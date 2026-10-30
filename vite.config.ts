@@ -46,7 +46,7 @@ const prerenderMetaTags = (): Plugin => ({
       return template.replace(/<title>.*<\/title>/, head);
     };
 
-    for (const pathname of staticRoutes.STATIC_PATHS) {
+    for (const pathname of [...staticRoutes.STATIC_PATHS, ...staticRoutes.EMBED_PATHS]) {
       const file = join(OUT_DIR, pathname, 'index.html');
       mkdirSync(dirname(file), { recursive: true });
       writeFileSync(file, render(pathname));

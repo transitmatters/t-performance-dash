@@ -3,6 +3,7 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { FREQUENT_BUS_ROUTE_IDS } from '../../common/constants/lines';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
+import { getFormattedTimeString } from '../../common/utils/time';
 import type {
   BusSpeedSegmentLeaderboardByBand,
   BusSpeedSegmentLeaderboardByDayType,
@@ -78,6 +79,21 @@ export const selectSegmentLeaderboardEntries = (
     return (data as BusSpeedSegmentLeaderboardByBand)[timeBand] ?? [];
   }
   return (data as BusSpeedSegmentLeaderboardByDayType)[dayType]?.[timeBand] ?? [];
+};
+
+const METERS_PER_MILE = 1609.344;
+
+/**
+ * "0.25 mi · 1m 52s" -- the segment's length and median travel time, the two numbers its
+ * p50_speed_mph is computed from. Undefined for leaderboard files published before the
+ * pipeline started writing them.
+ */
+export const segmentDistanceAndTime = (
+  entry: BusSpeedSegmentLeaderboardEntry
+): string | undefined => {
+  if (entry.segment_length_m == null || entry.p50_total_time_seconds == null) return undefined;
+  const miles = (entry.segment_length_m / METERS_PER_MILE).toFixed(2);
+  return `${miles} mi · ${getFormattedTimeString(entry.p50_total_time_seconds)}`;
 };
 
 export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntry {

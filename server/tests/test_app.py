@@ -286,6 +286,14 @@ class TestTimePredictionsValidation:
         result = client.http.get("/api/time_predictions")
         assert result.status_code == 400
 
+    def test_invalid_start_date_returns_400(self, client):
+        result = client.http.get("/api/time_predictions?route_id=Red&start_date=2026-13-01")
+        assert result.status_code == 400
+
+    def test_start_after_end_returns_400(self, client):
+        result = client.http.get("/api/time_predictions?route_id=Red&start_date=2026-09-30&end_date=2026-09-01")
+        assert result.status_code == 400
+
 
 # ---------------------------------------------------------------------------
 # Smoke tests: routes that work without AWS (static/no-param)

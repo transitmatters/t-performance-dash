@@ -1,5 +1,6 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { TimeUnit } from 'chart.js';
+import type { HoverCardRow } from '../components/charts/hoverCard/types';
 import type { Station } from './stations';
 
 export interface SingleDayDataPoint {
@@ -127,6 +128,8 @@ export interface AggregateLineProps extends LineProps {
   byTime?: boolean;
   children?: React.ReactNode;
   yUnit: string;
+  /** Extra rows for a day's hover card, after the percentiles. */
+  hoverRows?: (point: AggregateDataPoint) => HoverCardRow[];
 }
 
 export interface SingleDayLineProps extends LineProps {

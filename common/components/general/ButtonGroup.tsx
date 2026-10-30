@@ -37,9 +37,11 @@ export const ButtonGroup: <T extends string, K extends string>(
   // driven externally, so callers that never pass selectedIndex still update on click instead of
   // staying pinned to the first option.
   const [internalIndex, setInternalIndex] = useState(selectedIndex);
-  useEffect(() => {
+  const [prevSelectedIndex, setPrevSelectedIndex] = useState(selectedIndex);
+  if (selectedIndex !== prevSelectedIndex) {
+    setPrevSelectedIndex(selectedIndex);
     setInternalIndex(selectedIndex);
-  }, [selectedIndex]);
+  }
 
   const selected = options[internalIndex]?.[0];
   const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';

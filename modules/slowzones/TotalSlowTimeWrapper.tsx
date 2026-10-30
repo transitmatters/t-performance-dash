@@ -9,6 +9,7 @@ import { ChartStack } from '../../common/components/charts/ChartStack';
 import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
 import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TotalSlowTime } from './charts/TotalSlowTime';
+import type { SlowZonesEmbedLine } from './embed';
 
 interface TotalSlowTimeWrapperProps {
   data: DayDelayTotals[];
@@ -18,6 +19,7 @@ interface TotalSlowTimeWrapperProps {
   lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>;
   showTitle?: boolean;
   showWidgetValue?: boolean;
+  embedLine?: SlowZonesEmbedLine;
 }
 
 export const TotalSlowTimeWrapper = ({
@@ -28,6 +30,7 @@ export const TotalSlowTimeWrapper = ({
   lineShort,
   showTitle = false,
   showWidgetValue = true,
+  embedLine,
 }: TotalSlowTimeWrapperProps) => {
   const filteredDelayTotals = useFilteredDelayTotals(data, startDateUTC, endDateUTC);
   const delayDelta = getSlowZoneDelayDelta(filteredDelayTotals, lineShort);
@@ -56,6 +59,7 @@ export const TotalSlowTimeWrapper = ({
         line={line}
         lineShort={lineShort}
         showTitle={showTitle}
+        embedLine={embedLine}
       />
     </ChartStack>
   );

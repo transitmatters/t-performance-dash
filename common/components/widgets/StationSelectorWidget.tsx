@@ -12,6 +12,7 @@ import {
   stopIdsForStations,
   findValidDefaultStations,
   findNextValidStation,
+  stopNoun,
 } from '../../utils/stations';
 import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
 import { LINE_OBJECTS } from '../../constants/lines';
@@ -125,7 +126,7 @@ export const StationSelectorWidget = ({
       />
       <Button
         onClick={() => updateStations('swap')}
-        title={'Swap stations'}
+        title={`Swap ${stopNoun(lineShort)}s`}
         aria-label={`Swap direction: show ${toStation.stop_name} to ${fromStation.stop_name}`}
         additionalClasses={'shrink-0 w-fit'}
       >

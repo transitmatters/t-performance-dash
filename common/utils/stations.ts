@@ -22,6 +22,10 @@ const isRapidTransitLine = (
 ): line is Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry'> =>
   !isBusLine(line) && !isCommuterRailLine(line) && !isFerryLine(line);
 
+/** What riders call the places a line serves: buses and ferries have stops, rail has stations. */
+export const stopNoun = (line: LineShort | undefined): 'stop' | 'station' =>
+  line && (isBusLine(line) || isFerryLine(line)) ? 'stop' : 'station';
+
 // Helper function to safely get stations for a line
 const getStationsForLine = (
   line: LineShort,
@@ -167,6 +171,7 @@ export const getStationForInvalidFromSelection = (
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
   if (line === 'line-bus') {
     if (busRoute === '17/19') return getParentStationForStopId('17-1-323');
+    if (busRoute === '34') return getParentStationForStopId('34-1-10642'); // Forest Hills
     if (busRoute === '24/27/33') return getParentStationForStopId('24-1-185'); // Mattapan Station
     if (busRoute === '40/50') return getParentStationForStopId('40-1-36466'); // Cleary Square
     // 52/59 have no overlaps

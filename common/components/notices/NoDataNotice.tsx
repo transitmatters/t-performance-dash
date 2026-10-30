@@ -17,6 +17,8 @@ interface NoDataNoticeProps {
   metric?: TripMetric;
   /** Names the shutdowns on the page's line and dates that explain the missing data. */
   shutdownScope?: 'line' | 'trip';
+  /** Replaces the detail line when the caller knows better, e.g. the dates fall outside service. */
+  message?: string;
 }
 
 const ShutdownExplanation = ({ scope, inverse }: { scope: 'line' | 'trip'; inverse?: boolean }) => {
@@ -48,6 +50,7 @@ export const NoDataNotice = ({
   filtered = false,
   metric,
   shutdownScope,
+  message,
 }: NoDataNoticeProps) => {
   const { tab, query } = useDelimitatedRoute();
   const updateQueryParams = useUpdateQuery();
@@ -82,7 +85,7 @@ export const NoDataNotice = ({
           <ShutdownExplanation scope={shutdownScope} inverse={inverse} />
         )}
         <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
-          {detail}
+          {message ?? detail}
         </p>
         {jumpTo && (
           <Button

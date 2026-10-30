@@ -27,6 +27,7 @@ import { Route as LineSpeedmapRouteImport } from './routes/$line/speedmap'
 import { Route as SystemIndexRouteImport } from './routes/system/index'
 import { Route as SystemRidershipRouteImport } from './routes/system/ridership'
 import { Route as SystemSlowzonesRouteImport } from './routes/system/slowzones'
+import { Route as EmbedLineSlowzonesRouteImport } from './routes/embed/$line/slowzones'
 import { Route as LineTripsMultiIndexRouteImport } from './routes/$line/trips/multi/index'
 import { Route as LineTripsSingleIndexRouteImport } from './routes/$line/trips/single/index'
 
@@ -120,6 +121,11 @@ const SystemSlowzonesRoute = SystemSlowzonesRouteImport.update({
   path: '/system/slowzones',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmbedLineSlowzonesRoute = EmbedLineSlowzonesRouteImport.update({
+  id: '/embed/$line/slowzones',
+  path: '/embed/$line/slowzones',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LineTripsMultiIndexRoute = LineTripsMultiIndexRouteImport.update({
   id: '/$line/trips/multi/',
   path: '/$line/trips/multi/',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/system/slowzones': typeof SystemSlowzonesRoute
   '/$line/': typeof LineIndexRoute
   '/system/': typeof SystemIndexRoute
+  '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/$line/trips/multi/': typeof LineTripsMultiIndexRoute
   '/$line/trips/single/': typeof LineTripsSingleIndexRoute
 }
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/system/slowzones': typeof SystemSlowzonesRoute
   '/$line': typeof LineIndexRoute
   '/system': typeof SystemIndexRoute
+  '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/$line/trips/multi': typeof LineTripsMultiIndexRoute
   '/$line/trips/single': typeof LineTripsSingleIndexRoute
 }
@@ -195,6 +203,7 @@ export interface FileRoutesById {
   '/system/slowzones': typeof SystemSlowzonesRoute
   '/$line/': typeof LineIndexRoute
   '/system/': typeof SystemIndexRoute
+  '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/$line/trips/multi/': typeof LineTripsMultiIndexRoute
   '/$line/trips/single/': typeof LineTripsSingleIndexRoute
 }
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/system/slowzones'
     | '/$line/'
     | '/system/'
+    | '/embed/$line/slowzones'
     | '/$line/trips/multi/'
     | '/$line/trips/single/'
   fileRoutesByTo: FileRoutesByTo
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/system/slowzones'
     | '/$line'
     | '/system'
+    | '/embed/$line/slowzones'
     | '/$line/trips/multi'
     | '/$line/trips/single'
   id:
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/system/slowzones'
     | '/$line/'
     | '/system/'
+    | '/embed/$line/slowzones'
     | '/$line/trips/multi/'
     | '/$line/trips/single/'
   fileRoutesById: FileRoutesById
@@ -286,6 +298,7 @@ export interface RootRouteChildren {
   SystemSlowzonesRoute: typeof SystemSlowzonesRoute
   LineIndexRoute: typeof LineIndexRoute
   SystemIndexRoute: typeof SystemIndexRoute
+  EmbedLineSlowzonesRoute: typeof EmbedLineSlowzonesRoute
   LineTripsMultiIndexRoute: typeof LineTripsMultiIndexRoute
   LineTripsSingleIndexRoute: typeof LineTripsSingleIndexRoute
 }
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SystemSlowzonesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/embed/$line/slowzones': {
+      id: '/embed/$line/slowzones'
+      path: '/embed/$line/slowzones'
+      fullPath: '/embed/$line/slowzones'
+      preLoaderRoute: typeof EmbedLineSlowzonesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$line/trips/multi/': {
       id: '/$line/trips/multi/'
       path: '/$line/trips/multi'
@@ -454,6 +474,7 @@ const rootRouteChildren: RootRouteChildren = {
   SystemSlowzonesRoute: SystemSlowzonesRoute,
   LineIndexRoute: LineIndexRoute,
   SystemIndexRoute: SystemIndexRoute,
+  EmbedLineSlowzonesRoute: EmbedLineSlowzonesRoute,
   LineTripsMultiIndexRoute: LineTripsMultiIndexRoute,
   LineTripsSingleIndexRoute: LineTripsSingleIndexRoute,
 }
