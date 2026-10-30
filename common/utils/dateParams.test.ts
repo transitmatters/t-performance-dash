@@ -9,7 +9,7 @@ import {
   YESTERDAY_STRING,
 } from '../constants/dates';
 import { getDefaultDates } from '../state/defaults/dateDefaults';
-import { getDateRedirectHref, normalizeDateParams } from './dateParams';
+import { getCanonicalSearchHref, getDateRedirectHref, normalizeDateParams } from './dateParams';
 import type { SearchObject } from './searchParams';
 
 const range = (search: SearchObject, page: 'speed' | 'multiTrips' = 'speed') =>
@@ -185,5 +185,33 @@ describe('getDateRedirectHref', () => {
     expect(
       getDateRedirectHref(pathname, Object.fromEntries(new URLSearchParams(query)))
     ).toBeUndefined();
+  });
+});
+
+describe('getCanonicalSearchHref', () => {
+  it("drops another mode's route param", () => {
+    expect(getCanonicalSearchHref('/orange/', { busRoute: '1' })).toBe('/orange/');
+    expect(getCanonicalSearchHref('/orange/', { busRoute: '1', view: 'year' })).toBe(
+      '/orange/?view=year'
+    );
+  });
+
+  it('fills in dates after dropping it', () => {
+    expect(
+      getCanonicalSearchHref('/orange/speed/', { busRoute: '1', startDate: '2025-01-01' })
+    ).toBe(`/orange/speed/?startDate=2025-01-01&endDate=${TODAY_STRING}`);
+  });
+
+  it('leaves canonical URLs alone', () => {
+    expect(getCanonicalSearchHref('/bus/', { busRoute: '1' })).toBeUndefined();
+    expect(getCanonicalSearchHref('/red/', {})).toBeUndefined();
+  });
+
+  it("keeps an embed's own route param, so bus, commuter rail and ferry embeds load", () => {
+    const search = { busRoute: '1', from: '1-1-67', to: '1-1-72', date: '2026-10-21' };
+    expect(getCanonicalSearchHref('/embed/bus/trips/single/traveltimes/', search)).toBeUndefined();
+    expect(getCanonicalSearchHref('/embed/red/trips/single/headways/', { busRoute: '1' })).toBe(
+      '/embed/red/trips/single/headways/'
+    );
   });
 });
