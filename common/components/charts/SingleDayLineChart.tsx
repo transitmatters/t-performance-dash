@@ -23,9 +23,16 @@ import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
-import { SEVERITY_COLORS, severityForRatio, useChartTheme } from '../../utils/chartTheme';
+import {
+  BUNCHED_RATIO,
+  SEVERITY_COLORS,
+  isOnTimeHeadwayRatio,
+  severityForRatio,
+  useChartTheme,
+} from '../../utils/chartTheme';
 import { CHART_COLORS } from '../../constants/colors';
 import { getFormattedTimeString } from '../../utils/time';
+import { consistHoverContent } from '../../utils/occupancy';
 import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
 import { FIVE_MINUTES } from '../../constants/time';
 import type { HoverCardContent } from './hoverCard/types';
@@ -249,13 +256,28 @@ export const SingleDayLineChart = ({
                       if (actualValue && severity) {
                         const delta = actualValue - benchmarkValue;
                         const deltaText = `${delta < 0 ? '−' : '+'}${format(Math.abs(delta))}`;
+                        // Headway dots name the stat they count toward under the chart
+                        const ratio = actualValue / benchmarkValue;
+                        const headwayStatus = !showUnderRatio
+                          ? null
+                          : ratio <= BUNCHED_RATIO
+                            ? 'Bunched'
+                            : isOnTimeHeadwayRatio(ratio)
+                              ? 'On time'
+                              : null;
                         content.badge = {
                           tone: severity.tone,
-                          text: severity.label
-                            ? `${deltaText} · ${severity.label} ${referenceWord}`
-                            : `${deltaText} vs ${referenceWord}`,
+                          text: headwayStatus
+                            ? `${headwayStatus} · ${deltaText} vs ${referenceWord}`
+                            : severity.label
+                              ? `${deltaText} · ${severity.label} ${referenceWord}`
+                              : `${deltaText} vs ${referenceWord}`,
                         };
                       }
+                    } else if (showUnderRatio && actualValue) {
+                      content.notes = [
+                        'No scheduled headway, but still counted in the Bunched and On time totals',
+                      ];
                     }
                     if (temperature?.parsed.y) {
                       content.rows?.push({
@@ -266,17 +288,15 @@ export const SingleDayLineChart = ({
                     }
 
                     const dataPoint = data[(actual ?? items[0]).dataIndex];
-                    const consist = dataPoint?.vehicle_consist?.split('|') ?? [];
-                    if (consist.length > 0) {
-                      content.chips = {
-                        label: consist.length > 1 ? 'Vehicles' : 'Vehicle',
-                        values: consist,
-                      };
-                    }
+                    const { train, chips, load } = consistHoverContent(dataPoint);
+                    if (load) content.rows?.push(load);
+                    content.train = train;
+                    content.chips = chips;
                     // The label usually just repeats the lead car's number
                     const label = dataPoint?.vehicle_label;
-                    if (label && Number(consist[0]) !== parseInt(label)) {
-                      content.notes = [`Vehicle label: ${label}`];
+                    const leadCar = dataPoint?.vehicle_consist?.split('|')[0];
+                    if (label && Number(leadCar) !== parseInt(label)) {
+                      content.notes = [...(content.notes ?? []), `Vehicle label: ${label}`];
                     }
                     return content;
                   },

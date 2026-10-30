@@ -17,8 +17,9 @@ describe('severityForRatio', () => {
   });
 
   it.each([
-    [0.02, 'off100', '50%+ under'],
-    [0.4, 'off50', '50%+ under'],
+    [0.02, 'off100', 'Bunched'],
+    [0.4, 'off50', 'Bunched'],
+    [0.5, 'off50', 'Bunched'],
     [0.7, 'off25', '25%+ under'],
     [0.9, 'onTime', null],
     [1.6, 'off50', '50%+ over'],

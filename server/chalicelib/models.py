@@ -232,9 +232,19 @@ class TimePredictionParams(BaseModel):
 
     Attributes:
         route_id: Route identifier (e.g., `Red`, `CR-Fairmount`).
+        start_date: Optional start of the range of weeks to return.
+        end_date: Optional end of the range of weeks to return.
     """
 
     route_id: str = Field(description=_ROUTE_ID_DESC)
+    start_date: date | None = Field(
+        default=None,
+        description="Keep only weeks starting on or after this date (YYYY-MM-DD). Omit it for the full history.",
+    )
+    end_date: date | None = Field(
+        default=None,
+        description="Keep only weeks starting on or before this date (YYYY-MM-DD). Omit it for the full history.",
+    )
 
 
 class SpeedRestrictionsParams(BaseModel):
@@ -626,6 +636,12 @@ class HeadwayEvent(BaseModel):
         headway_time_sec: Seconds since the previous departure.
         benchmark_headway_time_sec: Scheduled headway in seconds, or `null` when unavailable.
         vehicle_consist: Car numbers separated by `|` (e.g. `1850|1851`), or `null` when unavailable.
+        occupancy_status: GTFS-RT occupancy status of each car, separated by `|` in `vehicle_consist` order
+            (e.g. `MANY_SEATS_AVAILABLE|STANDING_ROOM_ONLY`). A car without a reading is `NO_DATA_AVAILABLE`.
+            `null` when no car reported, which covers everything but Red and Orange Line cars with sensors and
+            any day before 2026-10-22. Read on arrival at the next stop, so it shows how full the train left this one.
+        occupancy_percentage: Occupancy percentage of each car, separated by `|` in the same order, with an
+            empty slot for a car without a reading (e.g. `6.0||4.0`), or `null` when no car reported.
         vehicle_label: Vehicle label; may be empty.
     """
 
@@ -636,6 +652,8 @@ class HeadwayEvent(BaseModel):
     headway_time_sec: float
     benchmark_headway_time_sec: float | None = None
     vehicle_consist: str | None = None
+    occupancy_status: str | None = None
+    occupancy_percentage: str | None = None
     vehicle_label: str
 
 
@@ -655,6 +673,12 @@ class DwellEvent(BaseModel):
         dep_dt: Departure time.
         dwell_time_sec: Seconds between arrival and departure.
         vehicle_consist: Car numbers separated by `|`, or `null` when unavailable.
+        occupancy_status: GTFS-RT occupancy status of each car, separated by `|` in `vehicle_consist` order
+            (e.g. `MANY_SEATS_AVAILABLE|STANDING_ROOM_ONLY`). A car without a reading is `NO_DATA_AVAILABLE`.
+            `null` when no car reported, which covers everything but Red and Orange Line cars with sensors and
+            any day before 2026-10-22. Read on arrival at the next stop, so it shows how full the train left this one.
+        occupancy_percentage: Occupancy percentage of each car, separated by `|` in the same order, with an
+            empty slot for a car without a reading (e.g. `6.0||4.0`), or `null` when no car reported.
         vehicle_label: Vehicle label; may be empty.
     """
 
@@ -665,6 +689,8 @@ class DwellEvent(BaseModel):
     dep_dt: str
     dwell_time_sec: float
     vehicle_consist: str | None = None
+    occupancy_status: str | None = None
+    occupancy_percentage: str | None = None
     vehicle_label: str
 
 
@@ -687,6 +713,12 @@ class TravelTimeEvent(BaseModel):
         tm_benchmark_travel_time_sec: TransitMatters benchmark travel time in seconds for the stop pair
             (the same on every event), or `null` when there is none (bus, commuter rail, ferry).
         vehicle_consist: Car numbers separated by `|`, or `null` when unavailable.
+        occupancy_status: GTFS-RT occupancy status of each car, separated by `|` in `vehicle_consist` order
+            (e.g. `MANY_SEATS_AVAILABLE|STANDING_ROOM_ONLY`). A car without a reading is `NO_DATA_AVAILABLE`.
+            `null` when no car reported, which covers everything but Red and Orange Line cars with sensors and
+            any day before 2026-10-22. Read on arrival at the next stop, so it shows how full the train left this one.
+        occupancy_percentage: Occupancy percentage of each car, separated by `|` in the same order, with an
+            empty slot for a car without a reading (e.g. `6.0||4.0`), or `null` when no car reported.
         vehicle_label: Vehicle label; may be empty.
     """
 
@@ -699,6 +731,8 @@ class TravelTimeEvent(BaseModel):
     benchmark_travel_time_sec: float | None = None
     tm_benchmark_travel_time_sec: float | None = None
     vehicle_consist: str | None = None
+    occupancy_status: str | None = None
+    occupancy_percentage: str | None = None
     vehicle_label: str
 
 

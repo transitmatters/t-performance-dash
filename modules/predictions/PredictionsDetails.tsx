@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Link } from '../../common/components/general/Link';
@@ -31,13 +31,13 @@ export function PredictionsDetails() {
   } = useDelimitatedRoute();
   const enabled = Boolean(line);
 
-  const [routeId, setRouteId] = useState<LineRouteId>(lineToDefaultRouteId(line));
-  useEffect(() => {
-    setRouteId(lineToDefaultRouteId(line));
-  }, [line]);
+  const [greenRouteId, setGreenRouteId] = useState<LineRouteId>(lineToDefaultRouteId('line-green'));
+  const routeId = line === 'line-green' ? greenRouteId : lineToDefaultRouteId(line);
 
   const greenBranchToggle = useMemo(() => {
-    return line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setRouteId} />;
+    return (
+      line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setGreenRouteId} />
+    );
   }, [line, routeId]);
 
   const predictions = usePredictionData(
