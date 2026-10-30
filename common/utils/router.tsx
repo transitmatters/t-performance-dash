@@ -95,6 +95,10 @@ export const parseRoutePath = (pathname: string) => {
   };
 };
 
+/** An embed's path is its dashboard page's path under `/embed`, so its charts read the same line. */
+const withoutEmbedPrefix = (pathname: string) =>
+  pathname.startsWith('/embed/') ? pathname.slice('/embed'.length) : pathname;
+
 /** Query keys that pick a route within a mode. Each one only means something on its own mode. */
 const ROUTE_PARAMS = ['busRoute', 'crRoute', 'ferryRoute'];
 
@@ -106,14 +110,14 @@ const ROUTE_PARAM_FOR_LINE: Partial<Record<Line, string>> = {
 
 /** The search without route params from another mode, e.g. `busRoute` on `/orange/`. */
 export const stripForeignRouteParams = (pathname: string, search: SearchObject): SearchObject => {
-  const { line } = parseRoutePath(pathname);
+  const { line } = parseRoutePath(withoutEmbedPrefix(pathname));
   const ownParam = line ? ROUTE_PARAM_FOR_LINE[line] : undefined;
   return pickBy(search, (_, key) => !ROUTE_PARAMS.includes(key) || key === ownParam);
 };
 
 export const useDelimitatedRoute = (): Route => {
   const { pathname, search } = useLocation();
-  const { pathItems, tab, page, line } = parseRoutePath(pathname);
+  const { pathItems, tab, page, line } = parseRoutePath(withoutEmbedPrefix(pathname));
   const newParams = getParams(search);
 
   return {

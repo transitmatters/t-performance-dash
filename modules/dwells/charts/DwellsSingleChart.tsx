@@ -10,13 +10,20 @@ interface DwellsSingleChartProps {
   dwells: SingleDayDataPoint[];
   toStation: Station;
   fromStation: Station;
+  /** The day shown; defaults to the URL's `date`. */
+  date?: string;
+  fill?: boolean;
 }
 
-export const DwellsSingleChart = ({ dwells, toStation, fromStation }: DwellsSingleChartProps) => {
-  const {
-    linePath,
-    query: { date },
-  } = useDelimitatedRoute();
+export const DwellsSingleChart = ({
+  dwells,
+  toStation,
+  fromStation,
+  date: dateProp,
+  fill = false,
+}: DwellsSingleChartProps) => {
+  const { linePath, query } = useDelimitatedRoute();
+  const date = dateProp ?? query.date;
 
   const chart = useMemo(() => {
     return (
@@ -30,9 +37,11 @@ export const DwellsSingleChart = ({ dwells, toStation, fromStation }: DwellsSing
         fname={'dwells'}
         units={'Minutes'}
         showLegend={false}
+        fill={fill}
+        embedChart="dwells"
       />
     );
-  }, [dwells, fromStation, linePath, date, toStation]);
+  }, [dwells, fromStation, linePath, date, toStation, fill]);
 
   return chart;
 };

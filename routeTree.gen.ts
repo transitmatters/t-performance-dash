@@ -30,6 +30,7 @@ import { Route as SystemSlowzonesRouteImport } from './routes/system/slowzones'
 import { Route as EmbedLineSlowzonesRouteImport } from './routes/embed/$line/slowzones'
 import { Route as LineTripsMultiIndexRouteImport } from './routes/$line/trips/multi/index'
 import { Route as LineTripsSingleIndexRouteImport } from './routes/$line/trips/single/index'
+import { Route as EmbedLineTripsSingleChartRouteImport } from './routes/embed/$line/trips/single/$chart'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -136,6 +137,12 @@ const LineTripsSingleIndexRoute = LineTripsSingleIndexRouteImport.update({
   path: '/$line/trips/single/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmbedLineTripsSingleChartRoute =
+  EmbedLineTripsSingleChartRouteImport.update({
+    id: '/embed/$line/trips/single/$chart',
+    path: '/embed/$line/trips/single/$chart',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -159,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/$line/trips/multi/': typeof LineTripsMultiIndexRoute
   '/$line/trips/single/': typeof LineTripsSingleIndexRoute
+  '/embed/$line/trips/single/$chart': typeof EmbedLineTripsSingleChartRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,6 +190,7 @@ export interface FileRoutesByTo {
   '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/$line/trips/multi': typeof LineTripsMultiIndexRoute
   '/$line/trips/single': typeof LineTripsSingleIndexRoute
+  '/embed/$line/trips/single/$chart': typeof EmbedLineTripsSingleChartRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,6 +215,7 @@ export interface FileRoutesById {
   '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/$line/trips/multi/': typeof LineTripsMultiIndexRoute
   '/$line/trips/single/': typeof LineTripsSingleIndexRoute
+  '/embed/$line/trips/single/$chart': typeof EmbedLineTripsSingleChartRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -231,6 +241,7 @@ export interface FileRouteTypes {
     | '/embed/$line/slowzones'
     | '/$line/trips/multi/'
     | '/$line/trips/single/'
+    | '/embed/$line/trips/single/$chart'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -254,6 +265,7 @@ export interface FileRouteTypes {
     | '/embed/$line/slowzones'
     | '/$line/trips/multi'
     | '/$line/trips/single'
+    | '/embed/$line/trips/single/$chart'
   id:
     | '__root__'
     | '/'
@@ -277,6 +289,7 @@ export interface FileRouteTypes {
     | '/embed/$line/slowzones'
     | '/$line/trips/multi/'
     | '/$line/trips/single/'
+    | '/embed/$line/trips/single/$chart'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -301,6 +314,7 @@ export interface RootRouteChildren {
   EmbedLineSlowzonesRoute: typeof EmbedLineSlowzonesRoute
   LineTripsMultiIndexRoute: typeof LineTripsMultiIndexRoute
   LineTripsSingleIndexRoute: typeof LineTripsSingleIndexRoute
+  EmbedLineTripsSingleChartRoute: typeof EmbedLineTripsSingleChartRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -452,6 +466,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LineTripsSingleIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/embed/$line/trips/single/$chart': {
+      id: '/embed/$line/trips/single/$chart'
+      path: '/embed/$line/trips/single/$chart'
+      fullPath: '/embed/$line/trips/single/$chart'
+      preLoaderRoute: typeof EmbedLineTripsSingleChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -477,6 +498,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmbedLineSlowzonesRoute: EmbedLineSlowzonesRoute,
   LineTripsMultiIndexRoute: LineTripsMultiIndexRoute,
   LineTripsSingleIndexRoute: LineTripsSingleIndexRoute,
+  EmbedLineTripsSingleChartRoute: EmbedLineTripsSingleChartRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

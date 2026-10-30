@@ -148,7 +148,8 @@ type UseQueriesOverload = {
     routeType: RouteType,
     parameters: SingleDayAPIOptions,
     aggregate: false,
-    enabled?: boolean
+    enabled?: boolean,
+    queryNames?: QueryNameOptions[]
   ): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
@@ -156,7 +157,8 @@ type UseQueriesOverload = {
     routeType: RouteType,
     parameters: AggregateAPIOptions,
     aggregate: true,
-    enabled?: boolean
+    enabled?: boolean,
+    queryNames?: QueryNameOptions[]
   ): {
     [key in QueryNameKeys]: ChunkedAggregateQueryResult;
   };
@@ -167,9 +169,11 @@ export const useTripExplorerQueries: UseQueriesOverload = (
   routeType: RouteType,
   parameters: SingleDayAPIOptions | AggregateAPIOptions,
   aggregate: boolean,
-  enabled = true
+  enabled = true,
+  // An embed shows one chart, so it fetches only that chart's data.
+  queryNames?: QueryNameOptions[]
 ): any => {
-  const queryTypes = QUERIES[routeType];
+  const queryTypes = queryNames ?? QUERIES[routeType];
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
   // Create objects with keys of query names which contains keys and parameters.
   const queries = {};

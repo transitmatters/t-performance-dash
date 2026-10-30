@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 import type { RefObject } from 'react';
 import type { Chart } from 'chart.js';
-import { faCode } from '@fortawesome/free-solid-svg-icons';
-import { CopyButton } from '../../common/components/buttons/CopyLinkButton';
+import { EmbedButton } from '../../common/components/buttons/EmbedButton';
 import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
 import type { SlowZonesEmbedLine } from './embed';
 import { getSlowZonesEmbedSnippet, getSlowZonesEmbedTitle } from './embed';
@@ -34,13 +33,7 @@ export const TotalSlowTimeActions = ({
         startDate={startDate}
         endDate={endDate}
       />
-      <CopyButton
-        getText={getEmbedSnippet}
-        label="Embed"
-        icon={faCode}
-        ariaLabel="Copy embed code for this chart"
-        failedMessage="Could not copy the embed code"
-      />
+      <EmbedButton getSnippet={getEmbedSnippet} />
     </div>
   );
 };
