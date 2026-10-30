@@ -10,7 +10,7 @@ import { useDateStore } from '../state/dateStore';
 import { getDateStoreSection } from '../state/utils/dateStoreUtils';
 import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
-import { parseRoutePath } from './router';
+import { parseRoutePath, stripForeignRouteParams } from './router';
 import type { SearchObject } from './searchParams';
 import { stringifySearch } from './searchParams';
 
@@ -143,11 +143,23 @@ export const getDateRedirectHref = (pathname: string, search: SearchObject) => {
 };
 
 /**
- * Runs before every navigation, so no link, back button or hand-edited URL can render a dated page
- * without its dates. Replace rather than push, so Back doesn't land on the broken URL again.
+ * Where to send a URL whose query doesn't fit its page: a route param from another mode (the line
+ * would render as that route), or missing or broken dates. Route params go first, since they set
+ * the date bounds.
  */
-export const redirectToCompleteDates = ({ location }: { location: ParsedLocation }) => {
-  const href = getDateRedirectHref(location.pathname, location.search);
+export const getCanonicalSearchHref = (pathname: string, search: SearchObject) => {
+  const stripped = stripForeignRouteParams(pathname, search);
+  const dateHref = getDateRedirectHref(pathname, stripped);
+  if (dateHref) return dateHref;
+  return isEqual(stripped, search) ? undefined : `${pathname}${stringifySearch(stripped)}`;
+};
+
+/**
+ * Runs before every navigation, so no link, back button or hand-edited URL can render a page with a
+ * query that doesn't fit it. Replace rather than push, so Back doesn't land on the broken URL again.
+ */
+export const redirectToCanonicalSearch = ({ location }: { location: ParsedLocation }) => {
+  const href = getCanonicalSearchHref(location.pathname, location.search);
   if (href) {
     const hash = location.hash ? `#${location.hash}` : '';
     throw redirect({ href: `${href}${hash}`, replace: true } as Parameters<typeof redirect>[0]);
