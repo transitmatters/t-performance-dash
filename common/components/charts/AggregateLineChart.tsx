@@ -84,6 +84,7 @@ export const AggregateLineChart = ({
   byTime = false,
   yUnit = 'Minutes',
   chartTitle,
+  hoverRows,
 }: AggregateLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -296,6 +297,9 @@ export const AggregateLineChart = ({
                     const tempMean = valueOf('Daily mean');
                     const tempLow = valueOf('Daily low');
                     const tempHigh = valueOf('Daily high');
+                    const medianItem = items.find((item) => item.dataset.label === seriesName);
+                    const extraRows =
+                      hoverRows && medianItem ? hoverRows(data[medianItem.dataIndex]) : [];
 
                     return {
                       hero: median
@@ -312,6 +316,7 @@ export const AggregateLineChart = ({
                         ...(p25
                           ? [{ label: '25th percentile', value: format(p25), color: fillColor }]
                           : []),
+                        ...extraRows,
                         ...(trend
                           ? [{ label: 'Trend', value: format(trend), color: CHART_COLORS.RED }]
                           : []),
