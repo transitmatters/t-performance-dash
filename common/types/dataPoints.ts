@@ -16,6 +16,8 @@ export interface TravelTimePoint extends DataPoint {
   threshold_flag_2?: string;
   threshold_flag_3?: string;
   vehicle_consist?: string;
+  occupancy_status?: string | null;
+  occupancy_percentage?: string | null;
   vehicle_label?: string;
 }
 
@@ -29,6 +31,8 @@ export interface HeadwayPoint extends DataPoint {
   threshold_flag_2?: string;
   threshold_flag_3?: string;
   vehicle_consist?: string;
+  occupancy_status?: string | null;
+  occupancy_percentage?: string | null;
   vehicle_label?: string;
 }
 
@@ -37,6 +41,8 @@ export interface DwellPoint extends DataPoint {
   dep_dt: string;
   dwell_time_sec: number;
   vehicle_consist?: string;
+  occupancy_status?: string | null;
+  occupancy_percentage?: string | null;
   vehicle_label?: string;
 }
 

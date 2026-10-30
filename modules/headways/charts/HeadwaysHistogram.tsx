@@ -21,10 +21,7 @@ export const HeadwaysHistogram = ({ headways }: HeadwaysChartProps) => {
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
 
-  const benchmarkTime =
-    useMemo(() => {
-      return headways.length > 0 ? headways[0].benchmark_headway_time_sec : 0;
-    }, [headways]) ?? 0;
+  const benchmarkTime = headways[0]?.benchmark_headway_time_sec ?? 0;
 
   // dataObject is a mapping from headway bucket -> number of trains.
   // All keys are increased by 0.5. This is a workaround to get chartjs to display the tick labels in between the bars.

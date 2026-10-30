@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface RollingNumberProps {
   /** The target value to display. Roll-up animates from the currently shown value to this. */
@@ -40,6 +40,8 @@ export const RollingNumber = ({
   // change to `value` animates, rolling from the previously shown (real) figure to the new one.
   const currentRef = useRef(value);
   const frameRef = useRef<number>(undefined);
+  // Rendered once and never changed, so React never rewrites the text the effect writes.
+  const [initialText] = useState(() => format(value));
 
   useEffect(() => {
     const node = spanRef.current;
@@ -81,7 +83,7 @@ export const RollingNumber = ({
   // First paint (and SSR) shows the starting value; the effect animates from there.
   return (
     <span ref={spanRef} className={className}>
-      {format(currentRef.current)}
+      {initialText}
     </span>
   );
 };
