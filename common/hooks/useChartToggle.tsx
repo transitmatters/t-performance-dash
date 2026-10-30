@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { lineColorVar } from '../styles/general';
+import type { QueryParams } from '../types/router';
 import { useDelimitatedRoute, useSetQueryParam } from '../utils/router';
 
 interface UseChartToggleOptions {
@@ -24,7 +25,7 @@ interface UseChartToggleOptions {
    * the shareable URL; leave it off and the value stays local component state. Only the non-default
    * value is written, so a link to an untouched chart carries no extra params.
    */
-  paramKey?: string;
+  paramKey?: keyof QueryParams;
 }
 
 /**

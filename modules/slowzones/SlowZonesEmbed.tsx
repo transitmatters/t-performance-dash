@@ -1,3 +1,4 @@
+import { useSearch } from '@tanstack/react-router';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
@@ -7,7 +8,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
 import { normalizeDateParams } from '../../common/utils/dateParams';
-import { linePathToKeyMap, useQueryParams } from '../../common/utils/router';
+import { linePathToKeyMap } from '../../common/utils/router';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import type { SlowZonesEmbedLine } from './embed';
 import { getSlowZonesEmbedTitle, getSlowZonesPageUrl } from './embed';
@@ -20,7 +21,7 @@ interface SlowZonesEmbedProps {
 
 /** The total slow time chart on its own, for iframing into articles. */
 export const SlowZonesEmbed = ({ line }: SlowZonesEmbedProps) => {
-  const search = useQueryParams();
+  const search = useSearch({ from: '/embed/$line/slowzones' });
   const delayTotals = useSlowzoneDelayTotalData();
 
   const isSystem = line === 'system';

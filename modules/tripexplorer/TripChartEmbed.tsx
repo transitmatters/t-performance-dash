@@ -8,7 +8,7 @@ import { QueryNameKeys, SingleDayAPIParams } from '../../common/types/api';
 import type { RouteType } from '../../common/types/api';
 import type { Tab } from '../../common/types/router';
 import { normalizeDateParams } from '../../common/utils/dateParams';
-import { useDelimitatedRoute, useQueryParams } from '../../common/utils/router';
+import { useDelimitatedRoute } from '../../common/utils/router';
 import {
   getLocationDetails,
   getParentStationForStopId,
@@ -48,10 +48,13 @@ interface TripChartEmbedProps {
 export const TripChartEmbed = ({ chart }: TripChartEmbedProps) => {
   const route = useDelimitatedRoute();
   const { tab, lineShort, query } = route;
-  const search = useQueryParams();
   // Fills in a missing or out-of-range day without rewriting the URL, as the slow zone embed does.
-  const date = (normalizeDateParams({ section: 'singleTrips', tab, page: 'singleTrips', search })
-    ?.date ?? search.date) as string;
+  const date = (normalizeDateParams({
+    section: 'singleTrips',
+    tab,
+    page: 'singleTrips',
+    search: query,
+  })?.date ?? query.date) as string;
 
   const fromStation = query.from ? getParentStationForStopId(query.from, lineShort) : undefined;
   const toStation = query.to ? getParentStationForStopId(query.to, lineShort) : undefined;

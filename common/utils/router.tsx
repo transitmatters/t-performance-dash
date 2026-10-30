@@ -1,6 +1,5 @@
-import type { ParsedUrlQuery } from 'querystring';
-import { useLocation, useMatches, useRouter, useSearch } from '@tanstack/react-router';
-import { useCallback } from 'react';
+import { useLocation, useMatches, useNavigate, useRouter } from '@tanstack/react-router';
+import { useCallback, useMemo } from 'react';
 import { isEqual, pickBy, startCase, toLower } from '@lodash-utils';
 import type { Line, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
@@ -21,7 +20,7 @@ import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
 import { LINE_COLORS } from '../constants/colors';
 import type { SearchObject } from './searchParams';
-import { stringifySearch } from './searchParams';
+import { validateAnySearch } from './searchSchemas';
 
 export const linePathToKeyMap: Record<LinePath, Line> = {
   red: 'line-red',
@@ -33,12 +32,6 @@ export const linePathToKeyMap: Record<LinePath, Line> = {
   'commuter-rail': 'line-commuter-rail',
   ferry: 'line-ferry',
   'the-ride': 'line-RIDE',
-};
-
-const getParams = (params: ParsedUrlQuery | QueryParams) => {
-  return Object.fromEntries(
-    Object.entries(params).filter(([key, value]) => key !== 'line' && value)
-  );
 };
 
 const getPage = (pathItems: string[], tab: Tab): string => {
@@ -79,9 +72,6 @@ export const useIsNotFound = () =>
       matches.some((match) => match.status === 'notFound' || match._notFound === true),
   });
 
-/** The current query string as plain strings; no route declares a search schema yet. */
-export const useQueryParams = (): SearchObject => useSearch({ strict: false });
-
 /** The line, tab and page a pathname points at. Pure, so the router can use it before render. */
 export const parseRoutePath = (pathname: string) => {
   // Page detection expects Next's trailing-slash paths; a hand-typed `/red/speed` still has to work.
@@ -117,8 +107,9 @@ export const stripForeignRouteParams = (pathname: string, search: SearchObject):
 
 export const useDelimitatedRoute = (): Route => {
   const { pathname, search } = useLocation();
+  // Merged like TanStack merges a route's validated search, so unknown params still carry over.
+  const query: QueryParams = useMemo(() => ({ ...search, ...validateAnySearch(search) }), [search]);
   const { pathItems, tab, page, line } = parseRoutePath(withoutEmbedPrefix(pathname));
-  const newParams = getParams(search);
 
   return {
     line,
@@ -126,32 +117,40 @@ export const useDelimitatedRoute = (): Route => {
     lineShort: startCase(toLower(pathItems[1]).replace('-', ' ')) as LineShort, //TODO: Remove as
     page: page,
     tab,
-    query: newParams,
+    query,
     color: LINE_COLORS[line ?? 'default'],
   };
 };
 
 /**
  * Rewrite the query string in place. Query-only updates (a date or station change) keep the
- * scroll position; the page itself isn't changing.
+ * scroll position; the page itself isn't changing. Skips a no-op, since navigating to the current
+ * URL still reloads the route.
  */
-export const navigateToQuery = (
-  router: ReturnType<typeof useRouter>,
-  pathname: string,
-  query: Record<string, unknown>,
-  replace: boolean
-) => router.navigate({ href: `${pathname}${stringifySearch(query)}`, replace, resetScroll: false });
+export const useNavigateToQuery = () => {
+  const router = useRouter();
+  const navigate = useNavigate();
+
+  return useCallback(
+    (update: (search: QueryParams) => QueryParams, replace = true) => {
+      // The latest location, not a render's, so back-to-back updates build on each other.
+      const { search } = router.latestLocation;
+      const next = pickBy(update(search), (value) => value !== undefined);
+      if (isEqual(next, search)) return;
+      navigate({ to: './', search: next, replace, resetScroll: false });
+    },
+    [router, navigate]
+  );
+};
 
 export const useUpdateQuery = () => {
-  const router = useRouter();
+  const navigateToQuery = useNavigateToQuery();
 
-  const updateQueryParams = useCallback(
+  return useCallback(
     (newQueryParams: QueryParams, replace = true) => {
       if (!newQueryParams) return;
-      const { pathname, search } = router.latestLocation;
-
       const { startDate, endDate, to, from, date } = newQueryParams;
-      const newTempQuery: Partial<QueryParams> = {};
+      const newTempQuery: QueryParams = {};
 
       // A single date and a range never coexist in the URL: writing one clears the other.
       if (date) {
@@ -164,25 +163,13 @@ export const useUpdateQuery = () => {
         newTempQuery.date = undefined;
       }
 
-      if (to || from) {
-        if ((to && typeof to === 'string') || typeof to === 'number') {
-          newTempQuery.to = to;
-        }
-        if ((from && typeof from === 'string') || typeof from === 'number') {
-          newTempQuery.from = from;
-        }
-      }
+      if (to) newTempQuery.to = to;
+      if (from) newTempQuery.from = from;
 
-      const newQuery = pickBy({ ...search, ...newTempQuery }, (attr) => attr !== undefined);
-
-      if (!isEqual(search, newQuery)) {
-        navigateToQuery(router, pathname, newQuery, replace);
-      }
+      navigateToQuery((search) => ({ ...search, ...newTempQuery }), replace);
     },
-    [router]
+    [navigateToQuery]
   );
-
-  return updateQueryParams;
 };
 
 /**
@@ -190,24 +177,22 @@ export const useUpdateQuery = () => {
  * which is how a control at its default value keeps itself out of the query string.
  */
 export const useSetQueryParam = () => {
-  const router = useRouter();
+  const navigateToQuery = useNavigateToQuery();
 
   return useCallback(
-    (key: string, value: string | undefined) => {
-      const { pathname, search } = router.latestLocation;
-      const newQuery: Record<string, unknown> = { ...search };
-      if (value === undefined) {
-        delete newQuery[key];
-      } else {
-        newQuery[key] = value;
-      }
-      if (!isEqual(search, newQuery)) {
-        navigateToQuery(router, pathname, newQuery, true);
-      }
-    },
-    [router]
+    (key: keyof QueryParams, value: string | undefined) =>
+      navigateToQuery((search) => ({ ...search, [key]: value })),
+    [navigateToQuery]
   );
 };
+
+/** The query as URL params, without the given keys; leaves `query` itself alone. */
+const queryWithout = (query: QueryParams, keys: string[]) =>
+  new URLSearchParams(
+    Object.entries(query).filter(
+      (entry): entry is [string, string] => entry[1] !== undefined && !keys.includes(entry[0])
+    )
+  );
 
 export const getLineSelectionItemHref = (newLine: Line, route: Route): string => {
   const { page, line, query } = route;
@@ -221,16 +206,10 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   if (key === line || currentPath === 'today' || !validPage) {
     return href;
   }
-  delete query.from;
-  delete query.to;
-  // Get queryParams but exclude route params and view (a per-line preset selection, e.g. the
-  // Overview page's date range — carrying it to a different line makes that line's page open on
-  // whatever range was last picked instead of its own default).
-  const queryParams = query
-    ? new URLSearchParams(
-        Object.entries(query).filter(([key]) => !ROUTE_PARAMS.includes(key) && key !== 'view')
-      )
-    : new URLSearchParams();
+  // Drop stations, route params and view (a per-line preset selection, e.g. the Overview page's
+  // date range — carrying it to a different line makes that line's page open on whatever range was
+  // last picked instead of its own default).
+  const queryParams = queryWithout(query, ['from', 'to', 'view', ...ROUTE_PARAMS]);
   href += currentPath ? `${currentPath}` : '';
   const queryString = queryParams.toString();
   href += queryString ? `?${queryString}` : '';
@@ -245,11 +224,7 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/trips/single?busRoute=${newRoute}`;
   }
-  delete query.from;
-  delete query.to;
-  const queryParams = query
-    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
-    : new URLSearchParams();
+  const queryParams = queryWithout(query, ['from', 'to', 'busRoute']);
   queryParams.append('busRoute', newRoute);
   let href = `/bus${currentPath}`;
   href += `?${queryParams.toString() ?? ''}`;
@@ -264,11 +239,7 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
  */
 export const getBusSpeedMapRouteHref = (newRoute: string, route: Route): string => {
   const { query } = route;
-  delete query.from;
-  delete query.to;
-  const queryParams = query
-    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'busRoute'))
-    : new URLSearchParams();
+  const queryParams = queryWithout(query, ['from', 'to', 'busRoute']);
   queryParams.append('busRoute', newRoute);
   return `/bus/speedmap?${queryParams.toString()}`;
 };
@@ -281,11 +252,7 @@ export const getCommuterRailRouteSelectionItemHref = (newRoute: string, route: R
   if (newRoute === route.query.crRoute || !validPage) {
     return `/commuter-rail/trips/single?crRoute=${newRoute}`;
   }
-  delete query.from;
-  delete query.to;
-  const queryParams = query
-    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'crRoute'))
-    : new URLSearchParams();
+  const queryParams = queryWithout(query, ['from', 'to', 'crRoute']);
   queryParams.append('crRoute', newRoute);
   let href = `/commuter-rail${currentPath}`;
   href += `?${queryParams.toString() ?? ''}`;
@@ -300,11 +267,7 @@ export const getFerryRouteSelectionItemHref = (newRoute: string, route: Route): 
   if (newRoute === route.query.ferryRoute || !validPage) {
     return `/ferry/trips/single?ferryRoute=${newRoute}`;
   }
-  delete query.from;
-  delete query.to;
-  const queryParams = query
-    ? new URLSearchParams(Object.entries(query).filter(([key]) => key !== 'ferryRoute'))
-    : new URLSearchParams();
+  const queryParams = queryWithout(query, ['from', 'to', 'ferryRoute']);
   queryParams.append('ferryRoute', newRoute);
   let href = `/ferry${currentPath}`;
   href += `?${queryParams.toString() ?? ''}`;
