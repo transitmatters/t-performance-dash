@@ -19,7 +19,8 @@ def get_cache_max_age(query_params: dict) -> int:
     ``to_date`` in that order) and selects a cache lifetime based on how recent
     that date is relative to today in US/Eastern time:
 
-    - **Today**: 15 minutes — data is still being actively updated.
+    - **Today or yesterday**: 15 minutes — today's data is still arriving, and
+      yesterday's lands overnight, so neither should sit in a shared cache for long.
     - **Within the last 6 months**: 1 hour — data is settled but corrections
       may still arrive.
     - **Older than 6 months**: 90 days — historical data that is unlikely to
@@ -47,16 +48,15 @@ def get_cache_max_age(query_params: dict) -> int:
         try:
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d").replace(tzinfo=EASTERN_TIME)
             now = datetime.now(EASTERN_TIME)
-            today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            yesterday = now.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
             six_months_ago = now - timedelta(days=180)
 
-            # If data is from today, cache for only 15 minutes (data still updating)
-            if end_date >= today:
+            if end_date >= yesterday:
                 cache_max_age = FIFTEEN_MINUTES
             # If data is from more than 6 months ago, it's historical and won't change much
             elif end_date < six_months_ago:
                 cache_max_age = THREE_MONTHS
-            # Otherwise, cache for 1 hour (recent but not today)
+            # Otherwise, cache for 1 hour (recent, but older than yesterday)
             else:
                 cache_max_age = ONE_HOUR
         except ValueError:
