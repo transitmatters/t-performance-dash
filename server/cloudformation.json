@@ -75,14 +75,26 @@
         "Name": { "Ref": "TMBackendHostname" },
         "HostedZoneName": { "Fn::Sub": "${TMBackendZone}." },
         "AliasTarget": {
-          "HostedZoneId": {
-            "Fn::GetAtt": ["ApiGatewayCustomDomain", "RegionalHostedZoneId"]
-          },
+          "HostedZoneId": "Z2FDTNDATAQYW2",
           "DNSName": {
-            "Fn::GetAtt": ["ApiGatewayCustomDomain", "RegionalDomainName"]
+            "Fn::GetAtt": ["BackendCloudFront", "DomainName"]
           }
         },
         "Type": "A"
+      }
+    },
+    "BackendDNSRecordSetIPv6": {
+      "Type": "AWS::Route53::RecordSet",
+      "Properties": {
+        "Name": { "Ref": "TMBackendHostname" },
+        "HostedZoneName": { "Fn::Sub": "${TMBackendZone}." },
+        "AliasTarget": {
+          "HostedZoneId": "Z2FDTNDATAQYW2",
+          "DNSName": {
+            "Fn::GetAtt": ["BackendCloudFront", "DomainName"]
+          }
+        },
+        "Type": "AAAA"
       }
     },
     "APIHandler": {
@@ -177,6 +189,79 @@
             "title": { "Ref": "TMBackendHostname" }
           }
         }
+      }
+    },
+    "BackendCachePolicy": {
+      "Type": "AWS::CloudFront::CachePolicy",
+      "Properties": {
+        "CachePolicyConfig": {
+          "Name": { "Fn::Sub": "${AWS::StackName}-api-origin-ttl" },
+          "Comment": "Cache API responses for as long as their Cache-Control allows, up to a day; responses without one are not cached",
+          "MinTTL": 0,
+          "DefaultTTL": 0,
+          "MaxTTL": 86400,
+          "ParametersInCacheKeyAndForwardedToOrigin": {
+            "CookiesConfig": { "CookieBehavior": "none" },
+            "HeadersConfig": { "HeaderBehavior": "none" },
+            "QueryStringsConfig": { "QueryStringBehavior": "all" },
+            "EnableAcceptEncodingGzip": true,
+            "EnableAcceptEncodingBrotli": true
+          }
+        }
+      }
+    },
+    "BackendCloudFront": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Aliases": [{ "Ref": "TMBackendHostname" }],
+          "Comment": "Shared edge cache in front of the API to cut Lambda invocations",
+          "Enabled": true,
+          "HttpVersion": "http2and3",
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "api-gateway",
+            "ViewerProtocolPolicy": "redirect-to-https",
+            "AllowedMethods": ["GET", "HEAD", "OPTIONS"],
+            "CachedMethods": ["GET", "HEAD"],
+            "Compress": true,
+            "CachePolicyId": { "Ref": "BackendCachePolicy" },
+            "OriginRequestPolicyId": "b689b0a8-53d0-40ab-baf2-68738e2966ac"
+          },
+          "Origins": [
+            {
+              "Id": "api-gateway",
+              "DomainName": {
+                "Fn::Sub": "${RestAPI}.execute-api.${AWS::Region}.amazonaws.com"
+              },
+              "OriginPath": {
+                "Fn::Join": ["", ["/", { "Ref": "RestAPI.Stage" }]]
+              },
+              "CustomOriginConfig": {
+                "HTTPSPort": 443,
+                "OriginProtocolPolicy": "https-only",
+                "OriginSSLProtocols": ["TLSv1.2"]
+              }
+            }
+          ],
+          "CustomErrorResponses": [
+            { "ErrorCode": 500, "ErrorCachingMinTTL": 0 },
+            { "ErrorCode": 502, "ErrorCachingMinTTL": 0 },
+            { "ErrorCode": 503, "ErrorCachingMinTTL": 0 },
+            { "ErrorCode": 504, "ErrorCachingMinTTL": 0 }
+          ],
+          "PriceClass": "PriceClass_100",
+          "ViewerCertificate": {
+            "MinimumProtocolVersion": "TLSv1.2_2021",
+            "AcmCertificateArn": { "Ref": "TMBackendCertArn" },
+            "SslSupportMethod": "sni-only"
+          }
+        },
+        "Tags": [
+          {
+            "Key": "service",
+            "Value": "t-performance-dash"
+          }
+        ]
       }
     },
     "FrontendCloudFront": {
