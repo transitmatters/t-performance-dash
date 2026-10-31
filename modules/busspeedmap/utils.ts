@@ -9,6 +9,7 @@ import type {
   BusSpeedSegmentLeaderboardByDayType,
   BusSpeedSegmentLeaderboardEntry,
   BusSpeedSegmentLeaderboardResponse,
+  BusSpeedSegmentProperties,
   DayType,
   Period,
   TimeBand,
@@ -85,16 +86,43 @@ const METERS_PER_MILE = 1609.344;
 
 /**
  * "0.25 mi · 1m 52s" -- the segment's length and median travel time, the two numbers its
- * p50_speed_mph is computed from. Undefined for leaderboard files published before the
- * pipeline started writing them.
+ * p50_speed_mph is computed from. Shared by leaderboard rows and map features; undefined for
+ * files published before the pipeline started writing them.
  */
 export const segmentDistanceAndTime = (
-  entry: BusSpeedSegmentLeaderboardEntry
+  entry: Pick<BusSpeedSegmentLeaderboardEntry, 'segment_length_m' | 'p50_total_time_seconds'>
 ): string | undefined => {
   if (entry.segment_length_m == null || entry.p50_total_time_seconds == null) return undefined;
   const miles = (entry.segment_length_m / METERS_PER_MILE).toFixed(2);
   return `${miles} mi · ${getFormattedTimeString(entry.p50_total_time_seconds)}`;
 };
+
+/**
+ * Every `shared_routes` a pooled segment could carry with all of its routes among `routeIds`:
+ * each combination of two or more, sorted and comma-joined as the pipeline writes them ("749,751"
+ * for SL4/SL5). A plain string sort, as there, so "19,8" rather than "8,19".
+ */
+export const sharedRouteKeys = (routeIds: string[]): string[] =>
+  [...new Set(routeIds)]
+    .sort()
+    .reduce<string[][]>(
+      (combinations, routeId) => [
+        ...combinations,
+        ...combinations.map((combination) => [...combination, routeId]),
+      ],
+      [[]]
+    )
+    .filter((combination) => combination.length > 1)
+    .map((combination) => combination.join(','));
+
+/** The feature that stands in for every route on its stop pair (see `shared_routes`). */
+export const isPooledSegment = (
+  segment: Pick<BusSpeedSegmentProperties, 'route_id' | 'shared_routes'>
+): boolean => segment.route_id === segment.shared_routes;
+
+/** Route names in the order a rider would list them: SL1 before SL2, 9 before 10. */
+export const compareRouteNames = (a: string, b: string): number =>
+  a.localeCompare(b, 'en', { numeric: true });
 
 export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntry {
   /** Whether any raw route_id behind this curated label is a Frequent Bus Route. */
