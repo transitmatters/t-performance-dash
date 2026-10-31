@@ -68,6 +68,7 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
         >
           <FontAwesomeIcon
             icon={range ? faCalendarWeek : faCalendarDay}
+            widthAuto
             className="pr-1 text-white"
           />
           <p className="truncate">
