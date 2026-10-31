@@ -155,6 +155,10 @@ aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/slowzones --no
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
 
+# Drop cached API responses so backend changes are live immediately
+BACKEND_CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$BACKEND_HOSTNAME')].Id | [0]" --output text)
+aws cloudfront create-invalidation --distribution-id $BACKEND_CLOUDFRONT_ID --paths "/*"
+
 # Draw the link-preview cards for this build's pages now instead of at the next morning's run.
 # Chalice's schedule handler only accepts an EventBridge-shaped event, hence the payload.
 OG_CARDS_RESULT=$(mktemp)

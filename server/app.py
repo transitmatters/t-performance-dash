@@ -155,8 +155,10 @@ def healthcheck():
                 e_str.replace(secret, "HIDDEN")
             failed_checks[check] = f"Check threw an exception: {e_str}"
 
+    # Uptime monitors must reach the Lambda, never a cached copy at the edge
+    headers = {"Cache-Control": "no-store"}
     if len(failed_checks) == 0:
-        return Response(body={"status": "pass"}, status_code=200)
+        return Response(body={"status": "pass"}, status_code=200, headers=headers)
 
     return Response(
         body={
@@ -165,6 +167,7 @@ def healthcheck():
             "failed_checks": failed_checks,
         },
         status_code=500,
+        headers=headers,
     )
 
 
