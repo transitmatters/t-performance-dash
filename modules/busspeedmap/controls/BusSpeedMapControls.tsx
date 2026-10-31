@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
-import { DAY_TYPES, DIRECTIONS, PERIODS, TIME_BANDS } from '../constants';
+import { getBusRouteDisplayName } from '../../../common/constants/lines';
+import { ALL_ROUTES, DAY_TYPES, DIRECTIONS, PERIODS, TIME_BANDS } from '../constants';
 import type { DayType, DirectionFilter, Period, TimeBand } from '../types';
 
 interface BusSpeedMapControlsProps {
@@ -15,6 +16,12 @@ interface BusSpeedMapControlsProps {
   // rather than wiring up a filter it doesn't use.
   direction?: DirectionFilter;
   setDirection?: Dispatch<SetStateAction<DirectionFilter>>;
+  // The raw route_ids behind a composite route like SL4/SL5 (see getBusRouteIds), so the map
+  // can be narrowed to one of them -- they're otherwise drawn over one another wherever they
+  // share a street. `routeId` is one of them or ALL_ROUTES. No control for a single route.
+  routeIds?: string[];
+  routeId?: string;
+  setRouteId?: Dispatch<SetStateAction<string>>;
   // The merged leaderboard page reuses this same period/day-type/time-band control set for
   // its "by route" view too, which has no notion of day type or time-of-day bucketing at all
   // (the route API just sums over a date range) -- both default true so the map page, which
@@ -32,6 +39,9 @@ export const BusSpeedMapControls = ({
   setTimeBand,
   direction,
   setDirection,
+  routeIds,
+  routeId,
+  setRouteId,
   showDayType = true,
   showTimeBand = true,
 }: BusSpeedMapControlsProps) => {
@@ -48,6 +58,14 @@ export const BusSpeedMapControls = ({
     (option) => [option.key, option.label] as [DirectionFilter, string]
   );
   const selectedDirectionIndex = DIRECTIONS.findIndex((option) => option.key === direction);
+
+  const routeOptions: [string, string][] = [
+    [ALL_ROUTES, 'All'],
+    ...(routeIds ?? []).map((id): [string, string] => [id, getBusRouteDisplayName(id)]),
+  ];
+  const selectedRouteIndex = routeOptions.findIndex(([key]) => key === routeId);
+  const showRoutes = (routeIds?.length ?? 0) > 1;
+  const showDirection = Boolean(direction && setDirection);
 
   return (
     <div className="flex flex-col gap-3">
@@ -117,7 +135,7 @@ export const BusSpeedMapControls = ({
         )}
       </div>
 
-      {(showTimeBand || (direction && setDirection)) && (
+      {(showTimeBand || showDirection || showRoutes) && (
         <div className="flex flex-col gap-3 lg:flex-row lg:flex-wrap lg:items-start lg:justify-between">
           {showTimeBand && (
             <>
@@ -147,31 +165,63 @@ export const BusSpeedMapControls = ({
             </>
           )}
 
-          {direction && setDirection && (
-            <>
-              <div className="hidden lg:block">
-                <ButtonGroup
-                  options={directionOptions}
-                  pressFunction={setDirection}
-                  selectedIndex={selectedDirectionIndex}
-                  line="line-bus"
-                />
-              </div>
-              <label className="flex items-center gap-2 text-sm lg:hidden">
-                <span className="text-stone-600">Direction</span>
-                <select
-                  className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
-                  value={direction}
-                  onChange={(event) => setDirection?.(event.target.value as DirectionFilter)}
-                >
-                  {DIRECTIONS.map((option) => (
-                    <option key={option.key} value={option.key}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </>
+          {/* Route and direction together say which lines are drawn, so they share a side. */}
+          {(showRoutes || showDirection) && (
+            <div className="flex flex-col gap-3 lg:flex-row">
+              {showRoutes && routeId && setRouteId && (
+                <>
+                  <div className="hidden lg:block">
+                    <ButtonGroup
+                      options={routeOptions}
+                      pressFunction={setRouteId}
+                      selectedIndex={selectedRouteIndex}
+                      line="line-bus"
+                    />
+                  </div>
+                  <label className="flex items-center gap-2 text-sm lg:hidden">
+                    <span className="text-stone-600">Route</span>
+                    <select
+                      className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+                      value={routeId}
+                      onChange={(event) => setRouteId(event.target.value)}
+                    >
+                      {routeOptions.map(([key, label]) => (
+                        <option key={key} value={key}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </>
+              )}
+
+              {direction && setDirection && (
+                <>
+                  <div className="hidden lg:block">
+                    <ButtonGroup
+                      options={directionOptions}
+                      pressFunction={setDirection}
+                      selectedIndex={selectedDirectionIndex}
+                      line="line-bus"
+                    />
+                  </div>
+                  <label className="flex items-center gap-2 text-sm lg:hidden">
+                    <span className="text-stone-600">Direction</span>
+                    <select
+                      className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+                      value={direction}
+                      onChange={(event) => setDirection?.(event.target.value as DirectionFilter)}
+                    >
+                      {DIRECTIONS.map((option) => (
+                        <option key={option.key} value={option.key}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </>
+              )}
+            </div>
           )}
         </div>
       )}
