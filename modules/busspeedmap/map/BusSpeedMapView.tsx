@@ -34,6 +34,7 @@ import type {
   StationProperties,
   TimeBand,
 } from '../types';
+import { compareRouteNames, isPooledSegment, sharedRouteKeys } from '../utils';
 import { SegmentPopupContent } from './BusSpeedSegmentPopupContent';
 import { BusStopPopupContent, StationPopupContent } from './BusSpeedStopPopupContent';
 import { ResetViewControl } from './ResetViewControl';
@@ -251,11 +252,12 @@ const HOVER_PRIORITY: [string, Hovered['kind']][] = [
 const INTERACTIVE_LAYER_IDS = HOVER_PRIORITY.map(([layerId]) => layerId);
 
 /**
- * Every route drawn on the hovered segment, in route order. Routes sharing a street are drawn
- * exactly over one another (SL4 and SL5 along Washington St, say), so the topmost feature alone
- * would hide the rest. Matched on the stop pair rather than taking everything under the cursor,
- * which near a stop also catches the next segment along and any cross street; one per route,
- * since a segment crossing a tile boundary comes back once per tile.
+ * Every route on the hovered segment, in route order, after the pooled feature standing in for
+ * them where there is one. Routes sharing a street run exactly over one another (SL4 and SL5
+ * along Washington St, say), so the topmost feature alone would hide the rest. Matched on the
+ * stop pair rather than taking everything under the cursor, which near a stop also catches the
+ * next segment along and any cross street; one per route, since a segment crossing a tile
+ * boundary comes back once per tile.
  */
 const segmentsSharingStops = (
   features: MapGeoJSONFeature[],
@@ -275,10 +277,10 @@ const segmentsSharingStops = (
       (segment, index) =>
         matches.findIndex((other) => other.route_id === segment.route_id) === index
     )
-    .sort((a, b) =>
-      getBusRouteDisplayName(a.route_id).localeCompare(getBusRouteDisplayName(b.route_id), 'en', {
-        numeric: true,
-      })
+    .sort(
+      (a, b) =>
+        Number(isPooledSegment(b)) - Number(isPooledSegment(a)) ||
+        compareRouteNames(getBusRouteDisplayName(a.route_id), getBusRouteDisplayName(b.route_id))
     );
 };
 
@@ -320,16 +322,23 @@ export const BusSpeedMapView = ({
   // missing when its tile is laid out, and wouldn't lay that tile out again just for the image.
   const [arrowImageReady, setArrowImageReady] = useState(false);
   const mapRef = useRef<MapRef>(null);
+  const routeIds = useMemo(
+    () => (routeFilter ? getBusRouteIds(routeFilter) : undefined),
+    [routeFilter]
+  );
+  // Every feature of the selected routes, including the pooled ones standing in for several of
+  // them on a shared stop pair (see routeClauses below). The fly-to needs those: at the lowest
+  // zooms, which it fits a route from, tippecanoe keeps them over the lines they stand in for.
   const routeFilterClause = useMemo<FilterSpecification | undefined>(
     () =>
-      routeFilter
+      routeIds
         ? ([
             'in',
             ['get', 'route_id'],
-            ['literal', getBusRouteIds(routeFilter)],
+            ['literal', [...routeIds, ...sharedRouteKeys(routeIds)]],
           ] as unknown as FilterSpecification)
         : undefined,
-    [routeFilter]
+    [routeIds]
   );
 
   // Bus stops follow the route filter, so a selected route's stops aren't lost among every
@@ -337,17 +346,17 @@ export const BusSpeedMapView = ({
   // inside "111" -- comma-wrapping both sides makes it an exact match.
   const busStopsFilter = useMemo<FilterSpecification | undefined>(
     () =>
-      routeFilter
+      routeIds
         ? ([
             'any',
-            ...getBusRouteIds(routeFilter).map((routeId) => [
+            ...routeIds.map((routeId) => [
               'in',
               `,${routeId},`,
               ['concat', ',', ['get', 'routes'], ','],
             ]),
           ] as unknown as FilterSpecification)
         : undefined,
-    [routeFilter]
+    [routeIds]
   );
 
   // Undefined until the archive loads, and for good if it's missing or fails -- the stops are
@@ -358,7 +367,35 @@ export const BusSpeedMapView = ({
     [stopsArchive]
   );
 
-  const filter = useMemo<FilterSpecification>(() => {
+  // Which routes' lines are drawn, and which can be hovered. Where every route on a shared stop
+  // pair is selected (as they all are with no route picked), the pair's pooled feature is drawn
+  // in place of each route's own line, so its colour is all their trips together rather than
+  // whichever route happens to be on top. The routes it stands in for stay hoverable beneath
+  // it, so the popup can list them. Tiles from before the pipeline pooled anything have no
+  // shared_routes, so they draw every route as they always did.
+  const routeClauses = useMemo<{
+    drawn: FilterSpecification;
+    hoverable?: FilterSpecification;
+  }>(() => {
+    const isPooled = ['==', ['get', 'route_id'], ['get', 'shared_routes']];
+    if (!routeIds) {
+      return {
+        drawn: ['any', ['!', ['has', 'shared_routes']], isPooled] as unknown as FilterSpecification,
+      };
+    }
+    const pooledIds = sharedRouteKeys(routeIds);
+    const isStoodInFor = ['in', ['coalesce', ['get', 'shared_routes'], ''], ['literal', pooledIds]];
+    return {
+      drawn: [
+        'any',
+        ['all', ['in', ['get', 'route_id'], ['literal', routeIds]], ['!', isStoodInFor]],
+        ['in', ['get', 'route_id'], ['literal', pooledIds]],
+      ] as unknown as FilterSpecification,
+      hoverable: routeFilterClause,
+    };
+  }, [routeIds, routeFilterClause]);
+
+  const [filter, hitboxFilter] = useMemo<[FilterSpecification, FilterSpecification]>(() => {
     const clauses: FilterSpecification[] = [
       ['>=', ['get', 'n_traversals'], MIN_TRAVERSALS],
       ['==', ['get', 'time_band'], timeBand],
@@ -366,15 +403,16 @@ export const BusSpeedMapView = ({
     // Daily features carry no `day_type` at all (a single day is already wholly one type),
     // so this clause only applies to weekly/monthly tiles.
     if (period !== 'daily') clauses.push(['==', ['get', 'day_type'], dayType]);
-    if (routeFilterClause) clauses.push(routeFilterClause);
     if (segmentStops) {
       clauses.push(['==', ['get', 'from_stop_name'], segmentStops.from]);
       clauses.push(['==', ['get', 'to_stop_name'], segmentStops.to]);
     }
     // GTFS direction_id: 0 is outbound, 1 is inbound -- matches the hover popup below.
     clauses.push(['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]);
-    return ['all', ...clauses] as unknown as FilterSpecification;
-  }, [timeBand, period, dayType, routeFilterClause, segmentStops, direction]);
+    const withRoutes = (routeClause?: FilterSpecification) =>
+      ['all', ...clauses, ...(routeClause ? [routeClause] : [])] as unknown as FilterSpecification;
+    return [withRoutes(routeClauses.drawn), withRoutes(routeClauses.hoverable)];
+  }, [timeBand, period, dayType, routeClauses, segmentStops, direction]);
 
   // Identifies the exact hovered features (one per route on the segment) so the halo layer
   // below can single them out -- the same route_id/direction_id/from/to tuple used as a
@@ -651,7 +689,7 @@ export const BusSpeedMapView = ({
           id={HITBOX_LAYER_ID}
           type="line"
           source-layer={PMTILES_SOURCE_LAYER}
-          filter={filter}
+          filter={hitboxFilter}
           paint={{ 'line-color': '#000000', 'line-opacity': 0, 'line-width': 14 }}
         />
       </Source>

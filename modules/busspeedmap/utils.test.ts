@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { BusSpeedSegmentLeaderboardEntry } from './types';
-import { segmentDistanceAndTime } from './utils';
+import { isPooledSegment, segmentDistanceAndTime, sharedRouteKeys } from './utils';
 
 const entry = (
   overrides: Partial<BusSpeedSegmentLeaderboardEntry> = {}
@@ -32,5 +32,45 @@ describe('segmentDistanceAndTime', () => {
     expect(segmentDistanceAndTime(entry())).toBeUndefined();
     expect(segmentDistanceAndTime(entry({ segment_length_m: 402 }))).toBeUndefined();
     expect(segmentDistanceAndTime(entry({ p50_total_time_seconds: 112 }))).toBeUndefined();
+  });
+});
+
+describe('sharedRouteKeys', () => {
+  it('is empty for a single route', () => {
+    expect(sharedRouteKeys(['751'])).toEqual([]);
+  });
+
+  it('joins a pair the way the pipeline does', () => {
+    expect(sharedRouteKeys(['751', '749'])).toEqual(['749,751']);
+  });
+
+  it('lists every combination of two or more', () => {
+    expect(sharedRouteKeys(['741', '742', '743', '746']).sort()).toEqual(
+      [
+        '741,742',
+        '741,743',
+        '741,746',
+        '742,743',
+        '742,746',
+        '743,746',
+        '741,742,743',
+        '741,742,746',
+        '741,743,746',
+        '742,743,746',
+        '741,742,743,746',
+      ].sort()
+    );
+  });
+
+  it('sorts ids as strings, not numbers', () => {
+    expect(sharedRouteKeys(['8', '19'])).toEqual(['19,8']);
+  });
+});
+
+describe('isPooledSegment', () => {
+  it('is the feature whose route_id is its shared_routes', () => {
+    expect(isPooledSegment({ route_id: '749,751', shared_routes: '749,751' })).toBe(true);
+    expect(isPooledSegment({ route_id: '749', shared_routes: '749,751' })).toBe(false);
+    expect(isPooledSegment({ route_id: '749' })).toBe(false);
   });
 });

@@ -38,6 +38,13 @@ export type DayType = 'business_day' | 'weekend_or_holiday';
  * `segment_length_m` and `p50_total_time_seconds` (whole metres and seconds) are the two numbers
  * `p50_speed_mph` comes from, same as on a leaderboard entry. Both are missing from tiles
  * published before the pipeline started writing them.
+ *
+ * `shared_routes` is on every feature of a stop pair that two or more drawn routes share: their
+ * route_ids, sorted and comma-joined ("749,751"). One more feature on the pair has that same
+ * string as its route_id: the pooled one, the median of all their trips together (see
+ * mbta-performance's shared_segments.py), drawn in place of each route's own line when every one
+ * of them is selected. Missing everywhere else, and from tiles published before the pipeline
+ * pooled them.
  */
 export interface BusSpeedSegmentProperties {
   route_id: string;
@@ -51,6 +58,7 @@ export interface BusSpeedSegmentProperties {
   n_interpolated: number;
   segment_length_m?: number;
   p50_total_time_seconds?: number;
+  shared_routes?: string;
 }
 
 /**
