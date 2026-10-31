@@ -1256,6 +1256,68 @@
         "operationId": "getRidership"
       }
     },
+    "/api/station_ridership": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StationRidershipResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve weekly ridership at each gated station on a rapid transit line over a date range.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "line_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Rapid transit line identifier: `line-Red`, `line-Orange`, `line-Blue` or `line-Green`."
+          }
+        ],
+        "operationId": "getStationRidership"
+      }
+    },
     "/api/reliability": {
       "get": {
         "responses": {
@@ -2505,6 +2567,43 @@
           "$ref": "#/components/schemas/RidershipEntry"
         },
         "title": "RidershipResponse",
+        "type": "array"
+      },
+      "StationRidershipParams": {
+        "description": "Parameters for the `/api/station_ridership` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    line_id: Rapid transit line identifier.",
+        "properties": {
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "line_id": {
+            "description": "Rapid transit line identifier: `line-Red`, `line-Orange`, `line-Blue` or `line-Green`.",
+            "title": "Line Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "line_id"
+        ],
+        "title": "StationRidershipParams",
+        "type": "object"
+      },
+      "StationRidershipResponse": {
+        "description": "Response for `/api/station_ridership`: weekly ridership by station over the date range.",
+        "items": {
+          "$ref": "#/components/schemas/StationRidershipEntry"
+        },
+        "title": "StationRidershipResponse",
         "type": "array"
       },
       "ReliabilityParams": {
@@ -3933,6 +4032,28 @@
           "count"
         ],
         "title": "RidershipEntry",
+        "type": "object"
+      },
+      "StationRidershipEntry": {
+        "description": "Ridership at each gated station on a line for one week.\n\nFare validations at a transfer station count riders for every line there.\n\nAttributes:\n    date: Week start date (`YYYY-MM-DD`).\n    stations: Average weekday (non-holiday) fare validations, keyed by parent stop ID (e.g. `place-pktrm`).",
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "stations": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Stations",
+            "type": "object"
+          }
+        },
+        "required": [
+          "date",
+          "stations"
+        ],
+        "title": "StationRidershipEntry",
         "type": "object"
       },
       "ReliabilityCounts": {

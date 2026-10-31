@@ -241,6 +241,33 @@ def query_agg_trip_metrics(start_date: str | date, end_date: str | date, table_n
     return ddb_json.loads(response["Items"])
 
 
+def query_station_ridership(start_date: date, end_date: date, line_id: str) -> List[dict]:
+    """Query weekly per-station ridership from the StationRidership DynamoDB table.
+
+    Args:
+      start_date: date: Start of date range (inclusive).
+      end_date: date: End of date range (inclusive).
+      line_id: str: The line ID to query, e.g. ``line-Red``.
+
+    Returns:
+      list[dict]: Deserialized records, one per week, each with a ``stations`` map of stop ID to count.
+    """
+    table = dynamodb.Table("StationRidership")
+    query_kwargs = {
+        "KeyConditionExpression": Key("lineId").eq(line_id)
+        & Key("date").between(start_date.isoformat(), end_date.isoformat()),
+    }
+    items = []
+    while True:
+        response = table.query(**query_kwargs)
+        items.extend(ddb_json.loads(response["Items"]))
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        if not last_evaluated_key:
+            break
+        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
+    return items
+
+
 def query_shutdowns(line: str, start_date: str | date, end_date: str | date) -> List[dict]:
     """Query the Shutdowns table for one line's shutdowns that overlap a date range.
 

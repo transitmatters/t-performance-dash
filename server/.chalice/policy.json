@@ -43,6 +43,7 @@
         "arn:aws:dynamodb:*:*:table/ScheduledServiceDaily",
         "arn:aws:dynamodb:*:*:table/ScheduledServiceRegionalRail",
         "arn:aws:dynamodb:*:*:table/Ridership",
+        "arn:aws:dynamodb:*:*:table/StationRidership",
         "arn:aws:dynamodb:*:*:table/Reliability",
         "arn:aws:dynamodb:*:*:table/SpeedRestrictions",
         "arn:aws:dynamodb:*:*:table/TimePredictions",

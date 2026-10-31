@@ -19,6 +19,7 @@ interface RidershipGraphWrapperProps {
   config: ParamsType;
   startDate: string;
   endDate: string;
+  stationName?: string;
 }
 
 // The average/percentage/peak KPIs now live in the page's stat-card row (see RidershipDetails), so
@@ -30,6 +31,7 @@ export const RidershipGraphWrapper = ({
   config,
   startDate,
   endDate,
+  stationName,
 }: RidershipGraphWrapperProps) => {
   const { tab } = useDelimitatedRoute();
   const { minDate: serviceStart, maxDate: serviceEnd } = getMinMaxDatesForRoute(
@@ -58,6 +60,7 @@ export const RidershipGraphWrapper = ({
         endDate={endDate}
         serviceEnd={serviceEnd}
         serviceDateBlocks={serviceDateBlocks}
+        stationName={stationName}
       />
     </ChartStack>
   );

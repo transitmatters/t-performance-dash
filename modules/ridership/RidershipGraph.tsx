@@ -31,6 +31,8 @@ interface RidershipGraphProps {
   showTitle?: boolean;
   serviceEnd?: string;
   serviceDateBlocks?: AnnotationOptions<keyof AnnotationTypeRegistry>[];
+  /** Charts one station's ridership, which has no historical maximum to compare against */
+  stationName?: string;
 }
 
 export const RidershipGraph = ({
@@ -41,6 +43,7 @@ export const RidershipGraph = ({
   showTitle = false,
   serviceEnd,
   serviceDateBlocks = [],
+  stationName,
 }: RidershipGraphProps) => {
   const {
     line,
@@ -50,7 +53,8 @@ export const RidershipGraph = ({
   const { tooltipFormat, unit, callbacks } = config;
   const isMobile = !useBreakpoint('md');
   const ref = useRef(null);
-  const peak = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
+  const linePeak = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
+  const peak = stationName ? 0 : linePeak;
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
@@ -68,7 +72,7 @@ export const RidershipGraph = ({
               labels,
               datasets: [
                 {
-                  label: `Fare validations`,
+                  label: stationName ? `Fare validations at ${stationName}` : `Fare validations`,
                   borderColor: lineColor,
                   borderWidth: HERO_LINE_WIDTH,
                   backgroundColor: hexWithAlpha(lineColor, 0.8),
@@ -80,12 +84,16 @@ export const RidershipGraph = ({
                   data: data.map((datapoint) => datapoint.count),
                 },
 
-                {
-                  // This null dataset produces the entry in the legend for the peak annotation.
-                  label: `Historical Maximum (${peak.toLocaleString('en-us')} fare validations)`,
-                  backgroundColor: CHART_COLORS.ANNOTATIONS,
-                  data: null,
-                },
+                ...(peak > 0
+                  ? [
+                      {
+                        // This null dataset produces the entry in the legend for the peak annotation.
+                        label: `Historical Maximum (${peak.toLocaleString('en-us')} fare validations)`,
+                        backgroundColor: CHART_COLORS.ANNOTATIONS,
+                        data: null,
+                      },
+                    ]
+                  : []),
               ],
             }}
             options={{
@@ -142,15 +150,19 @@ export const RidershipGraph = ({
                 annotation: {
                   // Add your annotations here
                   annotations: [
-                    {
-                      type: 'line',
-                      yMin: peak,
-                      yMax: peak,
-                      borderColor: CHART_COLORS.ANNOTATIONS,
-                      // corresponds to null dataset index.
-                      display: (ctx) => ctx.chart.isDatasetVisible(1),
-                      borderWidth: 2,
-                    },
+                    ...(peak > 0
+                      ? [
+                          {
+                            type: 'line' as const,
+                            yMin: peak,
+                            yMax: peak,
+                            borderColor: CHART_COLORS.ANNOTATIONS,
+                            // corresponds to null dataset index.
+                            display: (ctx) => ctx.chart.isDatasetVisible(1),
+                            borderWidth: 2,
+                          },
+                        ]
+                      : []),
                     ...getNoDataSinceLatestAnnotation(
                       data.filter((point) => point.count !== null).map((point) => point.date),
                       serviceEnd
@@ -249,6 +261,7 @@ export const RidershipGraph = ({
     );
   }, [
     peak,
+    stationName,
     line,
     data,
     isMobile,

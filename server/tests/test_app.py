@@ -213,6 +213,12 @@ class TestRidershipValidation:
         assert result.status_code == 400
 
 
+class TestStationRidershipValidation:
+    def test_missing_line_id_returns_400(self, client):
+        result = client.http.get("/api/station_ridership?start_date=2024-01-01&end_date=2024-02-01")
+        assert result.status_code == 400
+
+
 class TestReliabilityValidation:
     def test_missing_params_returns_400(self, client):
         result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01")

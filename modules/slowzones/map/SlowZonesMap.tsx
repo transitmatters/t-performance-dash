@@ -13,6 +13,7 @@ import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { TODAY_STRING } from '../../../common/constants/dates';
 import { useThemeStore } from '../../../common/state/themeStore';
+import { abbreviateStationName, getStripMapWatermark } from '../../../common/utils/stripmap';
 import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
@@ -22,21 +23,6 @@ interface SlowZonesMapProps extends Pick<ComponentProps<typeof LineMap>, 'direct
   speedRestrictions: SpeedRestriction[];
   lineName: SlowZonesLineName;
 }
-
-const abbreviateStationName = ({ stationName }: { stationName: string }) => {
-  if (stationName.startsWith('JFK')) {
-    return 'JFK';
-  }
-  return stationName
-    .replace('Downtown Crossing', 'Dwntn Crossing')
-    .replace('Boston University', 'BU')
-    .replace('Hynes Convention Center', 'Hynes')
-    .replace('Government Center', "Gov't Center")
-    .replace('Northeastern University', 'Northeastern')
-    .replace('Museum of Fine Arts', 'MFA')
-    .replace('Massachusetts Avenue', 'Mass Ave')
-    .replace('North Quincy', 'N. Quincy');
-};
 
 const getSegmentLabelOverrides = (
   segmentLocation: SegmentLocation,
@@ -187,18 +173,7 @@ export const SlowZonesMap = ({
       getSegments={getSegmentsForSlowZones}
       getStationLabel={abbreviateStationName}
       tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
-      watermark={{
-        // Vertical maps end at a terminal label in the bottom-right corner
-        position: isHorizontal ? 'bottom-right' : 'bottom-left',
-        opacity: 0.2,
-        content: (
-          <img
-            src={isDark ? '/Logo_wordmark_white.png' : '/Logo_wordmark.png'}
-            alt="TransitMatters"
-            width={isHorizontal ? 160 : 120}
-          />
-        ),
-      }}
+      watermark={getStripMapWatermark(isHorizontal, isDark)}
     />
   );
 };

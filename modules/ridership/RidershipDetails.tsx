@@ -1,5 +1,6 @@
+import { useMemo, useState } from 'react';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { useRidershipData } from '../../common/api/hooks/ridership';
+import { useRidershipData, useStationRidershipData } from '../../common/api/hooks/ridership';
 import { useRidershipBaseline } from '../../common/api/hooks/baselines';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
@@ -11,12 +12,19 @@ import {
 } from '../../common/components/widgets/StatCard';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { getRidershipLineId } from '../../common/utils/ridership';
+import { getStationById } from '../../common/utils/stations';
+import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { Button } from '../../common/components/inputs/Button';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 import { getRidershipStats } from './utils/utils';
+import { StationRidershipMap } from './map';
+import { getStationAverages, getStationSeries, isStationRidershipLine } from './map/utils';
 
 export function RidershipDetails() {
   const {
     line,
+    lineShort,
     query: { startDate, endDate, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
   const config = SPEED_RANGE_PARAM_MAP.week;
@@ -31,6 +39,32 @@ export function RidershipDetails() {
     },
     enabled
   );
+
+  const hasStationMap = isStationRidershipLine(lineShort);
+  const stationRidership = useStationRidershipData(
+    {
+      line_id: lineId,
+      start_date: startDate,
+      end_date: endDate,
+    },
+    enabled && hasStationMap
+  );
+  const stationAverages = useMemo(
+    () => getStationAverages(stationRidership.data ?? []),
+    [stationRidership.data]
+  );
+  const isDesktop = useBreakpoint('lg');
+
+  // Keyed by line so switching lines clears the selection, while changing dates keeps it
+  const [selection, setSelection] = useState<{ lineId?: string; stationId: null | string }>({
+    stationId: null,
+  });
+  const selectedStationId =
+    selection.lineId === lineId && selection.stationId && selection.stationId in stationAverages
+      ? selection.stationId
+      : null;
+  const selectStation = (stationId: null | string) => setSelection({ lineId, stationId });
+  const selectedStationName = selectedStationId && getStationById(selectedStationId)?.stop_name;
 
   const peakRidership = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
   const stats = ridership.data ? getRidershipStats(ridership.data, peakRidership) : null;
@@ -74,9 +108,24 @@ export function RidershipDetails() {
             />
           </StatCardGrid>
         )}
-        <Widget title="Weekday ridership" ready={[ridership, startDate, endDate, lineId]}>
+        <Widget
+          title={
+            selectedStationName ? `Weekday ridership · ${selectedStationName}` : 'Weekday ridership'
+          }
+          action={
+            selectedStationId && (
+              <Button onClick={() => selectStation(null)}>Show line total</Button>
+            )
+          }
+          ready={[ridership, startDate, endDate, lineId]}
+        >
           <RidershipGraphWrapper
-            data={ridership.data!}
+            data={
+              selectedStationId && stationRidership.data
+                ? getStationSeries(stationRidership.data, selectedStationId)
+                : ridership.data!
+            }
+            stationName={selectedStationName || undefined}
             config={config}
             startDate={startDate!}
             endDate={endDate!}
@@ -86,6 +135,26 @@ export function RidershipDetails() {
             ferryRoute={ferryRoute}
           />
         </Widget>
+        {hasStationMap && (
+          <Widget
+            title="Station ridership"
+            subtitle="Average weekday fare validations at each gated station. Select a station to chart it above."
+            ready={[stationRidership, startDate, endDate]}
+          >
+            {Object.keys(stationAverages).length > 0 ? (
+              <StationRidershipMap
+                key={lineShort}
+                lineName={lineShort}
+                averages={stationAverages}
+                direction={isDesktop ? 'horizontal' : 'vertical'}
+                selectedStationId={selectedStationId}
+                onSelectStation={selectStation}
+              />
+            ) : (
+              <NoDataNotice isLineMetric />
+            )}
+          </Widget>
+        )}
       </ChartPageDiv>
     </PageWrapper>
   );

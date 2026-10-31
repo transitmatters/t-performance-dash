@@ -163,6 +163,7 @@ _OPERATION_IDS = {
     ("/api/busspeedleaderboard", "get"): "getBusSpeedLeaderboard",
     ("/api/scheduledservice", "get"): "getScheduledService",
     ("/api/ridership", "get"): "getRidership",
+    ("/api/station_ridership", "get"): "getStationRidership",
     ("/api/reliability", "get"): "getReliability",
     ("/api/crscorecard", "get"): "getCommuterRailScorecard",
     ("/api/weather", "get"): "getWeather",
