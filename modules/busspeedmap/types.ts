@@ -34,6 +34,10 @@ export type DayType = 'business_day' | 'weekend_or_holiday';
  * `day_type` only exists on weekly/monthly features, where it's the true median across every
  * traversal of that (segment, day_type, time_band) in the whole period -- not an average of
  * daily numbers, so it reads as "typical", not "on this one day".
+ *
+ * `segment_length_m` and `p50_total_time_seconds` (whole metres and seconds) are the two numbers
+ * `p50_speed_mph` comes from, same as on a leaderboard entry. Both are missing from tiles
+ * published before the pipeline started writing them.
  */
 export interface BusSpeedSegmentProperties {
   route_id: string;
@@ -45,6 +49,8 @@ export interface BusSpeedSegmentProperties {
   p50_speed_mph: number;
   n_traversals: number;
   n_interpolated: number;
+  segment_length_m?: number;
+  p50_total_time_seconds?: number;
 }
 
 /**

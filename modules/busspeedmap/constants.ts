@@ -134,3 +134,17 @@ export const BOSTON_CENTER: { longitude: number; latitude: number; zoom: number 
  * desktop. This box is 2.2 degrees wide.
  */
 export const MAP_MAX_BOUNDS: [number, number, number, number] = [-72.2, 41.5, -70.0, 43.0];
+
+/**
+ * The whole bus network, [west, south, east, north]: the extent of every segment in a real
+ * month's tiles (2026-09), rounded out a little. The map zooms out no further than fits this in
+ * view, whatever its size (see limitZoomOut in BusSpeedMapView). MAP_MAX_BOUNDS alone stops at
+ * whatever zoom fits that much larger box to the viewport, which on a phone is most of New England.
+ */
+export const NETWORK_BOUNDS: [number, number, number, number] = [-71.3, 42.1, -70.84, 42.59];
+
+/**
+ * Selects every route behind a composite like SL4/SL5 at once, in the control that narrows the
+ * map to one of them. Never a real route_id.
+ */
+export const ALL_ROUTES = 'all';

@@ -10,6 +10,7 @@ import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
+import { getBusRouteIds } from '../../common/constants/lines';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -17,6 +18,7 @@ import { BusSpeedMapControls } from './controls/BusSpeedMapControls';
 import { BusSpeedLegend } from './map/BusSpeedLegend';
 import { BusSpeedMapViewLazy as BusSpeedMapView } from './map/BusSpeedMapViewLazy';
 import {
+  ALL_ROUTES,
   DAY_TYPES,
   DEFAULT_DAY_TYPE,
   DEFAULT_DIRECTION,
@@ -36,6 +38,16 @@ export function BusSpeedMapDetails() {
   const [dayType, setDayType] = useState<DayType>(DEFAULT_DAY_TYPE);
   const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
   const [direction, setDirection] = useState<DirectionFilter>(DEFAULT_DIRECTION);
+
+  // One route_id out of a composite like SL4/SL5, or ALL_ROUTES. Back to all of them whenever
+  // the sidebar picks another route, rather than carrying a member over that isn't in it.
+  const [routeId, setRouteId] = useState<string>(ALL_ROUTES);
+  const [prevBusRoute, setPrevBusRoute] = useState(busRoute);
+  if (busRoute !== prevBusRoute) {
+    setPrevBusRoute(busRoute);
+    setRouteId(ALL_ROUTES);
+  }
+  const routeIds = busRoute ? getBusRouteIds(busRoute) : [];
 
   const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, Boolean(date));
   const { data: pmtilesUrl } = segments;
@@ -69,8 +81,9 @@ export function BusSpeedMapDetails() {
             dayType={dayType}
             timeBand={timeBand}
             direction={direction}
-            // Driven by the sidebar route picker / URL rather than an in-page control.
-            routeFilter={busRoute}
+            // Driven by the sidebar route picker / URL, narrowed by the in-page route control
+            // for a composite.
+            routeFilter={routeId === ALL_ROUTES ? busRoute : routeId}
           />
         </ErrorBoundary>
       </div>
@@ -93,6 +106,9 @@ export function BusSpeedMapDetails() {
               setTimeBand={setTimeBand}
               direction={direction}
               setDirection={setDirection}
+              routeIds={routeIds}
+              routeId={routeId}
+              setRouteId={setRouteId}
             />
             {isPeriodInProgress(date, period) && (
               <p className="text-xs text-stone-500">

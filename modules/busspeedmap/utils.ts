@@ -85,11 +85,11 @@ const METERS_PER_MILE = 1609.344;
 
 /**
  * "0.25 mi · 1m 52s" -- the segment's length and median travel time, the two numbers its
- * p50_speed_mph is computed from. Undefined for leaderboard files published before the
- * pipeline started writing them.
+ * p50_speed_mph is computed from. Shared by leaderboard rows and map features; undefined for
+ * files published before the pipeline started writing them.
  */
 export const segmentDistanceAndTime = (
-  entry: BusSpeedSegmentLeaderboardEntry
+  entry: Pick<BusSpeedSegmentLeaderboardEntry, 'segment_length_m' | 'p50_total_time_seconds'>
 ): string | undefined => {
   if (entry.segment_length_m == null || entry.p50_total_time_seconds == null) return undefined;
   const miles = (entry.segment_length_m / METERS_PER_MILE).toFixed(2);
