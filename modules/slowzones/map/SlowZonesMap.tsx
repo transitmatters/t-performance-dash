@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import type { SegmentLocation, SegmentLabel, TooltipSide } from '@transitmatters/stripmap';
+import type { SegmentLocation, TooltipSide } from '@transitmatters/stripmap';
 import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
 
 import '@transitmatters/stripmap/dist/style.css';
@@ -11,7 +11,7 @@ import type { SlowZonesLineName } from '../types';
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { TODAY_STRING } from '../../../common/constants/dates';
-import { segmentSlowZones } from './segment';
+import { getSegmentLabelOverrides, segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
 
@@ -34,27 +34,6 @@ const abbreviateStationName = ({ stationName }: { stationName: string }) => {
     .replace('Museum of Fine Arts', 'MFA')
     .replace('Massachusetts Avenue', 'Mass Ave')
     .replace('North Quincy', 'N. Quincy');
-};
-
-const getSegmentLabelOverrides = (
-  segmentLocation: SegmentLocation,
-  isHorizontal: boolean
-): null | Partial<SegmentLabel> => {
-  const { toStationId } = segmentLocation;
-  // JFK to Savin Hill — on a steep curve
-  if (toStationId === 'place-shmnl') {
-    return {
-      mapSide: '1' as const,
-      offset: isHorizontal ? { x: -12, y: -5 } : { x: 0, y: 0 },
-    };
-  }
-  // Shawmut to Ashmont — obscured by "North Quincy" label
-  if (!isHorizontal && toStationId === 'place-asmnl') {
-    return {
-      mapSide: '1' as const,
-    };
-  }
-  return null;
 };
 
 export const SlowZonesMap: React.FC<SlowZonesMapProps> = ({

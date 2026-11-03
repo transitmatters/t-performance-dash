@@ -6,13 +6,14 @@ import type { LineMetadata } from '../../../common/types/lines';
 import { getClockFormattedTimeString } from '../../../common/utils/time';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { TODAY_STRING } from '../../../common/constants/dates';
-import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
-import { DIRECTIONS } from './segment';
+import type { ByDirection, SegmentDirection } from '../../../common/types/map';
+import { DIRECTIONS } from '../../../common/utils/mapSegments';
+import type { SlowZonesSegment } from './segment';
 
 import styles from './SlowSegmentLabel.module.css';
 
 interface SlowZoneLabelProps {
-  direction: SlowZoneDirection;
+  direction: SegmentDirection;
   slowZone: SlowZoneResponse;
   color: string;
   offset: number;
@@ -129,7 +130,7 @@ export const SlowSegmentLabel: React.FC<SlowSegmentLabelProps> = (props) => {
         return (
           <SlowZoneLabel
             key={direction}
-            direction={direction as SlowZoneDirection}
+            direction={direction as SegmentDirection}
             slowZone={zone}
             color={line.color}
             isHorizontal={isHorizontal}
