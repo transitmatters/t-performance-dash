@@ -5,7 +5,7 @@ import {
 } from '../../common/components/widgets/StatCard';
 import type { LineDelays } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
-import { getFormattedTimeString } from '../../common/utils/time';
+import { formatDelay } from './format';
 import { getDelayStats } from './utils';
 
 interface DelayStatsProps {
@@ -21,7 +21,7 @@ const deltaFor = (delta: number) => {
   const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
   const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
 
-  return { label: `${sign}${getFormattedTimeString(delta, 'minutes')} · ${word}`, sentiment };
+  return { label: `${sign}${formatDelay(delta)} · ${word}`, sentiment };
 };
 
 export const DelayStats = ({ data, agg, line }: DelayStatsProps) => {
@@ -30,13 +30,10 @@ export const DelayStats = ({ data, agg, line }: DelayStatsProps) => {
 
   return (
     <StatCardGrid>
-      <StatCard
-        label="Total time delayed"
-        value={getFormattedTimeString(stats.totalDelay, 'minutes')}
-      />
+      <StatCard label="Total time delayed" value={formatDelay(stats.totalDelay)} />
       <StatCard
         label={`Avg per ${agg === 'weekly' ? 'week' : 'day'}`}
-        value={getFormattedTimeString(stats.avgDelay, 'minutes')}
+        value={formatDelay(stats.avgDelay)}
         delta={deltaFor(stats.avgDelayDelta)}
       />
       {stats.topReasonLabel && stats.topReasonShare != null && (

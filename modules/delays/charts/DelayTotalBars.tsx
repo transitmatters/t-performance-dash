@@ -15,14 +15,14 @@ import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
-import type { LineDelays } from '../../../common/types/delays';
-import { getFormattedTimeString } from '../../../common/utils/time';
+import type { DelayRow } from '../reasonSeries';
+import { delayAxisTicks, formatDelay } from '../format';
 import type { DelayReasonKey } from '../constants/reasons';
 import { REASON_BY_KEY, reasonLabel } from '../constants/reasons';
 import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
 
 interface DelayTotalBarsProps {
-  data: LineDelays[];
+  data: DelayRow[];
   startDate: string;
   endDate: string;
   agg: 'daily' | 'weekly';
@@ -82,12 +82,43 @@ export const DelayTotalBars = ({ data, startDate, endDate, agg, focus }: DelayTo
                 callbacks: {
                   title: (context) =>
                     agg === 'weekly' ? `Week of ${context[0]?.label ?? ''}` : context[0]?.label,
-                  label: (item) =>
-                    `${item.dataset.label}: ${getFormattedTimeString(item.parsed.y ?? 0, 'minutes')}`,
-                  footer: (items) => {
-                    if (!reason || !items.length) return '';
-                    const total = totals[items[0].dataIndex];
-                    return `Total: ${getFormattedTimeString(total, 'minutes')}`;
+                  hoverCard: (items) => {
+                    const point = data[items[0]?.dataIndex];
+                    if (!point) return null;
+                    const total = point.total_delay_time;
+                    // Commuter Rail rows have only the announced delay, so there's nothing to compare
+                    const isActual = point.delay_alert_minutes != null;
+                    const rows: {
+                      label: string;
+                      value: string;
+                      detail?: string;
+                      color?: string;
+                    }[] = [];
+                    if (reason) {
+                      const minutes = point[reason.key];
+                      rows.push({
+                        label: reasonLabel(reason, line),
+                        value: formatDelay(minutes),
+                        detail: total
+                          ? `${Math.round((minutes / total) * 100)}% of the ${period}`
+                          : undefined,
+                        color: reason.color,
+                      });
+                    }
+                    if (isActual) {
+                      rows.push({
+                        label: "MBTA's estimate",
+                        value: formatDelay(point.stated_delay_time),
+                      });
+                    }
+                    return {
+                      hero: {
+                        value: formatDelay(total),
+                        caption: isActual ? 'Alerts were up' : 'Time delayed',
+                        color: lineColor,
+                      },
+                      rows,
+                    };
                   },
                 },
               },
@@ -98,10 +129,10 @@ export const DelayTotalBars = ({ data, startDate, endDate, agg, focus }: DelayTo
                 min: 0,
                 border: { display: false },
                 grid: { color: chartTheme.grid },
-                ticks: { color: chartTheme.tick },
+                ticks: { color: chartTheme.tick, ...delayAxisTicks(Math.max(0, ...totals)) },
                 title: {
                   display: true,
-                  text: 'Time delayed (minutes)',
+                  text: 'Time delayed',
                   color: chartTheme.tick,
                 },
               },

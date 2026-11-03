@@ -18,7 +18,7 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import type { LineDelays } from '../../../common/types/delays';
-import { getFormattedTimeString } from '../../../common/utils/time';
+import { delayAxisTicks, formatDelay } from '../format';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 import type { ReasonSeries } from '../reasonSeries';
@@ -171,7 +171,7 @@ export const DelayBreakdownGraph = ({
                   label: (tooltipItem) => {
                     const { y } = tooltipItem.parsed;
                     const minutes = series[tooltipItem.datasetIndex].values[tooltipItem.dataIndex];
-                    const time = getFormattedTimeString(minutes, 'minutes');
+                    const time = formatDelay(minutes);
                     return isShare
                       ? `${tooltipItem.dataset.label}: ${round(y ?? 0, 1)}% (${time})`
                       : `${tooltipItem.dataset.label}: ${time}`;
@@ -209,11 +209,13 @@ export const DelayBreakdownGraph = ({
                 grid: { color: chartTheme.grid },
                 ticks: {
                   color: chartTheme.tick,
-                  callback: isShare ? (value: string | number) => `${value}%` : undefined,
+                  ...(isShare
+                    ? { callback: (value: string | number) => `${value}%` }
+                    : delayAxisTicks(Math.max(0, ...totals))),
                 },
                 title: {
                   display: true,
-                  text: isShare ? 'Share of all delay time' : 'Time delayed (minutes)',
+                  text: isShare ? 'Share of all delay time' : 'Time delayed',
                   color: chartTheme.tick,
                 },
               },

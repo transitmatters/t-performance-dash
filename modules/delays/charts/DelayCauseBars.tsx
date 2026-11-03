@@ -9,13 +9,13 @@ import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
-import type { LineDelays } from '../../../common/types/delays';
-import { getFormattedTimeString } from '../../../common/utils/time';
+import { formatDelay } from '../format';
 import type { DelayReasonKey } from '../constants/reasons';
+import type { DelayRow } from '../reasonSeries';
 import { causeRows } from '../reasonSeries';
 
 interface DelayCauseBarsProps {
-  data: LineDelays[];
+  data: DelayRow[];
   startDate: string;
   endDate: string;
   focus: DelayReasonKey | null;
@@ -46,7 +46,30 @@ export const DelayCauseBars = ({
   }
 
   const valueLabel = (index: number) =>
-    `${getFormattedTimeString(rows[index].total, 'minutes')} · ${Math.round(rows[index].share * 100)}%`;
+    `${formatDelay(rows[index].total)} · ${Math.round(rows[index].share * 100)}%`;
+
+  // Commuter Rail rows only have the announced delay, so there's nothing to compare
+  const isActual = data.some((point) => point.delay_alert_minutes != null);
+
+  const hoverCard = (index: number) => {
+    const { key, label, color, total, share } = rows[index];
+    const announced = data.reduce((sum, point) => sum + point.stated_by_cause[key], 0);
+    return {
+      title: label,
+      hero: {
+        value: formatDelay(total),
+        caption: isActual ? 'Alerts were up' : 'Time delayed',
+        color,
+      },
+      rows: [
+        ...(isActual ? [{ label: "MBTA's estimate", value: formatDelay(announced) }] : []),
+        { label: 'Share of all delay time', value: `${Math.round(share * 100)}%` },
+      ],
+      notes: [
+        key === focus ? 'Click to clear the highlight' : 'Click to highlight it in the chart above',
+      ],
+    };
+  };
 
   const pick = (index: number) => {
     const { key } = rows[index];
@@ -92,7 +115,11 @@ export const DelayCauseBars = ({
             watermark: watermarkLayout(isMobile),
             plugins: {
               legend: { display: false },
-              tooltip: { enabled: false },
+              tooltip: {
+                callbacks: {
+                  hoverCard: (items) => (items.length ? hoverCard(items[0].dataIndex) : null),
+                },
+              },
               datalabels: {
                 display: true,
                 anchor: 'end',

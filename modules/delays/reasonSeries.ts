@@ -72,28 +72,45 @@ export const causeRows = (data: LineDelays[], line?: Line): CauseRow[] => {
   }));
 };
 
+/** A day or week as the page plots it, with the delay its alerts announced kept for comparison. */
+export type DelayRow = LineDelays & {
+  stated_delay_time: number;
+  stated_by_cause: Record<DelayReasonKey, number>;
+};
+
+const statedByCause = (row: LineDelays) =>
+  Object.fromEntries(DELAY_REASONS.map(({ key }) => [key, row[key]])) as Record<
+    DelayReasonKey,
+    number
+  >;
+
 /**
  * Use the actual delay (how long delay alerts were up) wherever the API has it: subway lines and bus
- * routes with alert history. Commuter Rail alerts state how far behind schedule a train is, which already is its
- * delay, so those rows are returned as they are. Rows missing the actual delay (e.g. today, before
- * alert history is in) are dropped rather than mixing in the stated number.
+ * routes with alert history. Commuter Rail alerts state how far behind schedule a train is, which
+ * already is its delay, so those rows keep the stated delay. Rows missing the actual delay (e.g.
+ * today, before alert history is in) are dropped rather than mixing in the stated number.
  */
 export const toActualDelays = (data: LineDelays[]) => {
   const isActual = data.some((row) => row.delay_alert_minutes != null);
-  if (!isActual) return { rows: data, isActual };
-  const rows: LineDelays[] = data.flatMap((row) =>
-    row.delay_alert_minutes == null
-      ? []
-      : [
-          {
-            ...row,
-            total_delay_time: row.delay_alert_minutes,
-            ...Object.fromEntries(
-              DELAY_REASONS.map(({ key }) => [key, row[`delay_alert_minutes_${key}`] ?? 0])
-            ),
-          },
-        ]
-  );
+  const rows: DelayRow[] = data.flatMap((row) => {
+    if (!isActual) {
+      return [
+        { ...row, stated_delay_time: row.total_delay_time, stated_by_cause: statedByCause(row) },
+      ];
+    }
+    if (row.delay_alert_minutes == null) return [];
+    return [
+      {
+        ...row,
+        total_delay_time: row.delay_alert_minutes,
+        stated_delay_time: row.total_delay_time,
+        stated_by_cause: statedByCause(row),
+        ...Object.fromEntries(
+          DELAY_REASONS.map(({ key }) => [key, row[`delay_alert_minutes_${key}`] ?? 0])
+        ),
+      },
+    ];
+  });
   return { rows, isActual };
 };
 
@@ -102,5 +119,5 @@ export const toActualDelays = (data: LineDelays[]) => {
  * to the range through their axes, but totals and rankings sum every row they're given; if the API
  * returns extra periods (the static dev backend ignores dates entirely), they'd disagree.
  */
-export const withinRange = (data: LineDelays[], start: string, end: string): LineDelays[] =>
+export const withinRange = <T extends LineDelays>(data: T[], start: string, end: string): T[] =>
   data.filter((point) => point.date >= start && point.date <= end);

@@ -173,7 +173,8 @@ export function DelaysDetails() {
               only counted once in the total, and an alert is counted for at most 3 hours, since
               longer ones were almost always left up by mistake. Alerts usually stay up longer than
               the delay they state, because they cover the time it takes service to recover: a "15
-              minute" subway alert is typically up for about 35 minutes.
+              minute" subway alert is typically up for about 35 minutes. Hover over a bar to compare
+              the two: "MBTA's estimate" is the delay the alerts stated.
             </p>
             <p className="mt-2">
               Commuter Rail alerts are about individual trains and stay up until that train finishes

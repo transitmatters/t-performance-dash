@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { DELAY_CAUSES, type LineDelays } from '../../common/types/delays';
 import { REASON_BY_KEY, reasonLabel } from './constants/reasons';
+import { delayAxisTicks, formatDelay } from './format';
 import {
   buildSeries,
   causeRows,
@@ -33,7 +34,13 @@ describe('toActualDelays', () => {
       }),
     ]);
     expect(isActual).toBe(true);
-    expect(rows[0]).toMatchObject({ total_delay_time: 60, signal_problem: 60, other: 0 });
+    expect(rows[0]).toMatchObject({
+      total_delay_time: 60,
+      stated_delay_time: 25,
+      signal_problem: 60,
+      other: 0,
+    });
+    expect(rows[0].stated_by_cause.signal_problem).toBe(25);
   });
 
   it('drops rows without the actual delay yet rather than mixing in the stated one', () => {
@@ -45,10 +52,15 @@ describe('toActualDelays', () => {
   });
 
   it('keeps the stated delay when the line has no actual delay (Commuter Rail)', () => {
-    const data = [row({ line: 'line-commuter-rail', total_delay_time: 25, signal_problem: 25 })];
-    const { rows, isActual } = toActualDelays(data);
+    const { rows, isActual } = toActualDelays([
+      row({ line: 'line-commuter-rail', total_delay_time: 25, signal_problem: 25 }),
+    ]);
     expect(isActual).toBe(false);
-    expect(rows).toBe(data);
+    expect(rows[0]).toMatchObject({
+      total_delay_time: 25,
+      stated_delay_time: 25,
+      signal_problem: 25,
+    });
   });
 });
 
@@ -95,6 +107,22 @@ describe('period totals', () => {
     expect(medianPeriodTotal([0, 10, 30, 20, 0])).toBe(20);
     expect(medianPeriodTotal([0, 0])).toBe(0);
     expect(minShareMinutes([0, 10, 30, 20])).toBe(1);
+  });
+});
+
+describe('formatDelay', () => {
+  it('shows hours and minutes, never seconds', () => {
+    expect(formatDelay(38)).toBe('38m');
+    expect(formatDelay(52.25)).toBe('52m');
+    expect(formatDelay(120)).toBe('2h');
+    expect(formatDelay(34946)).toBe('582h 26m');
+    expect(formatDelay(-249)).toBe('4h 09m');
+  });
+
+  it('puts axis ticks on round times', () => {
+    expect(delayAxisTicks(1440).stepSize).toBe(360);
+    expect(delayAxisTicks(250).stepSize).toBe(60);
+    expect(delayAxisTicks(40).stepSize).toBe(15);
   });
 });
 
