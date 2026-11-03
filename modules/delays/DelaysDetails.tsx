@@ -1,29 +1,31 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useAlertDelays } from '../../common/api/hooks/delays';
 import { Widget } from '../../common/components/widgets';
-import {
-  StatCard,
-  StatCardGrid,
-  type StatSentiment,
-} from '../../common/components/widgets/StatCard';
 import { BranchSelector } from '../../common/components/inputs/BranchSelector';
 import { lineToDefaultRouteId } from '../predictions/utils/utils';
 import { getBusRouteIds } from '../../common/constants/lines';
 import type { LineRouteId } from '../../common/types/lines';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Link } from '../../common/components/general/Link';
-import { getFormattedTimeString } from '../../common/utils/time';
-import { getDelayStats } from './utils';
-import { DelayByCategoryGraph } from './charts/DelayByCategoryGraph';
+import { useChartToggle } from '../../common/hooks/useChartToggle';
+import { getWeekStart } from '../../common/utils/date';
+import { DelayStats } from './DelayStats';
+import { useFocusedReason } from './useFocusedReason';
+import { buildSeries, toActualDelays, withinRange } from './reasonSeries';
 import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
-import { TotalDelayGraph } from './charts/TotalDelayGraph';
-import { toDisplayedDelays } from './charts/utils';
+import { DelayTotalBars } from './charts/DelayTotalBars';
+import { DelayCauseBars } from './charts/DelayCauseBars';
+
+const STACK_MODE_OPTIONS: ['minutes' | 'share', string][] = [
+  ['minutes', 'Minutes'],
+  ['share', 'Share'],
+];
 
 export function DelaysDetails() {
   const {
@@ -39,21 +41,13 @@ export function DelaysDetails() {
       : line === 'line-commuter-rail' && crRoute
         ? crRoute
         : lineToDefaultRouteId(line);
-  const greenBranchToggle = useMemo(() => {
-    return (
-      line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setGreenRouteId} />
-    );
-  }, [line, routeId]);
+  const greenBranchToggle = line === 'line-green' && (
+    <BranchSelector routeId={routeId} setRouteId={setGreenRouteId} />
+  );
 
-  // Determine whether to use daily or weekly data based on date range
-  const agg = useMemo(() => {
-    if (!startDate || !endDate) return 'weekly';
-    const start = dayjs(startDate);
-    const end = dayjs(endDate);
-    const daysDiff = end.diff(start, 'day');
-    // Use daily data for 90 days or less, weekly for longer ranges
-    return daysDiff <= 90 ? 'daily' : 'weekly';
-  }, [startDate, endDate]);
+  // Use daily data for 90 days or less, weekly for longer ranges
+  const agg =
+    startDate && endDate && dayjs(endDate).diff(dayjs(startDate), 'day') <= 90 ? 'daily' : 'weekly';
 
   // Bus delays are stored per GTFS route id; grouped labels (e.g. 114/116/117) are summed
   // server-side, and "Bus" is every route together.
@@ -70,81 +64,92 @@ export function DelaysDetails() {
     },
     enabled
   );
-  // The actual delay (time alerts were active) where the line has it, else the stated delay
-  const { delays, isActual } = useMemo(
-    () => toDisplayedDelays(alertDelays.data ?? []),
-    [alertDelays.data]
+  const { focus, setFocus } = useFocusedReason();
+  const { value: stackMode, control: stackModeControl } = useChartToggle(
+    'minutes',
+    STACK_MODE_OPTIONS,
+    { variant: 'toggle', paramKey: 'dlView' }
   );
+
+  const actual = alertDelays.data && toActualDelays(alertDelays.data);
+  const isActual = actual?.isActual ?? false;
+  const delayData =
+    actual && startDate && endDate
+      ? withinRange(actual.rows, agg === 'weekly' ? getWeekStart(startDate) : startDate, endDate)
+      : undefined;
+  const series = delayData ? buildSeries(delayData, line) : [];
+
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
 
-  const stats = alertDelays.data ? getDelayStats(delays, agg, line) : null;
-
-  const deltaFor = (delta: number) => {
-    if (!Number.isFinite(delta)) return undefined;
-    const sentiment: StatSentiment = Math.abs(delta) <= 1 ? 'flat' : delta < 0 ? 'good' : 'bad';
-    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
-    const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
-    return { label: `${sign}${getFormattedTimeString(delta, 'minutes')} · ${word}`, sentiment };
-  };
+  const period = agg === 'weekly' ? 'week' : 'day';
 
   return (
     <PageWrapper pageTitle={'Delays'}>
       <ChartPageDiv>
-        {stats && Number.isFinite(stats.avgDelay) && (
-          <StatCardGrid>
-            <StatCard
-              label="Total time delayed"
-              value={getFormattedTimeString(stats.totalDelay, 'minutes')}
-            />
-            <StatCard
-              label={`Avg per ${stats.agg === 'weekly' ? 'week' : 'day'}`}
-              value={getFormattedTimeString(stats.avgDelay, 'minutes')}
-              delta={deltaFor(stats.avgDelayDelta)}
-            />
-            {stats.topReasonLabel && stats.topReasonShare != null && (
-              <StatCard
-                label={stats.topReasonLabel}
-                value={`${Math.round(stats.topReasonShare * 100)}%`}
-                unit="of delay time"
-              />
-            )}
-          </StatCardGrid>
-        )}
+        {delayData && <DelayStats data={delayData} agg={agg} line={line} />}
         <Widget
-          title="Total time delayed"
+          title="How much delay"
           subtitle={
             isActual
-              ? `Per ${agg === 'weekly' ? 'week' : 'day'}: how long delay alerts were up, vs. the delay they stated`
-              : `Per ${agg === 'weekly' ? 'week' : 'day'}, from rider alerts`
+              ? `Minutes a delay alert was up, per ${period}`
+              : `Minutes delayed per ${period}, from rider alerts`
           }
           ready={[alertDelays]}
           action={greenBranchToggle}
         >
-          <TotalDelayGraph
-            data={delays}
-            isActual={isActual}
+          <DelayTotalBars
+            data={delayData ?? []}
             startDate={startDate}
             endDate={endDate}
             agg={agg}
+            focus={focus}
           />
         </Widget>
         <Widget
-          title="Delay time by reason"
-          subtitle="Over time"
+          title="What caused it"
+          subtitle="Total for these dates. Click a cause to see it in the chart above."
           ready={[alertDelays]}
-          action={greenBranchToggle}
+          action={
+            focus && (
+              <button
+                type="button"
+                onClick={() => setFocus(null)}
+                className="rounded-sm text-sm text-stone-600 underline-offset-4 hover:text-stone-900 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-500 dark:text-stone-400 dark:hover:text-stone-100"
+              >
+                Clear highlight
+              </button>
+            )
+          }
         >
-          <DelayBreakdownGraph data={delays} startDate={startDate} endDate={endDate} agg={agg} />
+          <DelayCauseBars
+            data={delayData ?? []}
+            startDate={startDate}
+            endDate={endDate}
+            focus={focus}
+            onFocus={setFocus}
+          />
         </Widget>
         <Widget
-          title="Delay time by reason"
-          subtitle="Total for the period"
+          title="How the causes changed"
+          subtitle={
+            stackMode === 'share'
+              ? `Detail: each ${period} as a share of all delay time. Periods with very little delay are left blank.`
+              : `Detail: each cause over time, in minutes per ${period}`
+          }
           ready={[alertDelays]}
-          action={greenBranchToggle}
+          action={stackModeControl}
         >
-          <DelayByCategoryGraph data={delays} />
+          <DelayBreakdownGraph
+            data={delayData ?? []}
+            series={series}
+            mode={stackMode}
+            startDate={startDate}
+            endDate={endDate}
+            summary="Delay time by cause over the selected dates"
+            agg={agg}
+          />
         </Widget>
         <DataNotes>
           <p>
@@ -160,6 +165,38 @@ export function DelaysDetails() {
               up the alerts for each route in it, so an alert covering two of them counts twice.
             </p>
           )}
+          <div>
+            <h4 className="font-semibold">How we measure delay time</h4>
+            <p>
+              On subway lines and bus routes, delay time is how long the delay alerts were actually
+              up, from when the MBTA posted each one until it was taken down. Overlapping alerts are
+              only counted once in the total, and an alert is counted for at most 3 hours, since
+              longer ones were almost always left up by mistake. Alerts usually stay up longer than
+              the delay they state, because they cover the time it takes service to recover: a "15
+              minute" subway alert is typically up for about 35 minutes. Hover over a bar to compare
+              the two: "MBTA's estimate" is the delay the alerts stated.
+            </p>
+            <p className="mt-2">
+              Commuter Rail alerts are about individual trains and stay up until that train finishes
+              its trip, so for Commuter Rail we use the stated delay, which is how far behind
+              schedule the train ran.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-semibold">Where this data comes from</h4>
+            <p>
+              Alerts come from the MBTA's{' '}
+              <Link
+                href="https://performancedata.mbta.com/"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                LAMP
+              </Link>{' '}
+              archive, which keeps every version of every alert since September 2019. The most
+              recent day uses alerts we collect live, and is filled in from LAMP the next morning.
+            </p>
+          </div>
           <div>
             <h4 className="font-semibold">Example alerts</h4>
             <blockquote className="my-2 border-s-4 border-gray-300 bg-gray-50 p-4 dark:border-gray-500 dark:bg-gray-800">
@@ -204,41 +241,6 @@ export function DelaysDetails() {
               </span>{' '}
               between riverside and kenmore.
             </blockquote>
-          </div>
-          <div>
-            <h4 className="font-semibold">How we measure delay time</h4>
-            <p>
-              On subway lines and bus routes, delay time is how long the delay alerts were actually
-              up, from when the MBTA posted each one until it was taken down. Overlapping alerts are
-              only counted once, and an alert is counted for at most 3 hours, since longer ones were
-              almost always left up by mistake.
-            </p>
-            <p className="mt-2">
-              The top chart compares this with the delay the alerts stated. Alerts usually stay up
-              longer than the delay they state, because they cover the time it takes service to
-              recover: a "15 minute" subway alert is typically up for about 35 minutes. When an
-              alert is updated, its final stated delay is counted once.
-            </p>
-            <p className="mt-2">
-              Commuter Rail alerts are about individual trains and stay up until that train finishes
-              its trip, so for Commuter Rail we use the stated delay, which is how far behind
-              schedule the train ran.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-semibold">Where this data comes from</h4>
-            <p>
-              Alerts come from the MBTA&apos;s{' '}
-              <Link
-                href="https://performancedata.mbta.com/"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                LAMP
-              </Link>{' '}
-              archive, which keeps every version of every alert since September 2019. The most
-              recent day uses alerts we collect live, and is filled in from LAMP the next morning.
-            </p>
           </div>
         </DataNotes>
       </ChartPageDiv>

@@ -70,6 +70,12 @@ const fleetSearch = (search: RawSearch) => ({
   fleetScope: str(search.fleetScope),
 });
 
+const delaysSearch = (search: RawSearch) => ({
+  dlView: str(search.dlView),
+  /** The single cause highlighted in the total chart. */
+  focus: str(search.focus),
+});
+
 const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[];
 
 const overviewSearch = (search: RawSearch) => ({
@@ -109,6 +115,11 @@ export const validateFleetSearch = (search: RawSearch) => ({
   ...fleetSearch(search),
 });
 
+export const validateDelaysSearch = (search: RawSearch) => ({
+  ...validateLineSearch(search),
+  ...delaysSearch(search),
+});
+
 export const validateSystemSearch = dateSearch;
 
 export const validateEmbedSearch = (search: RawSearch) => ({
@@ -135,6 +146,7 @@ export const validateAnySearch = (search: RawSearch) => ({
   ...speedSearch(search),
   ...serviceSearch(search),
   ...fleetSearch(search),
+  ...delaysSearch(search),
   ...validateEmbedSearch(search),
 });
 

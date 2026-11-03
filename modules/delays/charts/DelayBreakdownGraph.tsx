@@ -1,235 +1,145 @@
-import { useRef } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { Line } from '@chartjs-components';
+import type { Chart as ChartJS } from 'chart.js';
+import { round } from '@lodash-utils';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
-import { max, min } from 'date-fns';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
-import classNames from 'classnames';
 import { useDelimitatedRoute } from '../../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
+import { useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
-import type { DisplayedDelays } from '../../../common/types/delays';
-import { getFormattedTimeString } from '../../../common/utils/time';
-import { hexWithAlpha } from '../../../common/utils/general';
+import { ChartDiv } from '../../../common/components/charts/ChartDiv';
+import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
+import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
+import type { LineDelays } from '../../../common/types/delays';
+import { delayAxisTicks, formatDelay } from '../format';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
+import type { ReasonSeries } from '../reasonSeries';
+import { minShareMinutes, periodTotals } from '../reasonSeries';
 import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
-import { disabledVehicleLabel, filterOutZeroValueDatasets } from './utils';
 
 interface DelayBreakdownGraphProps {
-  data: DisplayedDelays[];
+  data: LineDelays[];
+  series: ReasonSeries[];
+  /** Minutes stacks absolute delay time; share normalises each period to 100% of all delay. */
+  mode: 'minutes' | 'share';
   startDate: string;
   endDate: string;
+  /** Text alternative for the canvas. */
+  summary?: string;
   showTitle?: boolean;
   agg?: 'daily' | 'weekly';
 }
 
 export const DelayBreakdownGraph = ({
   data,
+  series,
+  mode,
   startDate,
   endDate,
+  summary,
   showTitle = false,
   agg = 'weekly',
 }: DelayBreakdownGraphProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { linePath } = useDelimitatedRoute();
   const ref = useRef(null);
+  const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
+  const isShare = mode === 'share';
 
-  const lineColor = LINE_COLORS[line ?? 'default'];
-
+  // ISO date strings sort chronologically
+  const sortedDates = [...labels].sort();
   const remainingBlocks = getRemainingBlockAnnotation(
-    dayjs(max(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT) ??
-      TODAY.format(DATE_FORMAT)
+    sortedDates.length
+      ? dayjs(sortedDates[sortedDates.length - 1]).format(DATE_FORMAT)
+      : TODAY.format(DATE_FORMAT)
   );
   const earlierBlocks = getRemainingBlockAnnotation(
     undefined,
-    dayjs(min(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT)
+    sortedDates.length ? dayjs(sortedDates[0]).format(DATE_FORMAT) : undefined
   );
+
+  const totals = periodTotals(data);
+  const floor = minShareMinutes(totals);
+  const toPoint = (value: number, index: number) => {
+    if (!isShare) return value;
+    // Too little delay to say anything about the mix: leave a gap rather than a full-height band.
+    return totals[index] > 0 && totals[index] >= floor ? (value / totals[index]) * 100 : null;
+  };
+
+  const latest = useRef({ series, isMobile, tick: chartTheme.tick });
+
+  useLayoutEffect(() => {
+    latest.current = { series, isMobile, tick: chartTheme.tick };
+  }, [series, isMobile, chartTheme.tick]);
+
+  const endLabels = {
+    id: 'endLabels',
+    afterDatasetsDraw: (chart: ChartJS) => {
+      const { series, isMobile, tick } = latest.current;
+      if (isMobile) return;
+      const { ctx, chartArea, scales } = chart;
+      const zero = scales.y.getPixelForValue(0);
+      ctx.save();
+      ctx.font = '11px sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = tick;
+      let lastDrawnY = Infinity;
+      for (let i = series.length - 1; i >= 0; i--) {
+        const meta = chart.getDatasetMeta(i);
+        const dataset = chart.data.datasets[i].data as (number | null)[];
+        let at = dataset.length - 1;
+        while (at >= 0 && dataset[at] == null) at--;
+        if (at < 0) continue;
+        const top = meta.data[at]?.y;
+        const bottom = i === 0 ? zero : chart.getDatasetMeta(i - 1).data[at]?.y;
+        if (top == null || bottom == null || bottom - top < 13) continue;
+        const y = (top + bottom) / 2;
+        if (lastDrawnY - y < 13) continue;
+        lastDrawnY = y;
+        ctx.fillText(
+          series[i].label.length > 17 ? `${series[i].label.slice(0, 16)}…` : series[i].label,
+          chartArea.right + 8,
+          y
+        );
+      }
+      ctx.restore();
+    },
+  };
 
   return (
     <ChartStack>
-      <div className={classNames('h-72', 'flex w-full flex-row')}>
+      <ChartDiv isMobile={isMobile}>
         <Line
-          id={`breakdownDelay-${linePath}`}
-          height={isMobile ? 200 : 240}
+          id={`breakdownDelay-${mode}-${linePath}`}
+          role="img"
+          aria-label={summary}
+          height={isMobile ? 240 : 200}
           ref={ref}
-          redraw={true}
           data={{
             labels,
-            datasets: filterOutZeroValueDatasets([
-              {
-                label: disabledVehicleLabel(line),
-                borderColor: '#dc2626',
-                backgroundColor: hexWithAlpha('#dc2626', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.disabled_vehicle),
-              },
-              {
-                label: `🚪 Door Problem`,
-                borderColor: '#3f6212',
-                backgroundColor: hexWithAlpha('#3f6212', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.door_problem),
-              },
-              {
-                label: `🔌 Power/Wire Issue`,
-                borderColor: '#eab308',
-                backgroundColor: hexWithAlpha('#eab308', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.power_problem),
-              },
-              {
-                label: `🚦 Signal Problem`,
-                borderColor: '#84cc16',
-                backgroundColor: hexWithAlpha('#84cc16', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.signal_problem),
-              },
-              {
-                label: `🚙 Cars/Traffic`,
-                borderColor: '#f59e0b',
-                backgroundColor: hexWithAlpha('#f59e0b', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.car_traffic),
-              },
-              {
-                label: `🚧 Track Work`,
-                borderColor: '#f87171',
-                backgroundColor: hexWithAlpha('#f87171', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.track_work),
-              },
-              {
-                label: `🎚️ Switch Problem`,
-                borderColor: '#10b981',
-                backgroundColor: hexWithAlpha('#10b981', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.switch_problem),
-              },
-              {
-                label: `🛑 Brake Issue`,
-                borderColor: '#4c1d95',
-                backgroundColor: hexWithAlpha('#4c1d95', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.brake_problem),
-              },
-              {
-                label: `🛤️ Track Issue`,
-                borderColor: '#8b5cf6',
-                backgroundColor: hexWithAlpha('#8b5cf6', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.track_issue),
-              },
-              {
-                label: `🔧 Mechanical Problem`,
-                borderColor: '#451a03',
-                backgroundColor: hexWithAlpha('#451a03', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.mechanical_problem),
-              },
-              {
-                label: `🌊 Flooding`,
-                borderColor: '#0ea5e9',
-                backgroundColor: hexWithAlpha('#0ea5e9', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.flooding),
-              },
-              {
-                label: `🚓 Police Activity`,
-                borderColor: '#1d4ed8',
-                backgroundColor: hexWithAlpha('#1d4ed8', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.police_activity),
-              },
-              {
-                label: `🚑 Medical Emergency`,
-                borderColor: '#be123c',
-                backgroundColor: hexWithAlpha('#be123c', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.medical_emergency),
-              },
-              {
-                label: `🚒 Fire Department Activity`,
-                borderColor: '#ea580c',
-                backgroundColor: hexWithAlpha('#ea580c', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.fire),
-              },
-              {
-                label: `Other/No Reason Given`,
-                borderColor: '#6b7280',
-                backgroundColor: hexWithAlpha('#6b7280', 0.8),
-                pointRadius: 0,
-                pointBorderWidth: 0,
-                fill: true,
-                pointHoverRadius: 6,
-                pointHoverBackgroundColor: lineColor,
-                data: data.map((datapoint) => datapoint.other),
-              },
-            ]),
+            datasets: series.map((layer, index) => ({
+              label: layer.label,
+              borderColor: 'rgba(255,255,255,0.55)',
+              borderWidth: 0.75,
+              backgroundColor: layer.color,
+              pointRadius: 0,
+              pointHoverRadius: 6,
+              pointBorderWidth: 0,
+              pointHoverBackgroundColor: layer.color,
+              stepped: true,
+              // Fill to the layer below; filling to zero lets the top layer cover the rest
+              fill: index === 0 ? 'origin' : '-1',
+              data: layer.values.map(toPoint),
+            })),
           }}
           options={{
             responsive: true,
@@ -237,6 +147,7 @@ export const DelayBreakdownGraph = ({
             layout: {
               padding: {
                 top: showTitle ? 25 : 0,
+                right: isMobile ? 0 : 118,
               },
             },
             interaction: {
@@ -248,23 +159,34 @@ export const DelayBreakdownGraph = ({
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
+                // Biggest contributor first, and no rows for reasons that were silent that period.
+                itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
                 filter: hideZeroUnlessAllZero,
                 callbacks: {
                   title: (context) => {
-                    return agg === 'weekly' ? `Week of ${context[0].label}` : `${context[0].label}`;
+                    return agg === 'weekly'
+                      ? `Week of ${context[0]?.label ?? ''}`
+                      : `${context[0]?.label}`;
                   },
                   label: (tooltipItem) => {
-                    return `${tooltipItem.dataset.label}: ${getFormattedTimeString(
-                      tooltipItem.parsed.y ?? 0,
-                      'minutes'
-                    )}`;
+                    const { y } = tooltipItem.parsed;
+                    const minutes = series[tooltipItem.datasetIndex].values[tooltipItem.dataIndex];
+                    const time = formatDelay(minutes);
+                    return isShare
+                      ? `${tooltipItem.dataset.label}: ${round(y ?? 0, 1)}% (${time})`
+                      : `${tooltipItem.dataset.label}: ${time}`;
                   },
                 },
               },
+              // Bands are labelled on the chart on wider screens; on a phone there's no room for that,
+              // so a legend stands in. It never filters: the cause list is the only filter.
               legend: {
+                display: isMobile,
                 position: 'bottom',
+                onClick: () => undefined,
                 labels: {
-                  boxWidth: 15,
+                  boxWidth: 12,
+                  color: chartTheme.tick,
                 },
               },
               title: {
@@ -273,29 +195,37 @@ export const DelayBreakdownGraph = ({
                 text: '',
               },
               annotation: {
-                // Add your annotations here
                 annotations: [...earlierBlocks, ...remainingBlocks],
               },
             },
             scales: {
               y: {
                 stacked: true,
-                suggestedMin: 0,
                 min: 0,
+                // Chart.js treats undefined as unset, falling back to its defaults
+                max: isShare ? 100 : undefined,
                 display: true,
+                border: { display: false },
+                grid: { color: chartTheme.grid },
                 ticks: {
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
+                  ...(isShare
+                    ? { callback: (value: string | number) => `${value}%` }
+                    : delayAxisTicks(Math.max(0, ...totals))),
                 },
                 title: {
                   display: true,
-                  text: 'Time delayed (minutes)',
-                  color: COLORS.design.subtitleGrey,
+                  text: isShare ? 'Share of all delay time' : 'Time delayed',
+                  color: chartTheme.tick,
                 },
               },
               x: {
                 min: startDate,
                 max: endDate,
                 type: 'time',
+                // Vertical rules add noise without helping readers compare values.
+                grid: { display: false },
+                border: { color: chartTheme.axisBorder },
                 time: {
                   unit: 'day',
                   tooltipFormat: 'MMM d, yyyy',
@@ -304,7 +234,7 @@ export const DelayBreakdownGraph = ({
                   },
                 },
                 ticks: {
-                  color: COLORS.design.subtitleGrey,
+                  color: chartTheme.tick,
                 },
                 adapters: {
                   date: {
@@ -323,26 +253,33 @@ export const DelayBreakdownGraph = ({
             {
               id: 'customTitle',
               afterDraw: (chart) => {
-                if (!data) {
-                  // No data is present
-                  const { ctx } = chart;
-                  const { width } = chart;
-                  const { height } = chart;
-                  chart.clear();
-
-                  ctx.save();
-                  ctx.textAlign = 'center';
-                  ctx.textBaseline = 'middle';
-                  ctx.font = "16px normal 'Helvetica Nueue'";
-                  ctx.fillText('No data to display', width / 2, height / 2);
-                  ctx.restore();
-                }
-                if (showTitle) drawSimpleTitle(`Speed`, chart);
+                if (showTitle) drawSimpleTitle(`Delays`, chart);
               },
             },
+            endLabels,
             ChartjsPluginWatermark,
           ]}
         />
+      </ChartDiv>
+      <div className="flex flex-row items-end justify-end gap-4">
+        {startDate && (
+          <>
+            <SaveChartImageButton
+              chartRef={ref}
+              datasetName="delays-by-reason"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+            <DownloadButton
+              data={data}
+              datasetName="delays-by-reason"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </>
+        )}
       </div>
     </ChartStack>
   );
