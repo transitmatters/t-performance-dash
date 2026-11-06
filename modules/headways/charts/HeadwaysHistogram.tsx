@@ -27,11 +27,10 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
   // dataObject is a mapping from headway bucket -> number of trains.
   // All keys are increased by 0.5. This is a workaround to get chartjs to display the tick labels in between the bars.
   const dataObject: Record<string, number> = useMemo(() => {
-    const values =
-      headways.map(
-        (datapoint: HeadwayPoint) =>
-          Math.floor(datapoint[MetricFieldKeys.headwayTimeSec] / 60) + 0.5
-      ) || [];
+    const values = headways
+      .map((datapoint: HeadwayPoint) => datapoint[MetricFieldKeys.headwayTimeSec])
+      .filter((seconds) => seconds >= 0)
+      .map((seconds) => Math.floor(seconds / 60) + 0.5);
     const max = Math.max(...values);
     const headwayBuckets: { [key in number]: number } = {};
     for (let i = 0.5; i <= max; i++) {
@@ -79,6 +78,7 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
               scales: {
                 x: {
                   type: 'linear',
+                  min: 0,
                   offset: false,
                   grid: {
                     offset: false,
