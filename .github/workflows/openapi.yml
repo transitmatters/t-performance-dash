@@ -8,7 +8,7 @@ on:
 
 jobs:
   check-spec:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
