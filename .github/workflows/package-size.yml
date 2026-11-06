@@ -8,7 +8,7 @@ on:
 
 jobs:
   check-package-size:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     strategy:
       matrix:
         python-version: ['3.14']

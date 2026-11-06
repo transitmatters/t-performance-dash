@@ -8,7 +8,7 @@ on:
 
 jobs:
   backend:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     steps:
       - name: Checkout repo
         uses: actions/checkout@v7
@@ -23,7 +23,7 @@ jobs:
       - name: Run backend tests
         run: cd server && uv run pytest tests/ -v
   frontend:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     strategy:
       matrix:
         node-version: ['26']

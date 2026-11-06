@@ -10,7 +10,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04-arm
     env:
       AWS_PROFILE: transitmatters
       AWS_DEFAULT_REGION: us-east-1

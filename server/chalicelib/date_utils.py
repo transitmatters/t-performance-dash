@@ -13,7 +13,7 @@ DATE_FORMAT_TIMEZONE = "%Y-%m-%d %H:%M:%S%z"
 # Gobble's Commuter Rail terminal arrivals from 2026-10-04 carry microseconds
 DATE_FORMAT_TIMEZONE_FRACTIONAL = "%Y-%m-%d %H:%M:%S.%f%z"
 DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
-EASTERN_TIME = ZoneInfo("US/Eastern")
+EASTERN_TIME = ZoneInfo("America/New_York")
 
 # The most recent date for which we have monthly data
 MAX_MONTH_DATA_DATE = "2026-06-30"
