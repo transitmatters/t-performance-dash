@@ -307,3 +307,18 @@ def test_missing_ferry_day_is_requested_once(fake_s3):
 
     assert s3.download_events(day, day, [FERRY_STOP], single_day=True) == []
     assert requested == [_ferry_daily_key(day)]
+
+
+def test_events_sort_by_instant_when_clocks_fall_back(fake_s3):
+    # 2026-11-01: the 1am hour runs once in EDT, then again in EST
+    files, _ = fake_s3
+    files["Events-lamp/daily-data/70020/Year=2026/Month=10/Day=31/events.csv"] = _csv(
+        "2026-10-31,Orange,t1,0,70020,DEP,2026-11-01 01:05:50-04:00,1494",
+        "2026-10-31,Orange,t2,0,70020,DEP,2026-11-01 01:42:17-04:00,1450",
+        "2026-10-31,Orange,t3,0,70020,DEP,2026-11-01 01:07:09-05:00,1456",
+        "2026-10-31,Orange,t4,0,70020,DEP,2026-11-01 01:19:33-05:00,1410",
+    )
+
+    rows = s3.download_events(date(2026, 10, 31), date(2026, 10, 31), ["70020"], single_day=True)
+
+    assert [r["trip_id"] for r in rows] == ["t1", "t2", "t3", "t4"]

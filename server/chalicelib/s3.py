@@ -221,9 +221,15 @@ def download_range_event_file(date: pd.Timestamp, stop_id: str, start_date: date
     return rows
 
 
+def _event_instant(row: dict):
+    """Sort key for event rows. Sorting the raw strings would interleave the two 1am hours on the
+    night clocks fall back, since the offsets differ but the wall-clock times repeat."""
+    return date_utils.parse_event_date(row["event_time"])
+
+
 def _parse_events(csv_text: str):
     """Parse an events CSV into rows sorted by event_time."""
-    return sorted(csv.DictReader(csv_text.splitlines()), key=lambda row: row["event_time"])
+    return sorted(csv.DictReader(csv_text.splitlines()), key=_event_instant)
 
 
 @parallel.make_parallel
@@ -270,7 +276,7 @@ def download_events(start_date: date, end_date: date, stops: list, single_day=Fa
     result = filter(
         lambda row: start_date.strftime("%Y-%m-%d") <= row["service_date"] <= end_date.strftime("%Y-%m-%d"), result
     )
-    return sorted(result, key=lambda row: row["event_time"])
+    return sorted(result, key=_event_instant)
 
 
 def get_all_s3_objects(s3, **base_kwargs):
