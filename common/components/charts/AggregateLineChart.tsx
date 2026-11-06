@@ -23,6 +23,7 @@ import {
 import { useWeatherData } from '../../api/hooks/weather';
 import { useWeatherStore } from '../../../modules/weather/WeatherStore';
 import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
+import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartDiv } from './ChartDiv';
@@ -85,6 +86,8 @@ export const AggregateLineChart = ({
   yUnit = 'Minutes',
   chartTitle,
   hoverRows,
+  fill = false,
+  embedChart,
 }: AggregateLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -93,13 +96,15 @@ export const AggregateLineChart = ({
   const tempEnabled = useWeatherStore((s) => s.temperatureEnabled);
   const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
     { start_date: startDate, end_date: endDate },
-    !hourly && (weatherEnabled || tempEnabled) && Boolean(startDate && endDate)
+    !hourly && !fill && (weatherEnabled || tempEnabled) && Boolean(startDate && endDate)
   );
   const weatherBlocks =
-    hourly || !weatherEnabled ? [] : getWeatherAnnotations(weather ?? [], { granularity: 'daily' });
+    hourly || fill || !weatherEnabled
+      ? []
+      : getWeatherAnnotations(weather ?? [], { granularity: 'daily' });
   const temperatureSeries = useMemo(
-    () => (!hourly && tempEnabled && weather ? getDailyTemperatureSeries(weather) : null),
-    [hourly, tempEnabled, weather]
+    () => (!hourly && !fill && tempEnabled && weather ? getDailyTemperatureSeries(weather) : null),
+    [hourly, fill, tempEnabled, weather]
   );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
@@ -192,8 +197,8 @@ export const AggregateLineChart = ({
   }
 
   return (
-    <ChartStack>
-      <ChartDiv isMobile={isMobile}>
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <ChartDiv isMobile={isMobile} fill={fill}>
         <Line
           id={chartId}
           ref={ref}
@@ -229,7 +234,7 @@ export const AggregateLineChart = ({
               yTemp: {
                 type: 'linear',
                 position: 'right',
-                display: !hourly && tempEnabled,
+                display: !hourly && !fill && tempEnabled,
                 title: {
                   display: true,
                   text: '°F',
@@ -342,40 +347,43 @@ export const AggregateLineChart = ({
           plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
-      <div className="flex flex-col">
-        {!hourly && startDate && endDate && (
-          <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />
-        )}
-        <div className="flex flex-row flex-wrap items-end gap-x-4 gap-y-2">
-          {showLegend && (
-            <LegendLongTerm
-              isTrendlineVisible={isTrendlineVisible}
-              onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
-            />
+      {!fill && (
+        <div className="flex flex-col">
+          {!hourly && startDate && endDate && (
+            <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />
           )}
-          {startDate && (
-            <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
-              <CopyLinkButton />
-              <SaveChartImageButton
-                chartRef={ref}
-                datasetName={fname}
-                location={location}
-                includeBothStopsForLocation={includeBothStopsForLocation}
-                startDate={startDate}
-                endDate={endDate}
-                chartTitle={chartTitle}
+          <div className="flex flex-row flex-wrap items-end gap-x-4 gap-y-2">
+            {showLegend && (
+              <LegendLongTerm
+                isTrendlineVisible={isTrendlineVisible}
+                onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
               />
-              <DownloadButton
-                data={data}
-                datasetName={fname}
-                location={location}
-                includeBothStopsForLocation={includeBothStopsForLocation}
-                startDate={startDate}
-              />
-            </div>
-          )}
+            )}
+            {startDate && (
+              <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
+                <CopyLinkButton />
+                <SaveChartImageButton
+                  chartRef={ref}
+                  datasetName={fname}
+                  location={location}
+                  includeBothStopsForLocation={includeBothStopsForLocation}
+                  startDate={startDate}
+                  endDate={endDate}
+                  chartTitle={chartTitle}
+                />
+                <DownloadButton
+                  data={data}
+                  datasetName={fname}
+                  location={location}
+                  includeBothStopsForLocation={includeBothStopsForLocation}
+                  startDate={startDate}
+                />
+                {embedChart && <TripEmbedButton page="multi" chart={embedChart} />}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </ChartStack>
   );
 };

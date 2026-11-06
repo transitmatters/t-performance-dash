@@ -131,6 +131,10 @@ export interface AggregateLineProps extends LineProps {
   yUnit: string;
   /** Extra rows for a day's hover card, after the percentiles. */
   hoverRows?: (point: AggregateDataPoint) => HoverCardRow[];
+  /** Fill the parent's height and leave out the legend and buttons under the chart, as an embed does. */
+  fill?: boolean;
+  /** Adds an Embed button that copies an `<iframe>` of this multi-day trip chart. */
+  embedChart?: TripEmbedChart<'multi'>;
 }
 
 export interface SingleDayLineProps extends LineProps {
@@ -143,7 +147,7 @@ export interface SingleDayLineProps extends LineProps {
   /** Fill the parent's height and leave out the toggles and buttons under the chart, as an embed does. */
   fill?: boolean;
   /** Adds an Embed button that copies an `<iframe>` of this trip chart. */
-  embedChart?: TripEmbedChart;
+  embedChart?: TripEmbedChart<'single'>;
 }
 
 export interface HeadwayHistogramProps {

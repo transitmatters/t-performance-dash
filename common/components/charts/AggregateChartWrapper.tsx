@@ -1,10 +1,11 @@
-import type { ChunkedAggregateQueryResult, TravelTimesUnit } from '../../types/charts';
+import type { ChunkedAggregateQueryResult, DayFilter, TravelTimesUnit } from '../../types/charts';
 import type { Station } from '../../types/stations';
 import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../notices/NoDataNotice';
 import { TravelTimesAggregateChart } from '../../../modules/traveltimes/charts/TravelTimesAggregateChart';
 import { DwellsAggregateChart } from '../../../modules/dwells/charts/DwellsAggregateChart';
 import { HeadwaysAggregateChart } from '../../../modules/headways/charts/HeadwaysAggregateChart';
+import { SpeedBetweenStationsAggregateChart } from '../../../modules/speed/charts/SpeedBetweenStationsAggregateChart';
 
 interface AggregateChartWrapperProps {
   query: ChunkedAggregateQueryResult;
@@ -12,7 +13,12 @@ interface AggregateChartWrapperProps {
   fromStation: Station | undefined;
   timeUnit?: TravelTimesUnit;
   peakTime?: boolean;
-  type: 'headways' | 'traveltimes' | 'dwells';
+  type: 'headways' | 'traveltimes' | 'dwells' | 'speeds';
+  dayFilter?: DayFilter;
+  /** For an embed: fill its frame, with its own dates rather than the page's. */
+  fill?: boolean;
+  startDate?: string;
+  endDate?: string;
 }
 
 export const AggregateChartWrapper = ({
@@ -22,6 +28,8 @@ export const AggregateChartWrapper = ({
   timeUnit,
   peakTime,
   type,
+  dayFilter,
+  ...chartProps
 }: AggregateChartWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
@@ -40,7 +48,13 @@ export const AggregateChartWrapper = ({
       : (query.data.by_date ?? []).filter((datapoint) => datapoint.peak === 'all');
   if (plotted.length < 1) {
     const peakFilterEmptied = timeUnit === 'by_time' && Boolean(query.data.by_time?.length);
-    return <NoDataNotice shutdownScope="trip" metric={type} filtered={peakFilterEmptied} />;
+    return (
+      <NoDataNotice
+        shutdownScope="trip"
+        metric={type === 'speeds' ? 'traveltimes' : type}
+        filtered={peakFilterEmptied}
+      />
+    );
   }
 
   switch (type) {
@@ -52,6 +66,18 @@ export const AggregateChartWrapper = ({
           fromStation={fromStation}
           timeUnit={timeUnit}
           peakTime={peakTime}
+          dayFilter={dayFilter}
+          {...chartProps}
+        />
+      );
+    case 'speeds':
+      return (
+        <SpeedBetweenStationsAggregateChart
+          traveltimes={query.data}
+          toStation={toStation}
+          fromStation={fromStation}
+          timeUnit={timeUnit ?? 'by_date'}
+          {...chartProps}
         />
       );
     case 'headways':
@@ -60,11 +86,19 @@ export const AggregateChartWrapper = ({
           headways={query.data}
           fromStation={fromStation}
           toStation={toStation}
+          dayFilter={dayFilter}
+          {...chartProps}
         />
       );
     case 'dwells':
       return (
-        <DwellsAggregateChart dwells={query.data} fromStation={fromStation} toStation={toStation} />
+        <DwellsAggregateChart
+          dwells={query.data}
+          fromStation={fromStation}
+          toStation={toStation}
+          dayFilter={dayFilter}
+          {...chartProps}
+        />
       );
   }
 };

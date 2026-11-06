@@ -30,6 +30,10 @@ interface HeadwaysAggregateChartProps {
   fromStation: Station;
   showLegend?: boolean;
   dayFilter?: DayFilter;
+  /** Defaults to the page's dates; an embed passes its own. */
+  startDate?: string;
+  endDate?: string;
+  fill?: boolean;
 }
 
 export const HeadwaysAggregateChart = ({
@@ -37,10 +41,13 @@ export const HeadwaysAggregateChart = ({
   toStation,
   fromStation,
   dayFilter = 'all',
+  startDate: startDateProp,
+  endDate: endDateProp,
+  fill = false,
 }: HeadwaysAggregateChartProps) => {
-  const {
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { query } = useDelimitatedRoute();
+  const startDate = startDateProp ?? query.startDate;
+  const endDate = endDateProp ?? query.endDate;
 
   const chart = useMemo(() => {
     // Filter data based on dayFilter
@@ -71,9 +78,11 @@ export const HeadwaysAggregateChart = ({
         fname="headways"
         yUnit="Minutes"
         hoverRows={bunchingRows}
+        fill={fill}
+        embedChart={'headways'}
       />
     );
-  }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter]);
+  }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill]);
 
   return chart;
 };

@@ -14,6 +14,10 @@ interface SpeedBetweenStationsAggregateChartProps {
   fromStation: Station;
   timeUnit?: TravelTimesUnit;
   peakTime?: boolean;
+  /** Defaults to the page's dates; an embed passes its own. */
+  startDate?: string;
+  endDate?: string;
+  fill?: boolean;
 }
 
 export const SpeedBetweenStationsAggregateChart = ({
@@ -22,10 +26,13 @@ export const SpeedBetweenStationsAggregateChart = ({
   fromStation,
   timeUnit,
   peakTime = true,
+  startDate: startDateProp,
+  endDate: endDateProp,
+  fill = false,
 }: SpeedBetweenStationsAggregateChartProps) => {
-  const {
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { query } = useDelimitatedRoute();
+  const startDate = startDateProp ?? query.startDate;
+  const endDate = endDateProp ?? query.endDate;
 
   const chart = useMemo(() => {
     const timeUnitByDate = timeUnit === 'by_date';
@@ -56,9 +63,11 @@ export const SpeedBetweenStationsAggregateChart = ({
         fname="speeds"
         chartTitle="Speeds"
         yUnit="MPH"
+        fill={fill}
+        embedChart={timeUnitByDate ? 'speeds' : undefined}
       />
     );
-  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime]);
+  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime, fill]);
 
   return chart;
 };
