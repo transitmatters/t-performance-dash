@@ -47,12 +47,16 @@ const routeSearch = (search: RawSearch) => ({
  * sender was actually looking at — a "weekdays only" chart shared as "all days" is a different
  * claim. Each control checks its value against its own options (see useChartToggle).
  */
-const chartSearch = (search: RawSearch) => ({
-  ttView: str(search.ttView),
+const dayFilterSearch = (search: RawSearch) => ({
   ttDays: str(search.ttDays),
   hwDays: str(search.hwDays),
   dwDays: str(search.dwDays),
   peak: str(search.peak),
+});
+
+const chartSearch = (search: RawSearch) => ({
+  ttView: str(search.ttView),
+  ...dayFilterSearch(search),
 });
 
 // Same idea for the page-level toggles on Speed, Service and Fleet.
@@ -133,6 +137,12 @@ export const validateTripEmbedSearch = (search: RawSearch) => ({
   ...validateEmbedSearch(search),
   ...stationSearch(search),
   ...routeSearch(search),
+});
+
+/** A multi-day trip chart embed also keeps its card's day filter. */
+export const validateMultiTripEmbedSearch = (search: RawSearch) => ({
+  ...validateTripEmbedSearch(search),
+  ...dayFilterSearch(search),
 });
 
 /**
