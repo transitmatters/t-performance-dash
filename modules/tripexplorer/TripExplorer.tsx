@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useHistoricalAlertsData } from '../../common/api/hooks/alerts';
 import { findMatch } from '../../common/components/alerts/AlertFilter';
-import { AlertNotice } from '../../common/components/alerts/AlertNotice';
 import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
 import { CoverageGapNotice } from '../../common/components/notices/CoverageGapNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
@@ -32,17 +31,21 @@ export const TripExplorer = () => {
     query: { to, from, date, startDate, endDate, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
   const pageTitle = page === 'multiTrips' ? 'Trips over a date range' : 'Trips on a single day';
-  const { data: alerts } = useHistoricalAlertsData(date, lineShort, busRoute, crRoute, ferryRoute);
+  const { data: alerts, isLoading: isAlertsLoading } = useHistoricalAlertsData(
+    date,
+    lineShort,
+    busRoute,
+    crRoute,
+    ferryRoute
+  );
 
   const fromStation = from ? getParentStationForStopId(from, lineShort) : undefined;
   const toStation = to ? getParentStationForStopId(to, lineShort) : undefined;
-  const alertsForModal = alerts?.filter(findMatch).map((alert) => {
-    return { ...alert, applied: false };
-  });
+  const matchingAlerts = useMemo(() => alerts?.filter(findMatch), [alerts]);
   const setAlerts = useAlertStore((store) => store.setAlerts);
   useEffect(() => {
-    setAlerts(alertsForModal);
-  }, [alertsForModal, setAlerts]);
+    setAlerts(matchingAlerts, isAlertsLoading);
+  }, [matchingAlerts, isAlertsLoading, setAlerts]);
 
   return (
     <PageWrapper pageTitle={pageTitle}>
@@ -54,7 +57,6 @@ export const TripExplorer = () => {
             <div aria-live="polite" className="sr-only">
               {`Showing ${fromStation.stop_name} to ${toStation.stop_name}${describeDates(date, startDate, endDate)}.`}
             </div>
-            {alertsForModal?.length ? <AlertNotice count={alertsForModal.length} /> : null}
             {busRoute && <PokeySchleppieAwardBanner busRoute={busRoute} />}
             <BnrdBanner busRoute={busRoute} />
             {/* Urgent, per-view accuracy warnings stay visible with the charts. */}

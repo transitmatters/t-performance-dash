@@ -5,17 +5,11 @@ import { enUS } from 'date-fns/locale';
 import { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
-import { useAlertStore } from '../../../modules/tripexplorer/AlertStore';
 import type { SingleDayLineProps } from '../../types/charts';
-import { getAlertAnnotations } from '../../../modules/service/utils/graphUtils';
-import { getWeatherAnnotations } from '../../../modules/weather/utils/weatherAnnotations';
 import {
   TEMPERATURE_LINE_COLOR,
   getHourlyTemperatureSeries,
 } from '../../../modules/weather/utils/temperatureDataset';
-import { useWeatherData } from '../../api/hooks/weather';
-import { useWeatherStore } from '../../../modules/weather/WeatherStore';
-import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
@@ -33,12 +27,13 @@ import {
 import { CHART_COLORS } from '../../constants/colors';
 import { getFormattedTimeString } from '../../utils/time';
 import { consistHoverContent } from '../../utils/occupancy';
-import { AlertsDisclaimer } from '../general/AlertsDisclaimer';
-import { FIVE_MINUTES } from '../../constants/time';
 import type { HoverCardContent } from './hoverCard/types';
 import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartStack } from './ChartStack';
+import { ContextTrack } from './contextTrack/ContextTrack';
+import { useChartLayers } from './contextTrack/useChartLayers';
+import { singleDayAxisBounds } from './contextTrack/segments';
 
 const pointColors = (
   data: DataPoint[],
@@ -77,24 +72,30 @@ export const SingleDayLineChart = ({
 }: SingleDayLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
-  const alerts = useAlertStore((store) => store.alerts)?.filter((alert) => alert.applied);
-  const alertAnnotations = date && alerts ? getAlertAnnotations(alerts, date) : [];
-  const weatherEnabled = useWeatherStore((s) => s.enabled);
-  const tempEnabled = useWeatherStore((s) => s.temperatureEnabled);
-  const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
-    { start_date: date, end_date: date },
-    // An embed has no weather toggle, so it skips the request.
-    Boolean(date) && !fill
-  );
-  const weatherAnnotations = weatherEnabled
-    ? getWeatherAnnotations(weather ?? [], { granularity: 'hourly' })
-    : [];
+  const {
+    layers,
+    annotations: layerAnnotations,
+    temperatureEnabled: tempEnabled,
+    geometryPlugin,
+  } = useChartLayers({
+    startDate: date,
+    endDate: date,
+    granularity: 'hourly',
+    // Embeds have no track, so they skip the request
+    enabled: Boolean(date) && !fill,
+    withAlerts: true,
+  });
+  const { weather } = layers;
   const temperaturePoints = useMemo(
     () => (tempEnabled && weather ? getHourlyTemperatureSeries(weather) : []),
     [tempEnabled, weather]
   );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
+  const xBounds = useMemo(
+    () => (date ? singleDayAxisBounds(date, labels) : undefined),
+    [date, labels]
+  );
 
   // Per-point MBTA scheduled benchmark.
   const mbtaBenchmarkData = data.map((datapoint) => {
@@ -307,7 +308,7 @@ export const SingleDayLineChart = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: [...alertAnnotations, ...weatherAnnotations],
+                annotations: layerAnnotations,
               },
             },
             scales: {
@@ -365,26 +366,16 @@ export const SingleDayLineChart = ({
                   text: date ? prettyDate(date, true) : 'No date selected',
                   color: chartTheme.tick,
                 },
-                afterDataLimits: (axis) => {
-                  const today = new Date(`${date}T00:00:00`);
-                  const low = new Date(today);
-                  low.setHours(6);
-                  axis.min = Math.min(axis.min - FIVE_MINUTES, low.valueOf());
-                  const high = new Date(today);
-                  high.setDate(high.getDate() + 1);
-                  high.setHours(1);
-                  high.setMinutes(15);
-                  axis.max = Math.max(axis.max, high.valueOf());
-                },
+                min: xBounds?.min,
+                max: xBounds?.max,
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
+          plugins={[ChartjsPluginWatermark, geometryPlugin]}
         />
       </ChartDiv>
+      <ContextTrack layers={layers} chartRef={ref} />
       <div className="flex flex-col">
-        {!fill && alerts && <AlertsDisclaimer alerts={alerts} />}
-        {!fill && date && <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />}
         <div className="flex flex-row flex-wrap items-end justify-between gap-x-6 gap-y-2">
           {showLegend && benchmarkField ? (
             <LegendSingleDay showUnderRatio={showUnderRatio} usingTmBenchmark={usingTmBenchmark} />

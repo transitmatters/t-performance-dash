@@ -14,18 +14,16 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
-import { getWeatherAnnotations } from '../../../modules/weather/utils/weatherAnnotations';
 import {
   TEMPERATURE_BAND_COLOR,
   TEMPERATURE_LINE_COLOR,
   getDailyTemperatureSeries,
 } from '../../../modules/weather/utils/temperatureDataset';
-import { useWeatherData } from '../../api/hooks/weather';
-import { useWeatherStore } from '../../../modules/weather/WeatherStore';
-import { WeatherDisclaimer } from '../../../modules/weather/WeatherDisclaimer';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartDiv } from './ChartDiv';
+import { ContextTrack } from './contextTrack/ContextTrack';
+import { useChartLayers } from './contextTrack/useChartLayers';
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   if (hourly) {
@@ -89,14 +87,13 @@ export const AggregateLineChart = ({
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const hourly = timeUnit === 'hour';
-  const weatherEnabled = useWeatherStore((s) => s.enabled);
-  const tempEnabled = useWeatherStore((s) => s.temperatureEnabled);
-  const { data: weather, isLoading: isWeatherLoading } = useWeatherData(
-    { start_date: startDate, end_date: endDate },
-    !hourly && (weatherEnabled || tempEnabled) && Boolean(startDate && endDate)
-  );
-  const weatherBlocks =
-    hourly || !weatherEnabled ? [] : getWeatherAnnotations(weather ?? [], { granularity: 'daily' });
+  const {
+    layers,
+    annotations: weatherBlocks,
+    temperatureEnabled: tempEnabled,
+    geometryPlugin,
+  } = useChartLayers({ startDate, endDate, granularity: 'daily', enabled: !hourly });
+  const { weather } = layers;
   const temperatureSeries = useMemo(
     () => (!hourly && tempEnabled && weather ? getDailyTemperatureSeries(weather) : null),
     [hourly, tempEnabled, weather]
@@ -339,13 +336,11 @@ export const AggregateLineChart = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
+          plugins={[ChartjsPluginWatermark, geometryPlugin]}
         />
       </ChartDiv>
+      <ContextTrack layers={layers} chartRef={ref} />
       <div className="flex flex-col">
-        {!hourly && startDate && endDate && (
-          <WeatherDisclaimer hours={weather} isLoading={isWeatherLoading} />
-        )}
         <div className="flex flex-row flex-wrap items-end gap-x-4 gap-y-2">
           {showLegend && (
             <LegendLongTerm

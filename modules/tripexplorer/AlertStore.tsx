@@ -1,39 +1,16 @@
 import { create } from 'zustand';
-import type { AlertForModal } from '../../common/types/alerts';
+import type { OldAlert } from '../../common/types/alerts';
 
 interface AlertStore {
-  alerts: AlertForModal[] | undefined;
-  setAlerts: (alerts: AlertForModal[] | undefined) => void;
-  changeAlertApplied: (alerts: AlertForModal[] | undefined, index: number) => void;
-  getAppliedAlerts: () => AlertForModal[] | undefined;
+  // Undefined until the day's alerts load, or when they fail to
+  alerts: OldAlert[] | undefined;
+  isLoading: boolean;
+  setAlerts: (alerts: OldAlert[] | undefined, isLoading: boolean) => void;
 }
 
-export const useAlertStore = create<AlertStore>((set, get) => ({
-  alerts: [],
-  setAlerts: (alerts) =>
-    set(() => ({
-      alerts: alerts?.map((alert) => {
-        const match = get().alerts?.find(
-          (other) =>
-            other.valid_from === alert.valid_from &&
-            other.valid_to === alert.valid_to &&
-            other.text === alert.text
-        );
-        return match ? match : alert;
-      }),
-    })),
-  changeAlertApplied: (alerts, index) => {
-    if (!alerts)
-      return set(() => ({
-        alerts: undefined,
-      }));
-    alerts[index].applied = !alerts[index].applied;
-    const newAlerts = [...alerts];
-    return set(() => ({
-      alerts: newAlerts,
-    }));
-  },
-  getAppliedAlerts: () => {
-    return get().alerts?.filter((alert) => alert.applied);
-  },
+/** The selected day's service alerts, shared by every chart's context track. */
+export const useAlertStore = create<AlertStore>((set) => ({
+  alerts: undefined,
+  isLoading: false,
+  setAlerts: (alerts, isLoading) => set({ alerts, isLoading }),
 }));
