@@ -8,10 +8,6 @@ S3 archives.
 from datetime import date, datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
-DATE_FORMAT_MASSDOT = "%Y-%m-%d %H:%M:%S"
-DATE_FORMAT_TIMEZONE = "%Y-%m-%d %H:%M:%S%z"
-# Gobble's Commuter Rail terminal arrivals from 2026-10-04 carry microseconds
-DATE_FORMAT_TIMEZONE_FRACTIONAL = "%Y-%m-%d %H:%M:%S.%f%z"
 DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
 EASTERN_TIME = ZoneInfo("America/New_York")
 
@@ -72,9 +68,10 @@ def parse_event_date(date_str: str):
 
     Handles three formats:
 
-    - 19-character strings (``YYYY-MM-DD HH:MM:SS``) — assumed Eastern Time.
-    - Longer strings with timezone offset (``YYYY-MM-DD HH:MM:SS±HHMM``).
-    - The same with fractional seconds (``YYYY-MM-DD HH:MM:SS.ffffff±HHMM``).
+    - ``YYYY-MM-DD HH:MM:SS`` with no offset — assumed Eastern Time.
+    - The same with a timezone offset (``YYYY-MM-DD HH:MM:SS±HH:MM``).
+    - The same with fractional seconds (``YYYY-MM-DD HH:MM:SS.ffffff±HH:MM``), which Gobble's
+      Commuter Rail terminal arrivals carry from 2026-10-04.
 
     Args:
         date_str: Timestamp string from an event CSV.
@@ -82,12 +79,10 @@ def parse_event_date(date_str: str):
     Returns:
         Timezone-aware ``datetime`` object.
     """
-    if len(date_str) == 19:
-        return datetime.strptime(date_str, DATE_FORMAT_MASSDOT).replace(tzinfo=EASTERN_TIME)
-    elif "." in date_str:
-        return datetime.strptime(date_str, DATE_FORMAT_TIMEZONE_FRACTIONAL)
-    else:
-        return datetime.strptime(date_str, DATE_FORMAT_TIMEZONE)
+    parsed = datetime.fromisoformat(date_str)
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=EASTERN_TIME)
+    return parsed
 
 
 def return_formatted_date(date: datetime):
