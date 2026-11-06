@@ -43,7 +43,12 @@
     ]
   },
   "overrides": {
-    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0"
+    "@storybook/react-docgen-typescript-plugin": "1.0.6--canary.9.0c3f3b7.0",
+    "compression": "^1.8.2",
+    "webpack-dev-middleware": "^7.4.5",
+    "next": {
+      "postcss": "^8.5.32"
+    }
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
