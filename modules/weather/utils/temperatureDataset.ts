@@ -11,6 +11,9 @@ export type DailyTemperatureSeries = {
 export const TEMPERATURE_BAND_COLOR = 'rgba(234, 88, 12, 0.18)';
 export const TEMPERATURE_LINE_COLOR = 'rgb(234, 88, 12)';
 
+// A fixed scale so a mild day looks mild; colder or hotter readings stretch it
+export const TEMPERATURE_SCALE = { min: 0, max: 100 };
+
 export const getHourlyTemperatureSeries = (hours: WeatherHourly[]): DailyTempPoint[] =>
   hours
     .filter((h) => h.temperature_f !== null && h.temperature_f !== undefined)

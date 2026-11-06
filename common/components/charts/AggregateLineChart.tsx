@@ -17,6 +17,7 @@ import { getFormattedTimeString } from '../../utils/time';
 import {
   TEMPERATURE_BAND_COLOR,
   TEMPERATURE_LINE_COLOR,
+  TEMPERATURE_SCALE,
   getDailyTemperatureSeries,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { LegendLongTerm } from './Legend';
@@ -227,6 +228,8 @@ export const AggregateLineChart = ({
                 type: 'linear',
                 position: 'right',
                 display: !hourly && tempEnabled,
+                suggestedMin: TEMPERATURE_SCALE.min,
+                suggestedMax: TEMPERATURE_SCALE.max,
                 title: {
                   display: true,
                   text: '°F',

@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import {
   TEMPERATURE_BAND_COLOR,
   TEMPERATURE_LINE_COLOR,
+  TEMPERATURE_SCALE,
   getDailyTemperatureSeries,
   getHourlyTemperatureSeries,
 } from '../../../../modules/weather/utils/temperatureDataset';
@@ -51,6 +52,12 @@ const WIDTH = 1000;
 const HEIGHT = 100;
 const PAD = 12;
 
+/** The fixed 0–100 °F scale, widened to fit readings outside it. */
+export const temperatureScale = (low: number, high: number) => ({
+  min: Math.min(TEMPERATURE_SCALE.min, low),
+  max: Math.max(TEMPERATURE_SCALE.max, high),
+});
+
 const degrees = (value: number) => `${Math.round(value)} °F`;
 
 /** The day's (or range's) temperature as a sparkline; clicking plots it on the chart. */
@@ -65,11 +72,14 @@ export const TemperatureTrack = ({
   const highs = points.map((point) => point.high ?? point.mean);
   const min = Math.min(...lows);
   const max = Math.max(...highs);
+  const scale = temperatureScale(min, max);
   // Unclamped, so the hours just past each end run off the edge and get clipped
   const x = (time: number) =>
     (((time - domain.min) / (domain.max - domain.min || 1)) * WIDTH).toFixed(1);
   const y = (value: number) =>
-    (HEIGHT - PAD - ((value - min) / (max - min || 1)) * (HEIGHT - PAD * 2)).toFixed(1);
+    (HEIGHT - PAD - ((value - scale.min) / (scale.max - scale.min)) * (HEIGHT - PAD * 2)).toFixed(
+      1
+    );
 
   const line = points
     .map((point, i) => `${i ? 'L' : 'M'}${x(point.time)} ${y(point.mean)}`)

@@ -8,6 +8,7 @@ import type { DataPoint } from '../../types/dataPoints';
 import type { SingleDayLineProps } from '../../types/charts';
 import {
   TEMPERATURE_LINE_COLOR,
+  TEMPERATURE_SCALE,
   getHourlyTemperatureSeries,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { prettyDate } from '../../utils/date';
@@ -334,6 +335,8 @@ export const SingleDayLineChart = ({
                 type: 'linear',
                 position: 'right',
                 display: tempEnabled,
+                suggestedMin: TEMPERATURE_SCALE.min,
+                suggestedMax: TEMPERATURE_SCALE.max,
                 title: {
                   display: true,
                   text: '°F',
