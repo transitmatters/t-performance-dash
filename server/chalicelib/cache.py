@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-EASTERN_TIME = ZoneInfo("US/Eastern")
+EASTERN_TIME = ZoneInfo("America/New_York")
 
 # Cache duration constants (in seconds)
 FIFTEEN_MINUTES = 900
@@ -17,7 +17,7 @@ def get_cache_max_age(query_params: dict) -> int:
 
     Looks for a date in the query params (checking ``end_date``, ``date``, and
     ``to_date`` in that order) and selects a cache lifetime based on how recent
-    that date is relative to today in US/Eastern time:
+    that date is relative to today in Eastern time:
 
     - **Today or yesterday**: 15 minutes — today's data is still arriving, and
       yesterday's lands overnight, so neither should sit in a shared cache for long.
