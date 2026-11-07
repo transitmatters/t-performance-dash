@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import type { OldAlert } from '../../../types/alerts';
 import { FIVE_MINUTES } from '../../../constants/time';
 import { hexWithAlpha } from '../../../utils/general';
-import { annotationTooltip } from '../annotationTooltip';
 
 /** The x scale's range, in epoch milliseconds. */
 export interface Domain {
@@ -123,9 +122,5 @@ export const getAlertAnnotations = (
       xMax: clipped.to,
       backgroundColor: ALERT_SHADING,
       borderColor: 'transparent',
-      ...annotationTooltip({
-        title: formatTimeRange(alert.valid_from, alert.valid_to),
-        lines: [alert.text],
-      }),
     };
   });

@@ -94,6 +94,7 @@ export const AggregateLineChart = ({
     annotations: weatherBlocks,
     temperatureEnabled: tempEnabled,
     geometryPlugin,
+    weatherAt,
   } = useChartLayers({ startDate, endDate, granularity: 'daily', enabled: !hourly });
   const { weather } = layers;
   const temperatureSeries = useMemo(
@@ -304,6 +305,11 @@ export const AggregateLineChart = ({
                             String(labels[medianItem.dataIndex]).slice(0, 10)
                           )
                         : undefined;
+                    const hoveredDay = medianItem?.parsed.x;
+                    const weatherRow =
+                      hoveredDay === undefined || hoveredDay === null
+                        ? undefined
+                        : weatherAt(hoveredDay);
                     const extraRows =
                       hoverRows && medianItem ? hoverRows(data[medianItem.dataIndex]) : [];
 
@@ -336,6 +342,7 @@ export const AggregateLineChart = ({
                               },
                             ]
                           : []),
+                        ...(weatherRow ? [weatherRow] : []),
                       ],
                     };
                   },

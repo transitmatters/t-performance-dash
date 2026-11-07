@@ -4,8 +4,10 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCloudBolt, faCloudRain, faSmog, faSnowflake } from '@fortawesome/free-solid-svg-icons';
 import type { WeatherCondition, WeatherHourly } from '../../../common/types/weather';
 import { hexWithAlpha } from '../../../common/utils/general';
-import { annotationTooltip } from '../../../common/components/charts/annotationTooltip';
-import type { ResolvedHoverCardContent } from '../../../common/components/charts/hoverCard/types';
+import type {
+  HoverCardRow,
+  ResolvedHoverCardContent,
+} from '../../../common/components/charts/hoverCard/types';
 import { ONE_HOUR } from '../../../common/constants/time';
 import { describeWeather, weatherRows } from './weatherDetails';
 
@@ -176,24 +178,42 @@ export const weatherCard = (
   notes: [range],
 });
 
-export const getWeatherAnnotations = (
+/**
+ * The weather at `time` as a row for a chart's popover: the hour's own reading on hourly charts,
+ * or the day's summary on daily ones. Undefined when no run covers it.
+ */
+export const weatherRowAt = (
   runs: PlacedWeatherRun[],
-  describe: (run: WeatherRun) => string
+  time: number,
+  granularity: WeatherGranularity
+): HoverCardRow | undefined => {
+  const placed = runs.find(({ start, end }) => time >= start && time < end);
+  if (!placed) return undefined;
+  const { run, hours } = placed;
+  const hour =
+    granularity === 'hourly'
+      ? hours.find((h) => {
+          const start = dayjs(h.timestamp).valueOf();
+          return time >= start && time < start + ONE_HOUR;
+        })
+      : undefined;
+  return {
+    label: 'Weather',
+    value: describeWeather(hour ? [hour] : hours, run.condition),
+    color: WEATHER_BASE_COLORS[run.condition],
+  };
+};
+
+// No hover card on the shading: it would stack on the chart's own popover, and the track already
+// shows the same card
+export const getWeatherAnnotations = (
+  runs: PlacedWeatherRun[]
 ): AnnotationOptions<keyof AnnotationTypeRegistry>[] =>
-  runs.map((placed) => {
-    const card = weatherCard(placed, describe(placed.run));
-    return {
-      type: 'box',
-      xMin: placed.start,
-      xMax: placed.end,
-      backgroundColor: WEATHER_SHADING[placed.run.condition],
-      borderColor: 'transparent',
-      borderWidth: 0,
-      ...annotationTooltip({
-        title: card.title,
-        titleIcon: card.titleIcon,
-        rows: card.rows,
-        lines: card.notes ?? [],
-      }),
-    };
-  });
+  runs.map(({ run, start, end }) => ({
+    type: 'box',
+    xMin: start,
+    xMax: end,
+    backgroundColor: WEATHER_SHADING[run.condition],
+    borderColor: 'transparent',
+    borderWidth: 0,
+  }));

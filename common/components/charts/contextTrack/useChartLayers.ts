@@ -11,11 +11,12 @@ import type {
 import {
   getWeatherAnnotations,
   placeWeatherRuns,
+  weatherRowAt,
 } from '../../../../modules/weather/utils/weatherAnnotations';
 import type { WeatherHourly } from '../../../types/weather';
 import type { OldAlert } from '../../../types/alerts';
 import { ONE_HOUR } from '../../../constants/time';
-import { alertKey, formatTimeRange, getAlertAnnotations, serviceDay } from './segments';
+import { alertKey, getAlertAnnotations, serviceDay } from './segments';
 import { chartGeometryPlugin } from './chartGeometryPlugin';
 import type { TrackGeometry } from './chartGeometryPlugin';
 import { useLayerStore } from './layerStore';
@@ -93,6 +94,10 @@ export const useChartLayers = ({
   const [geometry, setGeometry] = useState<TrackGeometry | null>(null);
   const geometryPlugin: Plugin = useMemo(() => chartGeometryPlugin(setGeometry), []);
 
+  const pinnedRuns = useMemo(
+    () => weatherRuns.filter(({ key }) => pinned[key]),
+    [weatherRuns, pinned]
+  );
   const annotations: AnnotationOptions<keyof AnnotationTypeRegistry>[] = useMemo(() => {
     if (!enabled) return [];
     const pinnedAlerts =
@@ -102,12 +107,9 @@ export const useChartLayers = ({
             startDate
           )
         : [];
-    const weatherShading = getWeatherAnnotations(
-      weatherRuns.filter(({ key }) => pinned[key]),
-      (run) => formatTimeRange(run.start, run.end, granularity === 'daily')
-    );
+    const weatherShading = getWeatherAnnotations(pinnedRuns);
     return [...pinnedAlerts, ...weatherShading];
-  }, [enabled, withAlerts, alerts, startDate, pinned, weatherRuns, granularity]);
+  }, [enabled, withAlerts, alerts, startDate, pinned, pinnedRuns]);
 
   const layers: ChartLayers = {
     enabled,
@@ -122,5 +124,9 @@ export const useChartLayers = ({
     geometry,
   };
 
-  return { layers, annotations, temperatureEnabled, geometryPlugin };
+  /** The pinned weather at a hovered time, as a row for the chart's popover. */
+  const weatherAt = (time: number) =>
+    enabled ? weatherRowAt(pinnedRuns, time, granularity) : undefined;
+
+  return { layers, annotations, temperatureEnabled, geometryPlugin, weatherAt };
 };

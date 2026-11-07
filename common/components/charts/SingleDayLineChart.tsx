@@ -79,6 +79,7 @@ export const SingleDayLineChart = ({
     annotations: layerAnnotations,
     temperatureEnabled: tempEnabled,
     geometryPlugin,
+    weatherAt,
   } = useChartLayers({
     startDate: date,
     endDate: date,
@@ -292,6 +293,8 @@ export const SingleDayLineChart = ({
                         color: TEMPERATURE_LINE_COLOR,
                       });
                     }
+                    const weatherRow = hoveredTime === null ? undefined : weatherAt(hoveredTime);
+                    if (weatherRow) content.rows?.push(weatherRow);
 
                     const dataPoint = data[(actual ?? items[0]).dataIndex];
                     const { train, chips, load } = consistHoverContent(dataPoint);

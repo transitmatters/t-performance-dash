@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { WeatherHourly } from '../../../common/types/weather';
 import { describeWeather, weatherRows } from './weatherDetails';
+import { WEATHER_BASE_COLORS, placeWeatherRuns, weatherRowAt } from './weatherAnnotations';
 
 const hour = (
   weather_code: number,
@@ -56,5 +57,31 @@ describe('weatherRows', () => {
 
   it('skips rows that were never reported', () => {
     expect(weatherRows([hour(45, 'fog', 0, null)], 'fog')).toEqual([]);
+  });
+});
+
+describe('weatherRowAt', () => {
+  const at = (time: string) => new Date(time).getTime();
+  const rainHour = (timestamp: string, code: number): WeatherHourly => ({
+    ...hour(code, 'rain', 0.1),
+    timestamp,
+  });
+  const hours = [rainHour('2026-02-07T14:00:00', 61), rainHour('2026-02-07T15:00:00', 63)];
+
+  it('describes the hovered hour on hourly charts', () => {
+    const runs = placeWeatherRuns(hours, 'hourly');
+    expect(weatherRowAt(runs, at('2026-02-07T15:30:00'), 'hourly')).toEqual({
+      label: 'Weather',
+      value: 'Moderate rain',
+      color: WEATHER_BASE_COLORS.rain,
+    });
+    expect(weatherRowAt(runs, at('2026-02-07T16:30:00'), 'hourly')).toBeUndefined();
+  });
+
+  it("summarizes the day on daily charts, plotted at the day's midnight", () => {
+    const runs = placeWeatherRuns(hours, 'daily');
+    expect(weatherRowAt(runs, at('2026-02-07T00:00:00'), 'daily')?.value).toBe(
+      'Light to moderate rain'
+    );
   });
 });
