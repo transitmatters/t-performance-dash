@@ -13,6 +13,11 @@ interface DwellsAggregateChartProps {
   fromStation: Station;
   showLegend?: boolean;
   dayFilter?: DayFilter;
+  /** Defaults to the page's dates; an embed passes its own. */
+  startDate?: string;
+  endDate?: string;
+  fill?: boolean;
+  trendline?: boolean;
 }
 
 export const DwellsAggregateChart = ({
@@ -20,10 +25,14 @@ export const DwellsAggregateChart = ({
   toStation,
   fromStation,
   dayFilter = 'all',
+  startDate: startDateProp,
+  endDate: endDateProp,
+  fill = false,
+  trendline = false,
 }: DwellsAggregateChartProps) => {
-  const {
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { query } = useDelimitatedRoute();
+  const startDate = startDateProp ?? query.startDate;
+  const endDate = endDateProp ?? query.endDate;
 
   const chart = useMemo(() => {
     // Filter data based on dayFilter
@@ -53,9 +62,12 @@ export const DwellsAggregateChart = ({
         includeBothStopsForLocation={false}
         fname="dwells"
         yUnit="Minutes"
+        fill={fill}
+        trendline={trendline}
+        embedChart={'dwells'}
       />
     );
-  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter]);
+  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline]);
 
   return chart;
 };

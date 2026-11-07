@@ -52,25 +52,45 @@ export type DelaysEmbedChart = (typeof EMBED_DELAYS_CHARTS)[number];
 export const isDelaysEmbed = (line: string, chart: string): chart is DelaysEmbedChart =>
   EMBED_DELAYS_CHARTS.includes(chart as DelaysEmbedChart) && LINE_PAGE_LINES.delays.includes(line);
 
-/** Single-day trip charts that can be iframed, and the modes whose trip page shows each one. */
+/** Trip charts that can be iframed, by trip page, and the modes whose trip page shows each one. */
 export const EMBED_TRIP_CHART_LINES = {
-  traveltimes: ALL_MODES,
-  headways: ALL_MODES,
-  dwells: [...RAIL_LINES, 'commuter-rail'],
-  'headway-distribution': [...RAIL_LINES, 'ferry'],
-} satisfies Record<string, string[]>;
+  single: {
+    traveltimes: ALL_MODES,
+    headways: ALL_MODES,
+    dwells: [...RAIL_LINES, 'commuter-rail'],
+    'headway-distribution': [...RAIL_LINES, 'ferry'],
+  },
+  multi: {
+    traveltimes: ALL_MODES,
+    speeds: RAIL_LINES,
+    headways: ALL_MODES,
+    dwells: [...RAIL_LINES, 'commuter-rail'],
+    'traveltimes-by-hour': ALL_MODES,
+  },
+} satisfies Record<string, Record<string, string[]>>;
 
-export type TripEmbedChart = keyof typeof EMBED_TRIP_CHART_LINES;
+export type TripEmbedPage = keyof typeof EMBED_TRIP_CHART_LINES;
+export type TripEmbedChart<P extends TripEmbedPage> = Extract<
+  keyof (typeof EMBED_TRIP_CHART_LINES)[P],
+  string
+>;
 
-export const isTripEmbed = (line: string, chart: string): chart is TripEmbedChart =>
-  Object.hasOwn(EMBED_TRIP_CHART_LINES, chart) &&
-  EMBED_TRIP_CHART_LINES[chart as TripEmbedChart].includes(line);
+export const isTripEmbed = <P extends TripEmbedPage>(
+  page: P,
+  line: string,
+  chart: string
+): chart is TripEmbedChart<P> => {
+  const charts: Record<string, string[]> = EMBED_TRIP_CHART_LINES[page];
+  return Object.hasOwn(charts, chart) && charts[chart].includes(line);
+};
 
 /** Prerendered like STATIC_PATHS so S3 serves them, but they get no link-preview card. */
 export const EMBED_PATHS: string[] = [
   ...EMBED_SLOWZONES_LINES.map((line) => `/embed/${line}/slowzones/`),
-  ...Object.entries(EMBED_TRIP_CHART_LINES).flatMap(([chart, lines]) =>
-    lines.map((line) => `/embed/${line}/trips/single/${chart}/`)
+  ...Object.entries(EMBED_TRIP_CHART_LINES).flatMap(([page, charts]) =>
+    Object.entries(charts).flatMap(([chart, lines]) =>
+      lines.map((line) => `/embed/${line}/trips/${page}/${chart}/`)
+    )
   ),
   ...EMBED_DELAYS_CHARTS.flatMap((chart) =>
     LINE_PAGE_LINES.delays.map((line) => `/embed/${line}/delays/${chart}/`)

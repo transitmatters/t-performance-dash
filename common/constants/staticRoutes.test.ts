@@ -32,6 +32,16 @@ describe('EMBED_PATHS', () => {
     expect(delays).not.toContain('/embed/ferry/delays/total/');
   });
 
+  it('covers each multi-day trip chart only for the modes whose trip page shows it', () => {
+    const trips = EMBED_PATHS.filter((path) => path.includes('/trips/multi/'));
+    expect(trips).toHaveLength(35);
+    expect(trips).toContain('/embed/red/trips/multi/speeds/');
+    expect(trips).toContain('/embed/ferry/trips/multi/traveltimes-by-hour/');
+    expect(trips).toContain('/embed/commuter-rail/trips/multi/dwells/');
+    expect(trips).not.toContain('/embed/bus/trips/multi/speeds/');
+    expect(trips).not.toContain('/embed/bus/trips/multi/dwells/');
+  });
+
   it('stays out of STATIC_PATHS, which drives the link-preview cards', () => {
     expect(EMBED_PATHS.filter((path) => STATIC_PATHS.includes(path))).toEqual([]);
   });

@@ -47,12 +47,16 @@ const routeSearch = (search: RawSearch) => ({
  * sender was actually looking at — a "weekdays only" chart shared as "all days" is a different
  * claim. Each control checks its value against its own options (see useChartToggle).
  */
-const chartSearch = (search: RawSearch) => ({
-  ttView: str(search.ttView),
+const dayFilterSearch = (search: RawSearch) => ({
   ttDays: str(search.ttDays),
   hwDays: str(search.hwDays),
   dwDays: str(search.dwDays),
   peak: str(search.peak),
+});
+
+const chartSearch = (search: RawSearch) => ({
+  ttView: str(search.ttView),
+  ...dayFilterSearch(search),
 });
 
 // Same idea for the page-level toggles on Speed, Service and Fleet.
@@ -144,6 +148,18 @@ export const validateTripEmbedSearch = (search: RawSearch) => ({
   ...routeSearch(search),
 });
 
+/** A multi-day trip chart embed also keeps its card's day filter. */
+/** `?trend=1` draws the trendline, which the page turns on from the legend an embed leaves out. */
+const trendSearch = (search: RawSearch) => ({
+  trend: oneOf(['1'])(search.trend),
+});
+
+export const validateMultiTripEmbedSearch = (search: RawSearch) => ({
+  ...validateTripEmbedSearch(search),
+  ...dayFilterSearch(search),
+  ...trendSearch(search),
+});
+
 /**
  * Every param any route declares. Shared components (the sidebar, date controls) read the search
  * through this rather than a route's match: they render outside the matched route, and a match's
@@ -157,6 +173,7 @@ export const validateAnySearch = (search: RawSearch) => ({
   ...fleetSearch(search),
   ...delaysSearch(search),
   ...validateEmbedSearch(search),
+  ...trendSearch(search),
 });
 
 export type QueryParams = Partial<ReturnType<typeof validateAnySearch>>;
