@@ -5,14 +5,14 @@ import { TripChartEmbed } from '../../../../../modules/tripexplorer/TripChartEmb
 
 function TripChartEmbedPage() {
   const { line, chart } = Route.useParams();
-  if (!isTripEmbed(line, chart)) return null;
-  return <TripChartEmbed chart={chart} />;
+  if (!isTripEmbed('single', line, chart)) return null;
+  return <TripChartEmbed page="single" chart={chart} />;
 }
 
 export const Route = createFileRoute('/embed/$line/trips/single/$chart')({
   validateSearch: validateTripEmbedSearch,
   beforeLoad: ({ params }) => {
-    if (!isTripEmbed(params.line, params.chart)) throw notFound();
+    if (!isTripEmbed('single', params.line, params.chart)) throw notFound();
   },
   staticData: { embed: true },
   component: TripChartEmbedPage,

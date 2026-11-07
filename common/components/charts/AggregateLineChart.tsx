@@ -21,6 +21,7 @@ import {
   dailyTemperatureOn,
   getDailyTemperatureSeries,
 } from '../../../modules/weather/utils/temperatureDataset';
+import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartDiv } from './ChartDiv';
@@ -85,6 +86,9 @@ export const AggregateLineChart = ({
   yUnit = 'Minutes',
   chartTitle,
   hoverRows,
+  fill = false,
+  embedChart,
+  trendline = false,
 }: AggregateLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -95,15 +99,15 @@ export const AggregateLineChart = ({
     temperatureEnabled: tempEnabled,
     geometryPlugin,
     weatherAt,
-  } = useChartLayers({ startDate, endDate, granularity: 'daily', enabled: !hourly });
+  } = useChartLayers({ startDate, endDate, granularity: 'daily', enabled: !hourly && !fill });
   const { weather } = layers;
   const temperatureSeries = useMemo(
-    () => (!hourly && tempEnabled && weather ? getDailyTemperatureSeries(weather) : null),
-    [hourly, tempEnabled, weather]
+    () => (!hourly && !fill && tempEnabled && weather ? getDailyTemperatureSeries(weather) : null),
+    [hourly, fill, tempEnabled, weather]
   );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
-  const [isTrendlineVisible, setIsTrendlineVisible] = useState(false);
+  const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
 
   const trendlineData = useMemo(() => {
@@ -192,8 +196,8 @@ export const AggregateLineChart = ({
   }
 
   return (
-    <ChartStack>
-      <ChartDiv isMobile={isMobile}>
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <ChartDiv isMobile={isMobile} fill={fill}>
         <Line
           id={chartId}
           ref={ref}
@@ -229,7 +233,7 @@ export const AggregateLineChart = ({
               yTemp: {
                 type: 'linear',
                 position: 'right',
-                display: !hourly && tempEnabled,
+                display: !hourly && !fill && tempEnabled,
                 suggestedMin: TEMPERATURE_SCALE.min,
                 suggestedMax: TEMPERATURE_SCALE.max,
                 title: {
@@ -353,38 +357,43 @@ export const AggregateLineChart = ({
           plugins={[ChartjsPluginWatermark, geometryPlugin]}
         />
       </ChartDiv>
-      <ContextTrack layers={layers} chartRef={ref} />
-      <div className="flex flex-col">
-        <div className="flex flex-row flex-wrap items-end gap-x-4 gap-y-2">
-          {showLegend && (
-            <LegendLongTerm
-              isTrendlineVisible={isTrendlineVisible}
-              onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
-            />
-          )}
-          {startDate && (
-            <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
-              <CopyLinkButton />
-              <SaveChartImageButton
-                chartRef={ref}
-                datasetName={fname}
-                location={location}
-                includeBothStopsForLocation={includeBothStopsForLocation}
-                startDate={startDate}
-                endDate={endDate}
-                chartTitle={chartTitle}
+      {!fill && <ContextTrack layers={layers} chartRef={ref} />}
+      {!fill && (
+        <div className="flex flex-col">
+          <div className="flex flex-row flex-wrap items-end gap-x-4 gap-y-2">
+            {showLegend && (
+              <LegendLongTerm
+                isTrendlineVisible={isTrendlineVisible}
+                onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
               />
-              <DownloadButton
-                data={data}
-                datasetName={fname}
-                location={location}
-                includeBothStopsForLocation={includeBothStopsForLocation}
-                startDate={startDate}
-              />
-            </div>
-          )}
+            )}
+            {startDate && (
+              <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
+                <CopyLinkButton />
+                <SaveChartImageButton
+                  chartRef={ref}
+                  datasetName={fname}
+                  location={location}
+                  includeBothStopsForLocation={includeBothStopsForLocation}
+                  startDate={startDate}
+                  endDate={endDate}
+                  chartTitle={chartTitle}
+                />
+                <DownloadButton
+                  data={data}
+                  datasetName={fname}
+                  location={location}
+                  includeBothStopsForLocation={includeBothStopsForLocation}
+                  startDate={startDate}
+                />
+                {embedChart && (
+                  <TripEmbedButton page="multi" chart={embedChart} trendline={isTrendlineVisible} />
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </ChartStack>
   );
 };

@@ -164,7 +164,7 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
         </ChartDiv>
         {!fill && (
           <div className="-mr-2.5 flex flex-row justify-end">
-            <TripEmbedButton chart="headway-distribution" />
+            <TripEmbedButton page="single" chart="headway-distribution" />
           </div>
         )}
       </ChartStack>

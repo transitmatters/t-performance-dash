@@ -2,15 +2,53 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from '../../../common/components/general/Link';
 import { METRICS, definitionFor } from '../config';
 import { STATUS_LABELS } from '../copy';
-import { formatCell, formatThresholds, formatTrend, STATUS_TONE, trendSentiment } from '../format';
+import {
+  formatCell,
+  formatThresholds,
+  formatTrend,
+  formatValue,
+  STATUS_TONE,
+  trendSentiment,
+} from '../format';
 import { cn } from '../../../common/utils/cn';
-import type { Cell, Row } from '../types';
+import type { Cell, CellPart, Row } from '../types';
 import { StatusNode } from './StatusNode';
 
 interface CellDetailProps {
   row: Row;
   cell: Cell;
 }
+
+/** One measure behind a combined cell: its own figure, status, cut-offs and page. */
+const PartDetail = ({ part }: { part: CellPart }) => {
+  const thresholds = part.status !== 'na' ? formatThresholds(part) : undefined;
+  return (
+    <li className="flex flex-col gap-0.5">
+      <div className="flex items-center gap-1.5 text-xs">
+        <span className="text-primary">
+          <StatusNode status={part.status} className="size-3.5" />
+        </span>
+        <span className="font-medium">
+          {part.href ? (
+            <Link href={part.href} className="hover:underline">
+              {part.label}
+            </Link>
+          ) : (
+            part.label
+          )}
+        </span>
+        <span className="tabular-nums">
+          {formatValue(part.score, part.scoreUnit)}
+          {part.unitLabel && part.score !== null && ` ${part.unitLabel}`}
+        </span>
+        <span className={cn('ml-auto font-medium', STATUS_TONE[part.status])}>
+          {STATUS_LABELS[part.status]}
+        </span>
+      </div>
+      {thresholds && <p className="pl-5 text-[11px] text-muted-foreground">{thresholds}</p>}
+    </li>
+  );
+};
 
 /** Everything behind one stop: the number, what it's judged against, and how the status is set. */
 export const CellDetail = ({ row, cell }: CellDetailProps) => {
@@ -52,13 +90,20 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
           </p>
         )}
       </div>
+      {cell.parts && cell.parts.length > 0 && (
+        <ul className="flex flex-col gap-1.5 rounded-md border px-2 py-1.5">
+          {cell.parts.map((part) => (
+            <PartDetail key={part.label} part={part} />
+          ))}
+        </ul>
+      )}
       {cell.notes?.map((note) => (
         <p key={note} className="text-xs">
           {note}
         </p>
       ))}
       {definition && <p className="border-t pt-2 text-xs text-muted-foreground">{definition}</p>}
-      {cell.status !== 'na' && thresholds && (
+      {cell.status !== 'na' && !cell.parts?.length && thresholds && (
         <p className="text-xs text-muted-foreground">{thresholds}</p>
       )}
       {cell.href && (

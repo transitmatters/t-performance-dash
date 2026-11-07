@@ -9,6 +9,7 @@ import { useBusScorecardRows, BusMetricChart } from './busOverview';
 import { useCrScorecardRows, CrMetricChart } from './crOverview';
 import { MetricsScorecard } from './MetricsScorecard';
 import { MetricChartCard } from './MetricChartCard';
+import type { MetricCopy } from './MetricChartCard';
 import { SubwayMetricChart } from './SubwayMetricChart';
 import { ServiceAlertsCard } from './ServiceAlertsCard';
 import { AccessibilityCard } from './AccessibilityCard';
@@ -21,14 +22,17 @@ interface OverviewLayoutProps {
   selectedMetric: MetricKey;
   onSelectMetric: (metric: MetricKey) => void;
   chart: ReactNode;
+  chartCopy?: MetricCopy;
   cards: ReactNode;
 }
 
-const OverviewLayout = ({ chart, cards, ...scorecard }: OverviewLayoutProps) => (
+const OverviewLayout = ({ chart, chartCopy, cards, ...scorecard }: OverviewLayoutProps) => (
   <div className="flex w-full flex-col gap-6 md:gap-8">
     <div className="flex flex-col gap-4">
       <MetricsScorecard {...scorecard} />
-      <MetricChartCard metric={scorecard.selectedMetric}>{chart}</MetricChartCard>
+      <MetricChartCard metric={scorecard.selectedMetric} copy={chartCopy}>
+        {chart}
+      </MetricChartCard>
     </div>
     {cards}
   </div>
@@ -56,6 +60,11 @@ const SubwayOverview = ({ lineShort }: { lineShort: LineShort }) => {
   );
 };
 
+// Bus uses how long delay alerts were up, not the delay they stated
+const BUS_CHART_COPY: MetricCopy = {
+  delays: { title: 'Delays', subtitle: 'Minutes a delay alert was up per day, last 30 days' },
+};
+
 const BusOverview = () => {
   const { query } = useDelimitatedRoute();
   const busRoute = query.busRoute ?? '1';
@@ -66,10 +75,11 @@ const BusOverview = () => {
     <OverviewLayout
       rows={rows}
       isLoading={isLoading}
-      skeletonRows={2}
+      skeletonRows={3}
       selectedMetric={selectedMetric}
       onSelectMetric={setSelectedMetric}
       chart={<BusMetricChart metric={selectedMetric} busRoute={busRoute} />}
+      chartCopy={BUS_CHART_COPY}
       cards={<ServiceAlertsCard lineShort="Bus" busRoute={busRoute} label={`Route ${busRoute}`} />}
     />
   );
