@@ -16,8 +16,6 @@ import {
   TODAY_STRING,
 } from '../../../common/constants/dates';
 import { SPEED_RANGE_PARAM_MAP } from '../../speed/constants/speeds';
-import { LANDING_RAIL_LINES } from '../../../common/types/lines';
-import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { DATA_LABELS_LANDING, watermarkLayout } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 
@@ -62,9 +60,7 @@ export const LandingPageChart: React.FC<LandingPageChartsProps> = ({ datasets, l
                 position: 'nearest',
                 callbacks: {
                   label: (value) =>
-                    `${value.formattedValue}% of historical maximum (${
-                      LINE_OBJECTS[LANDING_RAIL_LINES[value.datasetIndex]].name
-                    })`,
+                    `${value.formattedValue}% of historical maximum (${value.dataset.label})`,
                   title: (value) => {
                     const startDay = dayjs(value[0].label);
                     const endDay = startDay.add(6, 'days');
