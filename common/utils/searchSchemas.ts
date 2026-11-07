@@ -133,6 +133,7 @@ export const validateEmbedSearch = (search: RawSearch) => ({
 export const validateServiceEmbedSearch = (search: RawSearch) => ({
   ...validateEmbedSearch(search),
   compare: oneOf(['scheduled', 'peak'])(search.compare),
+  day: oneOf(['weekday', 'saturday', 'sunday'])(search.day),
 });
 
 /** A trip chart embed carries the trip it shows, but not the page's view toggles. */

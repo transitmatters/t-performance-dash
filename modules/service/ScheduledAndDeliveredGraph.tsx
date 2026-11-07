@@ -17,6 +17,7 @@ interface ScheduledAndDeliveredGraphProps {
   benchmarks?: Benchmark[];
   blocks?: Block[];
   hoverCard?: ComponentProps<typeof TimeSeriesChart>['hoverCard'];
+  fill?: boolean;
 }
 
 export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProps) => {
@@ -30,6 +31,7 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
     benchmarks,
     blocks,
     hoverCard,
+    fill,
   } = props;
   const data = useMemo(() => [scheduled, delivered], [scheduled, delivered]);
   const { line } = useDelimitatedRoute();
@@ -44,6 +46,7 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
       benchmarks={benchmarks}
       blocks={blocks}
       hoverCard={hoverCard}
+      fill={fill}
     />
   );
 };

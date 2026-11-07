@@ -5,14 +5,10 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { ParamsType } from '../speed/constants/speeds';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { EmbedButton } from '../../common/components/buttons/EmbedButton';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { getPercentageData } from './utils/utils';
-import {
-  type ServiceComparison,
-  SERVICE_COMPARISON_LABELS,
-  getServiceDeliveredEmbedSnippet,
-} from './embed';
+import { type ServiceComparison, SERVICE_COMPARISON_LABELS } from './embed';
+import { ServiceEmbedButton } from './ServiceEmbedButton';
 
 interface PercentageServiceGraphWrapperProps {
   data: DeliveredTripMetrics[];
@@ -36,7 +32,7 @@ export const PercentageServiceGraphWrapper = ({
   comparison,
   fill = false,
 }: PercentageServiceGraphWrapperProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line } = useDelimitatedRoute();
   const peakService = useScheduledServiceBaseline(line);
 
   const { scheduled, peak } = useMemo(
@@ -59,12 +55,8 @@ export const PercentageServiceGraphWrapper = ({
         fill={fill}
       />
       {!fill && (
-        <div className="-mr-2.5 flex justify-end">
-          <EmbedButton
-            getSnippet={() =>
-              getServiceDeliveredEmbedSnippet(linePath, { startDate, endDate, comparison })
-            }
-          />
+        <div className="flex flex-row items-end justify-end gap-4">
+          <ServiceEmbedButton chart="delivered" />
         </div>
       )}
     </ChartStack>
