@@ -1,4 +1,5 @@
 import type { ChartType, TooltipItem, TooltipModel } from 'chart.js';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 import type { SeverityTone } from '../../../utils/chartTheme';
 
@@ -20,6 +21,8 @@ export interface HoverCardRow {
 export interface HoverCardContent {
   // Defaults to the title Chart.js builds from `callbacks.title` and the axis `tooltipFormat`
   title?: string;
+  // Drawn before the title, e.g. the weather condition it names
+  titleIcon?: { icon: IconDefinition; color?: string };
   hero?: { value: string; unit?: string; caption?: string; color?: string };
   badge?: { text: string; tone: HoverCardTone };
   meter?: { fraction: number; label: string; color?: string };
