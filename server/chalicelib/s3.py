@@ -65,13 +65,16 @@ def is_bus(stop_id: str):
 def is_cr(stop_id: str):
     """Check if a stop ID belongs to a commuter rail route.
 
+    Matches the standard "CR-" prefix as well as the CapeFlyer, whose stop IDs and
+    GTFS route_id use the "CapeFlyer" prefix rather than "CR-".
+
     Args:
       stop_id: str: The stop identifier.
 
     Returns:
-      bool: True if the stop ID starts with "CR-".
+      bool: True if the stop ID is a commuter rail (incl. CapeFlyer) identifier.
     """
-    return stop_id.startswith("CR-")
+    return stop_id.startswith("CR-") or stop_id.startswith("CapeFlyer")
 
 
 def is_ferry(stop_id: str):
