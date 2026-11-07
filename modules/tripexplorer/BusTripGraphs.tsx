@@ -12,6 +12,8 @@ import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregate
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
+import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
+import { BunchingByHourWrapper } from '../bunching/BunchingByHourWrapper';
 
 interface BusTripGraphsProps {
   fromStation: Station;
@@ -107,6 +109,32 @@ export const BusTripGraphs: React.FC<BusTripGraphsProps> = ({
               line={line}
             />
             <HeadwaysSingleWrapper
+              query={headways}
+              toStation={toStation}
+              fromStation={fromStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="Headway distribution"
+              subtitle="Time between buses"
+              location={location}
+              line={line}
+            />
+            <HeadwaysHistogramWrapper
+              query={headways}
+              toStation={toStation}
+              fromStation={fromStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="Bunching by hour"
+              subtitle="Percentage of bunched, on-time, and gapped trips"
+              location={location}
+              line={line}
+            />
+            <BunchingByHourWrapper
               query={headways}
               toStation={toStation}
               fromStation={fromStation}
