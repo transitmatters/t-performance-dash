@@ -365,7 +365,7 @@ class ReliabilityParams(BaseModel):
     """Parameters for the `/api/reliability` endpoint.
 
     Attributes:
-        route_id: `RIDE`, a commuter rail route, or `commuter-rail` for all of commuter rail.
+        route_id: `RIDE`, a commuter rail route, `commuter-rail` for all of commuter rail, or a subway line.
         start_date: Start of date range.
         end_date: End of date range.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
@@ -374,7 +374,8 @@ class ReliabilityParams(BaseModel):
     route_id: str = Field(
         description=(
             "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), "
-            "or `commuter-rail` for every commuter rail route combined."
+            "`commuter-rail` for every commuter rail route combined, "
+            "or a subway line (`line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`)."
         )
     )
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
@@ -1163,12 +1164,30 @@ class ReliabilityCounts(BaseModel):
     cancelled: int
 
 
+class HeadwayCounts(BaseModel):
+    """Headways by their ratio to the scheduled headway.
+
+    Attributes:
+        headways_under_50: At most half the scheduled headway (bunched).
+        headways_50_75: Over 50% and up to 75%.
+        headways_75_125: Over 75% and under 125%.
+        headways_125_150: 125% up to 150%.
+        headways_over_150: 150% or more.
+    """
+
+    headways_under_50: int
+    headways_50_75: int
+    headways_75_125: int
+    headways_125_150: int
+    headways_over_150: int
+
+
 class ReliabilityEntry(BaseModel):
-    """Summed on-time performance counts for one day, week, or month.
+    """Summed reliability counts for one day, week, or month.
 
     The RIDE entries have `completed` and `onTime`, plus `requests`, `noShows` and `missed` for periods
     where every day recorded them. Commuter rail entries have `otpNumerator`, `otpDenominator`,
-    `cancelled`, `peak` and `offPeak`.
+    `cancelled`, `peak` and `offPeak`. Subway entries have the five headway counts and `byDirection`.
 
     Attributes:
         date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
@@ -1183,6 +1202,12 @@ class ReliabilityEntry(BaseModel):
         cancelled: Commuter rail cancelled trips.
         peak: Commuter rail peak-period counts.
         offPeak: Commuter rail off-peak counts.
+        headways_under_50: Subway headways at most half the scheduled headway.
+        headways_50_75: Subway headways over 50% and up to 75% of scheduled.
+        headways_75_125: Subway headways over 75% and under 125% of scheduled.
+        headways_125_150: Subway headways 125% up to 150% of scheduled.
+        headways_over_150: Subway headways 150% of scheduled or more.
+        byDirection: Subway headway counts per direction ID (`"0"`, `"1"`).
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1198,10 +1223,16 @@ class ReliabilityEntry(BaseModel):
     cancelled: int | None = None
     peak: ReliabilityCounts | None = None
     offPeak: ReliabilityCounts | None = None
+    headways_under_50: int | None = None
+    headways_50_75: int | None = None
+    headways_75_125: int | None = None
+    headways_125_150: int | None = None
+    headways_over_150: int | None = None
+    byDirection: Dict[str, HeadwayCounts] | None = None
 
 
 class ReliabilityResponse(RootModel[List[ReliabilityEntry]]):
-    """Response for `/api/reliability`: on-time performance counts, one entry per period."""
+    """Response for `/api/reliability`: on-time performance or headway counts, one entry per period."""
 
 
 class CrScorecardDirection(BaseModel):

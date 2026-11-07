@@ -11,6 +11,7 @@ import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { TheRideReliability } from './TheRideReliability';
 import { CommuterRailReliability } from './CommuterRailReliability';
+import { SubwayReliability } from './SubwayReliability';
 
 // "commuter-rail" asks the API for every commuter rail route combined
 const ALL_COMMUTER_RAIL = 'commuter-rail';
@@ -18,10 +19,12 @@ const ALL_COMMUTER_RAIL = 'commuter-rail';
 export function ReliabilityDetails() {
   const {
     line,
+    lineShort,
     query: { startDate, endDate, crRoute },
   } = useDelimitatedRoute();
   const isRide = line === 'line-RIDE';
-  const routeId = isRide ? 'RIDE' : (crRoute ?? ALL_COMMUTER_RAIL);
+  const isSubway = line !== undefined && line !== 'line-RIDE' && line !== 'line-commuter-rail';
+  const routeId = isRide ? 'RIDE' : isSubway ? line : (crRoute ?? ALL_COMMUTER_RAIL);
   const { agg } = useMemo(
     () => getSpeedGraphConfig(dayjs(startDate), dayjs(endDate)),
     [startDate, endDate]
@@ -33,17 +36,40 @@ export function ReliabilityDetails() {
     enabled
   );
 
-  const title = isRide
-    ? 'Reliability'
-    : `Reliability · ${crRoute ? COMMUTER_RAIL_LINE_NAMES[crRoute] : 'All lines'}`;
+  const title =
+    isRide || isSubway
+      ? 'Reliability'
+      : `Reliability · ${crRoute ? COMMUTER_RAIL_LINE_NAMES[crRoute] : 'All lines'}`;
   const props = { reliability, agg, startDate, endDate };
 
   return (
     <PageWrapper pageTitle={title}>
       <ChartPageDiv>
-        {isRide ? <TheRideReliability {...props} /> : <CommuterRailReliability {...props} />}
+        {isSubway ? (
+          <SubwayReliability line={line} lineShort={lineShort} {...props} />
+        ) : isRide ? (
+          <TheRideReliability {...props} />
+        ) : (
+          <CommuterRailReliability {...props} />
+        )}
         <DataNotes>
-          {isRide ? (
+          {isSubway ? (
+            <>
+              <p>
+                A headway is the time between one train leaving a station and the next. We measure
+                every headway at every station except the terminals, from the arrival and departure
+                records for each stop, and compare it with the scheduled headway at that time of
+                day. Where branches share track, trains from every branch count together, since
+                riders there can take any of them.
+              </p>
+              <p>
+                75–125% of the scheduled headway is the band the home page judges each line on;
+                50–150% is shown alongside it. Before September 2026, the MBTA's monthly archives
+                compare Green Line trunk stations with a single branch's schedule, so those weeks
+                show more bunching than riders saw.
+              </p>
+            </>
+          ) : isRide ? (
             <>
               <p>
                 Daily trip counts published by the MBTA on its open data portal. From September 2025

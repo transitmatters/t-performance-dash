@@ -760,7 +760,7 @@ def get_station_ridership():
     docs=Docs(request=models.ReliabilityParams, responses=[Resp(models.ReliabilityResponse), BAD_REQUEST]),
 )
 def get_reliability():
-    """Retrieve on-time performance counts for The RIDE or commuter rail over a date range."""
+    """Retrieve on-time performance counts for The RIDE or commuter rail, or headway counts for a subway line."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
     if query_params["agg"] not in reliability.AGGS:

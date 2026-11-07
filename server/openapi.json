@@ -1345,7 +1345,7 @@
         "tags": [
           "/api"
         ],
-        "summary": "Retrieve on-time performance counts for The RIDE or commuter rail over a date range.",
+        "summary": "Retrieve on-time performance counts for The RIDE or commuter rail, or headway counts for a subway line.",
         "parameters": [
           {
             "in": "query",
@@ -1354,7 +1354,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), or `commuter-rail` for every commuter rail route combined."
+            "description": "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), `commuter-rail` for every commuter rail route combined, or a subway line (`line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`)."
           },
           {
             "in": "query",
@@ -2607,10 +2607,10 @@
         "type": "array"
       },
       "ReliabilityParams": {
-        "description": "Parameters for the `/api/reliability` endpoint.\n\nAttributes:\n    route_id: `RIDE`, a commuter rail route, or `commuter-rail` for all of commuter rail.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
+        "description": "Parameters for the `/api/reliability` endpoint.\n\nAttributes:\n    route_id: `RIDE`, a commuter rail route, `commuter-rail` for all of commuter rail, or a subway line.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
         "properties": {
           "route_id": {
-            "description": "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), or `commuter-rail` for every commuter rail route combined.",
+            "description": "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), `commuter-rail` for every commuter rail route combined, or a subway line (`line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`).",
             "title": "Route Id",
             "type": "string"
           },
@@ -2647,7 +2647,7 @@
         "type": "object"
       },
       "ReliabilityResponse": {
-        "description": "Response for `/api/reliability`: on-time performance counts, one entry per period.",
+        "description": "Response for `/api/reliability`: on-time performance or headway counts, one entry per period.",
         "items": {
           "$ref": "#/components/schemas/ReliabilityEntry"
         },
@@ -4056,6 +4056,40 @@
         "title": "StationRidershipEntry",
         "type": "object"
       },
+      "HeadwayCounts": {
+        "description": "Headways by their ratio to the scheduled headway.\n\nAttributes:\n    headways_under_50: At most half the scheduled headway (bunched).\n    headways_50_75: Over 50% and up to 75%.\n    headways_75_125: Over 75% and under 125%.\n    headways_125_150: 125% up to 150%.\n    headways_over_150: 150% or more.",
+        "properties": {
+          "headways_under_50": {
+            "title": "Headways Under 50",
+            "type": "integer"
+          },
+          "headways_50_75": {
+            "title": "Headways 50 75",
+            "type": "integer"
+          },
+          "headways_75_125": {
+            "title": "Headways 75 125",
+            "type": "integer"
+          },
+          "headways_125_150": {
+            "title": "Headways 125 150",
+            "type": "integer"
+          },
+          "headways_over_150": {
+            "title": "Headways Over 150",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "headways_under_50",
+          "headways_50_75",
+          "headways_75_125",
+          "headways_125_150",
+          "headways_over_150"
+        ],
+        "title": "HeadwayCounts",
+        "type": "object"
+      },
       "ReliabilityCounts": {
         "additionalProperties": true,
         "description": "On-time and cancellation counts for one commuter rail time period.\n\nAttributes:\n    otpNumerator: Trips that ran on time.\n    otpDenominator: Trips measured for on-time performance.\n    cancelled: Cancelled trips.",
@@ -4084,7 +4118,7 @@
       },
       "ReliabilityEntry": {
         "additionalProperties": true,
-        "description": "Summed on-time performance counts for one day, week, or month.\n\nThe RIDE entries have `completed` and `onTime`, plus `requests`, `noShows` and `missed` for periods\nwhere every day recorded them. Commuter rail entries have `otpNumerator`, `otpDenominator`,\n`cancelled`, `peak` and `offPeak`.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    days: Service days with data in the period.\n    completed: The RIDE completed trips.\n    onTime: The RIDE trips completed on time.\n    requests: The RIDE trip requests.\n    noShows: The RIDE rider no-shows.\n    missed: The RIDE missed trips.\n    otpNumerator: Commuter rail trips that ran on time.\n    otpDenominator: Commuter rail trips measured.\n    cancelled: Commuter rail cancelled trips.\n    peak: Commuter rail peak-period counts.\n    offPeak: Commuter rail off-peak counts.",
+        "description": "Summed reliability counts for one day, week, or month.\n\nThe RIDE entries have `completed` and `onTime`, plus `requests`, `noShows` and `missed` for periods\nwhere every day recorded them. Commuter rail entries have `otpNumerator`, `otpDenominator`,\n`cancelled`, `peak` and `offPeak`. Subway entries have the five headway counts and `byDirection`.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    days: Service days with data in the period.\n    completed: The RIDE completed trips.\n    onTime: The RIDE trips completed on time.\n    requests: The RIDE trip requests.\n    noShows: The RIDE rider no-shows.\n    missed: The RIDE missed trips.\n    otpNumerator: Commuter rail trips that ran on time.\n    otpDenominator: Commuter rail trips measured.\n    cancelled: Commuter rail cancelled trips.\n    peak: Commuter rail peak-period counts.\n    offPeak: Commuter rail off-peak counts.\n    headways_under_50: Subway headways at most half the scheduled headway.\n    headways_50_75: Subway headways over 50% and up to 75% of scheduled.\n    headways_75_125: Subway headways over 75% and under 125% of scheduled.\n    headways_125_150: Subway headways 125% up to 150% of scheduled.\n    headways_over_150: Subway headways 150% of scheduled or more.\n    byDirection: Subway headway counts per direction ID (`\"0\"`, `\"1\"`).",
         "properties": {
           "date": {
             "title": "Date",
@@ -4147,6 +4181,45 @@
           },
           "offPeak": {
             "$ref": "#/components/schemas/ReliabilityCounts"
+          },
+          "headways_under_50": {
+            "default": null,
+            "title": "Headways Under 50",
+            "nullable": true,
+            "type": "integer"
+          },
+          "headways_50_75": {
+            "default": null,
+            "title": "Headways 50 75",
+            "nullable": true,
+            "type": "integer"
+          },
+          "headways_75_125": {
+            "default": null,
+            "title": "Headways 75 125",
+            "nullable": true,
+            "type": "integer"
+          },
+          "headways_125_150": {
+            "default": null,
+            "title": "Headways 125 150",
+            "nullable": true,
+            "type": "integer"
+          },
+          "headways_over_150": {
+            "default": null,
+            "title": "Headways Over 150",
+            "nullable": true,
+            "type": "integer"
+          },
+          "byDirection": {
+            "default": null,
+            "title": "Bydirection",
+            "nullable": true,
+            "additionalProperties": {
+              "$ref": "#/components/schemas/HeadwayCounts"
+            },
+            "type": "object"
           }
         },
         "required": [

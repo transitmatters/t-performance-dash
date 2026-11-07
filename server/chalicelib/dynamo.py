@@ -193,6 +193,33 @@ def query_reliability(route_id: str, start_date: date, end_date: date):
     return items
 
 
+def query_headway_reliability(route: str, start_date: date, end_date: date):
+    """Query daily headway counts for a subway line from the HeadwayReliability DynamoDB table.
+
+    Args:
+      route: str: The line (``"line-red"``, ...).
+      start_date: date: Start of date range (inclusive).
+      end_date: date: End of date range (inclusive).
+
+    Returns:
+      list[dict]: Deserialized daily records.
+    """
+    table = dynamodb.Table("HeadwayReliability")
+    query_kwargs = {
+        "KeyConditionExpression": Key("route").eq(route)
+        & Key("date").between(start_date.isoformat(), end_date.isoformat())
+    }
+    items = []
+    while True:
+        response = table.query(**query_kwargs)
+        items.extend(ddb_json.loads(response["Items"]))
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        if not last_evaluated_key:
+            break
+        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
+    return items
+
+
 def query_regional_rail_scorecard(route_id: str, start_date: date, end_date: date):
     """Query scheduled Regional Rail metrics from the ScheduledServiceRegionalRail DynamoDB table.
 
