@@ -44,6 +44,14 @@ export const STATIC_PATHS: string[] = [
 /** Lines with an iframe-able total slow time chart; `system` draws every line on one chart. */
 export const EMBED_SLOWZONES_LINES = [...RAIL_LINES, 'system'];
 
+/** Delays page charts that can be iframed, each for every line with a Delays page. */
+export const EMBED_DELAYS_CHARTS = ['total', 'causes', 'breakdown'] as const;
+
+export type DelaysEmbedChart = (typeof EMBED_DELAYS_CHARTS)[number];
+
+export const isDelaysEmbed = (line: string, chart: string): chart is DelaysEmbedChart =>
+  EMBED_DELAYS_CHARTS.includes(chart as DelaysEmbedChart) && LINE_PAGE_LINES.delays.includes(line);
+
 /** Single-day trip charts that can be iframed, and the modes whose trip page shows each one. */
 export const EMBED_TRIP_CHART_LINES = {
   traveltimes: ALL_MODES,
@@ -63,5 +71,8 @@ export const EMBED_PATHS: string[] = [
   ...EMBED_SLOWZONES_LINES.map((line) => `/embed/${line}/slowzones/`),
   ...Object.entries(EMBED_TRIP_CHART_LINES).flatMap(([chart, lines]) =>
     lines.map((line) => `/embed/${line}/trips/single/${chart}/`)
+  ),
+  ...EMBED_DELAYS_CHARTS.flatMap((chart) =>
+    LINE_PAGE_LINES.delays.map((line) => `/embed/${line}/delays/${chart}/`)
   ),
 ];

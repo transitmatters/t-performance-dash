@@ -17,6 +17,7 @@ import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
+import { DelaysEmbedButton } from '../DelaysEmbedButton';
 import type { LineDelays } from '../../../common/types/delays';
 import { delayAxisTicks, formatDelay } from '../format';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
@@ -36,6 +37,8 @@ interface DelayBreakdownGraphProps {
   summary?: string;
   showTitle?: boolean;
   agg?: 'daily' | 'weekly';
+  /** Fill the parent's height and leave out the buttons, as an embed does. */
+  fill?: boolean;
 }
 
 export const DelayBreakdownGraph = ({
@@ -47,6 +50,7 @@ export const DelayBreakdownGraph = ({
   summary,
   showTitle = false,
   agg = 'weekly',
+  fill = false,
 }: DelayBreakdownGraphProps) => {
   const { linePath } = useDelimitatedRoute();
   const ref = useRef(null);
@@ -54,6 +58,8 @@ export const DelayBreakdownGraph = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const isShare = mode === 'share';
+  // An embed has no cause list beside it to read the colors from, so it always takes the legend.
+  const showLegend = isMobile || fill;
 
   // ISO date strings sort chronologically
   const sortedDates = [...labels].sort();
@@ -116,8 +122,8 @@ export const DelayBreakdownGraph = ({
   };
 
   return (
-    <ChartStack>
-      <ChartDiv isMobile={isMobile}>
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <ChartDiv isMobile={isMobile} fill={fill}>
         <Line
           id={`breakdownDelay-${mode}-${linePath}`}
           role="img"
@@ -147,7 +153,7 @@ export const DelayBreakdownGraph = ({
             layout: {
               padding: {
                 top: showTitle ? 25 : 0,
-                right: isMobile ? 0 : 118,
+                right: showLegend ? 0 : 118,
               },
             },
             interaction: {
@@ -181,7 +187,7 @@ export const DelayBreakdownGraph = ({
               // Bands are labelled on the chart on wider screens; on a phone there's no room for that,
               // so a legend stands in. It never filters: the cause list is the only filter.
               legend: {
-                display: isMobile,
+                display: showLegend,
                 position: 'bottom',
                 onClick: () => undefined,
                 labels: {
@@ -256,31 +262,34 @@ export const DelayBreakdownGraph = ({
                 if (showTitle) drawSimpleTitle(`Delays`, chart);
               },
             },
-            endLabels,
+            ...(showLegend ? [] : [endLabels]),
             ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <>
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName="delays-by-reason"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-            <DownloadButton
-              data={data}
-              datasetName="delays-by-reason"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </>
-        )}
-      </div>
+      {!fill && (
+        <div className="flex flex-row items-end justify-end gap-4">
+          {startDate && (
+            <>
+              <SaveChartImageButton
+                chartRef={ref}
+                datasetName="delays-by-reason"
+                includeBothStopsForLocation={false}
+                startDate={startDate}
+                endDate={endDate}
+              />
+              <DownloadButton
+                data={data}
+                datasetName="delays-by-reason"
+                includeBothStopsForLocation={false}
+                startDate={startDate}
+                endDate={endDate}
+              />
+            </>
+          )}
+          <DelaysEmbedButton chart="breakdown" />
+        </div>
+      )}
     </ChartStack>
   );
 };

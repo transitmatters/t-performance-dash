@@ -23,6 +23,15 @@ describe('EMBED_PATHS', () => {
     expect(trips).not.toContain('/embed/commuter-rail/trips/single/headway-distribution/');
   });
 
+  it('covers each Delays chart for every line with a Delays page', () => {
+    const delays = EMBED_PATHS.filter((path) => path.includes('/delays/'));
+    expect(delays).toHaveLength(21);
+    expect(delays).toContain('/embed/green/delays/breakdown/');
+    expect(delays).toContain('/embed/bus/delays/total/');
+    expect(delays).toContain('/embed/commuter-rail/delays/causes/');
+    expect(delays).not.toContain('/embed/ferry/delays/total/');
+  });
+
   it('stays out of STATIC_PATHS, which drives the link-preview cards', () => {
     expect(EMBED_PATHS.filter((path) => STATIC_PATHS.includes(path))).toEqual([]);
   });
