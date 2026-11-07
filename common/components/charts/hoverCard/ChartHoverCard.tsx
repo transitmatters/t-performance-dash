@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { SEVERITY_COLORS } from '../../../utils/chartTheme';
 import { hideHoverCard, useHoverCardStore } from './hoverCardStore';
@@ -88,7 +89,7 @@ const TrainConsist = ({ train }: { train: NonNullable<HoverCardContent['train']>
 };
 
 export const HoverCardBody = ({ content }: { content: HoverCardContent }) => {
-  const { title, hero, badge, meter, rows, chips, train, notes } = content;
+  const { title, titleIcon, hero, badge, meter, rows, chips, train, notes } = content;
   const hasDetail = Boolean(
     hero || badge || meter || rows?.length || chips?.values.length || train?.cars.length
   );
@@ -101,7 +102,19 @@ export const HoverCardBody = ({ content }: { content: HoverCardContent }) => {
   );
   return (
     <div className="flex flex-col gap-2">
-      {title && <p className="font-medium text-foreground">{title}</p>}
+      {title && (
+        <p className="flex items-center gap-1.5 font-medium text-foreground">
+          {titleIcon && (
+            <FontAwesomeIcon
+              icon={titleIcon.icon}
+              aria-hidden
+              className="size-3.5 shrink-0"
+              style={{ color: titleIcon.color }}
+            />
+          )}
+          {title}
+        </p>
+      )}
       {hero && (
         <div className="flex items-baseline gap-1.5">
           {hero.color && (

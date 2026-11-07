@@ -10,13 +10,6 @@ export interface OldAlert {
   valid_to: string;
 }
 
-export interface AlertForModal {
-  applied: boolean;
-  text: string;
-  valid_from: string;
-  valid_to: string;
-}
-
 export type UpcomingOrCurrent = 'upcoming' | 'current';
 
 export interface FormattedAlert {
