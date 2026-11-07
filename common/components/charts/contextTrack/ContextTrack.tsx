@@ -8,8 +8,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {
   WEATHER_BASE_COLORS,
-  WEATHER_LABELS,
+  weatherCard,
 } from '../../../../modules/weather/utils/weatherAnnotations';
+import { describeWeather } from '../../../../modules/weather/utils/weatherDetails';
 import { useHoverCardStore } from '../hoverCard/hoverCardStore';
 import type { HoverCard } from '../hoverCard/hoverCardStore';
 import { ALERT_COLOR, alertSegments, formatTimeRange, toFraction } from './segments';
@@ -120,8 +121,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
                 end={toFraction(run.end, domain)}
                 color={WEATHER_BASE_COLORS[run.run.condition]}
                 pinned={Boolean(pinned[run.key])}
-                label={`${WEATHER_LABELS[run.run.condition]}, ${range}`}
-                card={{ title: WEATHER_LABELS[run.run.condition], notes: [range] }}
+                label={`${describeWeather(run.hours, run.run.condition)}, ${range}`}
+                card={weatherCard(run, range)}
                 onToggle={() => toggle(run.key)}
               />
             );

@@ -1,4 +1,6 @@
+import dayjs from 'dayjs';
 import type { WeatherHourly } from '../../../common/types/weather';
+import { TWO_HOURS } from '../../../common/constants/time';
 
 export type DailyTempPoint = { x: string; y: number };
 
@@ -46,4 +48,27 @@ export const getDailyTemperatureSeries = (hours: WeatherHourly[]): DailyTemperat
   });
 
   return { min, max, mean };
+};
+
+/**
+ * The temperature at `time` (epoch ms), read off the hourly series between the readings either
+ * side of it. Undefined outside the series or across a gap in the readings.
+ */
+export const temperatureAt = (series: DailyTempPoint[], time: number): number | undefined => {
+  for (let i = 1; i < series.length; i++) {
+    const start = dayjs(series[i - 1].x).valueOf();
+    const end = dayjs(series[i].x).valueOf();
+    if (time < start || time > end) continue;
+    if (end - start > TWO_HOURS) return undefined;
+    const share = end > start ? (time - start) / (end - start) : 0;
+    return series[i - 1].y + share * (series[i].y - series[i - 1].y);
+  }
+  return undefined;
+};
+
+/** A day's mean, low and high, by its YYYY-MM-DD date. */
+export const dailyTemperatureOn = (series: DailyTemperatureSeries, day: string) => {
+  const index = series.mean.findIndex((point) => point.x === day);
+  if (index === -1) return undefined;
+  return { mean: series.mean[index].y, low: series.min[index].y, high: series.max[index].y };
 };

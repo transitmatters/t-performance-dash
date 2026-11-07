@@ -95,7 +95,7 @@ export const TemperatureTrack = ({
     title: dayjs(point.time).format(daily ? 'ddd, MMM D' : 'h:mm A'),
     rows: [
       {
-        label: daily ? 'Mean temperature' : 'Temperature',
+        label: daily ? 'Mean outdoor temperature' : 'Outdoor temperature',
         value: degrees(point.mean),
         detail:
           point.low !== undefined && point.high !== undefined
@@ -136,7 +136,7 @@ export const TemperatureTrack = ({
       onMouseLeave={(event) => hideTrackCard(event.currentTarget)}
       onFocus={(event) =>
         showTrackCard(event.currentTarget, {
-          title: 'Temperature',
+          title: 'Outdoor temperature',
           rows: [
             {
               label: 'Range',

@@ -1,8 +1,13 @@
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import dayjs from 'dayjs';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { faCloudBolt, faCloudRain, faSmog, faSnowflake } from '@fortawesome/free-solid-svg-icons';
 import type { WeatherCondition, WeatherHourly } from '../../../common/types/weather';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { annotationTooltip } from '../../../common/components/charts/annotationTooltip';
+import type { ResolvedHoverCardContent } from '../../../common/components/charts/hoverCard/types';
+import { ONE_HOUR } from '../../../common/constants/time';
+import { describeWeather, weatherRows } from './weatherDetails';
 
 export type WeatherGranularity = 'hourly' | 'daily';
 
@@ -21,6 +26,19 @@ export const WEATHER_BASE_COLORS: Record<SignificantCondition, string> = {
   fog: '#9ca3af',
   storm: '#7c3aed',
 };
+
+export const WEATHER_ICONS: Record<SignificantCondition, IconDefinition> = {
+  rain: faCloudRain,
+  snow: faSnowflake,
+  fog: faSmog,
+  storm: faCloudBolt,
+};
+
+/** The icon at the head of a condition's hover card. */
+export const weatherTitleIcon = (condition: SignificantCondition) => ({
+  icon: WEATHER_ICONS[condition],
+  color: WEATHER_BASE_COLORS[condition],
+});
 
 // Shading on the plot stays faint so the data reads through it
 const WEATHER_SHADING: Record<SignificantCondition, string> = {
@@ -116,6 +134,8 @@ export interface PlacedWeatherRun {
   key: string;
   start: number;
   end: number;
+  // The hours it covers, after clipping
+  hours: WeatherHourly[];
 }
 
 /**
@@ -128,28 +148,52 @@ export const placeWeatherRuns = (
   window?: { start: number; end: number }
 ): PlacedWeatherRun[] => {
   const offset = granularity === 'daily' ? 12 * 60 * 60 * 1000 : 0;
+  const times = hours.map((hour) => dayjs(hour.timestamp).valueOf());
   return getWeatherRuns(hours, granularity).flatMap((run) => {
-    let start = dayjs(run.start).valueOf() - offset;
-    let end = dayjs(run.end).valueOf() - offset;
+    let start = dayjs(run.start).valueOf();
+    let end = dayjs(run.end).valueOf();
     if (window) {
       start = Math.max(start, window.start);
       end = Math.min(end, window.end);
       if (start >= end) return [];
     }
-    return [{ run, key: weatherRunKey(run), start, end }];
+    // Each reading covers the hour from its timestamp
+    const covered = hours.filter((_, i) => times[i] + ONE_HOUR > start && times[i] < end);
+    return [
+      { run, key: weatherRunKey(run), start: start - offset, end: end - offset, hours: covered },
+    ];
   });
 };
+
+/** A run's hover card: what fell and how hard, how much, the wind, and when. */
+export const weatherCard = (
+  { run, hours }: PlacedWeatherRun,
+  range: string
+): ResolvedHoverCardContent => ({
+  title: describeWeather(hours, run.condition),
+  titleIcon: weatherTitleIcon(run.condition),
+  rows: weatherRows(hours, run.condition),
+  notes: [range],
+});
 
 export const getWeatherAnnotations = (
   runs: PlacedWeatherRun[],
   describe: (run: WeatherRun) => string
 ): AnnotationOptions<keyof AnnotationTypeRegistry>[] =>
-  runs.map(({ run, start, end }) => ({
-    type: 'box',
-    xMin: start,
-    xMax: end,
-    backgroundColor: WEATHER_SHADING[run.condition],
-    borderColor: 'transparent',
-    borderWidth: 0,
-    ...annotationTooltip({ title: WEATHER_LABELS[run.condition], lines: [describe(run)] }),
-  }));
+  runs.map((placed) => {
+    const card = weatherCard(placed, describe(placed.run));
+    return {
+      type: 'box',
+      xMin: placed.start,
+      xMax: placed.end,
+      backgroundColor: WEATHER_SHADING[placed.run.condition],
+      borderColor: 'transparent',
+      borderWidth: 0,
+      ...annotationTooltip({
+        title: card.title,
+        titleIcon: card.titleIcon,
+        rows: card.rows,
+        lines: card.notes ?? [],
+      }),
+    };
+  });

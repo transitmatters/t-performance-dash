@@ -10,6 +10,7 @@ import {
   TEMPERATURE_LINE_COLOR,
   TEMPERATURE_SCALE,
   getHourlyTemperatureSeries,
+  temperatureAt,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
@@ -183,8 +184,8 @@ export const SingleDayLineChart = ({
       borderColor: TEMPERATURE_LINE_COLOR,
       borderWidth: 2,
       pointRadius: 0,
-      pointHoverRadius: 3,
-      pointHoverBackgroundColor: TEMPERATURE_LINE_COLOR,
+      // Hovering matches trips by index, which would light up an unrelated hour
+      pointHoverRadius: 0,
       fill: false,
       tension: 0.3,
       spanGaps: true,
@@ -220,9 +221,6 @@ export const SingleDayLineChart = ({
                       (item) =>
                         item.dataset.label === 'MBTA Benchmark' ||
                         item.dataset.label === 'TransitMatters Benchmark'
-                    );
-                    const temperature = items.find(
-                      (item) => (item.dataset as { yAxisID?: string }).yAxisID === 'yTemp'
                     );
                     const format = (value: number) =>
                       units === 'Minutes'
@@ -281,10 +279,16 @@ export const SingleDayLineChart = ({
                         'No scheduled headway, but still counted in the Bunched and On time totals',
                       ];
                     }
-                    if (temperature?.parsed.y) {
+                    // Read by time, as the hourly readings don't line up with the trips
+                    const hoveredTime = (actual ?? items[0]).parsed.x;
+                    const temperature =
+                      hoveredTime === null
+                        ? undefined
+                        : temperatureAt(temperaturePoints, hoveredTime);
+                    if (temperature !== undefined) {
                       content.rows?.push({
-                        label: 'Temperature',
-                        value: `${temperature.parsed.y} °F`,
+                        label: 'Outdoor temperature',
+                        value: `${Math.round(temperature)} °F`,
                         color: TEMPERATURE_LINE_COLOR,
                       });
                     }

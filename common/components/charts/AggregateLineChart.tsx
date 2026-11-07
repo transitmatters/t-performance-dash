@@ -18,6 +18,7 @@ import {
   TEMPERATURE_BAND_COLOR,
   TEMPERATURE_LINE_COLOR,
   TEMPERATURE_SCALE,
+  dailyTemperatureOn,
   getDailyTemperatureSeries,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { LegendLongTerm } from './Legend';
@@ -294,10 +295,15 @@ export const AggregateLineChart = ({
                     const p25 = valueOf('25th percentile');
                     const p75 = valueOf('75th percentile');
                     const trend = valueOf('Trend');
-                    const tempMean = valueOf('Daily mean');
-                    const tempLow = valueOf('Daily low');
-                    const tempHigh = valueOf('Daily high');
                     const medianItem = items.find((item) => item.dataset.label === seriesName);
+                    // Read by date, as the weather days don't always line up with the data's
+                    const temperature =
+                      temperatureSeries && medianItem
+                        ? dailyTemperatureOn(
+                            temperatureSeries,
+                            String(labels[medianItem.dataIndex]).slice(0, 10)
+                          )
+                        : undefined;
                     const extraRows =
                       hoverRows && medianItem ? hoverRows(data[medianItem.dataIndex]) : [];
 
@@ -320,14 +326,12 @@ export const AggregateLineChart = ({
                         ...(trend
                           ? [{ label: 'Trend', value: format(trend), color: CHART_COLORS.RED }]
                           : []),
-                        ...(tempMean
+                        ...(temperature
                           ? [
                               {
-                                label: 'Temperature',
-                                value:
-                                  tempLow && tempHigh
-                                    ? `${tempMean} °F (${tempLow}–${tempHigh})`
-                                    : `${tempMean} °F`,
+                                label: 'Outdoor temperature',
+                                value: `${Math.round(temperature.mean)} °F`,
+                                detail: `${Math.round(temperature.low)}–${Math.round(temperature.high)} °F`,
                                 color: TEMPERATURE_LINE_COLOR,
                               },
                             ]

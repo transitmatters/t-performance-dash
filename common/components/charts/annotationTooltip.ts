@@ -2,8 +2,14 @@ import type { Plugin } from 'chart.js';
 import Annotation from 'chartjs-plugin-annotation';
 
 import { hideHoverCard, showHoverCard, useHoverCardStore } from './hoverCard/hoverCardStore';
+import type { HoverCardContent } from './hoverCard/types';
 
-export type AnnotationTooltipContent = { title: string; lines: string[] };
+export type AnnotationTooltipContent = {
+  title: string;
+  lines: string[];
+  titleIcon?: HoverCardContent['titleIcon'];
+  rows?: HoverCardContent['rows'];
+};
 
 type Hook = () => void;
 
@@ -45,7 +51,12 @@ export const annotationHoverCardPlugin: Plugin = {
     const current = useHoverCardStore.getState().annotation;
     if (current?.owner === chart && current.x === anchor.x && current.y === anchor.y) return;
     showHoverCard('annotation', {
-      content: { title: content.title, notes: content.lines },
+      content: {
+        title: content.title,
+        titleIcon: content.titleIcon,
+        rows: content.rows,
+        notes: content.lines,
+      },
       ...anchor,
       placement: 'above',
       owner: chart,
