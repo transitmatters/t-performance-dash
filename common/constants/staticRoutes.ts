@@ -44,6 +44,9 @@ export const STATIC_PATHS: string[] = [
 /** Lines with an iframe-able total slow time chart; `system` draws every line on one chart. */
 export const EMBED_SLOWZONES_LINES = [...RAIL_LINES, 'system'];
 
+/** Lines with an iframe-able service delivered chart: rapid transit, as on the Service page. */
+export const EMBED_SERVICE_LINES: string[] = [...RAIL_LINES];
+
 /** Single-day trip charts that can be iframed, and the modes whose trip page shows each one. */
 export const EMBED_TRIP_CHART_LINES = {
   traveltimes: ALL_MODES,
@@ -61,6 +64,7 @@ export const isTripEmbed = (line: string, chart: string): chart is TripEmbedChar
 /** Prerendered like STATIC_PATHS so S3 serves them, but they get no link-preview card. */
 export const EMBED_PATHS: string[] = [
   ...EMBED_SLOWZONES_LINES.map((line) => `/embed/${line}/slowzones/`),
+  ...EMBED_SERVICE_LINES.map((line) => `/embed/${line}/service/delivered/`),
   ...Object.entries(EMBED_TRIP_CHART_LINES).flatMap(([chart, lines]) =>
     lines.map((line) => `/embed/${line}/trips/single/${chart}/`)
   ),

@@ -20,6 +20,7 @@ import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
 import { ServiceHoursGraph } from './ServiceHoursGraph';
 import { DailyServiceHistogram } from './DailyServiceHistogram';
+import { type ServiceComparison, SERVICE_COMPARISON_LABELS } from './embed';
 
 dayjs.extend(utc);
 
@@ -30,13 +31,10 @@ export function ServiceDetails() {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
   const { value: comparison, control: comparisonControl } = useChartToggle(
-    'Scheduled' as const,
-    [
-      ['Scheduled', 'Scheduled'],
-      ['Historical Maximum', 'Historical Maximum'],
-    ],
+    'scheduled',
+    Object.entries(SERVICE_COMPARISON_LABELS) as [ServiceComparison, string][],
     // Long labels overflow the segmented control in the card header; a dropdown fits cleanly.
-    { variant: 'select' }
+    { variant: 'select', paramKey: 'compare' }
   );
   const { value: dayKind, control: dayKindControl } = useChartToggle('weekday' as const, [
     ['weekday', 'Weekday'],
@@ -129,7 +127,7 @@ export function ServiceDetails() {
         </Widget>
         <Widget
           title="Service delivered"
-          subtitle={`Compared to ${comparison}`}
+          subtitle={`Compared to ${SERVICE_COMPARISON_LABELS[comparison]}`}
           ready={[tripsData, scheduledData]}
           action={comparisonControl}
         >

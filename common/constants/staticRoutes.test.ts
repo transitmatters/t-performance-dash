@@ -13,6 +13,16 @@ describe('EMBED_PATHS', () => {
     ]);
   });
 
+  it('covers the service delivered chart for rapid transit only', () => {
+    expect(EMBED_PATHS.filter((path) => path.includes('/service/'))).toEqual([
+      '/embed/red/service/delivered/',
+      '/embed/orange/service/delivered/',
+      '/embed/green/service/delivered/',
+      '/embed/blue/service/delivered/',
+      '/embed/mattapan/service/delivered/',
+    ]);
+  });
+
   it('covers each single-day trip chart only for the modes whose trip page shows it', () => {
     const trips = EMBED_PATHS.filter((path) => path.includes('/trips/single/'));
     expect(trips).toHaveLength(28);
