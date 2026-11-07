@@ -74,6 +74,7 @@ export const TripChartEmbed = (embed: TripEmbed) => {
         startDate={dates.startDate as string}
         endDate={dates.endDate as string}
         days={days}
+        trendline={query.trend === '1'}
         {...props}
       />
     );

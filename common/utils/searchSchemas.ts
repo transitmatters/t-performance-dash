@@ -140,9 +140,15 @@ export const validateTripEmbedSearch = (search: RawSearch) => ({
 });
 
 /** A multi-day trip chart embed also keeps its card's day filter. */
+/** `?trend=1` draws the trendline, which the page turns on from the legend an embed leaves out. */
+const trendSearch = (search: RawSearch) => ({
+  trend: oneOf(['1'])(search.trend),
+});
+
 export const validateMultiTripEmbedSearch = (search: RawSearch) => ({
   ...validateTripEmbedSearch(search),
   ...dayFilterSearch(search),
+  ...trendSearch(search),
 });
 
 /**
@@ -158,6 +164,7 @@ export const validateAnySearch = (search: RawSearch) => ({
   ...fleetSearch(search),
   ...delaysSearch(search),
   ...validateEmbedSearch(search),
+  ...trendSearch(search),
 });
 
 export type QueryParams = Partial<ReturnType<typeof validateAnySearch>>;

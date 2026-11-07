@@ -36,6 +36,14 @@ describe('trip embed snippets', () => {
     );
   });
 
+  it('adds trend=1 when the trendline is on', () => {
+    expect(
+      srcOf(getTripEmbedSnippet({ page: 'multi', chart: 'traveltimes', trendline: true }, route))
+    ).toBe(
+      'https://dashboard.transitmatters.org/embed/red/trips/multi/traveltimes/?from=place-pktrm&to=place-harsq&startDate=2026-09-01&endDate=2026-10-31&ttDays=weekday&trend=1'
+    );
+  });
+
   it('keeps only the day on a single-day chart', () => {
     expect(srcOf(getTripEmbedSnippet({ page: 'single', chart: 'traveltimes' }, route))).toBe(
       'https://dashboard.transitmatters.org/embed/red/trips/single/traveltimes/?from=place-pktrm&to=place-harsq&date=2026-10-21'

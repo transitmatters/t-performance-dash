@@ -25,6 +25,7 @@ interface MultiTripEmbedChartProps {
   endDate: string;
   /** The day filter, or for travel times by hour, weekdays vs weekends. */
   days: DayFilter;
+  trendline: boolean;
 }
 
 export const MultiTripEmbedChart = ({
@@ -35,6 +36,7 @@ export const MultiTripEmbedChart = ({
   startDate,
   endDate,
   days,
+  trendline,
 }: MultiTripEmbedChartProps) => {
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
   const queryName = CHART_QUERIES[chart];
@@ -66,6 +68,7 @@ export const MultiTripEmbedChart = ({
           dayFilter={byHour ? undefined : days}
           startDate={startDate}
           endDate={endDate}
+          trendline={trendline}
           fill
         />
       </div>

@@ -17,6 +17,7 @@ interface DwellsAggregateChartProps {
   startDate?: string;
   endDate?: string;
   fill?: boolean;
+  trendline?: boolean;
 }
 
 export const DwellsAggregateChart = ({
@@ -27,6 +28,7 @@ export const DwellsAggregateChart = ({
   startDate: startDateProp,
   endDate: endDateProp,
   fill = false,
+  trendline = false,
 }: DwellsAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -61,10 +63,11 @@ export const DwellsAggregateChart = ({
         fname="dwells"
         yUnit="Minutes"
         fill={fill}
+        trendline={trendline}
         embedChart={'dwells'}
       />
     );
-  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill]);
+  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline]);
 
   return chart;
 };

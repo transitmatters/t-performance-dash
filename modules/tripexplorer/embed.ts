@@ -36,9 +36,9 @@ const embedParams = ({ page, chart }: TripEmbed) =>
     ? [...ROUTE_PARAMS, 'date']
     : [...ROUTE_PARAMS, 'startDate', 'endDate', MULTI_TRIP_DAY_PARAMS[chart]];
 
-const tripSearch = (embed: TripEmbed, query: QueryParams) => {
+const tripSearch = (embed: TripEmbed, query: QueryParams, extra: QueryParams = {}) => {
   const keep = embedParams(embed);
-  return stringifySearch(pickBy(query, (_, key) => keep.includes(key)));
+  return stringifySearch({ ...pickBy(query, (_, key) => keep.includes(key)), ...extra });
 };
 
 const getRouteName = ({ line, query }: Pick<Route, 'line' | 'query'>) => {
@@ -57,8 +57,11 @@ export const getTripPageUrl = (
   { linePath, query }: Pick<Route, 'linePath' | 'query'>
 ) => `${window.location.origin}/${linePath}/trips/${embed.page}/${tripSearch(embed, query)}`;
 
-export const getTripEmbedSnippet = (embed: TripEmbed, route: Route) =>
-  getEmbedSnippet(
-    `/embed/${route.linePath}/trips/${embed.page}/${embed.chart}/${tripSearch(embed, route.query)}`,
+/** `trendline`: the chart has its trendline turned on, so the embed draws it too. */
+export const getTripEmbedSnippet = (embed: TripEmbed & { trendline?: boolean }, route: Route) => {
+  const search = tripSearch(embed, route.query, embed.trendline ? { trend: '1' } : {});
+  return getEmbedSnippet(
+    `/embed/${route.linePath}/trips/${embed.page}/${embed.chart}/${search}`,
     getTripEmbedTitle(embed, route)
   );
+};

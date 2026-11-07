@@ -135,6 +135,8 @@ export interface AggregateLineProps extends LineProps {
   fill?: boolean;
   /** Adds an Embed button that copies an `<iframe>` of this multi-day trip chart. */
   embedChart?: TripEmbedChart<'multi'>;
+  /** Start with the trendline drawn. */
+  trendline?: boolean;
 }
 
 export interface SingleDayLineProps extends LineProps {

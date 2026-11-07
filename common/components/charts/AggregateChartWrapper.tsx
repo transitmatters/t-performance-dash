@@ -19,6 +19,7 @@ interface AggregateChartWrapperProps {
   fill?: boolean;
   startDate?: string;
   endDate?: string;
+  trendline?: boolean;
 }
 
 export const AggregateChartWrapper = ({

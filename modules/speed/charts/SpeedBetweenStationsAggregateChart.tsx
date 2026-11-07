@@ -18,6 +18,7 @@ interface SpeedBetweenStationsAggregateChartProps {
   startDate?: string;
   endDate?: string;
   fill?: boolean;
+  trendline?: boolean;
 }
 
 export const SpeedBetweenStationsAggregateChart = ({
@@ -29,6 +30,7 @@ export const SpeedBetweenStationsAggregateChart = ({
   startDate: startDateProp,
   endDate: endDateProp,
   fill = false,
+  trendline = false,
 }: SpeedBetweenStationsAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -64,10 +66,21 @@ export const SpeedBetweenStationsAggregateChart = ({
         chartTitle="Speeds"
         yUnit="MPH"
         fill={fill}
+        trendline={trendline}
         embedChart={timeUnitByDate ? 'speeds' : undefined}
       />
     );
-  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime, fill]);
+  }, [
+    timeUnit,
+    traveltimes,
+    startDate,
+    endDate,
+    fromStation,
+    toStation,
+    peakTime,
+    fill,
+    trendline,
+  ]);
 
   return chart;
 };

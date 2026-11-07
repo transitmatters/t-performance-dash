@@ -4,7 +4,7 @@ import type { TripEmbed } from './embed';
 import { getTripEmbedSnippet } from './embed';
 
 /** Copies an `<iframe>` of this trip chart, for the stops and dates on screen. */
-export const TripEmbedButton = (embed: TripEmbed) => {
+export const TripEmbedButton = (embed: TripEmbed & { trendline?: boolean }) => {
   const route = useDelimitatedRoute();
   return <EmbedButton getSnippet={() => getTripEmbedSnippet(embed, route)} />;
 };

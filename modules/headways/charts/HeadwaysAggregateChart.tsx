@@ -34,6 +34,7 @@ interface HeadwaysAggregateChartProps {
   startDate?: string;
   endDate?: string;
   fill?: boolean;
+  trendline?: boolean;
 }
 
 export const HeadwaysAggregateChart = ({
@@ -44,6 +45,7 @@ export const HeadwaysAggregateChart = ({
   startDate: startDateProp,
   endDate: endDateProp,
   fill = false,
+  trendline = false,
 }: HeadwaysAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -79,10 +81,11 @@ export const HeadwaysAggregateChart = ({
         yUnit="Minutes"
         hoverRows={bunchingRows}
         fill={fill}
+        trendline={trendline}
         embedChart={'headways'}
       />
     );
-  }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill]);
+  }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline]);
 
   return chart;
 };

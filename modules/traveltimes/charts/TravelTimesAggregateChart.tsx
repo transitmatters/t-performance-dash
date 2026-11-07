@@ -22,6 +22,7 @@ interface TravelTimesAggregateChartProps {
   startDate?: string;
   endDate?: string;
   fill?: boolean;
+  trendline?: boolean;
 }
 
 export const TravelTimesAggregateChart = ({
@@ -34,6 +35,7 @@ export const TravelTimesAggregateChart = ({
   startDate: startDateProp,
   endDate: endDateProp,
   fill = false,
+  trendline = false,
 }: TravelTimesAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -74,6 +76,7 @@ export const TravelTimesAggregateChart = ({
         chartTitle={timeUnitByDate ? 'Travel times' : 'Travel times by hour'}
         yUnit="Minutes"
         fill={fill}
+        trendline={trendline}
         embedChart={timeUnitByDate ? 'traveltimes' : 'traveltimes-by-hour'}
       />
     );
@@ -87,6 +90,7 @@ export const TravelTimesAggregateChart = ({
     peakTime,
     dayFilter,
     fill,
+    trendline,
   ]);
 
   return chart;

@@ -88,6 +88,7 @@ export const AggregateLineChart = ({
   hoverRows,
   fill = false,
   embedChart,
+  trendline = false,
 }: AggregateLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -108,7 +109,7 @@ export const AggregateLineChart = ({
   );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
-  const [isTrendlineVisible, setIsTrendlineVisible] = useState(false);
+  const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
 
   const trendlineData = useMemo(() => {
@@ -378,7 +379,9 @@ export const AggregateLineChart = ({
                   includeBothStopsForLocation={includeBothStopsForLocation}
                   startDate={startDate}
                 />
-                {embedChart && <TripEmbedButton page="multi" chart={embedChart} />}
+                {embedChart && (
+                  <TripEmbedButton page="multi" chart={embedChart} trendline={isTrendlineVisible} />
+                )}
               </div>
             )}
           </div>
