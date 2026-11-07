@@ -57,14 +57,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     label: 'Speed',
     definitions: {
       subway:
-        'Median weekly average speed over 12 weeks, end to end including stops, compared with the fastest 4-week stretch at least 3 years ago.',
-    },
-  },
-  slowZones: {
-    id: 'slowZones',
-    label: 'Slow zones',
-    definitions: {
-      subway: 'Average extra time per day that slow zones add to a trip, over the last 12 weeks.',
+        'The worse of two measures. Speed: median weekly average speed over 12 weeks, end to end including stops, compared with the fastest 4-week stretch at least 3 years ago. Slow zones: average extra time per day that slow zones add to a trip, over the last 12 weeks.',
     },
   },
   fleet: {
@@ -80,7 +73,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
 };
 
-export const METRIC_ORDER: MetricId[] = ['service', 'frequency', 'speed', 'slowZones', 'fleet'];
+export const METRIC_ORDER: MetricId[] = ['service', 'frequency', 'speed', 'fleet'];
 
 export interface RowConfig {
   id: string;

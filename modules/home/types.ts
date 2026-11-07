@@ -3,7 +3,7 @@ import type { Line } from '../../common/types/lines';
 // The shape of static/landing/overview.json (schemaVersion 1), built daily by data-ingestion
 // (chalicelib/overview).
 
-export type MetricId = 'service' | 'frequency' | 'speed' | 'slowZones' | 'fleet';
+export type MetricId = 'service' | 'frequency' | 'speed' | 'fleet';
 
 /** `insufficient`: should be measured but there isn't enough recent data. `na`: not measured. */
 export type Status = 'win' | 'good' | 'room' | 'problem' | 'insufficient' | 'na';
@@ -12,6 +12,20 @@ export type Direction = 'higher' | 'lower';
 
 /** `count` is a raw count described by `Cell.unitLabel`, e.g. trips per day. */
 export type Unit = 'pct' | 'mph' | 'seconds' | 'years' | 'count';
+
+/** One of the measures a cell is judged on; the cell takes the worst of its parts' statuses. */
+export interface CellPart {
+  label: string;
+  status: Status;
+  /** Shown as the figure, in `scoreUnit`. */
+  score: number | null;
+  scoreUnit: Unit;
+  /** Follows the figure, e.g. "of best" or "a day". */
+  unitLabel?: string;
+  direction?: Direction;
+  thresholds?: [number, number, number];
+  href?: string;
+}
 
 export interface Cell {
   metric: MetricId;
@@ -39,6 +53,8 @@ export interface Cell {
   asOf?: string;
   notes?: string[];
   href?: string;
+  /** Set when the status combines several measures, e.g. speed and slow zones. */
+  parts?: CellPart[];
 }
 
 export type HeadlineKind = 'strong' | 'good' | 'room' | 'needsWork' | 'limited';
