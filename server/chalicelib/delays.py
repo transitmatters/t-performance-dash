@@ -102,10 +102,14 @@ def delay_time_by_line(params: AlertDelaysByLineParams):
 
 
 def bus_delays(start_date: str | date, end_date: str | date, table_name: str, route_ids: list[str]):
-    """Delays for one or more bus routes, summed per date.
+    """Delays for one or more bus routes, per date.
 
     A bus route only has rows on days (or weeks) it had a delay. The ``Bus`` total has
     one for every day the alerts were processed, so its dates fill the gaps with zeros.
+
+    A grouped route (114/116/117) also has rows of its own, keyed ``114,116,117``, where
+    an alert posted on several of its routes counts once. Those are used where they
+    exist; dates without one (from before they were written) sum the routes instead.
 
     Args:
         start_date: Start of date range (inclusive).
@@ -114,7 +118,7 @@ def bus_delays(start_date: str | date, end_date: str | date, table_name: str, ro
         route_ids: Raw GTFS bus route ids; a grouped route (114/116/117) passes several.
 
     Returns:
-        One record per date, with every delay field summed across ``route_ids``.
+        One record per date, with every delay field for ``route_ids`` together.
     """
     line = ",".join(route_ids)
     totals = {
@@ -125,10 +129,21 @@ def bus_delays(start_date: str | date, end_date: str | date, table_name: str, ro
         }
         for row in dynamo.query_agg_trip_metrics(start_date, end_date, table_name, BUS_AGGREGATE)
     }
+
+    def add(row):
+        total = totals.setdefault(row["date"], {"date": row["date"], "line": line})
+        for key, value in row.items():
+            if key not in ("date", "line") and isinstance(value, (int, float)):
+                total[key] = total.get(key, 0) + value
+
+    grouped = []
+    if len(route_ids) > 1:
+        grouped = dynamo.query_agg_trip_metrics(start_date, end_date, table_name, line)
+    grouped_dates = {row["date"] for row in grouped}
+    for row in grouped:
+        add(row)
     for route_id in route_ids:
         for row in dynamo.query_agg_trip_metrics(start_date, end_date, table_name, route_id):
-            total = totals.setdefault(row["date"], {"date": row["date"], "line": line})
-            for key, value in row.items():
-                if key not in ("date", "line") and isinstance(value, (int, float)):
-                    total[key] = total.get(key, 0) + value
+            if row["date"] not in grouped_dates:
+                add(row)
     return sorted(totals.values(), key=lambda total: total["date"])
