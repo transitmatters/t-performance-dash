@@ -409,7 +409,7 @@ export const SingleDayLineChart = ({
                 includeBothStopsForLocation={includeBothStopsForLocation}
                 startDate={date}
               />
-              {embedChart && <TripEmbedButton chart={embedChart} />}
+              {embedChart && <TripEmbedButton page="single" chart={embedChart} />}
             </div>
           )}
         </div>
