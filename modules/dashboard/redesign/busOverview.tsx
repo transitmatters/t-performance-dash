@@ -2,16 +2,20 @@ import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
 import { useBusTripMetrics } from '../../../common/api/hooks/busTripMetrics';
+import { useAlertDelays } from '../../../common/api/hooks/delays';
 import { useRidershipData } from '../../../common/api/hooks/ridership';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { LINE_COLORS } from '../../../common/constants/colors';
 import { TODAY_STRING } from '../../../common/constants/dates';
 import { getBusRouteIds } from '../../../common/constants/lines';
+import type { FetchAlertDelaysByLineOptions } from '../../../common/types/api';
 import type { BusRoute } from '../../../common/types/lines';
 import { getRidershipLineId } from '../../../common/utils/ridership';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
 import { SpeedGraph } from '../../speed/charts/SpeedGraph';
 import { RidershipGraph } from '../../ridership/RidershipGraph';
+import { TotalDelayGraph } from '../../delays/charts/TotalDelayGraph';
+import { toDisplayedDelays } from '../../delays/charts/utils';
 import {
   CHART_FETCH_START,
   WINDOW_START,
@@ -26,6 +30,15 @@ import type { MetricKey, ScorecardRow } from './types';
 const ridershipLineId = (busRoute: BusRoute) =>
   getRidershipLineId('line-bus', busRoute, undefined, undefined);
 
+// Grouped routes (e.g. SL1/SL2/SL3/SLW) are summed per route server-side, so an alert posted on
+// several of them counts once for each.
+const delaysOptions = (busRoute: BusRoute): FetchAlertDelaysByLineOptions => ({
+  start_date: WINDOW_START,
+  end_date: TODAY_STRING,
+  line: getBusRouteIds(busRoute).join(','),
+  agg: 'daily',
+});
+
 export const useBusScorecardRows = (busRoute: BusRoute) => {
   const tripMetrics = useBusTripMetrics({
     start_date: WINDOW_START,
@@ -38,6 +51,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     start_date: WINDOW_START,
     end_date: TODAY_STRING,
   });
+  const delays = useAlertDelays(delaysOptions(busRoute));
 
   const rows = useMemo(() => {
     const color = LINE_COLORS['line-bus'];
@@ -62,10 +76,32 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     const ridershipRow = ridership.data && buildRidershipRow(ridership.data, color);
     if (ridershipRow) built.push(ridershipRow);
 
-    return built;
-  }, [tripMetrics.data, ridership.data]);
+    const delaysRow =
+      delays.data &&
+      buildRow({
+        key: 'delays',
+        label: 'Delays',
+        subtitle: 'Minutes a delay alert was up, daily average',
+        points: delays.data.map((point) => ({
+          date: point.date,
+          value: point.delay_alert_minutes ?? 0,
+        })),
+        reducer: 'avg',
+        unit: 'min/day',
+        formatValue: (v) => Math.round(v).toString(),
+        negligibleDelta: 1,
+        higherIsBetter: false,
+        color,
+      });
+    if (delaysRow) built.push(delaysRow);
 
-  return { rows, isLoading: tripMetrics.isLoading || ridership.isLoading };
+    return built;
+  }, [tripMetrics.data, ridership.data, delays.data]);
+
+  return {
+    rows,
+    isLoading: tripMetrics.isLoading || ridership.isLoading || delays.isLoading,
+  };
 };
 
 export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRoute: BusRoute }) => {
@@ -85,6 +121,7 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
     { line_id: ridershipLineId(busRoute), start_date: WINDOW_START, end_date: TODAY_STRING },
     metric === 'ridership'
   );
+  const delays = useAlertDelays(delaysOptions(busRoute), metric === 'delays');
 
   if (metric === 'speed') {
     if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
@@ -97,6 +134,20 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
         startDate={chartWindowStart(chartEnd)}
         endDate={chartEnd}
         peakLineDashed
+      />
+    );
+  }
+  if (metric === 'delays') {
+    if (!delays.data) return <ChartPlaceHolder query={delays} />;
+    const { delays: displayed, isActual } = toDisplayedDelays(delays.data);
+    const delaysEnd = delays.data[delays.data.length - 1]?.date ?? TODAY_STRING;
+    return (
+      <TotalDelayGraph
+        data={displayed}
+        isActual={isActual}
+        startDate={chartWindowStart(delaysEnd)}
+        endDate={delaysEnd}
+        agg="daily"
       />
     );
   }
