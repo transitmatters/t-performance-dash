@@ -58,7 +58,11 @@ const formatThreshold = (value: number, unit: Unit) =>
       : `${value} yr`;
 
 /** "Win ≥100% · Good ≥92% · Room to grow ≥80%", or undefined for a cell that isn't judged. */
-export const formatThresholds = ({ thresholds, direction, scoreUnit }: Cell) => {
+export const formatThresholds = ({
+  thresholds,
+  direction,
+  scoreUnit,
+}: Pick<Cell, 'thresholds' | 'direction' | 'scoreUnit'>) => {
   if (!thresholds || !direction || !scoreUnit) return undefined;
   const op = direction === 'higher' ? '≥' : '≤';
   const [win, good, room] = thresholds.map((t) => formatThreshold(t, scoreUnit));

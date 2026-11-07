@@ -177,6 +177,7 @@ describe('getDateRedirectHref', () => {
     expect(getDateRedirectHref('/embed/red/slowzones/', {})).toBeUndefined();
     expect(getDateRedirectHref('/embed/system/slowzones/', {})).toBeUndefined();
     expect(getDateRedirectHref('/embed/red/trips/single/traveltimes/', {})).toBeUndefined();
+    expect(getDateRedirectHref('/embed/red/trips/multi/headways/', {})).toBeUndefined();
   });
 
   it('is idempotent', () => {
@@ -210,6 +211,7 @@ describe('getCanonicalSearchHref', () => {
   it("keeps an embed's own route param, so bus, commuter rail and ferry embeds load", () => {
     const search = { busRoute: '1', from: '1-1-67', to: '1-1-72', date: '2026-10-21' };
     expect(getCanonicalSearchHref('/embed/bus/trips/single/traveltimes/', search)).toBeUndefined();
+    expect(getCanonicalSearchHref('/embed/bus/trips/multi/traveltimes/', search)).toBeUndefined();
     expect(getCanonicalSearchHref('/embed/red/trips/single/headways/', { busRoute: '1' })).toBe(
       '/embed/red/trips/single/headways/'
     );

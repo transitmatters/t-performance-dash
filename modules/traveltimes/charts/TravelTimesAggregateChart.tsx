@@ -18,6 +18,11 @@ interface TravelTimesAggregateChartProps {
   timeUnit?: TravelTimesUnit;
   peakTime?: boolean;
   dayFilter?: DayFilter;
+  /** Defaults to the page's dates; an embed passes its own. */
+  startDate?: string;
+  endDate?: string;
+  fill?: boolean;
+  trendline?: boolean;
 }
 
 export const TravelTimesAggregateChart = ({
@@ -27,10 +32,14 @@ export const TravelTimesAggregateChart = ({
   timeUnit = 'by_date',
   peakTime = true,
   dayFilter = 'all',
+  startDate: startDateProp,
+  endDate: endDateProp,
+  fill = false,
+  trendline = false,
 }: TravelTimesAggregateChartProps) => {
-  const {
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { query } = useDelimitatedRoute();
+  const startDate = startDateProp ?? query.startDate;
+  const endDate = endDateProp ?? query.endDate;
 
   const chart = useMemo(() => {
     const timeUnitByDate = timeUnit === 'by_date';
@@ -66,9 +75,23 @@ export const TravelTimesAggregateChart = ({
         fname={'traveltimes'}
         chartTitle={timeUnitByDate ? 'Travel times' : 'Travel times by hour'}
         yUnit="Minutes"
+        fill={fill}
+        trendline={trendline}
+        embedChart={timeUnitByDate ? 'traveltimes' : 'traveltimes-by-hour'}
       />
     );
-  }, [timeUnit, traveltimes, startDate, endDate, fromStation, toStation, peakTime, dayFilter]);
+  }, [
+    timeUnit,
+    traveltimes,
+    startDate,
+    endDate,
+    fromStation,
+    toStation,
+    peakTime,
+    dayFilter,
+    fill,
+    trendline,
+  ]);
 
   return chart;
 };

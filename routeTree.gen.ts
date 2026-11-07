@@ -31,6 +31,7 @@ import { Route as EmbedLineSlowzonesRouteImport } from './routes/embed/$line/slo
 import { Route as LineTripsMultiIndexRouteImport } from './routes/$line/trips/multi/index'
 import { Route as LineTripsSingleIndexRouteImport } from './routes/$line/trips/single/index'
 import { Route as EmbedLineServiceChartRouteImport } from './routes/embed/$line/service/$chart'
+import { Route as EmbedLineTripsMultiChartRouteImport } from './routes/embed/$line/trips/multi/$chart'
 import { Route as EmbedLineTripsSingleChartRouteImport } from './routes/embed/$line/trips/single/$chart'
 
 const IndexRoute = IndexRouteImport.update({
@@ -143,6 +144,12 @@ const EmbedLineServiceChartRoute = EmbedLineServiceChartRouteImport.update({
   path: '/embed/$line/service/$chart',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmbedLineTripsMultiChartRoute =
+  EmbedLineTripsMultiChartRouteImport.update({
+    id: '/embed/$line/trips/multi/$chart',
+    path: '/embed/$line/trips/multi/$chart',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const EmbedLineTripsSingleChartRoute =
   EmbedLineTripsSingleChartRouteImport.update({
     id: '/embed/$line/trips/single/$chart',
@@ -173,6 +180,7 @@ export interface FileRoutesByFullPath {
   '/embed/$line/service/$chart': typeof EmbedLineServiceChartRoute
   '/$line/trips/multi/': typeof LineTripsMultiIndexRoute
   '/$line/trips/single/': typeof LineTripsSingleIndexRoute
+  '/embed/$line/trips/multi/$chart': typeof EmbedLineTripsMultiChartRoute
   '/embed/$line/trips/single/$chart': typeof EmbedLineTripsSingleChartRoute
 }
 export interface FileRoutesByTo {
@@ -198,6 +206,7 @@ export interface FileRoutesByTo {
   '/embed/$line/service/$chart': typeof EmbedLineServiceChartRoute
   '/$line/trips/multi': typeof LineTripsMultiIndexRoute
   '/$line/trips/single': typeof LineTripsSingleIndexRoute
+  '/embed/$line/trips/multi/$chart': typeof EmbedLineTripsMultiChartRoute
   '/embed/$line/trips/single/$chart': typeof EmbedLineTripsSingleChartRoute
 }
 export interface FileRoutesById {
@@ -224,6 +233,7 @@ export interface FileRoutesById {
   '/embed/$line/service/$chart': typeof EmbedLineServiceChartRoute
   '/$line/trips/multi/': typeof LineTripsMultiIndexRoute
   '/$line/trips/single/': typeof LineTripsSingleIndexRoute
+  '/embed/$line/trips/multi/$chart': typeof EmbedLineTripsMultiChartRoute
   '/embed/$line/trips/single/$chart': typeof EmbedLineTripsSingleChartRoute
 }
 export interface FileRouteTypes {
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/embed/$line/service/$chart'
     | '/$line/trips/multi/'
     | '/$line/trips/single/'
+    | '/embed/$line/trips/multi/$chart'
     | '/embed/$line/trips/single/$chart'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/embed/$line/service/$chart'
     | '/$line/trips/multi'
     | '/$line/trips/single'
+    | '/embed/$line/trips/multi/$chart'
     | '/embed/$line/trips/single/$chart'
   id:
     | '__root__'
@@ -301,6 +313,7 @@ export interface FileRouteTypes {
     | '/embed/$line/service/$chart'
     | '/$line/trips/multi/'
     | '/$line/trips/single/'
+    | '/embed/$line/trips/multi/$chart'
     | '/embed/$line/trips/single/$chart'
   fileRoutesById: FileRoutesById
 }
@@ -327,6 +340,7 @@ export interface RootRouteChildren {
   EmbedLineServiceChartRoute: typeof EmbedLineServiceChartRoute
   LineTripsMultiIndexRoute: typeof LineTripsMultiIndexRoute
   LineTripsSingleIndexRoute: typeof LineTripsSingleIndexRoute
+  EmbedLineTripsMultiChartRoute: typeof EmbedLineTripsMultiChartRoute
   EmbedLineTripsSingleChartRoute: typeof EmbedLineTripsSingleChartRoute
 }
 
@@ -486,6 +500,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmbedLineServiceChartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/embed/$line/trips/multi/$chart': {
+      id: '/embed/$line/trips/multi/$chart'
+      path: '/embed/$line/trips/multi/$chart'
+      fullPath: '/embed/$line/trips/multi/$chart'
+      preLoaderRoute: typeof EmbedLineTripsMultiChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/embed/$line/trips/single/$chart': {
       id: '/embed/$line/trips/single/$chart'
       path: '/embed/$line/trips/single/$chart'
@@ -519,6 +540,7 @@ const rootRouteChildren: RootRouteChildren = {
   EmbedLineServiceChartRoute: EmbedLineServiceChartRoute,
   LineTripsMultiIndexRoute: LineTripsMultiIndexRoute,
   LineTripsSingleIndexRoute: LineTripsSingleIndexRoute,
+  EmbedLineTripsMultiChartRoute: EmbedLineTripsMultiChartRoute,
   EmbedLineTripsSingleChartRoute: EmbedLineTripsSingleChartRoute,
 }
 export const routeTree = rootRouteImport
