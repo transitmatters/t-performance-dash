@@ -55,6 +55,29 @@ def test_grouped_bus_routes_are_summed_and_zero_filled(queried):
     assert {row["line"] for row in result} == {"114,116,117"}
 
 
+def test_grouped_row_beats_summing_routes(queried, monkeypatch):
+    # 10-19's alert was on both 114 and 116, so the grouped row counts it once.
+    # 10-21 has no grouped row (not backfilled yet), so it falls back to the routes.
+    grouped = {
+        "line": "114,116,117",
+        "date": "2026-10-19",
+        "total_delay_time": 25,
+        "car_traffic": 20,
+        "delay_alert_minutes": 45,
+    }
+    monkeypatch.setitem(ROWS, "114,116,117", [grouped])
+    result = delays.delay_time_by_line({**PARAMS, "line": "114,116,117"})
+    assert [row["total_delay_time"] for row in result] == [25, 0, 20]
+    assert [row["car_traffic"] for row in result] == [20, 0, 20]
+    assert [row["delay_alert_minutes"] for row in result] == [45, 0, 25]
+    assert {row["line"] for row in result} == {"114,116,117"}
+
+
+def test_single_route_skips_grouped_query(queried):
+    delays.delay_time_by_line({**PARAMS, "line": "116"})
+    assert queried == ["Bus", "116"]
+
+
 @pytest.mark.parametrize("line", ["Purple", "", "1,Red", "Bus,1", "CR-Lowell,1", "1; drop"])
 def test_invalid_lines(queried, line):
     with pytest.raises(BadRequestError):
