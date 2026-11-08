@@ -21,6 +21,8 @@ const BUS_FLEET =
   'Share of bus trips run by battery-electric or hybrid buses over the last 4 weeks.';
 const reliabilityDefinition = (where: string) =>
   `Share of headways (the wait between one vehicle and the next) within 75–125% of the scheduled headway, at ${where}, over the last 4 complete weeks.`;
+const DELAYS_DEFINITION =
+  'Share of the service day, first trip to last, with an MBTA delay alert up, over the last 4 complete weeks. Overlapping alerts count once, and each alert counts for at most 3 hours.';
 
 // How each measure is judged (direction, thresholds, staleness) lives with the computation in
 // data-ingestion (chalicelib/overview), which publishes it on every cell.
@@ -65,6 +67,15 @@ export const METRICS: Record<MetricId, MetricMethod> = {
       bus: reliabilityDefinition('mid-route timepoints'),
     },
   },
+  delays: {
+    id: 'delays',
+    label: 'Delays',
+    definitions: {
+      subway: DELAYS_DEFINITION,
+      frequentBus: `${DELAYS_DEFINITION} Routes pool together by their service hours.`,
+      bus: `${DELAYS_DEFINITION} Routes pool together by their service hours.`,
+    },
+  },
   speed: {
     id: 'speed',
     label: 'Speed',
@@ -86,7 +97,14 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
 };
 
-export const METRIC_ORDER: MetricId[] = ['service', 'frequency', 'reliability', 'speed', 'fleet'];
+export const METRIC_ORDER: MetricId[] = [
+  'service',
+  'frequency',
+  'reliability',
+  'delays',
+  'speed',
+  'fleet',
+];
 
 export interface RowConfig {
   id: string;
