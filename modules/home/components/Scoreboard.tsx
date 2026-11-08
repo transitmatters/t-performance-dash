@@ -175,6 +175,16 @@ const PendingStop = ({
   );
 };
 
+/** Stands in for a cell the published file doesn't have yet. */
+const missingCell = (metric: MetricId): Cell => ({
+  metric,
+  status: 'na',
+  score: null,
+  value: null,
+  unit: 'pct',
+  trend: null,
+});
+
 const LineStop = ({
   line: { row },
   metric,
@@ -187,7 +197,7 @@ const LineStop = ({
   state: HomeState;
 }) =>
   row ? (
-    <Stop row={row} cell={row.cells[metric]} layout={layout} />
+    <Stop row={row} cell={row.cells[metric] ?? missingCell(metric)} layout={layout} />
   ) : (
     <PendingStop metric={metric} layout={layout} state={state} />
   );

@@ -9,6 +9,7 @@ import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
+import { DelaysEmbedButton } from '../DelaysEmbedButton';
 import { formatDelay } from '../format';
 import type { DelayReasonKey } from '../constants/reasons';
 import type { DelayRow } from '../reasonSeries';
@@ -19,7 +20,10 @@ interface DelayCauseBarsProps {
   startDate: string;
   endDate: string;
   focus: DelayReasonKey | null;
-  onFocus: (key: DelayReasonKey | null) => void;
+  /** Clicking a cause highlights it in the total chart. An embed has no total chart, so leaves it out. */
+  onFocus?: (key: DelayReasonKey | null) => void;
+  /** Fill the parent's height and leave out the buttons, as an embed does. */
+  fill?: boolean;
 }
 
 const ROW_HEIGHT = 36;
@@ -30,6 +34,7 @@ export const DelayCauseBars = ({
   endDate,
   focus,
   onFocus,
+  fill = false,
 }: DelayCauseBarsProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
@@ -65,20 +70,27 @@ export const DelayCauseBars = ({
         ...(isActual ? [{ label: "MBTA's estimate", value: formatDelay(announced) }] : []),
         { label: 'Share of all delay time', value: `${Math.round(share * 100)}%` },
       ],
-      notes: [
-        key === focus ? 'Click to clear the highlight' : 'Click to highlight it in the chart above',
-      ],
+      notes: onFocus
+        ? [
+            key === focus
+              ? 'Click to clear the highlight'
+              : 'Click to highlight it in the chart above',
+          ]
+        : [],
     };
   };
 
   const pick = (index: number) => {
     const { key } = rows[index];
-    onFocus(key === focus ? null : key);
+    onFocus?.(key === focus ? null : key);
   };
 
   return (
-    <ChartStack>
-      <div className="w-full" style={{ height: rows.length * ROW_HEIGHT + 16 }}>
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <div
+        className={fill ? 'relative min-h-0 w-full flex-1' : 'w-full'}
+        style={fill ? undefined : { height: rows.length * ROW_HEIGHT + 16 }}
+      >
         <Bar
           id={`delayCauses-${linePath}`}
           role="img"
@@ -109,7 +121,7 @@ export const DelayCauseBars = ({
               if (elements.length) pick(elements[0].index);
             },
             onHover: (_event, elements, chart) => {
-              chart.canvas.style.cursor = elements.length ? 'pointer' : 'default';
+              chart.canvas.style.cursor = onFocus && elements.length ? 'pointer' : 'default';
             },
             // @ts-expect-error The watermark plugin doesn't have typescript support
             watermark: watermarkLayout(isMobile),
@@ -143,28 +155,33 @@ export const DelayCauseBars = ({
           plugins={[ChartjsPluginWatermark]}
         />
       </div>
-      <ul className="sr-only flex flex-wrap gap-2 text-sm focus-within:not-sr-only">
-        {rows.map((row) => (
-          <li key={row.key}>
-            <button
-              type="button"
-              aria-pressed={focus === row.key}
-              onClick={() => onFocus(focus === row.key ? null : row.key)}
-            >
-              Highlight {row.label} in the chart above
-            </button>
-          </li>
-        ))}
-      </ul>
-      <div className="flex flex-row items-end justify-end gap-4">
-        <SaveChartImageButton
-          chartRef={ref}
-          datasetName="delay-causes"
-          includeBothStopsForLocation={false}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      </div>
+      {onFocus && (
+        <ul className="sr-only flex flex-wrap gap-2 text-sm focus-within:not-sr-only">
+          {rows.map((row) => (
+            <li key={row.key}>
+              <button
+                type="button"
+                aria-pressed={focus === row.key}
+                onClick={() => onFocus(focus === row.key ? null : row.key)}
+              >
+                Highlight {row.label} in the chart above
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {!fill && (
+        <div className="flex flex-row items-end justify-end gap-4">
+          <SaveChartImageButton
+            chartRef={ref}
+            datasetName="delay-causes"
+            includeBothStopsForLocation={false}
+            startDate={startDate}
+            endDate={endDate}
+          />
+          <DelaysEmbedButton chart="causes" />
+        </div>
+      )}
     </ChartStack>
   );
 };

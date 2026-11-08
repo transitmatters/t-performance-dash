@@ -1,5 +1,9 @@
 import type { DataPoint } from '../../common/components/charts/TimeSeriesChart';
-import type { ReliabilityCounts, ReliabilityEntry } from '../../common/types/dataPoints';
+import type {
+  HeadwayCounts,
+  ReliabilityCounts,
+  ReliabilityEntry,
+} from '../../common/types/dataPoints';
 
 type Point = DataPoint & { date: string };
 
@@ -61,3 +65,41 @@ export const formatPercent = (value?: number) =>
 
 export const formatCount = (value?: number) =>
   value == null || !Number.isFinite(value) ? '—' : Math.round(value).toLocaleString('en-us');
+
+type HeadwayField = keyof HeadwayCounts;
+
+const HEADWAY_FIELDS: HeadwayField[] = [
+  'headways_under_50',
+  'headways_50_75',
+  'headways_75_125',
+  'headways_125_150',
+  'headways_over_150',
+];
+
+export const WITHIN_75_125: HeadwayField[] = ['headways_75_125'];
+export const WITHIN_50_150: HeadwayField[] = [
+  'headways_50_75',
+  'headways_75_125',
+  'headways_125_150',
+];
+export const BUNCHED: HeadwayField[] = ['headways_under_50'];
+export const LONG_GAPS: HeadwayField[] = ['headways_over_150'];
+
+const sumFields = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
+  fields.reduce((total, field) => total + (counts?.[field] ?? 0), 0);
+
+/** Percent of headways in `fields`, or undefined when no headways were counted. */
+export const headwayShare = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
+  percent(sumFields(counts, fields), sumFields(counts, HEADWAY_FIELDS));
+
+export const getSubwayStats = (data: ReliabilityEntry[]) => {
+  const total = Object.fromEntries(
+    HEADWAY_FIELDS.map((field) => [field, data.reduce((t, e) => t + (e[field] ?? 0), 0)])
+  ) as HeadwayCounts;
+  return {
+    within75: headwayShare(total, WITHIN_75_125),
+    within50: headwayShare(total, WITHIN_50_150),
+    bunched: headwayShare(total, BUNCHED),
+    longGaps: headwayShare(total, LONG_GAPS),
+  };
+};

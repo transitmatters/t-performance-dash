@@ -12,7 +12,7 @@ export const LINE_PAGE_LINES = {
   fleet: [...RAIL_LINES, 'bus', 'commuter-rail'],
   leaderboard: ['bus'],
   predictions: RAIL_LINES,
-  reliability: ['commuter-rail', 'the-ride'],
+  reliability: [...RAIL_LINES, 'commuter-rail', 'the-ride'],
   ridership: [...ALL_MODES, 'the-ride'],
   service: [...RAIL_LINES, 'commuter-rail'],
   slowzones: RAIL_LINES,
@@ -59,6 +59,14 @@ export const isServiceEmbed = (line: string, chart: string): chart is ServiceEmb
   return Object.hasOwn(charts, chart) && charts[chart].includes(line);
 };
 
+/** Delays page charts that can be iframed, each for every line with a Delays page. */
+export const EMBED_DELAYS_CHARTS = ['total', 'causes', 'breakdown'] as const;
+
+export type DelaysEmbedChart = (typeof EMBED_DELAYS_CHARTS)[number];
+
+export const isDelaysEmbed = (line: string, chart: string): chart is DelaysEmbedChart =>
+  EMBED_DELAYS_CHARTS.includes(chart as DelaysEmbedChart) && LINE_PAGE_LINES.delays.includes(line);
+
 /** Trip charts that can be iframed, by trip page, and the modes whose trip page shows each one. */
 export const EMBED_TRIP_CHART_LINES = {
   single: {
@@ -101,5 +109,8 @@ export const EMBED_PATHS: string[] = [
     Object.entries(charts).flatMap(([chart, lines]) =>
       lines.map((line) => `/embed/${line}/trips/${page}/${chart}/`)
     )
+  ),
+  ...EMBED_DELAYS_CHARTS.flatMap((chart) =>
+    LINE_PAGE_LINES.delays.map((line) => `/embed/${line}/delays/${chart}/`)
   ),
 ];

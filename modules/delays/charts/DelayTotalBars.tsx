@@ -20,6 +20,7 @@ import { delayAxisTicks, formatDelay } from '../format';
 import type { DelayReasonKey } from '../constants/reasons';
 import { REASON_BY_KEY, reasonLabel } from '../constants/reasons';
 import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
+import { DelaysEmbedButton } from '../DelaysEmbedButton';
 
 interface DelayTotalBarsProps {
   data: DelayRow[];
@@ -27,9 +28,18 @@ interface DelayTotalBarsProps {
   endDate: string;
   agg: 'daily' | 'weekly';
   focus: DelayReasonKey | null;
+  /** Fill the parent's height and leave out the buttons, as an embed does. */
+  fill?: boolean;
 }
 
-export const DelayTotalBars = ({ data, startDate, endDate, agg, focus }: DelayTotalBarsProps) => {
+export const DelayTotalBars = ({
+  data,
+  startDate,
+  endDate,
+  agg,
+  focus,
+  fill = false,
+}: DelayTotalBarsProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -60,8 +70,8 @@ export const DelayTotalBars = ({ data, startDate, endDate, agg, focus }: DelayTo
     : [{ ...bar, label: 'Time delayed', backgroundColor: lineColor, data: totals }];
 
   return (
-    <ChartStack>
-      <ChartDiv isMobile={isMobile}>
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <ChartDiv isMobile={isMobile} fill={fill}>
         <Bar
           id={`delayTotals-${linePath}`}
           role="img"
@@ -76,7 +86,13 @@ export const DelayTotalBars = ({ data, startDate, endDate, agg, focus }: DelayTo
             // @ts-expect-error The watermark plugin doesn't have typescript support
             watermark: watermarkLayout(isMobile),
             plugins: {
-              legend: { display: false },
+              // The page names a highlighted cause in the cause list; an embed needs the legend.
+              legend: {
+                display: fill && Boolean(reason),
+                position: 'bottom',
+                onClick: () => undefined,
+                labels: { boxWidth: 12, color: chartTheme.tick },
+              },
               tooltip: {
                 filter: hideZeroUnlessAllZero,
                 callbacks: {
@@ -157,22 +173,25 @@ export const DelayTotalBars = ({ data, startDate, endDate, agg, focus }: DelayTo
           plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        <SaveChartImageButton
-          chartRef={ref}
-          datasetName="delay-totals"
-          includeBothStopsForLocation={false}
-          startDate={startDate}
-          endDate={endDate}
-        />
-        <DownloadButton
-          data={data}
-          datasetName="delay-totals"
-          includeBothStopsForLocation={false}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      </div>
+      {!fill && (
+        <div className="flex flex-row items-end justify-end gap-4">
+          <SaveChartImageButton
+            chartRef={ref}
+            datasetName="delay-totals"
+            includeBothStopsForLocation={false}
+            startDate={startDate}
+            endDate={endDate}
+          />
+          <DownloadButton
+            data={data}
+            datasetName="delay-totals"
+            includeBothStopsForLocation={false}
+            startDate={startDate}
+            endDate={endDate}
+          />
+          <DelaysEmbedButton chart="total" />
+        </div>
+      )}
     </ChartStack>
   );
 };
