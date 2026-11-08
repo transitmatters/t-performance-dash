@@ -1,17 +1,22 @@
-"""On-time performance for The RIDE and commuter rail, from the MBTA open data portal.
+"""Reliability counts, written daily by data-ingestion.
 
-Daily rows are written to the ``Reliability`` table by data-ingestion, keyed by ``routeId``
-(``"RIDE"``, ``"CR-Worcester"``, ...) and ``date``. Everything here is a raw count, so rolling
-up to weekly/monthly or across commuter rail routes is a sum; percentages are computed by the client.
+- The RIDE and commuter rail: on-time performance from the MBTA open data portal, in the
+  ``Reliability`` table keyed by ``routeId`` (``"RIDE"``, ``"CR-Worcester"``, ...) and ``date``.
+- Subway lines: headways bucketed by their ratio to the scheduled headway, measured by TransitMatters
+  from per-stop events, in the ``HeadwayReliability`` table keyed by ``route`` (``"line-red"``, ...).
+
+Everything here is a raw count, so rolling up to weekly/monthly or across commuter rail routes is a
+sum; percentages are computed by the client.
 """
 
 from datetime import date, timedelta
 from typing import Dict, Iterable, List
 
-from .dynamo import query_reliability
+from .dynamo import query_headway_reliability, query_reliability
 
 THE_RIDE_ROUTE_ID = "RIDE"
 COMMUTER_RAIL_ROUTE_ID = "commuter-rail"
+SUBWAY_LINES = {"line-red", "line-orange", "line-blue", "line-green", "line-mattapan"}
 
 COMMUTER_RAIL_ROUTES = [
     "CR-Fairmount",
@@ -33,7 +38,7 @@ COMMUTER_RAIL_ROUTES = [
 
 # Attributes that aren't additive counts. MBTA's published RIDE OTP is recomputed client-side
 # from the counts so it stays correct when aggregated.
-NON_COUNT_KEYS = {"routeId", "date", "timestamp", "mode", "source", "otp"}
+NON_COUNT_KEYS = {"routeId", "route", "date", "timestamp", "mode", "source", "otp"}
 
 AGGS = ("daily", "weekly", "monthly")
 
@@ -88,11 +93,11 @@ def aggregate(items: Iterable[Dict], agg: str) -> List[Dict]:
 
 
 def get_reliability(route_id: str, start_date: date, end_date: date, agg: str) -> List[Dict]:
-    """Retrieve on-time performance counts for The RIDE, one commuter rail route, or all of commuter rail.
+    """Retrieve reliability counts for The RIDE, commuter rail, or a subway line.
 
     Args:
-        route_id: ``"RIDE"``, a commuter rail route (``"CR-Worcester"``), or ``"commuter-rail"`` for
-            every commuter rail route combined.
+        route_id: ``"RIDE"``, a commuter rail route (``"CR-Worcester"``), ``"commuter-rail"`` for
+            every commuter rail route combined, or a subway line (``"line-red"``).
         start_date: First date of the range (inclusive).
         end_date: Last date of the range (inclusive).
         agg: ``daily``, ``weekly``, or ``monthly``.
@@ -101,8 +106,12 @@ def get_reliability(route_id: str, start_date: date, end_date: date, agg: str) -
         A list of dicts with ``date`` (bucket start), ``days``, and summed counts. The RIDE has
         ``completed``, ``onTime``, and (when recorded) ``requests``, ``noShows``, ``missed``.
         Commuter rail has ``otpNumerator``, ``otpDenominator``, ``cancelled``, and the same
-        three counts under ``peak`` and ``offPeak``.
+        three counts under ``peak`` and ``offPeak``. Subway lines have five headway counts
+        (``headways_under_50`` ... ``headways_over_150``) and the same per direction under
+        ``byDirection``.
     """
+    if route_id in SUBWAY_LINES:
+        return aggregate(query_headway_reliability(route_id, start_date, end_date), agg)
     route_ids = COMMUTER_RAIL_ROUTES if route_id == COMMUTER_RAIL_ROUTE_ID else [route_id]
     items = [item for rid in route_ids for item in query_reliability(rid, start_date, end_date)]
     return aggregate(items, agg)

@@ -1,3 +1,5 @@
+import pytest
+
 from chalicelib import reliability
 
 
@@ -58,3 +60,30 @@ def test_get_reliability_queries_every_cr_route(monkeypatch):
 
     assert reliability.get_reliability("commuter-rail", date(2026, 1, 1), date(2026, 2, 1), "weekly") == []
     assert queried == reliability.COMMUTER_RAIL_ROUTES
+
+
+def subway(day, within, bunched, by_direction=None):
+    counts = {"headways_under_50": bunched, "headways_50_75": 0, "headways_75_125": within, "headways_125_150": 0,
+              "headways_over_150": 0}  # fmt: skip
+    return {"route": "line-red", "date": day, "source": "lamp", **counts, "byDirection": by_direction or {"0": counts}}
+
+
+def test_subway_lines_read_headway_counts_and_sum_directions(monkeypatch):
+    from datetime import date
+
+    queried = []
+    items = [
+        subway("2026-11-02", 60, 5),
+        subway("2026-11-03", 40, 15, {"0": {"headways_75_125": 40}, "1": {"headways_under_50": 15}}),
+    ]
+    monkeypatch.setattr(reliability, "query_headway_reliability", lambda r, s, e: queried.append(r) or items)
+    monkeypatch.setattr(reliability, "query_reliability", lambda *args: pytest.fail("wrong table"))
+
+    [entry] = reliability.get_reliability("line-red", date(2026, 11, 2), date(2026, 11, 8), "weekly")
+    assert queried == ["line-red"]
+    assert entry["date"] == "2026-11-02"
+    assert entry["days"] == 2
+    assert (entry["headways_75_125"], entry["headways_under_50"]) == (100, 20)
+    assert "route" not in entry and "source" not in entry
+    # Direction "1" is missing on one day, so it's left out rather than reported as a partial total.
+    assert entry["byDirection"] == {"0": {"headways_75_125": 100}}

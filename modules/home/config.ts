@@ -19,6 +19,8 @@ const frequencyDefinition = (vehicle: string, minutes: number) =>
   `Share of scheduled service hours, first trip to last, with a ${vehicle} at least every ${minutes} minutes. ${WEEKDAY_WEIGHTING}`;
 const BUS_FLEET =
   'Share of bus trips run by battery-electric or hybrid buses over the last 4 weeks.';
+const reliabilityDefinition = (where: string) =>
+  `Share of headways (the wait between one vehicle and the next) within 75–125% of the scheduled headway, at ${where}, over the last 4 complete weeks.`;
 
 // How each measure is judged (direction, thresholds, staleness) lives with the computation in
 // data-ingestion (chalicelib/overview), which publishes it on every cell.
@@ -52,6 +54,15 @@ export const METRICS: Record<MetricId, MetricMethod> = {
       bus: `${frequencyDefinition('bus', FREQUENCY_GOALS.bus)} Each route counts by its riders.`,
     },
   },
+  reliability: {
+    id: 'reliability',
+    label: 'Reliability',
+    definitions: {
+      subway: reliabilityDefinition('every station except the terminals'),
+      frequentBus: reliabilityDefinition('mid-route timepoints'),
+      bus: reliabilityDefinition('mid-route timepoints'),
+    },
+  },
   speed: {
     id: 'speed',
     label: 'Speed',
@@ -73,7 +84,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   },
 };
 
-export const METRIC_ORDER: MetricId[] = ['service', 'frequency', 'speed', 'fleet'];
+export const METRIC_ORDER: MetricId[] = ['service', 'frequency', 'reliability', 'speed', 'fleet'];
 
 export interface RowConfig {
   id: string;
