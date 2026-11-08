@@ -1,3 +1,5 @@
+import { ArrowRight } from 'lucide-react';
+import { Link } from '../../../common/components/general/Link';
 import { STATUS_LABELS } from '../copy';
 import type { Status } from '../types';
 import { StatusNode } from './StatusNode';
@@ -14,5 +16,13 @@ export const StatusLegend = () => (
         {STATUS_LABELS[status]}
       </li>
     ))}
+    <li className="ml-auto">
+      <Link
+        href="/methodology"
+        className="inline-flex items-center gap-1 font-medium text-primary hover:underline"
+      >
+        How we measure <ArrowRight className="size-3" aria-hidden />
+      </Link>
+    </li>
   </ul>
 );

@@ -79,5 +79,9 @@ describe('og cards', () => {
       subheading: 'MBTA subway, bus and commuter rail performance',
     });
     expect(getOgCard('/opensource/')).toMatchObject({ heading: 'Open Source', subheading: null });
+    expect(getOgCard('/methodology/')).toMatchObject({
+      heading: 'How We Measure',
+      subheading: null,
+    });
   });
 });

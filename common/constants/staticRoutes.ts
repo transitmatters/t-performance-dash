@@ -26,6 +26,7 @@ export type LinePageKey = keyof typeof LINE_PAGE_LINES;
 
 const OTHER_PATHS = [
   '/',
+  '/methodology/',
   '/opensource/',
   '/rapidtransit/',
   '/slowzones/',

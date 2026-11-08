@@ -15,6 +15,8 @@ export type RowMode = 'subway' | 'commuterRail' | 'frequentBus' | 'bus' | 'ferry
 const WEEKDAY_WEIGHTING = 'Weekdays count five times as much as Saturday or Sunday.';
 const SCHEDULED_SERVICE =
   'Scheduled trips per day (the 12-week median), compared with the most scheduled in any 12-week stretch at least 3 years ago.';
+const BUS_DELIVERED =
+  'Also shows the share of scheduled trips delivered over the last 4 complete weeks; a trip with no bus location data counts as missed.';
 const frequencyDefinition = (vehicle: string, minutes: number) =>
   `Share of scheduled service hours, first trip to last, with a ${vehicle} at least every ${minutes} minutes. ${WEEKDAY_WEIGHTING}`;
 const BUS_FLEET =
@@ -39,10 +41,10 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     label: 'Service',
     definitions: {
       subway:
-        'Trips run per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago.',
+        'Trips run per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago. Also shows the share of scheduled service hours delivered over the last 4 complete weeks.',
       commuterRail: SCHEDULED_SERVICE,
-      frequentBus: SCHEDULED_SERVICE,
-      bus: SCHEDULED_SERVICE,
+      frequentBus: `${SCHEDULED_SERVICE} ${BUS_DELIVERED}`,
+      bus: `${SCHEDULED_SERVICE} ${BUS_DELIVERED}`,
       ferry: SCHEDULED_SERVICE,
     },
   },

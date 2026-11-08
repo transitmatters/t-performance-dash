@@ -10,6 +10,11 @@ import {
 import type { DataPoint } from '../types/dataPoints';
 import { BUNCHED_RATIO, isOnTimeHeadwayRatio } from './chartTheme';
 
+const BUNCHED_HEADWAYS =
+  'Share of headways at this stop that were half the scheduled headway or less. Headways with no scheduled headway still count toward the total.';
+const ON_TIME_HEADWAYS =
+  'Share of headways at this stop within 25% of the scheduled headway. Headways with no scheduled headway still count toward the total.';
+
 const getAverage = (data: (number | undefined)[]) => {
   // Filter out undefined, null, NaN, and non-finite values
   const validData = data.filter(
@@ -230,12 +235,14 @@ export const getAggHeadwayDataWidgets = (
     },
     {
       text: 'Bunched',
+      description: BUNCHED_HEADWAYS,
       widgetValue: new PercentageWidgetValue(bunched),
       type: 'data',
       comparison: comp ? makeComparison(bunched, comp.bunched, label, 'percentage') : undefined,
     },
     {
       text: 'On time',
+      description: ON_TIME_HEADWAYS,
       widgetValue: new PercentageWidgetValue(onTime),
       type: 'data',
       comparison: comp ? makeComparison(onTime, comp.onTime, label, 'percentage') : undefined,
@@ -304,11 +311,13 @@ export const getSingleDayWidgets = (
   if (type === 'headways' && data.some((point) => point.benchmark_headway_time_sec)) {
     widgets.push({
       text: 'On time',
+      description: ON_TIME_HEADWAYS,
       widgetValue: new PercentageWidgetValue(onTimePercentage),
       type: 'data',
     });
     widgets.push({
       text: 'Bunched',
+      description: BUNCHED_HEADWAYS,
       widgetValue: new PercentageWidgetValue(bunchedPercentage),
       type: 'data',
     });

@@ -50,7 +50,7 @@ export const formatTrend = (cell: Pick<Cell, 'trend' | 'trendBasis'>) => {
     : `${arrow} ${amount}% last 2 weeks vs 12`;
 };
 
-const formatThreshold = (value: number, unit: Unit) =>
+export const formatThreshold = (value: number, unit: Unit) =>
   unit === 'pct'
     ? `${Math.round(value * 100)}%`
     : unit === 'seconds'

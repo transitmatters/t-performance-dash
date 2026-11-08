@@ -34,6 +34,7 @@ const PAGE_DISPLAY_NAMES: Record<string, string> = {
   leaderboard: 'Leaderboard',
   speedmap: 'Speed Map',
   opensource: 'Open Source',
+  methodology: 'How We Measure',
 };
 
 const TM_RED = '#a31e1e';
