@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { FetchRidershipOptions } from '../../types/api';
-import { fetchLandingRidership, fetchRidership, fetchStationRidership } from '../ridership';
+import { fetchRidership, fetchStationRidership } from '../ridership';
 import { ONE_HOUR } from '../../constants/time';
 
 export const useRidershipData = (options: FetchRidershipOptions, enabled?: boolean) => {
@@ -19,8 +19,4 @@ export const useStationRidershipData = (options: FetchRidershipOptions, enabled?
     enabled: enabled,
     staleTime: ONE_HOUR,
   });
-};
-
-export const useRidershipDataLanding = () => {
-  return useQuery({ queryKey: ['ridership-landing'], queryFn: () => fetchLandingRidership() });
 };

@@ -1,7 +1,4 @@
-"""Headline numbers for the social cards, from the same static JSON the landing page reads.
-
-The math mirrors modules/landing/utils.ts so a card never disagrees with the site.
-"""
+"""Headline numbers for the social cards, from the static landing JSON that data-ingestion publishes."""
 
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta

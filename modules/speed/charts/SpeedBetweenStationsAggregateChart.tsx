@@ -6,7 +6,7 @@ import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
-import { convertToAggregateStationSpeedDataset } from '../../landing/utils';
+import { convertToAggregateStationSpeedDataset } from '../utils/stationSpeed';
 
 interface SpeedBetweenStationsAggregateChartProps {
   traveltimes: AggregateDataResponse;

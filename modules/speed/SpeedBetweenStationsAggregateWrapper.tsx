@@ -6,7 +6,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PartialDataNotice } from '../../common/components/notices/PartialDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getAggDataWidgets } from '../../common/utils/widgets';
-import { convertToAggregateStationSpeedDataset } from '../landing/utils';
+import { convertToAggregateStationSpeedDataset } from './utils/stationSpeed';
 import { SpeedBetweenStationsAggregateChart } from './charts/SpeedBetweenStationsAggregateChart';
 
 interface SpeedBetweenStationsAggregateWrapperProps {

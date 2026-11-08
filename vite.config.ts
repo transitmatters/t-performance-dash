@@ -91,11 +91,6 @@ export default defineConfig(() => {
     build: {
       outDir: OUT_DIR,
       rolldownOptions: {
-        onLog(level, log, handler) {
-          // lottie-web's expression engine uses eval; nothing we can change from here.
-          if (log.code === 'EVAL' && log.id?.includes('lottie-web')) return;
-          handler(level, log);
-        },
         output: {
           // Libraries that rarely change get their own files, so a deploy that only touches app
           // code doesn't make returning visitors download them again.
