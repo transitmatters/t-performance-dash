@@ -75,27 +75,45 @@ export const getRemainingBlockAnnotation = (
   ];
 };
 
-const getLatestDate = (dates: string[]) =>
-  dates.reduce<string | undefined>(
-    (latest, date) => (!latest || date > latest ? date : latest),
-    undefined
-  );
+// Data normally trails today by up to a couple of days of processing.
+const EXPECTED_LAG_DAYS = 2;
 
 /*
- * A "No data" block from the latest datapoint through today, so data that lags behind
- * (weekly data especially) reads as not yet available rather than a line that just stops.
+ * The latest date, but only when the data stops short of `end` by more than one bucket plus the
+ * usual lag, so data that is just catching up doesn't get a sliver of "No data" at the edge.
+ * The bucket is the spacing of the last two dates, which covers daily, weekly and monthly data.
+ */
+const getStaleLatestDate = (dates: string[], end: string) => {
+  const sorted = [...new Set(dates)].sort();
+  const latest = sorted.at(-1);
+  if (!latest) return undefined;
+  const previous = sorted.at(-2);
+  const bucketDays = previous ? Math.max(dayjs(latest).diff(previous, 'day'), 1) : 1;
+  return dayjs(end).diff(latest, 'day') > bucketDays + EXPECTED_LAG_DAYS ? latest : undefined;
+};
+
+/*
+ * A "No data" block from the latest datapoint through today when the data has fallen behind,
+ * so it reads as not yet available rather than a line that just stops.
  * Pass `until` to stop the block early, e.g. where a "Service ended" block takes over.
  */
-export const getNoDataSinceLatestAnnotation = (dates: string[], until?: string) => {
-  const latest = getLatestDate(dates);
-  if (!latest || (until && !dayjs(latest).isBefore(until))) return [];
+export const getNoDataSinceLatestAnnotation = (
+  dates: string[],
+  until?: string,
+  today: string = TODAY.format(DATE_FORMAT)
+) => {
+  const latest = getStaleLatestDate(dates, until ?? today);
+  if (!latest) return [];
   return getRemainingBlockAnnotation(latest, until);
 };
 
 // The same block, for TimeSeriesChart.
-export const getNoDataSinceLatestBlock = (dates: string[]): Block[] => {
-  const latest = getLatestDate(dates);
-  return latest ? [{ from: latest, to: TODAY.format(DATE_FORMAT) }] : [];
+export const getNoDataSinceLatestBlock = (
+  dates: string[],
+  today: string = TODAY.format(DATE_FORMAT)
+): Block[] => {
+  const latest = getStaleLatestDate(dates, today);
+  return latest ? [{ from: latest, to: today }] : [];
 };
 
 /*
