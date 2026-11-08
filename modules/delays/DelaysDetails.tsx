@@ -1,23 +1,16 @@
 'use client';
 
-import { useState } from 'react';
-import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
-import { useAlertDelays } from '../../common/api/hooks/delays';
 import { Widget } from '../../common/components/widgets';
 import { BranchSelector } from '../../common/components/inputs/BranchSelector';
-import { lineToDefaultRouteId } from '../predictions/utils/utils';
-import { getBusRouteIds } from '../../common/constants/lines';
-import type { LineRouteId } from '../../common/types/lines';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Link } from '../../common/components/general/Link';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
-import { getWeekStart } from '../../common/utils/date';
 import { DelayStats } from './DelayStats';
 import { useFocusedReason } from './useFocusedReason';
-import { buildSeries, toActualDelays, withinRange } from './reasonSeries';
+import { useDelays } from './useDelays';
 import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
 import { DelayTotalBars } from './charts/DelayTotalBars';
 import { DelayCauseBars } from './charts/DelayCauseBars';
@@ -30,40 +23,16 @@ const STACK_MODE_OPTIONS: ['minutes' | 'share', string][] = [
 export function DelaysDetails() {
   const {
     line,
-    query: { startDate, endDate, crRoute, busRoute },
+    query: { startDate, endDate },
   } = useDelimitatedRoute();
-
-  const [greenRouteId, setGreenRouteId] = useState<LineRouteId>(lineToDefaultRouteId('line-green'));
-  // Green picks its branch from the toggle; commuter rail uses the crRoute from query params.
-  const routeId =
-    line === 'line-green'
-      ? greenRouteId
-      : line === 'line-commuter-rail' && crRoute
-        ? crRoute
-        : lineToDefaultRouteId(line);
+  const { alertDelays, agg, period, isActual, delayData, series, greenBranch } = useDelays(
+    startDate,
+    endDate
+  );
   const greenBranchToggle = line === 'line-green' && (
-    <BranchSelector routeId={routeId} setRouteId={setGreenRouteId} />
+    <BranchSelector routeId={greenBranch.routeId} setRouteId={greenBranch.setRouteId} />
   );
 
-  // Use daily data for 90 days or less, weekly for longer ranges
-  const agg =
-    startDate && endDate && dayjs(endDate).diff(dayjs(startDate), 'day') <= 90 ? 'daily' : 'weekly';
-
-  // Bus delays are stored per GTFS route id; grouped labels (e.g. 114/116/117) are summed
-  // server-side, and "Bus" is every route together.
-  const delaysLine =
-    line === 'line-bus' ? (busRoute ? getBusRouteIds(busRoute).join(',') : 'Bus') : routeId;
-
-  const enabled = Boolean(startDate && endDate && line);
-  const alertDelays = useAlertDelays(
-    {
-      start_date: startDate,
-      end_date: endDate,
-      line: delaysLine,
-      agg: agg,
-    },
-    enabled
-  );
   const { focus, setFocus } = useFocusedReason();
   const { value: stackMode, control: stackModeControl } = useChartToggle(
     'minutes',
@@ -71,19 +40,9 @@ export function DelaysDetails() {
     { variant: 'toggle', paramKey: 'dlView' }
   );
 
-  const actual = alertDelays.data && toActualDelays(alertDelays.data);
-  const isActual = actual?.isActual ?? false;
-  const delayData =
-    actual && startDate && endDate
-      ? withinRange(actual.rows, agg === 'weekly' ? getWeekStart(startDate) : startDate, endDate)
-      : undefined;
-  const series = delayData ? buildSeries(delayData, line) : [];
-
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
-
-  const period = agg === 'weekly' ? 'week' : 'day';
 
   return (
     <PageWrapper pageTitle={'Delays'}>

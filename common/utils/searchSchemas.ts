@@ -78,6 +78,8 @@ const delaysSearch = (search: RawSearch) => ({
   dlView: str(search.dlView),
   /** The single cause highlighted in the total chart. */
   focus: str(search.focus),
+  /** The Green Line branch, as its letter. */
+  branch: str(search.branch),
 });
 
 const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[];
@@ -130,6 +132,13 @@ export const validateEmbedSearch = (search: RawSearch) => ({
   ...dateSearch(search),
   /** The host page picks the theme; light unless `?theme=dark`. */
   theme: oneOf(['dark', 'light'])(search.theme),
+});
+
+/** A delays embed carries the route and branch it shows, and its chart's toggle. */
+export const validateDelaysEmbedSearch = (search: RawSearch) => ({
+  ...validateEmbedSearch(search),
+  ...routeSearch(search),
+  ...delaysSearch(search),
 });
 
 /** A trip chart embed carries the trip it shows, but not the page's view toggles. */
