@@ -76,6 +76,8 @@ interface Props<Data extends Dataset[]> {
   timeAxis?: Partial<ProvidedTimeAxis>;
   valueAxis: ValueAxis;
   height?: number;
+  /** Take the parent's height instead of a fixed one, as an embed does. */
+  fill?: boolean;
   // Structured hover card content; without it the card is built from each style's tooltipLabel
   hoverCard?: (items: TooltipItem<'line'>[]) => HoverCardContent | null;
 }
@@ -92,6 +94,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     legend = { visible: true },
     height,
     hoverCard,
+    fill = false,
   } = props;
 
   const isMobile = !useBreakpoint('md');
@@ -350,5 +353,9 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     );
   }, [height, isMobile, chartJsData, chartJsOptions, chartJsPlugins]);
 
-  return <ChartDiv isMobile={isMobile}>{chart}</ChartDiv>;
+  return (
+    <ChartDiv isMobile={isMobile} fill={fill}>
+      {chart}
+    </ChartDiv>
+  );
 };

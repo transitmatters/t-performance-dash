@@ -14,6 +14,7 @@ import type { HoverCardContent } from '../../common/components/charts/hoverCard/
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
 import { getScheduledAndDeliveredRoundTrips } from './utils/utils';
+import { ServiceEmbedButton } from './ServiceEmbedButton';
 
 interface ServiceGraphProps {
   config: ParamsType;
@@ -21,10 +22,11 @@ interface ServiceGraphProps {
   predictedData: ScheduledService;
   startDate: string;
   endDate: string;
+  fill?: boolean;
 }
 
 export const ServiceGraph = (props: ServiceGraphProps) => {
-  const { data, predictedData, startDate, endDate, config } = props;
+  const { data, predictedData, startDate, endDate, config, fill = false } = props;
   const { line } = useDelimitatedRoute();
   const lineColor = LINE_COLORS[line ?? 'default'];
 
@@ -117,7 +119,7 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
   }, [roundTrips, peak]);
 
   return (
-    <ChartStack>
+    <ChartStack className={fill ? 'h-full' : undefined}>
       <ScheduledAndDeliveredGraph
         valueAxisLabel="Round trips"
         scheduled={scheduled}
@@ -128,19 +130,23 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
         startDate={startDate}
         endDate={endDate}
         agg={config.agg}
+        fill={fill}
       />
 
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <DownloadButton
-            data={data}
-            datasetName="service"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
-        )}
-      </div>
+      {!fill && (
+        <div className="flex flex-row items-end justify-end gap-4">
+          {startDate && (
+            <DownloadButton
+              data={data}
+              datasetName="service"
+              includeBothStopsForLocation={false}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          )}
+          <ServiceEmbedButton chart="round-trips" />
+        </div>
+      )}
     </ChartStack>
   );
 };

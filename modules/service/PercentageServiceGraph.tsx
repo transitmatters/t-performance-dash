@@ -27,6 +27,7 @@ interface PercentageServiceGraphProps {
   endDate: string;
   comparison: 'Historical Maximum' | 'Scheduled';
   showTitle?: boolean;
+  fill?: boolean;
 }
 
 export const PercentageServiceGraph = ({
@@ -37,6 +38,7 @@ export const PercentageServiceGraph = ({
   endDate,
   comparison,
   showTitle = false,
+  fill = false,
 }: PercentageServiceGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
@@ -54,8 +56,8 @@ export const PercentageServiceGraph = ({
     });
     const compareToScheduled = comparison === 'Scheduled';
     return (
-      <ChartStack>
-        <ChartDiv isMobile={isMobile}>
+      <ChartStack className={fill ? 'h-full' : undefined}>
+        <ChartDiv isMobile={isMobile} fill={fill}>
           <Line
             id={`service-percentage-${linePath}`}
             height={isMobile ? 200 : 240}
@@ -235,6 +237,7 @@ export const PercentageServiceGraph = ({
     calculatedData.scheduled,
     calculatedData.peak,
     showTitle,
+    fill,
     callbacks,
     startDate,
     endDate,

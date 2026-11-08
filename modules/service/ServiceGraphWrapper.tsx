@@ -10,6 +10,8 @@ interface ServiceGraphWrapperProps {
   config: ParamsType;
   startDate: string;
   endDate: string;
+  /** Fill the parent's height and leave out the buttons, as an embed does. */
+  fill?: boolean;
 }
 
 // The average/peak KPIs now live in the page's stat-card row (see ServiceDetails), so the chart
@@ -20,18 +22,20 @@ export const ServiceGraphWrapper = ({
   config,
   startDate,
   endDate,
+  fill = false,
 }: ServiceGraphWrapperProps) => {
   if (!data.some((datapoint) => datapoint.miles_covered))
     return <NoDataNotice isLineMetric shutdownScope="line" />;
 
   return (
-    <ChartStack>
+    <ChartStack className={fill ? 'h-full' : undefined}>
       <ServiceGraph
         config={config}
         data={data}
         startDate={startDate}
         endDate={endDate}
         predictedData={predictedData}
+        fill={fill}
       />
     </ChartStack>
   );

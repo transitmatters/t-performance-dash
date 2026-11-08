@@ -5,16 +5,19 @@ import type { AggType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock } from './utils/graphUtils';
+import { ServiceEmbedButton } from './ServiceEmbedButton';
 
 interface ServiceHoursGraphProps {
   serviceHours: FetchServiceHoursResponse;
   agg: AggType;
   startDate: string;
   endDate: string;
+  /** Fill the parent's height and leave out the Embed button, as an embed does. */
+  fill?: boolean;
 }
 
 export const ServiceHoursGraph = (props: ServiceHoursGraphProps) => {
-  const { serviceHours, agg, startDate, endDate } = props;
+  const { serviceHours, agg, startDate, endDate, fill = false } = props;
 
   const scheduled = useMemo(() => {
     return {
@@ -32,7 +35,7 @@ export const ServiceHoursGraph = (props: ServiceHoursGraphProps) => {
   }, [serviceHours]);
 
   return (
-    <ChartStack>
+    <ChartStack className={fill ? 'h-full' : undefined}>
       <ScheduledAndDeliveredGraph
         scheduled={scheduled}
         delivered={delivered}
@@ -41,7 +44,13 @@ export const ServiceHoursGraph = (props: ServiceHoursGraphProps) => {
         agg={agg}
         valueAxisLabel="Service hours"
         blocks={getNoDataSinceLatestBlock(serviceHours.map((sh) => sh.date))}
+        fill={fill}
       />
+      {!fill && (
+        <div className="flex flex-row items-end justify-end gap-4">
+          <ServiceEmbedButton chart="hours" />
+        </div>
+      )}
     </ChartStack>
   );
 };

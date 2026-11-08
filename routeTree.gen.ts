@@ -31,6 +31,7 @@ import { Route as EmbedLineSlowzonesRouteImport } from './routes/embed/$line/slo
 import { Route as LineTripsMultiIndexRouteImport } from './routes/$line/trips/multi/index'
 import { Route as LineTripsSingleIndexRouteImport } from './routes/$line/trips/single/index'
 import { Route as EmbedLineDelaysChartRouteImport } from './routes/embed/$line/delays/$chart'
+import { Route as EmbedLineServiceChartRouteImport } from './routes/embed/$line/service/$chart'
 import { Route as EmbedLineTripsMultiChartRouteImport } from './routes/embed/$line/trips/multi/$chart'
 import { Route as EmbedLineTripsSingleChartRouteImport } from './routes/embed/$line/trips/single/$chart'
 
@@ -144,6 +145,11 @@ const EmbedLineDelaysChartRoute = EmbedLineDelaysChartRouteImport.update({
   path: '/embed/$line/delays/$chart',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EmbedLineServiceChartRoute = EmbedLineServiceChartRouteImport.update({
+  id: '/embed/$line/service/$chart',
+  path: '/embed/$line/service/$chart',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmbedLineTripsMultiChartRoute =
   EmbedLineTripsMultiChartRouteImport.update({
     id: '/embed/$line/trips/multi/$chart',
@@ -178,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/system/': typeof SystemIndexRoute
   '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/embed/$line/delays/$chart': typeof EmbedLineDelaysChartRoute
+  '/embed/$line/service/$chart': typeof EmbedLineServiceChartRoute
   '/$line/trips/multi/': typeof LineTripsMultiIndexRoute
   '/$line/trips/single/': typeof LineTripsSingleIndexRoute
   '/embed/$line/trips/multi/$chart': typeof EmbedLineTripsMultiChartRoute
@@ -204,6 +211,7 @@ export interface FileRoutesByTo {
   '/system': typeof SystemIndexRoute
   '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/embed/$line/delays/$chart': typeof EmbedLineDelaysChartRoute
+  '/embed/$line/service/$chart': typeof EmbedLineServiceChartRoute
   '/$line/trips/multi': typeof LineTripsMultiIndexRoute
   '/$line/trips/single': typeof LineTripsSingleIndexRoute
   '/embed/$line/trips/multi/$chart': typeof EmbedLineTripsMultiChartRoute
@@ -231,6 +239,7 @@ export interface FileRoutesById {
   '/system/': typeof SystemIndexRoute
   '/embed/$line/slowzones': typeof EmbedLineSlowzonesRoute
   '/embed/$line/delays/$chart': typeof EmbedLineDelaysChartRoute
+  '/embed/$line/service/$chart': typeof EmbedLineServiceChartRoute
   '/$line/trips/multi/': typeof LineTripsMultiIndexRoute
   '/$line/trips/single/': typeof LineTripsSingleIndexRoute
   '/embed/$line/trips/multi/$chart': typeof EmbedLineTripsMultiChartRoute
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/system/'
     | '/embed/$line/slowzones'
     | '/embed/$line/delays/$chart'
+    | '/embed/$line/service/$chart'
     | '/$line/trips/multi/'
     | '/$line/trips/single/'
     | '/embed/$line/trips/multi/$chart'
@@ -285,6 +295,7 @@ export interface FileRouteTypes {
     | '/system'
     | '/embed/$line/slowzones'
     | '/embed/$line/delays/$chart'
+    | '/embed/$line/service/$chart'
     | '/$line/trips/multi'
     | '/$line/trips/single'
     | '/embed/$line/trips/multi/$chart'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '/system/'
     | '/embed/$line/slowzones'
     | '/embed/$line/delays/$chart'
+    | '/embed/$line/service/$chart'
     | '/$line/trips/multi/'
     | '/$line/trips/single/'
     | '/embed/$line/trips/multi/$chart'
@@ -338,6 +350,7 @@ export interface RootRouteChildren {
   SystemIndexRoute: typeof SystemIndexRoute
   EmbedLineSlowzonesRoute: typeof EmbedLineSlowzonesRoute
   EmbedLineDelaysChartRoute: typeof EmbedLineDelaysChartRoute
+  EmbedLineServiceChartRoute: typeof EmbedLineServiceChartRoute
   LineTripsMultiIndexRoute: typeof LineTripsMultiIndexRoute
   LineTripsSingleIndexRoute: typeof LineTripsSingleIndexRoute
   EmbedLineTripsMultiChartRoute: typeof EmbedLineTripsMultiChartRoute
@@ -500,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmbedLineDelaysChartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/embed/$line/service/$chart': {
+      id: '/embed/$line/service/$chart'
+      path: '/embed/$line/service/$chart'
+      fullPath: '/embed/$line/service/$chart'
+      preLoaderRoute: typeof EmbedLineServiceChartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/embed/$line/trips/multi/$chart': {
       id: '/embed/$line/trips/multi/$chart'
       path: '/embed/$line/trips/multi/$chart'
@@ -538,6 +558,7 @@ const rootRouteChildren: RootRouteChildren = {
   SystemIndexRoute: SystemIndexRoute,
   EmbedLineSlowzonesRoute: EmbedLineSlowzonesRoute,
   EmbedLineDelaysChartRoute: EmbedLineDelaysChartRoute,
+  EmbedLineServiceChartRoute: EmbedLineServiceChartRoute,
   LineTripsMultiIndexRoute: LineTripsMultiIndexRoute,
   LineTripsSingleIndexRoute: LineTripsSingleIndexRoute,
   EmbedLineTripsMultiChartRoute: EmbedLineTripsMultiChartRoute,

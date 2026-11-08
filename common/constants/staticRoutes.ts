@@ -44,6 +44,21 @@ export const STATIC_PATHS: string[] = [
 /** Lines with an iframe-able total slow time chart; `system` draws every line on one chart. */
 export const EMBED_SLOWZONES_LINES = [...RAIL_LINES, 'system'];
 
+/** Service page charts that can be iframed, and the lines whose Service page shows each one. */
+export const EMBED_SERVICE_CHART_LINES = {
+  'round-trips': RAIL_LINES,
+  delivered: RAIL_LINES,
+  hours: ['red', 'orange', 'blue'],
+  'by-hour': RAIL_LINES,
+} satisfies Record<string, string[]>;
+
+export type ServiceEmbedChart = keyof typeof EMBED_SERVICE_CHART_LINES;
+
+export const isServiceEmbed = (line: string, chart: string): chart is ServiceEmbedChart => {
+  const charts: Record<string, string[]> = EMBED_SERVICE_CHART_LINES;
+  return Object.hasOwn(charts, chart) && charts[chart].includes(line);
+};
+
 /** Delays page charts that can be iframed, each for every line with a Delays page. */
 export const EMBED_DELAYS_CHARTS = ['total', 'causes', 'breakdown'] as const;
 
@@ -87,6 +102,9 @@ export const isTripEmbed = <P extends TripEmbedPage>(
 /** Prerendered like STATIC_PATHS so S3 serves them, but they get no link-preview card. */
 export const EMBED_PATHS: string[] = [
   ...EMBED_SLOWZONES_LINES.map((line) => `/embed/${line}/slowzones/`),
+  ...Object.entries(EMBED_SERVICE_CHART_LINES).flatMap(([chart, lines]) =>
+    lines.map((line) => `/embed/${line}/service/${chart}/`)
+  ),
   ...Object.entries(EMBED_TRIP_CHART_LINES).flatMap(([page, charts]) =>
     Object.entries(charts).flatMap(([chart, lines]) =>
       lines.map((line) => `/embed/${line}/trips/${page}/${chart}/`)

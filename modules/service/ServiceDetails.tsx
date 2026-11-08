@@ -20,6 +20,11 @@ import { ServiceGraphWrapper } from './ServiceGraphWrapper';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
 import { ServiceHoursGraph } from './ServiceHoursGraph';
 import { DailyServiceHistogram } from './DailyServiceHistogram';
+import {
+  SERVICE_COMPARISON_LABELS,
+  SERVICE_COMPARISON_OPTIONS,
+  SERVICE_DAY_OPTIONS,
+} from './embed';
 
 dayjs.extend(utc);
 
@@ -30,19 +35,16 @@ export function ServiceDetails() {
     query: { startDate, endDate },
   } = useDelimitatedRoute();
   const { value: comparison, control: comparisonControl } = useChartToggle(
-    'Scheduled' as const,
-    [
-      ['Scheduled', 'Scheduled'],
-      ['Historical Maximum', 'Historical Maximum'],
-    ],
+    'scheduled',
+    SERVICE_COMPARISON_OPTIONS,
     // Long labels overflow the segmented control in the card header; a dropdown fits cleanly.
-    { variant: 'select' }
+    { variant: 'select', paramKey: 'compare' }
   );
-  const { value: dayKind, control: dayKindControl } = useChartToggle('weekday' as const, [
-    ['weekday', 'Weekday'],
-    ['saturday', 'Saturday'],
-    ['sunday', 'Sunday'],
-  ]);
+  const { value: dayKind, control: dayKindControl } = useChartToggle(
+    'weekday',
+    SERVICE_DAY_OPTIONS,
+    { paramKey: 'day' }
+  );
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(startDate && endDate && line && config.agg);
   const tripsData = useDeliveredTripMetrics(
@@ -129,7 +131,7 @@ export function ServiceDetails() {
         </Widget>
         <Widget
           title="Service delivered"
-          subtitle={`Compared to ${comparison}`}
+          subtitle={`Compared to ${SERVICE_COMPARISON_LABELS[comparison]}`}
           ready={[tripsData, scheduledData]}
           action={comparisonControl}
         >

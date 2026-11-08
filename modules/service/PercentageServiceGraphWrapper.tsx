@@ -7,6 +7,8 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PercentageServiceGraph } from './PercentageServiceGraph';
 import { getPercentageData } from './utils/utils';
+import { type ServiceComparison, SERVICE_COMPARISON_LABELS } from './embed';
+import { ServiceEmbedButton } from './ServiceEmbedButton';
 
 interface PercentageServiceGraphWrapperProps {
   data: DeliveredTripMetrics[];
@@ -14,7 +16,9 @@ interface PercentageServiceGraphWrapperProps {
   config: ParamsType;
   startDate: string;
   endDate: string;
-  comparison: 'Scheduled' | 'Historical Maximum';
+  comparison: ServiceComparison;
+  /** Fill the parent's height and leave out the Embed button, as an embed does. */
+  fill?: boolean;
 }
 
 // The "% delivered" KPI now lives in the page's stat-card row (see ServiceDetails), so the chart
@@ -26,6 +30,7 @@ export const PercentageServiceGraphWrapper = ({
   startDate,
   endDate,
   comparison,
+  fill = false,
 }: PercentageServiceGraphWrapperProps) => {
   const { line } = useDelimitatedRoute();
   const peakService = useScheduledServiceBaseline(line);
@@ -39,15 +44,21 @@ export const PercentageServiceGraphWrapper = ({
     return <NoDataNotice isLineMetric shutdownScope="line" />;
 
   return (
-    <ChartStack>
+    <ChartStack className={fill ? 'h-full' : undefined}>
       <PercentageServiceGraph
         config={config}
         data={data}
         calculatedData={{ scheduled: scheduled, peak: peak }}
         startDate={startDate}
         endDate={endDate}
-        comparison={comparison}
+        comparison={SERVICE_COMPARISON_LABELS[comparison]}
+        fill={fill}
       />
+      {!fill && (
+        <div className="flex flex-row items-end justify-end gap-4">
+          <ServiceEmbedButton chart="delivered" />
+        </div>
+      )}
     </ChartStack>
   );
 };

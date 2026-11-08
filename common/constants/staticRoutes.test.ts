@@ -13,6 +13,16 @@ describe('EMBED_PATHS', () => {
     ]);
   });
 
+  it('covers the Service page charts for rapid transit, and hours of service where it is shown', () => {
+    const service = EMBED_PATHS.filter((path) => path.includes('/service/'));
+    expect(service).toHaveLength(18);
+    expect(service).toContain('/embed/mattapan/service/delivered/');
+    expect(service).toContain('/embed/green/service/by-hour/');
+    expect(service).toContain('/embed/orange/service/hours/');
+    expect(service).not.toContain('/embed/green/service/hours/');
+    expect(service).not.toContain('/embed/commuter-rail/service/round-trips/');
+  });
+
   it('covers each single-day trip chart only for the modes whose trip page shows it', () => {
     const trips = EMBED_PATHS.filter((path) => path.includes('/trips/single/'));
     expect(trips).toHaveLength(28);

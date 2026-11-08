@@ -68,6 +68,8 @@ const speedSearch = (search: RawSearch) => ({
 const serviceSearch = (search: RawSearch) => ({
   serviceScope: str(search.serviceScope),
   day: str(search.day),
+  /** What service delivered is a percentage of: the schedule, or `peak` for the historical maximum. */
+  compare: str(search.compare),
 });
 
 const fleetSearch = (search: RawSearch) => ({
@@ -132,6 +134,12 @@ export const validateEmbedSearch = (search: RawSearch) => ({
   ...dateSearch(search),
   /** The host page picks the theme; light unless `?theme=dark`. */
   theme: oneOf(['dark', 'light'])(search.theme),
+});
+
+export const validateServiceEmbedSearch = (search: RawSearch) => ({
+  ...validateEmbedSearch(search),
+  compare: oneOf(['scheduled', 'peak'])(search.compare),
+  day: oneOf(['weekday', 'saturday', 'sunday'])(search.day),
 });
 
 /** A delays embed carries the route and branch it shows, and its chart's toggle. */
