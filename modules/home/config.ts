@@ -59,6 +59,8 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     label: 'Reliability',
     definitions: {
       subway: reliabilityDefinition('every station except the terminals'),
+      commuterRail:
+        "Share of trains on time over the last 4 complete weeks, by the MBTA's measure. Commuter Rail runs to a timetable rather than headways, so this uses the MBTA's published on-time counts.",
       frequentBus: reliabilityDefinition('mid-route timepoints'),
       bus: reliabilityDefinition('mid-route timepoints'),
     },
