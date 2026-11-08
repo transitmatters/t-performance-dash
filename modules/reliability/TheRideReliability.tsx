@@ -1,7 +1,6 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
-import { CHART_COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
 import type { AggType } from '../speed/constants/speeds';
 import { ReliabilityGraph } from './charts/ReliabilityGraph';
@@ -28,7 +27,6 @@ export const TheRideReliability = ({
 }: TheRideReliabilityProps) => {
   const data = reliability.data ?? [];
   const stats = reliability.data ? getTheRideStats(reliability.data) : null;
-  const color = LINE_COLORS['line-RIDE'];
   const ready = [reliability, startDate, endDate];
   const hasNoShows = data.some((e) => e.noShows != null);
 
@@ -48,18 +46,17 @@ export const TheRideReliability = ({
         ready={ready}
       >
         <ReliabilityGraph
+          line="line-RIDE"
           data={[
             {
               label: 'On time',
               data: toPoints(data, (e) => percent(e.onTime, e.completed)),
-              style: { color },
             },
             ...(hasNoShows
               ? [
                   {
                     label: 'MBTA OTP (no-shows count as on time)',
                     data: toPoints(data, mbtaOtp),
-                    style: { color: CHART_COLORS.BLUE },
                   },
                 ]
               : []),
@@ -73,16 +70,15 @@ export const TheRideReliability = ({
       </Widget>
       <Widget title="Trips per day" ready={ready}>
         <ReliabilityGraph
+          line="line-RIDE"
           data={[
             {
               label: 'Completed',
               data: toPoints(data, (e) => perDay(e, e.completed)),
-              style: { color },
             },
             {
               label: 'Requested',
               data: toPoints(data, (e) => perDay(e, e.requests)),
-              style: { color: CHART_COLORS.BLUE },
             },
           ]}
           agg={agg}
@@ -95,16 +91,15 @@ export const TheRideReliability = ({
       {hasNoShows && (
         <Widget title="Missed trips and no-shows per day" ready={ready}>
           <ReliabilityGraph
+            line="line-RIDE"
             data={[
               {
                 label: 'Missed trips',
                 data: toPoints(data, (e) => perDay(e, e.missed)),
-                style: { color: CHART_COLORS.RED },
               },
               {
                 label: 'Rider no-shows',
                 data: toPoints(data, (e) => perDay(e, e.noShows)),
-                style: { color: CHART_COLORS.GREY },
               },
             ]}
             agg={agg}

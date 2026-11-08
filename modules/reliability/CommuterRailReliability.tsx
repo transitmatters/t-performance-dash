@@ -1,7 +1,6 @@
 import type { UseQueryResult } from '@tanstack/react-query';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
-import { CHART_COLORS, LINE_COLORS } from '../../common/constants/colors';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
 import type { AggType } from '../speed/constants/speeds';
 import { ReliabilityGraph } from './charts/ReliabilityGraph';
@@ -29,7 +28,6 @@ export const CommuterRailReliability = ({
 }: CommuterRailReliabilityProps) => {
   const data = reliability.data ?? [];
   const stats = reliability.data ? getCommuterRailStats(reliability.data) : null;
-  const color = LINE_COLORS['line-commuter-rail'];
   const ready = [reliability, startDate, endDate];
 
   return (
@@ -48,23 +46,21 @@ export const CommuterRailReliability = ({
         ready={ready}
       >
         <ReliabilityGraph
+          line="line-commuter-rail"
           data={[
             {
               label: 'All trains',
               data: toPoints(data, (e) => percent(e.otpNumerator, e.otpDenominator)),
-              style: { color },
             },
             {
               label: 'Peak',
               data: toPoints(data, (e) => percent(e.peak?.otpNumerator, e.peak?.otpDenominator)),
-              style: { color: CHART_COLORS.BLUE, width: 1 },
             },
             {
               label: 'Off-peak',
               data: toPoints(data, (e) =>
                 percent(e.offPeak?.otpNumerator, e.offPeak?.otpDenominator)
               ),
-              style: { color: CHART_COLORS.YELLOW, width: 1 },
             },
           ]}
           agg={agg}
@@ -76,11 +72,11 @@ export const CommuterRailReliability = ({
       </Widget>
       <Widget title="Cancelled trains per day" ready={ready}>
         <ReliabilityGraph
+          line="line-commuter-rail"
           data={[
             {
               label: 'Cancelled',
               data: toPoints(data, (e) => perDay(e, e.cancelled)),
-              style: { color: CHART_COLORS.RED },
             },
           ]}
           agg={agg}

@@ -1,15 +1,15 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
+import type { Ref } from 'react';
 import { createPortal } from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { SEVERITY_COLORS } from '../../../utils/chartTheme';
 import { hideHoverCard, useHoverCardStore } from './hoverCardStore';
 import type { HoverCard } from './hoverCardStore';
+import { placeCard } from './placement';
+import type { Rect } from './placement';
 import type { HoverCardContent, HoverCardTone } from './types';
 import { cn } from '@/common/utils/cn';
-
-const GAP = 12;
-const EDGE = 8;
 
 const toneColor = (tone: HoverCardTone) =>
   tone === 'neutral' ? 'var(--muted-foreground)' : SEVERITY_COLORS[tone];
@@ -195,43 +195,29 @@ export const HoverCardBody = ({ content }: { content: HoverCardContent }) => {
   );
 };
 
-const FloatingCard = ({ card }: { card: HoverCard }) => {
-  const ref = useRef<HTMLDivElement>(null);
+const FloatingCard = ({ card, ref }: { card: HoverCard; ref: Ref<HTMLDivElement> }) => (
+  <div
+    ref={ref}
+    role="tooltip"
+    className="pointer-events-none fixed z-50 w-max max-w-80 min-w-44 animate-in rounded-xl bg-popover p-3 text-xs text-popover-foreground shadow-lg ring-1 ring-foreground/10 fade-in-0 data-placed:transition-[left,top] data-placed:duration-100 data-placed:ease-out"
+  >
+    <HoverCardBody content={card.content} />
+  </div>
+);
 
-  // Position after layout so the card's own size decides which side of the point it fits on.
-  useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-    const { width, height } = element.getBoundingClientRect();
-    const maxLeft = window.innerWidth - width - EDGE;
-    const maxTop = window.innerHeight - height - EDGE;
-    let left: number;
-    let top: number;
-    if (card.placement === 'above') {
-      left = card.x - width / 2;
-      top = card.y - height - GAP / 2;
-    } else {
-      left = card.x + GAP + width > window.innerWidth - EDGE ? card.x - GAP - width : card.x + GAP;
-      top = card.y - height / 2;
-    }
-    element.style.left = `${Math.round(Math.min(Math.max(left, EDGE), maxLeft))}px`;
-    element.style.top = `${Math.round(Math.min(Math.max(top, EDGE), maxTop))}px`;
-    // Glide between points, but not in from the corner on first show
-    if (!('placed' in element.dataset)) {
-      void element.offsetWidth;
-      element.dataset.placed = '';
-    }
-  }, [card]);
+const moveCard = (element: HTMLDivElement, { left, top }: Rect) => {
+  element.style.left = `${left}px`;
+  element.style.top = `${top}px`;
+  // Glide between points, but not in from the corner on first show
+  if (!('placed' in element.dataset)) {
+    void element.offsetWidth;
+    element.dataset.placed = '';
+  }
+};
 
-  return (
-    <div
-      ref={ref}
-      role="tooltip"
-      className="pointer-events-none fixed z-50 w-max max-w-80 min-w-44 animate-in rounded-xl bg-popover p-3 text-xs text-popover-foreground shadow-lg ring-1 ring-foreground/10 fade-in-0 data-placed:transition-[left,top] data-placed:duration-100 data-placed:ease-out"
-    >
-      <HoverCardBody content={card.content} />
-    </div>
-  );
+const sizeOf = (element: HTMLElement) => {
+  const { width, height } = element.getBoundingClientRect();
+  return { width, height };
 };
 
 /** Renders the open chart hover cards. Mounted once, at the app root. */
@@ -239,6 +225,23 @@ export const ChartHoverCard = () => {
   const point = useHoverCardStore((state) => state.point);
   const annotation = useHoverCardStore((state) => state.annotation);
   const open = Boolean(point || annotation);
+  const pointRef = useRef<HTMLDivElement>(null);
+  const annotationRef = useRef<HTMLDivElement>(null);
+
+  // Position after layout so each card's own size decides where it fits. The annotation card goes
+  // first so the point card can move out of its way.
+  useLayoutEffect(() => {
+    const viewport = { width: window.innerWidth, height: window.innerHeight };
+    let annotationRect: Rect | undefined;
+    if (annotation && annotationRef.current) {
+      annotationRect = placeCard(annotation, sizeOf(annotationRef.current), viewport);
+      moveCard(annotationRef.current, annotationRect);
+    }
+    if (point && pointRef.current) {
+      const rect = placeCard(point, sizeOf(pointRef.current), viewport, annotationRect);
+      moveCard(pointRef.current, rect);
+    }
+  }, [point, annotation]);
 
   // The card is placed in viewport coordinates, so any scroll would leave it behind.
   useEffect(() => {
@@ -254,8 +257,8 @@ export const ChartHoverCard = () => {
   if (!open) return null;
   return createPortal(
     <>
-      {point && <FloatingCard card={point} />}
-      {annotation && <FloatingCard card={annotation} />}
+      {point && <FloatingCard card={point} ref={pointRef} />}
+      {annotation && <FloatingCard card={annotation} ref={annotationRef} />}
     </>,
     document.body
   );

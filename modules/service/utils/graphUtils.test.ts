@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { getNoDataSinceLatestAnnotation, getServiceDatesBlockAnnotations } from './graphUtils';
+import {
+  getNoDataSinceLatestAnnotation,
+  getNoDataSinceLatestBlock,
+  getServiceDatesBlockAnnotations,
+} from './graphUtils';
 
 const spans = (blocks: ReturnType<typeof getServiceDatesBlockAnnotations>) =>
   blocks.map((block) => ({
@@ -45,5 +49,35 @@ describe('getNoDataSinceLatestAnnotation', () => {
 
   it('adds nothing when the latest datapoint is at or past `until`', () => {
     expect(getNoDataSinceLatestAnnotation(['2025-03-24'], '2025-03-23')).toEqual([]);
+  });
+});
+
+describe('getNoDataSinceLatestBlock', () => {
+  const today = '2026-11-07';
+  const daily = (...dates: string[]) => getNoDataSinceLatestBlock(dates, today);
+
+  it('adds nothing when daily data runs through the last couple of days', () => {
+    expect(daily('2026-11-05', '2026-11-06')).toEqual([]);
+    expect(daily('2026-11-03', '2026-11-04')).toEqual([]);
+  });
+
+  it('blocks from the latest date when daily data has fallen behind', () => {
+    expect(daily('2026-11-02', '2026-11-03')).toEqual([{ from: '2026-11-03', to: today }]);
+  });
+
+  it('adds nothing for the current week of weekly data', () => {
+    expect(daily('2026-10-26', '2026-11-02')).toEqual([]);
+  });
+
+  it('blocks when a week of weekly data is missing', () => {
+    expect(daily('2026-10-19', '2026-10-26')).toEqual([{ from: '2026-10-26', to: today }]);
+  });
+
+  it('adds nothing for the current month of monthly data', () => {
+    expect(daily('2026-10-01', '2026-11-01')).toEqual([]);
+  });
+
+  it('adds nothing without data', () => {
+    expect(daily()).toEqual([]);
   });
 });

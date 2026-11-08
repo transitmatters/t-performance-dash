@@ -7,6 +7,15 @@ import type { Line } from '../../types/lines';
 import { LINE_COLORS } from '../../constants/colors';
 import { readableOn } from '../../utils/general';
 
+// Sized to the active item rather than the wrapper, so a margin or height that callers put on the
+// group through additionalDivClass can't stretch the pill past the buttons.
+const placePill = (pill: HTMLElement, active: HTMLElement) => {
+  pill.style.transform = `translateX(${active.offsetLeft}px)`;
+  pill.style.top = `${active.offsetTop}px`;
+  pill.style.width = `${active.offsetWidth}px`;
+  pill.style.height = `${active.offsetHeight}px`;
+};
+
 interface ButtonGroupProps<K, T> {
   options: [K, T][];
   pressFunction: Dispatch<SetStateAction<K>>;
@@ -63,13 +72,11 @@ export const ButtonGroup: <T extends string, K extends string>(
       if (!animate) {
         const prevTransition = pill.style.transition;
         pill.style.transition = 'none';
-        pill.style.transform = `translateX(${active.offsetLeft}px)`;
-        pill.style.width = `${active.offsetWidth}px`;
+        placePill(pill, active);
         void pill.offsetWidth;
         pill.style.transition = prevTransition;
       } else {
-        pill.style.transform = `translateX(${active.offsetLeft}px)`;
-        pill.style.width = `${active.offsetWidth}px`;
+        placePill(pill, active);
       }
     },
     [internalIndex]
@@ -93,7 +100,7 @@ export const ButtonGroup: <T extends string, K extends string>(
       <span
         ref={pillRef}
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 left-0 z-0 w-0 rounded-lg bg-(--line-color) transition-[transform,width] duration-(--tabs-dur) ease-(--tabs-ease) motion-reduce:transition-none"
+        className="pointer-events-none absolute top-0 left-0 z-0 h-0 w-0 rounded-lg bg-(--line-color) transition-[transform,width] duration-(--tabs-dur) ease-(--tabs-ease) motion-reduce:transition-none"
       />
       <ToggleGroup
         type="single"

@@ -2,7 +2,6 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import { startCase } from '@lodash-utils';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
-import { CHART_COLORS, LINE_COLORS } from '../../common/constants/colors';
 import { rtStations } from '../../common/constants/stations';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
 import type { Line, LineShort } from '../../common/types/lines';
@@ -44,9 +43,14 @@ export const SubwayReliability = ({
 }: SubwayReliabilityProps) => {
   const data = reliability.data ?? [];
   const stats = reliability.data ? getSubwayStats(reliability.data) : null;
-  const color = LINE_COLORS[line];
   const ready = [reliability, startDate, endDate];
-  const graphProps = { agg, startDate: startDate!, endDate: endDate!, kind: 'percent' as const };
+  const graphProps = {
+    line,
+    agg,
+    startDate: startDate!,
+    endDate: endDate!,
+    kind: 'percent' as const,
+  };
 
   return (
     <>
@@ -68,12 +72,10 @@ export const SubwayReliability = ({
             {
               label: '75–125%',
               data: toPoints(data, (e) => headwayShare(e, WITHIN_75_125)),
-              style: { color },
             },
             {
               label: '50–150%',
               data: toPoints(data, (e) => headwayShare(e, WITHIN_50_150)),
-              style: { color: CHART_COLORS.BLUE, width: 1 },
             },
           ]}
           valueAxisLabel="Headways"
@@ -90,12 +92,10 @@ export const SubwayReliability = ({
             {
               label: 'Bunched',
               data: toPoints(data, (e) => headwayShare(e, BUNCHED)),
-              style: { color: CHART_COLORS.RED },
             },
             {
               label: 'Long gaps',
               data: toPoints(data, (e) => headwayShare(e, LONG_GAPS)),
-              style: { color: CHART_COLORS.YELLOW },
             },
           ]}
           valueAxisLabel="Headways"
@@ -104,10 +104,9 @@ export const SubwayReliability = ({
       </Widget>
       <Widget title="By direction" subtitle="Share of headways within 75–125%" ready={ready}>
         <ReliabilityGraph
-          data={(['0', '1'] as const).map((direction, i) => ({
+          data={(['0', '1'] as const).map((direction) => ({
             label: directionName(lineShort, direction),
             data: toPoints(data, (e) => headwayShare(e.byDirection?.[direction], WITHIN_75_125)),
-            style: i === 0 ? { color } : { color: CHART_COLORS.BLUE, width: 1 },
           }))}
           valueAxisLabel="Within 75–125%"
           {...graphProps}
