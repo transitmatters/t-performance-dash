@@ -365,7 +365,8 @@ class ReliabilityParams(BaseModel):
     """Parameters for the `/api/reliability` endpoint.
 
     Attributes:
-        route_id: `RIDE`, a commuter rail route, `commuter-rail` for all of commuter rail, or a subway line.
+        route_id: `RIDE`, a commuter rail route, `commuter-rail` for all of commuter rail, a subway line, or
+            comma-separated bus route IDs.
         start_date: Start of date range.
         end_date: End of date range.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
@@ -375,7 +376,8 @@ class ReliabilityParams(BaseModel):
         description=(
             "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), "
             "`commuter-rail` for every commuter rail route combined, "
-            "or a subway line (`line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`)."
+            "a subway line (`line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`), "
+            "or raw GTFS bus route IDs (e.g. `28`, or `741` for SL1), comma-separated to combine them (e.g. `114,116,117`)."
         )
     )
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
@@ -1203,7 +1205,8 @@ class ReliabilityEntry(BaseModel):
 
     The RIDE entries have `completed` and `onTime`, plus `requests`, `noShows` and `missed` for periods
     where every day recorded them. Commuter rail entries have `otpNumerator`, `otpDenominator`,
-    `cancelled`, `peak` and `offPeak`. Subway entries have the five headway counts and `byDirection`.
+    `cancelled`, `peak` and `offPeak`. Subway entries have the five headway counts and `byDirection`. Bus entries
+    have the five headway counts, measured at mid-route timepoints from 2025-12-24.
 
     Attributes:
         date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
@@ -1218,11 +1221,11 @@ class ReliabilityEntry(BaseModel):
         cancelled: Commuter rail cancelled trips.
         peak: Commuter rail peak-period counts.
         offPeak: Commuter rail off-peak counts.
-        headways_under_50: Subway headways at most half the scheduled headway.
-        headways_50_75: Subway headways over 50% and up to 75% of scheduled.
-        headways_75_125: Subway headways over 75% and under 125% of scheduled.
-        headways_125_150: Subway headways 125% up to 150% of scheduled.
-        headways_over_150: Subway headways 150% of scheduled or more.
+        headways_under_50: Subway or bus headways at most half the scheduled headway.
+        headways_50_75: Subway or bus headways over 50% and up to 75% of scheduled.
+        headways_75_125: Subway or bus headways over 75% and under 125% of scheduled.
+        headways_125_150: Subway or bus headways 125% up to 150% of scheduled.
+        headways_over_150: Subway or bus headways 150% of scheduled or more.
         byDirection: Subway headway counts per direction ID (`"0"`, `"1"`).
     """
 
