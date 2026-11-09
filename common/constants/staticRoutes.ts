@@ -12,7 +12,7 @@ export const LINE_PAGE_LINES = {
   fleet: [...RAIL_LINES, 'bus', 'commuter-rail'],
   leaderboard: ['bus'],
   predictions: RAIL_LINES,
-  reliability: [...RAIL_LINES, 'commuter-rail', 'the-ride'],
+  reliability: [...RAIL_LINES, 'bus', 'commuter-rail', 'the-ride'],
   ridership: [...ALL_MODES, 'the-ride'],
   service: [...RAIL_LINES, 'commuter-rail'],
   slowzones: RAIL_LINES,
