@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as MethodologyRouteImport } from './routes/methodology'
 import { Route as OpensourceRouteImport } from './routes/opensource'
 import { Route as RapidtransitRouteImport } from './routes/rapidtransit'
 import { Route as SlowzonesRouteImport } from './routes/slowzones'
@@ -39,11 +38,6 @@ import { Route as EmbedLineTripsSingleChartRouteImport } from './routes/embed/$l
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MethodologyRoute = MethodologyRouteImport.update({
-  id: '/methodology',
-  path: '/methodology',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OpensourceRoute = OpensourceRouteImport.update({
@@ -171,7 +165,6 @@ const EmbedLineTripsSingleChartRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/methodology': typeof MethodologyRoute
   '/opensource': typeof OpensourceRoute
   '/rapidtransit': typeof RapidtransitRoute
   '/slowzones': typeof SlowzonesRoute
@@ -199,7 +192,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/methodology': typeof MethodologyRoute
   '/opensource': typeof OpensourceRoute
   '/rapidtransit': typeof RapidtransitRoute
   '/slowzones': typeof SlowzonesRoute
@@ -228,7 +220,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/methodology': typeof MethodologyRoute
   '/opensource': typeof OpensourceRoute
   '/rapidtransit': typeof RapidtransitRoute
   '/slowzones': typeof SlowzonesRoute
@@ -258,7 +249,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/methodology'
     | '/opensource'
     | '/rapidtransit'
     | '/slowzones'
@@ -286,7 +276,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/methodology'
     | '/opensource'
     | '/rapidtransit'
     | '/slowzones'
@@ -314,7 +303,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/methodology'
     | '/opensource'
     | '/rapidtransit'
     | '/slowzones'
@@ -343,7 +331,6 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  MethodologyRoute: typeof MethodologyRoute
   OpensourceRoute: typeof OpensourceRoute
   RapidtransitRoute: typeof RapidtransitRoute
   SlowzonesRoute: typeof SlowzonesRoute
@@ -377,13 +364,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/methodology': {
-      id: '/methodology'
-      path: '/methodology'
-      fullPath: '/methodology'
-      preLoaderRoute: typeof MethodologyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/opensource': {
@@ -559,7 +539,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  MethodologyRoute: MethodologyRoute,
   OpensourceRoute: OpensourceRoute,
   RapidtransitRoute: RapidtransitRoute,
   SlowzonesRoute: SlowzonesRoute,

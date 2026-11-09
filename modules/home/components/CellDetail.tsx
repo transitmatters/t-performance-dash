@@ -102,14 +102,7 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
           {note}
         </p>
       ))}
-      {definition && (
-        <p className="border-t pt-2 text-xs text-muted-foreground">
-          {definition}{' '}
-          <Link href={`/methodology#${cell.metric}`} className="underline hover:text-foreground">
-            More on how we measure
-          </Link>
-        </p>
-      )}
+      {definition && <p className="border-t pt-2 text-xs text-muted-foreground">{definition}</p>}
       {cell.status !== 'na' && !cell.parts?.length && thresholds && (
         <p className="text-xs text-muted-foreground">{thresholds}</p>
       )}

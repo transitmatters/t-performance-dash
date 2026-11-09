@@ -31,6 +31,8 @@ const DELAYS_DEFINITION =
 export interface MetricMethod {
   id: MetricId;
   label: string;
+  /** One line for every mode, in the info pill on the column header. */
+  summary: string;
   /** Shown in a cell's detail; a mode with none isn't measured on this. */
   definitions: Partial<Record<RowMode, string>>;
 }
@@ -39,6 +41,8 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   service: {
     id: 'service',
     label: 'Service',
+    summary:
+      "Trips per day compared with the line's best stretch at least 3 years ago, and how much of the schedule actually ran.",
     definitions: {
       subway:
         'Trips run per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago. Also shows the share of scheduled service hours delivered over the last 4 complete weeks.',
@@ -51,6 +55,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   frequency: {
     id: 'frequency',
     label: 'Frequency',
+    summary: `Share of scheduled service hours with a train or bus at least every ${FREQUENCY_GOALS.subway} minutes on the subway, ${FREQUENCY_GOALS.bus} on buses, and ${FREQUENCY_GOALS.commuterRail} on Commuter Rail.`,
     definitions: {
       subway: frequencyDefinition('train', FREQUENCY_GOALS.subway),
       commuterRail: frequencyDefinition('train', FREQUENCY_GOALS.commuterRail),
@@ -61,6 +66,8 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   reliability: {
     id: 'reliability',
     label: 'Reliability',
+    summary:
+      "Share of gaps between vehicles within 75–125% of the scheduled gap. Commuter Rail uses the MBTA's on-time share instead.",
     definitions: {
       subway: reliabilityDefinition('every station except the terminals'),
       commuterRail:
@@ -72,6 +79,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   delays: {
     id: 'delays',
     label: 'Delays',
+    summary: 'Share of the service day with an MBTA delay alert up.',
     definitions: {
       subway: DELAYS_DEFINITION,
       frequentBus: `${DELAYS_DEFINITION} Routes pool together by their service hours.`,
@@ -81,6 +89,8 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   speed: {
     id: 'speed',
     label: 'Speed',
+    summary:
+      "The worse of average speed against the line's best, and time lost to slow zones. Subway only for now.",
     definitions: {
       subway:
         'The worse of two measures. Speed: median weekly average speed over 12 weeks, end to end including stops, compared with the fastest 4-week stretch at least 3 years ago. Slow zones: average extra time per day that slow zones add to a trip, over the last 12 weeks.',
@@ -89,6 +99,8 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   fleet: {
     id: 'fleet',
     label: 'Vehicles',
+    summary:
+      'Subway: age of the oldest cars still in regular service. Bus: share of trips on battery-electric or hybrid buses. Commuter Rail: share of service run electric.',
     definitions: {
       subway:
         'Age of the oldest cars still in regular service (at least 1% of cars over the last 4 weeks), counted from when that type was first built. Riders feel the oldest trains, not the average.',
