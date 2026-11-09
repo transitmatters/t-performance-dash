@@ -1,6 +1,5 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { Line } from '@chartjs-components';
-import type { Chart as ChartJS } from 'chart.js';
 import { round } from '@lodash-utils';
 
 import 'chartjs-adapter-date-fns';
@@ -81,46 +80,6 @@ export const DelayBreakdownGraph = ({
     return totals[index] > 0 && totals[index] >= floor ? (value / totals[index]) * 100 : null;
   };
 
-  const latest = useRef({ series, isMobile, tick: chartTheme.tick });
-
-  useLayoutEffect(() => {
-    latest.current = { series, isMobile, tick: chartTheme.tick };
-  }, [series, isMobile, chartTheme.tick]);
-
-  const endLabels = {
-    id: 'endLabels',
-    afterDatasetsDraw: (chart: ChartJS) => {
-      const { series, isMobile, tick } = latest.current;
-      if (isMobile) return;
-      const { ctx, chartArea, scales } = chart;
-      const zero = scales.y.getPixelForValue(0);
-      ctx.save();
-      ctx.font = '11px sans-serif';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle = tick;
-      let lastDrawnY = Infinity;
-      for (let i = series.length - 1; i >= 0; i--) {
-        const meta = chart.getDatasetMeta(i);
-        const dataset = chart.data.datasets[i].data as (number | null)[];
-        let at = dataset.length - 1;
-        while (at >= 0 && dataset[at] == null) at--;
-        if (at < 0) continue;
-        const top = meta.data[at]?.y;
-        const bottom = i === 0 ? zero : chart.getDatasetMeta(i - 1).data[at]?.y;
-        if (top == null || bottom == null || bottom - top < 13) continue;
-        const y = (top + bottom) / 2;
-        if (lastDrawnY - y < 13) continue;
-        lastDrawnY = y;
-        ctx.fillText(
-          series[i].label.length > 17 ? `${series[i].label.slice(0, 16)}…` : series[i].label,
-          chartArea.right + 8,
-          y
-        );
-      }
-      ctx.restore();
-    },
-  };
-
   return (
     <ChartStack className={fill ? 'h-full' : undefined}>
       <ChartDiv isMobile={isMobile} fill={fill}>
@@ -153,7 +112,6 @@ export const DelayBreakdownGraph = ({
             layout: {
               padding: {
                 top: showTitle ? 25 : 0,
-                right: showLegend ? 0 : 118,
               },
             },
             interaction: {
@@ -184,8 +142,8 @@ export const DelayBreakdownGraph = ({
                   },
                 },
               },
-              // Bands are labelled on the chart on wider screens; on a phone there's no room for that,
-              // so a legend stands in. It never filters: the cause list is the only filter.
+              // The cause list is the color key on wider screens; on a phone and in an embed a legend
+              // stands in. It never filters: the cause list is the only filter.
               legend: {
                 display: showLegend,
                 position: 'bottom',
@@ -262,7 +220,6 @@ export const DelayBreakdownGraph = ({
                 if (showTitle) drawSimpleTitle(`Delays`, chart);
               },
             },
-            ...(showLegend ? [] : [endLabels]),
             ChartjsPluginWatermark,
           ]}
         />
