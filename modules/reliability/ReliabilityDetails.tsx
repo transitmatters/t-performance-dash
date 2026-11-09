@@ -64,9 +64,9 @@ export function ReliabilityDetails() {
               </p>
               <p>
                 75–125% of the scheduled headway is the band the home page judges each line on;
-                50–150% is shown alongside it. Before September 2026, the MBTA's monthly archives
-                compare Green Line trunk stations with a single branch's schedule, so those weeks
-                show more bunching than riders saw.
+                50–150% is shown alongside it. Before 2025, the MBTA's monthly archives compare
+                Green Line trunk stations with a single branch's schedule, so those weeks show more
+                bunching than riders saw.
               </p>
             </>
           ) : isRide ? (
