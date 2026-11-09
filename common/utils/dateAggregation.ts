@@ -67,29 +67,69 @@ export interface WindowDelta {
   percentChange: number | null;
 }
 
+const NO_DELTA: WindowDelta = { current: NaN, prior: null, delta: null, percentChange: null };
+
+const latestDate = (points: DatedValue[]) =>
+  dayjs(points.reduce((max, point) => (point.date > max ? point.date : max), points[0].date));
+
+/** The `days` ending on `end` (inclusive), reduced; null when no point falls in them. */
+const reduceWindow = (points: DatedValue[], reducer: Reducer, end: dayjs.Dayjs, days: number) => {
+  const start = end.subtract(days, 'day');
+  const values = points
+    .filter((point) => {
+      const date = dayjs(point.date);
+      return date.isAfter(start) && !date.isAfter(end, 'day');
+    })
+    .map((point) => point.value);
+  return values.length ? reduce(values, reducer) : null;
+};
+
+const compareWindows = (
+  points: DatedValue[],
+  reducer: Reducer,
+  end: dayjs.Dayjs,
+  priorEnd: dayjs.Dayjs,
+  days: number
+): WindowDelta => {
+  const current = reduceWindow(points, reducer, end, days) ?? NaN;
+  const prior = reduceWindow(points, reducer, priorEnd, days);
+  const delta = prior === null ? null : current - prior;
+  const percentChange = prior ? (current - prior) / prior : null;
+  return { current, prior, delta, percentChange };
+};
+
 export const getTrailingWindowDelta = (
   points: DatedValue[],
   reducer: Reducer,
   days = 30
 ): WindowDelta => {
   const dated = points.filter((point) => Number.isFinite(point.value));
-  if (!dated.length) return { current: NaN, prior: null, delta: null, percentChange: null };
+  if (!dated.length) return NO_DELTA;
+  const end = latestDate(dated);
+  return compareWindows(dated, reducer, end, end.subtract(days, 'day'), days);
+};
 
-  const end = dayjs(
-    dated.reduce((max, point) => (point.date > max ? point.date : max), dated[0].date)
+/**
+ * The trailing window against the same window a year earlier. It steps back 52 weeks rather than
+ * a calendar year, so weekly series (dated by week start) line up and daily ones keep the same mix
+ * of weekdays. There's no prior when the series doesn't reach back to the start of the earlier
+ * window: one that begins partway through it would compare a couple of weeks with a full month.
+ */
+export const getYearOverYearDelta = (
+  points: DatedValue[],
+  reducer: Reducer,
+  days = 30
+): WindowDelta => {
+  const dated = points.filter((point) => Number.isFinite(point.value));
+  if (!dated.length) return NO_DELTA;
+  const end = latestDate(dated);
+  const priorEnd = end.subtract(52, 'week');
+  const earliest = dated.reduce(
+    (min, point) => (point.date < min ? point.date : min),
+    dated[0].date
   );
-  const currentStart = end.subtract(days, 'day');
-  const priorStart = end.subtract(days * 2, 'day');
-  const between = (point: DatedValue, from: dayjs.Dayjs, to: dayjs.Dayjs) => {
-    const d = dayjs(point.date);
-    return d.isAfter(from) && (d.isSame(to, 'day') || d.isBefore(to));
-  };
-
-  const currentValues = dated.filter((p) => between(p, currentStart, end)).map((p) => p.value);
-  const priorValues = dated.filter((p) => between(p, priorStart, currentStart)).map((p) => p.value);
-  const current = reduce(currentValues, reducer);
-  const prior = priorValues.length ? reduce(priorValues, reducer) : null;
-  const delta = prior === null ? null : current - prior;
-  const percentChange = prior ? (current - prior) / prior : null;
-  return { current, prior, delta, percentChange };
+  // A weekly series' first point in the window can fall up to a week after the window opens.
+  const reachesPriorWindow = !dayjs(earliest).isAfter(priorEnd.subtract(days - 7, 'day'), 'day');
+  const result = compareWindows(dated, reducer, end, priorEnd, days);
+  return reachesPriorWindow ? result : { ...NO_DELTA, current: result.current };
 };

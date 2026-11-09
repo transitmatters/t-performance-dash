@@ -39,6 +39,13 @@ const badgeVariantFor = (sentiment: ScorecardRow['deltaSentiment']) => {
   return 'outline' as const;
 };
 
+// Text colours to match the badge variants, for the secondary year-over-year line.
+const textColorFor = (sentiment: ScorecardRow['deltaSentiment']) => {
+  if (sentiment === 'good') return 'text-green-800 dark:text-green-300';
+  if (sentiment === 'bad') return 'text-destructive';
+  return 'text-muted-foreground';
+};
+
 export const MetricsScorecard = ({
   rows,
   isLoading,
@@ -138,12 +145,26 @@ export const MetricsScorecard = ({
                           className="text-xl font-semibold tabular-nums"
                         />{' '}
                         <span className="text-xs text-muted-foreground">{row.unit}</span>
+                        {row.peakLabel && (
+                          <div className="text-xs text-muted-foreground">{row.peakLabel}</div>
+                        )}
                       </TableCell>
                       <TableCell>
                         <Badge variant={badgeVariantFor(row.deltaSentiment)}>
                           <span className="md:hidden">{row.deltaValueLabel}</span>
                           <span className="hidden md:inline">{row.deltaLabel}</span>
                         </Badge>
+                        {row.yearOverYear && (
+                          <div
+                            className={classNames(
+                              'mt-1 text-xs font-medium whitespace-nowrap',
+                              textColorFor(row.yearOverYear.sentiment)
+                            )}
+                          >
+                            <span className="md:hidden">{row.yearOverYear.shortLabel}</span>
+                            <span className="hidden md:inline">{row.yearOverYear.label}</span>
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell className="hidden w-full pr-6 md:table-cell">
                         <Sparkline values={row.trend} color={row.color} />
