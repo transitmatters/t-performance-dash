@@ -992,6 +992,11 @@ class BusTripMetricsEntry(BaseModel):
         total_time: Total trip time in seconds.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
+        scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.
+        unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.
+            Omitted with `scheduled_trips`.
+        unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
+            `scheduled_trips`.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1001,6 +1006,9 @@ class BusTripMetricsEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    scheduled_trips: int | None = None
+    unobserved_trips: int | None = None
+    unobserved_waived_trips: int | None = None
 
 
 class BusTripMetricsResponse(RootModel[List[BusTripMetricsEntry]]):
@@ -1038,6 +1046,11 @@ class BusSpeedLeaderboardEntry(BaseModel):
         total_time: Total trip time in seconds.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
+        scheduled_trips: Trips scheduled, on the days in the range from 2025-12-24.
+        unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.
+            Omitted with `scheduled_trips`.
+        unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
+            `scheduled_trips`.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1046,6 +1059,9 @@ class BusSpeedLeaderboardEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    scheduled_trips: int | None = None
+    unobserved_trips: int | None = None
+    unobserved_waived_trips: int | None = None
 
 
 class BusSpeedLeaderboardResponse(RootModel[List[BusSpeedLeaderboardEntry]]):
