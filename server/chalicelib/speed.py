@@ -66,6 +66,18 @@ BUS_AGG_MAX_DAYS = {
     "monthly": 30 * BUS_TRIP_METRICS_MAX_DAYS,
 }
 BUS_SUMMED_FIELDS = ("miles_covered", "total_time", "count", "n_traversals")
+# Headways at mid-route timepoints, counted by actual / scheduled headway into the same buckets
+# /api/reliability serves for subway: HEADWAY_RATIO_BUCKETS in mbta-performance's
+# chalicelib/lamp/bus/constants.py. The pipeline counts them per whole day only, and from 2025-12-24 on,
+# so they're summed over the days that have them and left off a period with none, rather than written
+# as zeros that would read as "no headways at all".
+BUS_HEADWAY_FIELDS = (
+    "headways_under_50",
+    "headways_50_75",
+    "headways_75_125",
+    "headways_125_150",
+    "headways_over_150",
+)
 # The departure windows a DeliveredTripMetricsBus row breaks its totals down by, in its `time_bands`
 # map -- TIME_BANDS in mbta-performance's chalicelib/lamp/bus/constants.py, the same bands the bus
 # speed map uses. The row's top-level fields are the all-day figure, so there is no "all_day" band:
@@ -78,8 +90,9 @@ BUS_DAY_TYPES = ("business_day", "weekend_or_holiday")
 # Everything a `time_bands` entry holds. Band counts don't add up to the row's `count` (a trip crossing
 # a band boundary counts in both), but each is still a straight sum across days.
 BUS_BAND_FIELDS = ("count", "n_traversals", "n_interpolated", "miles_covered", "total_time")
-# Only exist for the whole day: medians and means can't be split into bands or summed back together.
-BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph")
+# Only exist for the whole day: medians and means can't be split into bands or summed back together, and
+# the pipeline doesn't count headways per band.
+BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph", *BUS_HEADWAY_FIELDS)
 
 CR_TRIP_METRICS_TABLE = "DeliveredTripMetricsCR"
 
@@ -329,8 +342,9 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
     """Roll daily rows (from one or more routes) up per day, ISO week (dated by its Monday),
     or calendar month (dated the 1st).
 
-    summed_fields are summed. Fleet stats are pooled by _rollup_fleet_fields. Per-day
-    medians/means can't be combined, so they're dropped.
+    summed_fields are summed. BUS_HEADWAY_FIELDS are summed over the rows that have them (see
+    _sum_present). Fleet stats are pooled by _rollup_fleet_fields. Per-day medians/means can't be
+    combined, so they're dropped.
     """
     periods: dict[date, list[dict]] = {}
     for row in rows:
@@ -347,10 +361,21 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
             "date": period_start.isoformat(),
             "route": route,
             **{field: sum(row.get(field) or 0 for row in periods[period_start]) for field in summed_fields},
+            **_sum_present(periods[period_start], BUS_HEADWAY_FIELDS),
             **_rollup_fleet_fields(periods[period_start]),
         }
         for period_start in sorted(periods)
     ]
+
+
+def _sum_present(rows: list[dict], fields) -> dict:
+    """Each of `fields` summed over the rows that have it, leaving out any field no row has."""
+    totals = {}
+    for row in rows:
+        for field in fields:
+            if row.get(field) is not None:
+                totals[field] = totals.get(field, 0) + row[field]
+    return totals
 
 
 def _is_fleet_stat(field: str) -> bool:
@@ -383,6 +408,11 @@ def _rollup_fleet_fields(rows: list[dict]) -> dict:
     return pooled
 
 
+# Bump when leaderboard entries gain or lose fields, so lists cached in the old shape aren't served.
+# 2: BUS_HEADWAY_FIELDS.
+LEADERBOARD_CACHE_VERSION = 2
+
+
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
     """S3 key for a cached leaderboard, scoped to a date range only (not limit).
 
@@ -390,7 +420,7 @@ def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
     read, since the scan/aggregation work is identical regardless of how many
     rows the caller asked for.
     """
-    return f"bus-speed-leaderboard/{start_date}_{end_date}.json"
+    return f"bus-speed-leaderboard/v{LEADERBOARD_CACHE_VERSION}/{start_date}_{end_date}.json"
 
 
 def _read_cached_leaderboard(start_date: str | date, end_date: str | date):
@@ -437,6 +467,7 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
     Returns:
         The `limit` slowest routes, each a dict with route, miles_covered, total_time,
         count, and n_traversals summed across the range, sorted slowest (lowest mph) first.
+        Routes also have BUS_HEADWAY_FIELDS, summed over the days that have them, when any do.
 
     Raises:
         ForbiddenError: If the date range exceeds the maximum allowed entries (150).
@@ -460,6 +491,9 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
             entry["total_time"] += row.get("total_time", 0)
             entry["count"] += row.get("count", 0)
             entry["n_traversals"] += row.get("n_traversals", 0)
+            for field in BUS_HEADWAY_FIELDS:
+                if row.get(field) is not None:
+                    entry[field] = entry.get(field, 0) + row[field]
 
         # Routes with no recorded time have no usable speed and would divide by zero below.
         ranked = [entry for entry in totals.values() if entry["total_time"] > 0]
