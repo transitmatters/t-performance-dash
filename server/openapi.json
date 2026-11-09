@@ -3920,7 +3920,7 @@
       },
       "BusSpeedLeaderboardEntry": {
         "additionalProperties": true,
-        "description": "A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.\n\nAttributes:\n    route: Route ID.\n    count: Trips delivered.\n    total_time: Total trip time in seconds.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.",
+        "description": "A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.\n\nRoutes with fleet data also have its stats for the range, each day weighted by `fleet_trips`:\nthe fields below and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).\nThese are omitted when unknown.\n\nAttributes:\n    route: Route ID.\n    count: Trips delivered.\n    total_time: Total trip time in seconds.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.\n    fleet_trips: Trips with a known vehicle.\n    pct_battery_trips: Percentage of those trips run by battery-electric buses.\n    avg_bus_age: Average bus age in years.",
         "properties": {
           "route": {
             "title": "Route",
@@ -3940,6 +3940,24 @@
           },
           "n_traversals": {
             "title": "N Traversals",
+            "type": "number"
+          },
+          "fleet_trips": {
+            "default": null,
+            "title": "Fleet Trips",
+            "nullable": true,
+            "type": "number"
+          },
+          "pct_battery_trips": {
+            "default": null,
+            "title": "Pct Battery Trips",
+            "nullable": true,
+            "type": "number"
+          },
+          "avg_bus_age": {
+            "default": null,
+            "title": "Avg Bus Age",
+            "nullable": true,
             "type": "number"
           }
         },

@@ -265,7 +265,7 @@ export const ALL_PAGES: PageMap = {
     key: 'leaderboard',
     path: '/leaderboard',
     name: 'Leaderboard',
-    title: 'Bus speed leaderboard',
+    title: 'Bus leaderboard',
     lines: ['line-bus'],
     icon: faRankingStar,
     // Ranks across every route or segment at once, so there's no single route to

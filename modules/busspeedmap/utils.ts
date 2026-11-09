@@ -11,6 +11,7 @@ import type {
   BusSpeedSegmentLeaderboardResponse,
   BusSpeedSegmentProperties,
   DayType,
+  LeaderboardMetricConfig,
   Period,
   TimeBand,
 } from './types';
@@ -131,35 +132,70 @@ export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntr
 
 const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
 
+const sumOf = <T>(items: T[], pick: (item: T) => number): number =>
+  items.reduce((total, item) => total + pick(item), 0);
+
+/**
+ * The battery share of several routes' trips together, each weighted by the trips it sampled,
+ * the same way the API pools the days of one route (_rollup_fleet_fields). Empty if none of them
+ * has fleet data.
+ */
+const poolBatteryShare = (
+  entries: BusSpeedLeaderboardEntry[]
+): Pick<BusSpeedLeaderboardEntry, 'fleet_trips' | 'pct_battery_trips'> => {
+  const sampled = entries.filter((entry) => entry.fleet_trips && entry.pct_battery_trips != null);
+  if (sampled.length === 0) return {};
+  const fleetTrips = sumOf(sampled, (entry) => entry.fleet_trips ?? 0);
+  const batteryShare =
+    sumOf(sampled, (entry) => (entry.pct_battery_trips ?? 0) * (entry.fleet_trips ?? 0)) /
+    fleetTrips;
+  return { fleet_trips: fleetTrips, pct_battery_trips: batteryShare };
+};
+
 /**
  * The API ranks raw GTFS route_ids, but the rest of the dashboard shows curated BusRoute labels
  * (SL4/SL5, 114/116/117, ...), so the leaderboard would otherwise list 751 and 749 as separate
  * "SL4" and "SL5" rows. Summing miles_covered/total_time per label keeps the speed a true
- * weighted average, same as the per-route speed page does for composites, then re-ranks
- * slowest first. `date` picks which labels were in service (see getBusRouteGroup).
+ * weighted average, same as the per-route speed page does for composites, and the battery share
+ * is pooled by trips the same way. `date` picks which labels were in service (see
+ * getBusRouteGroup). Unordered: rankLeaderboard sorts by whichever metric is picked.
  */
 export const groupLeaderboardByBusRoute = (
   entries: BusSpeedLeaderboardEntry[],
   date: string
 ): GroupedBusSpeedLeaderboardEntry[] => {
-  const groups = new Map<string, GroupedBusSpeedLeaderboardEntry>();
+  const groups = new Map<string, BusSpeedLeaderboardEntry[]>();
   for (const entry of entries) {
     const route = getBusRouteGroup(entry.route, date);
-    const group = groups.get(route) ?? {
-      route,
-      miles_covered: 0,
-      total_time: 0,
-      count: 0,
-      n_traversals: 0,
-      isFrequentRoute: false,
-    };
-    group.miles_covered += entry.miles_covered;
-    group.total_time += entry.total_time;
-    group.count += entry.count;
-    group.n_traversals += entry.n_traversals;
-    group.isFrequentRoute ||= FREQUENT_BUS_ROUTES.has(entry.route);
-    groups.set(route, group);
+    groups.set(route, [...(groups.get(route) ?? []), entry]);
   }
-  const mph = (entry: BusSpeedLeaderboardEntry) => entry.miles_covered / (entry.total_time / 3600);
-  return [...groups.values()].sort((a, b) => mph(a) - mph(b));
+  return [...groups].map(([route, members]) => ({
+    route,
+    miles_covered: sumOf(members, (entry) => entry.miles_covered),
+    total_time: sumOf(members, (entry) => entry.total_time),
+    count: sumOf(members, (entry) => entry.count),
+    n_traversals: sumOf(members, (entry) => entry.n_traversals),
+    ...poolBatteryShare(members),
+    isFrequentRoute: members.some((entry) => FREQUENT_BUS_ROUTES.has(entry.route)),
+  }));
 };
+
+export interface RankedBusRoute {
+  route: string;
+  value: number;
+  isFrequentRoute: boolean;
+}
+
+/** The routes `metric` has a figure for, in its order (see LeaderboardMetricConfig). */
+export const rankLeaderboard = (
+  entries: GroupedBusSpeedLeaderboardEntry[],
+  metric: LeaderboardMetricConfig
+): RankedBusRoute[] =>
+  entries
+    .flatMap((entry) => {
+      const value = metric.value(entry);
+      return value === undefined
+        ? []
+        : [{ route: entry.route, value, isFrequentRoute: entry.isFrequentRoute }];
+    })
+    .sort((a, b) => (metric.order === 'ascending' ? a.value - b.value : b.value - a.value));

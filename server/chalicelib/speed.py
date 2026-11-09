@@ -383,14 +383,19 @@ def _rollup_fleet_fields(rows: list[dict]) -> dict:
     return pooled
 
 
+# Bump when the fields of a leaderboard entry change. 2 added the pooled fleet fields.
+LEADERBOARD_CACHE_VERSION = 2
+
+
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
     """S3 key for a cached leaderboard, scoped to a date range only (not limit).
 
     The full ranked list is cached once per range and sliced to `limit` on every
     read, since the scan/aggregation work is identical regardless of how many
-    rows the caller asked for.
+    rows the caller asked for. LEADERBOARD_CACHE_VERSION is part of the key, so
+    lists cached before an entry's fields last changed are never read back.
     """
-    return f"bus-speed-leaderboard/{start_date}_{end_date}.json"
+    return f"bus-speed-leaderboard/v{LEADERBOARD_CACHE_VERSION}/{start_date}_{end_date}.json"
 
 
 def _read_cached_leaderboard(start_date: str | date, end_date: str | date):
@@ -437,6 +442,9 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
     Returns:
         The `limit` slowest routes, each a dict with route, miles_covered, total_time,
         count, and n_traversals summed across the range, sorted slowest (lowest mph) first.
+        Routes with fleet data also carry its fleet stats (fleet_trips, pct_battery_trips,
+        avg_bus_age, fleet_mix_*), pooled across the range by _rollup_fleet_fields, so the
+        dashboard can rank by those too.
 
     Raises:
         ForbiddenError: If the date range exceeds the maximum allowed entries (150).
@@ -450,19 +458,20 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
     if ranked is None:
         rows = dynamo.scan_trip_metrics_in_range(BUS_TRIP_METRICS_TABLE, start_date, end_date)
 
-        totals = {}
+        rows_by_route: dict[str, list[dict]] = {}
         for row in rows:
-            entry = totals.setdefault(
-                row["route"],
-                {"route": row["route"], "miles_covered": 0, "total_time": 0, "count": 0, "n_traversals": 0},
-            )
-            entry["miles_covered"] += row.get("miles_covered", 0)
-            entry["total_time"] += row.get("total_time", 0)
-            entry["count"] += row.get("count", 0)
-            entry["n_traversals"] += row.get("n_traversals", 0)
+            rows_by_route.setdefault(row["route"], []).append(row)
 
-        # Routes with no recorded time have no usable speed and would divide by zero below.
-        ranked = [entry for entry in totals.values() if entry["total_time"] > 0]
+        ranked = []
+        for route, route_rows in rows_by_route.items():
+            entry = {
+                "route": route,
+                **{field: sum(row.get(field) or 0 for row in route_rows) for field in BUS_SUMMED_FIELDS},
+            }
+            # Routes with no recorded time have no usable speed and would divide by zero below.
+            # This also drops route "all", which only carries the system's fleet stats.
+            if entry["total_time"] > 0:
+                ranked.append(entry | _rollup_fleet_fields(route_rows))
         ranked.sort(key=lambda entry: entry["miles_covered"] / (entry["total_time"] / 3600))
 
         key = _leaderboard_cache_key(start_date, end_date)
