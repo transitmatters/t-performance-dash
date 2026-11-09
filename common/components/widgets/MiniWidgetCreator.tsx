@@ -14,6 +14,8 @@ export interface MiniWidgetObject {
   type: 'delta' | 'data' | string;
   widgetValue: WidgetValueInterface;
   text: string;
+  /** How the figure is calculated, shown in a tooltip next to its label. */
+  description?: string;
   comparison?: WidgetComparison;
 }
 

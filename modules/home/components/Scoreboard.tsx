@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { Link } from '../../../common/components/general/Link';
 import {
   Card,
@@ -254,7 +255,10 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
           </th>
           {METRIC_ORDER.map((metric) => (
             <th scope="col" key={metric} className="pb-2 text-xs font-medium text-muted-foreground">
-              {METRICS[metric].label}
+              <span className="inline-flex items-center gap-1">
+                {METRICS[metric].label}
+                <InfoTooltip info={METRICS[metric].summary} className="leading-none" />
+              </span>
             </th>
           ))}
         </tr>

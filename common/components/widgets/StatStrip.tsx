@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { getFormattedTimeString } from '../../utils/time';
+import { InfoTooltip } from '../general/InfoTooltip';
 import type { MiniWidgetObject, WidgetComparison } from './MiniWidgetCreator';
 
 const formatComparisonDelta = (comparison: WidgetComparison) => {
@@ -21,16 +22,18 @@ const isOnTimeStat = (label: string) => label.toLowerCase().includes('on time');
 
 interface StatCellProps {
   label: ReactNode;
+  description?: string;
   children: ReactNode;
   valueClassName?: string;
 }
 
-const StatCell = ({ label, children, valueClassName }: StatCellProps) => (
+const StatCell = ({ label, description, children, valueClassName }: StatCellProps) => (
   // `bg-muted` rather than a fixed light grey: the figures inside inherit the card foreground, so a
   // cell pinned to stone-50 put near-white text on a near-white ground once the theme flipped.
   <div className="flex flex-col gap-y-1 bg-muted px-3.5 py-2.5">
-    <span className="text-[10px] font-medium tracking-[0.06em] text-muted-foreground uppercase">
+    <span className="flex items-center gap-1 text-[10px] font-medium tracking-[0.06em] text-muted-foreground uppercase">
       {label}
+      {description && <InfoTooltip info={description} className="leading-none normal-case" />}
     </span>
     <span
       className={classNames(
@@ -104,6 +107,7 @@ export const StatStrip = ({ widgetObjects }: StatStripProps) => {
       <StatCell
         key={widget.text}
         label={widget.text}
+        description={widget.description}
         valueClassName={classNames(
           onTime &&
             percentage !== undefined &&
