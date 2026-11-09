@@ -4,8 +4,8 @@ import { useBusSpeedLeaderboard } from '../../../common/api/hooks/busTripMetrics
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { Button } from '../../../common/components/ui/button';
-import type { Period } from '../types';
-import { groupLeaderboardByBusRoute, periodDateRange } from '../utils';
+import type { LeaderboardRankBy, Period } from '../types';
+import { groupLeaderboardByBusRoute, periodDateRange, rankLeaderboard } from '../utils';
 import { BusSpeedRouteLeaderboard } from './BusSpeedRouteLeaderboard';
 
 const LEADERBOARD_PREVIEW_SIZE = 25;
@@ -18,12 +18,14 @@ const LEADERBOARD_FETCH_LIMIT = 200;
 interface BusSpeedRouteLeaderboardSectionProps {
   date: string | undefined;
   period: Period;
+  rankBy: LeaderboardRankBy;
   frequentRoutesOnly: boolean;
 }
 
 export const BusSpeedRouteLeaderboardSection = ({
   date,
   period,
+  rankBy,
   frequentRoutesOnly,
 }: BusSpeedRouteLeaderboardSectionProps) => {
   const [showAll, setShowAll] = useState(false);
@@ -38,7 +40,10 @@ export const BusSpeedRouteLeaderboardSection = ({
   if (leaderboard.isError || !leaderboard.data) return <ChartPlaceHolder query={leaderboard} />;
 
   const grouped = groupLeaderboardByBusRoute(leaderboard.data, dateRange.end_date);
-  const ranked = frequentRoutesOnly ? grouped.filter((entry) => entry.isFrequentRoute) : grouped;
+  const ranked = rankLeaderboard(
+    frequentRoutesOnly ? grouped.filter((entry) => entry.isFrequentRoute) : grouped,
+    rankBy
+  );
   if (ranked.length < 1) return <NoDataNotice isLineMetric />;
 
   const hasMore = ranked.length > LEADERBOARD_PREVIEW_SIZE;
@@ -46,7 +51,7 @@ export const BusSpeedRouteLeaderboardSection = ({
 
   return (
     <>
-      <BusSpeedRouteLeaderboard data={visible} />
+      <BusSpeedRouteLeaderboard data={visible} rankBy={rankBy} />
       {hasMore && (
         <Button
           variant="outline"

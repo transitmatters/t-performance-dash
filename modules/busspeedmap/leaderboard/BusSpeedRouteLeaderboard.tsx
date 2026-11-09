@@ -1,18 +1,28 @@
 import { Link } from '../../../common/components/general/Link';
-import type { BusSpeedLeaderboardEntry } from '../../../common/types/dataPoints';
 import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../../common/utils/router';
+import type { LeaderboardRankBy } from '../types';
+import type { GroupedBusSpeedLeaderboardEntry } from '../utils';
+import { leaderboardHeadwayShare } from '../utils';
 
 interface BusSpeedRouteLeaderboardProps {
-  data: BusSpeedLeaderboardEntry[];
+  data: GroupedBusSpeedLeaderboardEntry[];
+  rankBy: LeaderboardRankBy;
 }
 
-export const BusSpeedRouteLeaderboard = ({ data }: BusSpeedRouteLeaderboardProps) => {
+const HEADWAY_LABELS = { bunched: 'bunched', reliability: 'within 75–125%' };
+
+const formatValue = (entry: GroupedBusSpeedLeaderboardEntry, rankBy: LeaderboardRankBy) => {
+  if (rankBy === 'speed')
+    return `${(entry.miles_covered / (entry.total_time / 3600)).toFixed(1)} mph`;
+  return `${leaderboardHeadwayShare(entry, rankBy)?.toFixed(1)}% ${HEADWAY_LABELS[rankBy]}`;
+};
+
+export const BusSpeedRouteLeaderboard = ({ data, rankBy }: BusSpeedRouteLeaderboardProps) => {
   const route = useDelimitatedRoute();
 
   return (
     <ol className="flex flex-col divide-y divide-stone-200">
       {data.map((entry, index) => {
-        const mph = entry.miles_covered / (entry.total_time / 3600);
         return (
           <li key={entry.route}>
             <Link
@@ -23,7 +33,7 @@ export const BusSpeedRouteLeaderboard = ({ data }: BusSpeedRouteLeaderboardProps
                 <span className="w-5 text-right text-stone-400">{index + 1}</span>
                 <span className="font-semibold text-stone-900">Route {entry.route}</span>
               </span>
-              <span className="font-semibold text-stone-900">{mph.toFixed(1)} mph</span>
+              <span className="font-semibold text-stone-900">{formatValue(entry, rankBy)}</span>
             </Link>
           </li>
         );

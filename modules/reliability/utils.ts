@@ -66,9 +66,9 @@ export const formatPercent = (value?: number) =>
 export const formatCount = (value?: number) =>
   value == null || !Number.isFinite(value) ? '—' : Math.round(value).toLocaleString('en-us');
 
-type HeadwayField = keyof HeadwayCounts;
+export type HeadwayField = keyof HeadwayCounts;
 
-const HEADWAY_FIELDS: HeadwayField[] = [
+export const HEADWAY_FIELDS: HeadwayField[] = [
   'headways_under_50',
   'headways_50_75',
   'headways_75_125',

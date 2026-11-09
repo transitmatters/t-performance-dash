@@ -140,3 +140,9 @@ export type BusSpeedSegmentLeaderboardResponse =
  * 'segment' mode cares about day type/time band.
  */
 export type LeaderboardViewMode = 'route' | 'segment';
+
+/**
+ * What the route leaderboard ranks by, worst first. Bunched and Reliability measure headways, which
+ * suit routes riders turn up for without a schedule, so they rank Frequent Bus Routes only.
+ */
+export type LeaderboardRankBy = 'speed' | 'bunched' | 'reliability';

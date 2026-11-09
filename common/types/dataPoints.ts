@@ -134,10 +134,11 @@ export interface DeliveredTripMetrics extends SpeedTripMetrics {
  * rather than extrapolated, but the mph formula (miles_covered / (total_time / 3600))
  * is the same.
  */
-export interface DeliveredTripMetricsBus extends SpeedTripMetrics {
+export interface DeliveredTripMetricsBus extends SpeedTripMetrics, Partial<HeadwayCounts> {
   route: string;
   n_traversals: number;
   n_interpolated: number;
+  // The headway counts are at mid-route timepoints, whole day only, and from 2025-12-24 on.
   // Whole-day, daily rows only: a median or mean can't be split by time band or summed into a
   // week or month.
   median_speed_mph?: number;
@@ -159,7 +160,7 @@ export interface DeliveredTripMetricsCR extends FleetMetrics {
  * derived client-side the same way as everywhere else (miles_covered / (total_time / 3600))
  * from figures summed across the range, not averaged day-by-day.
  */
-export interface BusSpeedLeaderboardEntry {
+export interface BusSpeedLeaderboardEntry extends Partial<HeadwayCounts> {
   route: string;
   miles_covered: number;
   total_time: number;

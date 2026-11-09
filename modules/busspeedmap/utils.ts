@@ -4,6 +4,7 @@ import { FREQUENT_BUS_ROUTE_IDS } from '../../common/constants/lines';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { getFormattedTimeString } from '../../common/utils/time';
+import { BUNCHED, HEADWAY_FIELDS, headwayShare, WITHIN_75_125 } from '../reliability/utils';
 import type {
   BusSpeedSegmentLeaderboardByBand,
   BusSpeedSegmentLeaderboardByDayType,
@@ -11,6 +12,7 @@ import type {
   BusSpeedSegmentLeaderboardResponse,
   BusSpeedSegmentProperties,
   DayType,
+  LeaderboardRankBy,
   Period,
   TimeBand,
 } from './types';
@@ -137,6 +139,9 @@ const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
  * "SL4" and "SL5" rows. Summing miles_covered/total_time per label keeps the speed a true
  * weighted average, same as the per-route speed page does for composites, then re-ranks
  * slowest first. `date` picks which labels were in service (see getBusRouteGroup).
+ *
+ * Headway counts are pooled from the label's Frequent Bus Routes only (116 of 114/116/117), as on
+ * the route overview, so a timetabled route's longer headways don't count toward a frequent one.
  */
 export const groupLeaderboardByBusRoute = (
   entries: BusSpeedLeaderboardEntry[],
@@ -157,9 +162,44 @@ export const groupLeaderboardByBusRoute = (
     group.total_time += entry.total_time;
     group.count += entry.count;
     group.n_traversals += entry.n_traversals;
-    group.isFrequentRoute ||= FREQUENT_BUS_ROUTES.has(entry.route);
+    if (FREQUENT_BUS_ROUTES.has(entry.route)) {
+      group.isFrequentRoute = true;
+      for (const field of HEADWAY_FIELDS) {
+        const count = entry[field];
+        if (count != null) group[field] = (group[field] ?? 0) + count;
+      }
+    }
     groups.set(route, group);
   }
   const mph = (entry: BusSpeedLeaderboardEntry) => entry.miles_covered / (entry.total_time / 3600);
   return [...groups.values()].sort((a, b) => mph(a) - mph(b));
+};
+
+/** The share of a route's headways the leaderboard ranks by, or undefined for Speed or no headways. */
+export const leaderboardHeadwayShare = (
+  entry: GroupedBusSpeedLeaderboardEntry,
+  rankBy: LeaderboardRankBy
+): number | undefined => {
+  if (rankBy === 'speed' || !entry.isFrequentRoute) return undefined;
+  return headwayShare(entry, rankBy === 'bunched' ? BUNCHED : WITHIN_75_125);
+};
+
+/**
+ * Worst first: Speed keeps groupLeaderboardByBusRoute's slowest-first order, Bunched puts the most
+ * bunched first and Reliability the least reliable. The headway measures rank only frequent routes
+ * with headways counted, so routes outside the list, and dates before the counts start, drop out.
+ */
+export const rankLeaderboard = (
+  entries: GroupedBusSpeedLeaderboardEntry[],
+  rankBy: LeaderboardRankBy
+): GroupedBusSpeedLeaderboardEntry[] => {
+  if (rankBy === 'speed') return entries;
+  const direction = rankBy === 'bunched' ? -1 : 1;
+  return entries
+    .flatMap((entry) => {
+      const share = leaderboardHeadwayShare(entry, rankBy);
+      return share === undefined ? [] : [{ entry, share }];
+    })
+    .sort((a, b) => direction * (a.share - b.share))
+    .map(({ entry }) => entry);
 };

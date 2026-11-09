@@ -131,3 +131,8 @@ const BUS_DISPLAY_NAME_TO_ROUTE_ID: Record<string, string> = Object.fromEntries(
  */
 export const getBusRouteIds = (busRoute: string): string[] =>
   busRoute.split('/').map((name) => BUS_DISPLAY_NAME_TO_ROUTE_ID[name] ?? name);
+
+/** The route_ids behind a curated label that are Frequent Bus Routes: all of SL4/SL5, but only 116
+ * of 114/116/117. Empty for a route that isn't frequent. */
+export const getFrequentBusRouteIds = (busRoute: string): string[] =>
+  getBusRouteIds(busRoute).filter((routeId) => FREQUENT_BUS_ROUTE_IDS.includes(routeId));

@@ -25,6 +25,7 @@ import {
   toSpeedPoints,
   trimTrailingEmpty,
 } from './scorecardUtils';
+import { BusReliabilityChart, useBusReliabilityRow } from './busReliability';
 import type { MetricKey, ScorecardRow } from './types';
 
 const ridershipLineId = (busRoute: BusRoute) =>
@@ -52,6 +53,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     end_date: TODAY_STRING,
   });
   const delays = useAlertDelays(delaysOptions(busRoute));
+  const reliability = useBusReliabilityRow(busRoute, LINE_COLORS['line-bus']);
 
   const rows = useMemo(() => {
     const color = LINE_COLORS['line-bus'];
@@ -72,6 +74,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
         color,
       });
     if (speedRow) built.push(speedRow);
+    if (reliability.row) built.push(reliability.row);
 
     const ridershipRow = ridership.data && buildRidershipRow(ridership.data, color);
     if (ridershipRow) built.push(ridershipRow);
@@ -96,11 +99,12 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     if (delaysRow) built.push(delaysRow);
 
     return built;
-  }, [tripMetrics.data, ridership.data, delays.data]);
+  }, [tripMetrics.data, reliability.row, ridership.data, delays.data]);
 
   return {
     rows,
-    isLoading: tripMetrics.isLoading || ridership.isLoading || delays.isLoading,
+    isLoading:
+      tripMetrics.isLoading || reliability.isLoading || ridership.isLoading || delays.isLoading,
   };
 };
 
@@ -123,6 +127,7 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
   );
   const delays = useAlertDelays(delaysOptions(busRoute), metric === 'delays');
 
+  if (metric === 'reliability') return <BusReliabilityChart busRoute={busRoute} />;
   if (metric === 'speed') {
     if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
     const data = trimTrailingEmpty(tripMetrics.data);

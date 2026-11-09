@@ -1,5 +1,5 @@
 import { COLORS } from '../../common/constants/colors';
-import type { DayType, DirectionFilter, Period, TimeBand } from './types';
+import type { DayType, DirectionFilter, LeaderboardRankBy, Period, TimeBand } from './types';
 
 /**
  * Buckets thinner than this are dropped before anything is drawn. The median row covers
@@ -60,6 +60,25 @@ export const DAY_TYPES: { key: DayType; label: string }[] = [
 ];
 
 export const DEFAULT_DAY_TYPE: DayType = 'business_day';
+
+export const RANK_BY: { key: LeaderboardRankBy; label: string; title: string; subtitle: string }[] =
+  [
+    { key: 'speed', label: 'Speed', title: 'Slowest routes', subtitle: 'Ranked by average speed' },
+    {
+      key: 'bunched',
+      label: 'Bunched',
+      title: 'Most bunched routes',
+      subtitle: 'Ranked by share of headways at half the scheduled headway or less',
+    },
+    {
+      key: 'reliability',
+      label: 'Reliability',
+      title: 'Least reliable routes',
+      subtitle: 'Ranked by share of headways within 75–125% of schedule',
+    },
+  ];
+
+export const DEFAULT_RANK_BY: LeaderboardRankBy = 'speed';
 
 /**
  * Speed ramp in mph, low (slow) to high. Red-yellow-blue rather than red-green so it stays
