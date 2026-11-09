@@ -148,3 +148,14 @@ export const NETWORK_BOUNDS: [number, number, number, number] = [-71.3, 42.1, -7
  * map to one of them. Never a real route_id.
  */
 export const ALL_ROUTES = 'all';
+
+/**
+ * Routes on the leaderboard's dwell summary must average at least this many stops with a dwell
+ * per day of service. Below it, a route's average swings 3-8s from one weekday to the next
+ * (October 2026), against about 1s for busier routes, so a handful of trips could top the list.
+ * At 200 it leaves out 3 of 121 routes on a weekday, Route 55 (about 140 stops) among them.
+ */
+export const MIN_DWELL_STOPS_PER_DAY = 200;
+
+/** How many routes each of the dwell summary's two lists shows. */
+export const DWELL_SUMMARY_SIZE = 5;

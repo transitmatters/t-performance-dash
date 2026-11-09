@@ -989,7 +989,7 @@ class BusTripMetricsEntry(BaseModel):
         date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
         route: Route ID, or the comma-separated group that was requested.
         count: Trips delivered.
-        total_time: Total trip time in seconds.
+        total_time: Total trip time in seconds, arrival to arrival, so including dwell.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
         scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.
@@ -997,6 +997,10 @@ class BusTripMetricsEntry(BaseModel):
             Omitted with `scheduled_trips`.
         unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
             `scheduled_trips`.
+        total_dwell: Seconds spent around the stops in `n_dwell_stops`. Missing from daily rows
+            written before the pipeline recorded dwell.
+        n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).
+            Average dwell per stop is `total_dwell / n_dwell_stops`.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1009,6 +1013,8 @@ class BusTripMetricsEntry(BaseModel):
     scheduled_trips: int | None = None
     unobserved_trips: int | None = None
     unobserved_waived_trips: int | None = None
+    total_dwell: float | None = None
+    n_dwell_stops: float | None = None
 
 
 class BusTripMetricsResponse(RootModel[List[BusTripMetricsEntry]]):
@@ -1040,10 +1046,13 @@ class CrTripMetricsResponse(RootModel[List[CrTripMetricsEntry]]):
 class BusSpeedLeaderboardEntry(BaseModel):
     """A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.
 
+    `total_dwell`, `n_dwell_stops` and `n_days` are missing from leaderboards computed before they
+    were added, such as the static sample data.
+
     Attributes:
         route: Route ID.
         count: Trips delivered.
-        total_time: Total trip time in seconds.
+        total_time: Total trip time in seconds, arrival to arrival, so including dwell.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
         scheduled_trips: Trips scheduled, on the days in the range from 2025-12-24.
@@ -1051,6 +1060,11 @@ class BusSpeedLeaderboardEntry(BaseModel):
             Omitted with `scheduled_trips`.
         unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
             `scheduled_trips`.
+        total_dwell: Seconds spent around the stops in `n_dwell_stops`. Its share of the route's
+            time is `total_dwell / total_time`.
+        n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).
+            Average dwell per stop is `total_dwell / n_dwell_stops`.
+        n_days: Days in the range with recorded speed data for the route.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1062,6 +1076,9 @@ class BusSpeedLeaderboardEntry(BaseModel):
     scheduled_trips: int | None = None
     unobserved_trips: int | None = None
     unobserved_waived_trips: int | None = None
+    total_dwell: float | None = None
+    n_dwell_stops: float | None = None
+    n_days: int | None = None
 
 
 class BusSpeedLeaderboardResponse(RootModel[List[BusSpeedLeaderboardEntry]]):

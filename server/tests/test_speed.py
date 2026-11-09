@@ -18,6 +18,15 @@ ROWS = [
     {"route": "66", "miles_covered": 2, "total_time": 3600, "count": 2, "n_traversals": 2},
 ]
 
+DWELL_ROWS = [
+    {"route": "1", "total_time": 3600, "total_dwell": 1200, "n_dwell_stops": 40, "miles_covered": 10},
+    {"route": "1", "total_time": 1800, "total_dwell": 600, "n_dwell_stops": 20, "miles_covered": 5},
+    # A fleet-only row from data-ingestion: not a day of service.
+    {"route": "1", "fleet_trips": 30},
+    # From before the pipeline recorded dwell: still a day of service, with no dwell to add.
+    {"route": "66", "total_time": 3600, "miles_covered": 2},
+]
+
 
 def not_found_error():
     return ClientError({"Error": {"Code": "NoSuchKey"}}, "GetObject")
@@ -160,6 +169,17 @@ class TestBusSpeedLeaderboardCache:
 
         assert len(result) == 5
         assert result == cached_data[:5]
+
+    def test_sums_dwell_and_counts_days_of_service(self, monkeypatch):
+        fake_s3 = FakeS3()
+        monkeypatch.setattr(speed.s3, "download", fake_s3.download)
+        monkeypatch.setattr(speed.s3, "upload", fake_s3.upload)
+        monkeypatch.setattr(speed.dynamo, "scan_trip_metrics_in_range", lambda table, start, end: DWELL_ROWS)
+
+        result = {entry["route"]: entry for entry in speed.bus_speed_leaderboard(START_DATE, END_DATE, limit=10)}
+
+        assert (result["1"]["total_dwell"], result["1"]["n_dwell_stops"], result["1"]["n_days"]) == (1800, 60, 2)
+        assert (result["66"]["total_dwell"], result["66"]["n_dwell_stops"], result["66"]["n_days"]) == (0, 0, 1)
 
     def test_cache_key_scoped_to_date_range_not_limit(self):
         assert speed._leaderboard_cache_key(START_DATE, END_DATE) == speed._leaderboard_cache_key(START_DATE, END_DATE)
@@ -361,7 +381,7 @@ class TestCrTripMetricsByRoute:
 
 
 def _bands(**bands):
-    """A `time_bands` map: each band given as (count, n_traversals, n_interpolated, miles_covered, total_time)."""
+    """A `time_bands` map: each band given as a tuple of its BUS_BAND_FIELDS, in order."""
     return {band: dict(zip(speed.BUS_BAND_FIELDS, values)) for band, values in bands.items()}
 
 
@@ -378,7 +398,9 @@ BANDED_BUS_ROWS = [
         "total_time": 36000,
         "median_speed_mph": 9.5,
         "mean_speed_mph": 10.1,
-        "time_bands": _bands(am_peak=(8, 200, 2, 20, 9000), midday=(20, 400, 4, 50, 15000)),
+        "total_dwell": 13000,
+        "n_dwell_stops": 850,
+        "time_bands": _bands(am_peak=(8, 200, 2, 20, 9000, 2700, 180), midday=(20, 400, 4, 50, 15000, 4500, 380)),
     },
     # Saturday, with no am_peak traversals at all.
     {
@@ -392,7 +414,9 @@ BANDED_BUS_ROWS = [
         "total_time": 14400,
         "median_speed_mph": 12.0,
         "mean_speed_mph": 12.5,
-        "time_bands": _bands(midday=(12, 250, 1, 30, 7200)),
+        "total_dwell": 5000,
+        "n_dwell_stops": 380,
+        "time_bands": _bands(midday=(12, 250, 1, 30, 7200, 2000, 230)),
     },
     # A Monday MBTA ran holiday service on: the row's own day_type decides, not the weekday.
     {
@@ -406,7 +430,9 @@ BANDED_BUS_ROWS = [
         "total_time": 18000,
         "median_speed_mph": 11.0,
         "mean_speed_mph": 11.4,
-        "time_bands": _bands(am_peak=(5, 100, 0, 12, 3600)),
+        "total_dwell": 6000,
+        "n_dwell_stops": 470,
+        "time_bands": _bands(am_peak=(5, 100, 0, 12, 3600, 1000, 95)),
     },
     # Written before the pipeline recorded day_type/time_bands.
     {
@@ -432,7 +458,9 @@ BANDED_BUS_ROWS = [
         "total_time": 36100,
         "median_speed_mph": 9.4,
         "mean_speed_mph": 10.0,
-        "time_bands": _bands(am_peak=(9, 210, 1, 22, 9900)),
+        "total_dwell": 13500,
+        "n_dwell_stops": 860,
+        "time_bands": _bands(am_peak=(9, 210, 1, 22, 9900, 3000, 200)),
     },
 ]
 
@@ -470,6 +498,9 @@ class TestBusTripMetricsFilters:
             "n_interpolated": 2,
             "miles_covered": 20,
             "total_time": 9000,
+            # The band's dwell, not the whole day's.
+            "total_dwell": 2700,
+            "n_dwell_stops": 180,
         }
 
     def test_absent_band_reads_as_zero(self, query_calls):
@@ -509,6 +540,8 @@ class TestBusTripMetricsFilters:
                 "total_time": 9000,
                 "count": 8,
                 "n_traversals": 200,
+                "total_dwell": 2700,
+                "n_dwell_stops": 180,
             },
             # Tue 1/13.
             {
@@ -518,6 +551,8 @@ class TestBusTripMetricsFilters:
                 "total_time": 9900,
                 "count": 9,
                 "n_traversals": 210,
+                "total_dwell": 3000,
+                "n_dwell_stops": 200,
             },
             # Mon 1/19 + the pre-breakdown row on Tue 1/20, which counts as zero.
             {
@@ -527,6 +562,8 @@ class TestBusTripMetricsFilters:
                 "total_time": 3600,
                 "count": 5,
                 "n_traversals": 100,
+                "total_dwell": 1000,
+                "n_dwell_stops": 95,
             },
         ]
 
@@ -542,6 +579,8 @@ class TestBusTripMetricsFilters:
             "total_time": 18900,
             "count": 17,
             "n_traversals": 410,
+            "total_dwell": 5700,
+            "n_dwell_stops": 380,
         }
 
     def test_grouped_routes_sum_band_totals_per_day(self, monkeypatch):
@@ -556,7 +595,7 @@ class TestBusTripMetricsFilters:
                         "total_time": 3600,
                         "count": 4,
                         "n_traversals": 40,
-                        "time_bands": _bands(am_peak=(1, 10, 0, 2, 600)),
+                        "time_bands": _bands(am_peak=(1, 10, 0, 2, 600, 150, 9)),
                     }
                 ],
                 [
@@ -568,7 +607,7 @@ class TestBusTripMetricsFilters:
                         "total_time": 7200,
                         "count": 9,
                         "n_traversals": 90,
-                        "time_bands": _bands(am_peak=(3, 30, 1, 6, 1200)),
+                        "time_bands": _bands(am_peak=(3, 30, 1, 6, 1200, 400, 28)),
                     },
                     # A weekend day, filtered out per route_id before anything is summed.
                     {
@@ -579,7 +618,7 @@ class TestBusTripMetricsFilters:
                         "total_time": 900,
                         "count": 2,
                         "n_traversals": 20,
-                        "time_bands": _bands(am_peak=(1, 5, 0, 1, 300)),
+                        "time_bands": _bands(am_peak=(1, 5, 0, 1, 300, 50, 4)),
                     },
                 ],
             ]
@@ -597,6 +636,8 @@ class TestBusTripMetricsFilters:
                 "total_time": 1800,
                 "count": 4,
                 "n_traversals": 40,
+                "total_dwell": 550,
+                "n_dwell_stops": 37,
             }
         ]
 
@@ -705,6 +746,10 @@ class TestBusLeaderboardTripCounts:
             "total_time": 5400,
             "count": 8,
             "n_traversals": 8,
+            "total_dwell": 0,
+            "n_dwell_stops": 0,
+            # The trips-only row has no total_time, so isn't a day of service.
+            "n_days": 2,
             **_trips(10, 5, 1),
         }
 

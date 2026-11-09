@@ -158,6 +158,10 @@ export interface DeliveredTripMetricsCR extends FleetMetrics {
  * One route's totals over a date range, as ranked by /api/busspeedleaderboard. mph is
  * derived client-side the same way as everywhere else (miles_covered / (total_time / 3600))
  * from figures summed across the range, not averaged day-by-day.
+ *
+ * total_time runs arrival to arrival, so it includes the time around stops in total_dwell.
+ * Average dwell is total_dwell / n_dwell_stops. The dwell fields and n_days (days with speed
+ * data) are missing from leaderboards computed before they were added.
  */
 export interface BusSpeedLeaderboardEntry {
   route: string;
@@ -165,6 +169,9 @@ export interface BusSpeedLeaderboardEntry {
   total_time: number;
   count: number;
   n_traversals: number;
+  total_dwell?: number;
+  n_dwell_stops?: number;
+  n_days?: number;
 }
 
 export type LineSegmentData = {

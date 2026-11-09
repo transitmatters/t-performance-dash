@@ -65,7 +65,10 @@ BUS_AGG_MAX_DAYS = {
     "weekly": 7 * BUS_TRIP_METRICS_MAX_DAYS,
     "monthly": 30 * BUS_TRIP_METRICS_MAX_DAYS,
 }
-BUS_SUMMED_FIELDS = ("miles_covered", "total_time", "count", "n_traversals")
+# total_dwell is time spent around the n_dwell_stops stops it covers, which leave out each trip's
+# first stop (layover) and stops LAMP didn't record. Average dwell is total_dwell / n_dwell_stops.
+# total_time runs arrival to arrival, so already includes dwell: total_dwell / total_time is its share.
+BUS_SUMMED_FIELDS = ("miles_covered", "total_time", "count", "n_traversals", "total_dwell", "n_dwell_stops")
 # Every trip LAMP scheduled, the ones with no observed stop (an estimate of trips dropped: a trip that
 # ran untracked looks the same), and the unobserved ones that have an MBTA waiver. mbta-performance
 # writes them from 2025-12-24, for the whole day only. They're summed like BUS_SUMMED_FIELDS, but a
@@ -83,7 +86,15 @@ BUS_TIME_BANDS = ("early_am", "am_peak", "midday", "pm_peak", "evening", "late_n
 BUS_DAY_TYPES = ("business_day", "weekend_or_holiday")
 # Everything a `time_bands` entry holds. Band counts don't add up to the row's `count` (a trip crossing
 # a band boundary counts in both), but each is still a straight sum across days.
-BUS_BAND_FIELDS = ("count", "n_traversals", "n_interpolated", "miles_covered", "total_time")
+BUS_BAND_FIELDS = (
+    "count",
+    "n_traversals",
+    "n_interpolated",
+    "miles_covered",
+    "total_time",
+    "total_dwell",
+    "n_dwell_stops",
+)
 # Only exist for the whole day: medians and means can't be split into bands or summed back together,
 # and trip counts aren't broken down by band.
 BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph", *BUS_TRIP_COUNT_FIELDS)
@@ -403,8 +414,8 @@ def _rollup_fleet_fields(rows: list[dict]) -> dict:
 
 
 # Bump when the fields of a cached leaderboard entry change, so lists cached without them aren't served.
-# 2: BUS_TRIP_COUNT_FIELDS.
-LEADERBOARD_CACHE_VERSION = 2
+# 2: BUS_TRIP_COUNT_FIELDS. 3: total_dwell, n_dwell_stops and n_days.
+LEADERBOARD_CACHE_VERSION = 3
 
 
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
@@ -413,6 +424,9 @@ def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
     The full ranked list is cached once per range and sliced to `limit` on every
     read, since the scan/aggregation work is identical regardless of how many
     rows the caller asked for.
+
+    Versioned by LEADERBOARD_CACHE_VERSION, because a cached list can be up to three months old
+    (cache.get_cache_max_age).
     """
     return f"bus-speed-leaderboard/v{LEADERBOARD_CACHE_VERSION}/{start_date}_{end_date}.json"
 
@@ -459,10 +473,11 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
         limit: Maximum number of routes to return (default 10).
 
     Returns:
-        The `limit` slowest routes, each a dict with route, miles_covered, total_time,
-        count, and n_traversals summed across the range, sorted slowest (lowest mph) first.
-        BUS_TRIP_COUNT_FIELDS are summed too, where the range has them. A route with no
-        recorded time in the range has no speed to rank by, so it's left out.
+        The `limit` slowest routes, sorted slowest (lowest mph) first. Each is a dict with the
+        route, each of BUS_SUMMED_FIELDS summed across the range, and n_days, the number of days
+        with recorded speed data for that route. BUS_TRIP_COUNT_FIELDS are summed too, where the
+        range has them. A route with no recorded time in the range has no speed to rank by, so it's
+        left out.
 
     Raises:
         ForbiddenError: If the date range exceeds the maximum allowed entries (150).
@@ -484,6 +499,10 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
                 "route": route,
                 **{field: sum(row.get(field) or 0 for row in route_rows) for field in BUS_SUMMED_FIELDS},
                 **_sum_trip_counts(route_rows),
+                # Lets the dashboard compare a route's service per day across ranges of any length.
+                # A fleet-only row, or a day on which none of the route's trips were observed, has no
+                # total_time, so doesn't count as a day of service.
+                "n_days": sum(1 for row in route_rows if (row.get("total_time") or 0) > 0),
             }
             for route, route_rows in rows_by_route.items()
         }
