@@ -3,7 +3,7 @@ import type { Line } from '../../common/types/lines';
 // The shape of static/landing/overview.json (schemaVersion 1), built daily by data-ingestion
 // (chalicelib/overview).
 
-export type MetricId = 'service' | 'frequency' | 'reliability' | 'speed' | 'fleet';
+export type MetricId = 'service' | 'frequency' | 'reliability' | 'delays' | 'speed' | 'fleet';
 
 /** `insufficient`: should be measured but there isn't enough recent data. `na`: not measured. */
 export type Status = 'win' | 'good' | 'room' | 'problem' | 'insufficient' | 'na';
