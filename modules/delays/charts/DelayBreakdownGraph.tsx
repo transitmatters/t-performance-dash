@@ -98,18 +98,21 @@ export const DelayBreakdownGraph = ({
       ctx.font = '11px sans-serif';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = tick;
-      let lastDrawnY = Infinity;
+      // Top layer first, so each label sits lower on the canvas than the one before.
+      let lastDrawnY = -Infinity;
       for (let i = series.length - 1; i >= 0; i--) {
         const meta = chart.getDatasetMeta(i);
         const dataset = chart.data.datasets[i].data as (number | null)[];
-        let at = dataset.length - 1;
-        while (at >= 0 && dataset[at] == null) at--;
+        // A stepped point's band runs to the next point, so the final point has no band of its own.
+        // Label the last band that is drawn: the one ending at the right edge.
+        let at = dataset.length - 2;
+        while (at >= 0 && (dataset[at] == null || dataset[at + 1] == null)) at--;
         if (at < 0) continue;
         const top = meta.data[at]?.y;
         const bottom = i === 0 ? zero : chart.getDatasetMeta(i - 1).data[at]?.y;
         if (top == null || bottom == null || bottom - top < 13) continue;
         const y = (top + bottom) / 2;
-        if (lastDrawnY - y < 13) continue;
+        if (y - lastDrawnY < 13) continue;
         lastDrawnY = y;
         ctx.fillText(
           series[i].label.length > 17 ? `${series[i].label.slice(0, 16)}…` : series[i].label,
