@@ -1,4 +1,5 @@
 import type { DataPoint } from '../../common/components/charts/TimeSeriesChart';
+import { SEVERITY_COLORS } from '../../common/utils/chartTheme';
 import type {
   HeadwayCounts,
   ReliabilityCounts,
@@ -92,10 +93,31 @@ const sumFields = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayFi
 export const headwayShare = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
   percent(sumFields(counts, fields), sumFields(counts, HEADWAY_FIELDS));
 
-export const getSubwayStats = (data: ReliabilityEntry[]) => {
-  const total = Object.fromEntries(
+/**
+ * Each headway count, in ratio order, with how the breakdown chart shows it. Colors are the
+ * severity ramp the trip charts use for headway dots, so a bucket reads the same on both.
+ */
+export const HEADWAY_BUCKETS: {
+  field: HeadwayField;
+  label: string;
+  range: string;
+  color: string;
+}[] = [
+  { field: 'headways_under_50', label: 'Bunched', range: '≤50%', color: SEVERITY_COLORS.off50 },
+  { field: 'headways_50_75', label: 'Short', range: '50–75%', color: SEVERITY_COLORS.off25 },
+  { field: 'headways_75_125', label: 'On time', range: '75–125%', color: SEVERITY_COLORS.onTime },
+  { field: 'headways_125_150', label: 'Long', range: '125–150%', color: SEVERITY_COLORS.off25 },
+  { field: 'headways_over_150', label: 'Long gap', range: '≥150%', color: SEVERITY_COLORS.off50 },
+];
+
+/** Every headway count summed over the range. */
+export const getHeadwayTotals = (data: ReliabilityEntry[]) =>
+  Object.fromEntries(
     HEADWAY_FIELDS.map((field) => [field, data.reduce((t, e) => t + (e[field] ?? 0), 0)])
   ) as HeadwayCounts;
+
+export const getHeadwayStats = (data: ReliabilityEntry[]) => {
+  const total = getHeadwayTotals(data);
   return {
     within75: headwayShare(total, WITHIN_75_125),
     within50: headwayShare(total, WITHIN_50_150),
