@@ -616,6 +616,109 @@ class TestBusTripMetricsFilters:
         assert query_calls == []
 
 
+def _trips(scheduled, unobserved, waived):
+    return {"scheduled_trips": scheduled, "unobserved_trips": unobserved, "unobserved_waived_trips": waived}
+
+
+TRIP_COUNT_ROWS = [
+    # Tuesday 2025-12-23, the week before trip counts began: speed fields only.
+    {"route": "1", "date": "2025-12-23", "miles_covered": 10, "total_time": 3600, "count": 200, "n_traversals": 9},
+    # Mon 12/29 and Tue 12/30, the first full week with them.
+    {
+        "route": "1",
+        "date": "2025-12-29",
+        "day_type": "business_day",
+        "miles_covered": 10,
+        "total_time": 3600,
+        "count": 210,
+        "n_traversals": 9,
+        "time_bands": _bands(am_peak=(30, 2, 0, 2, 600)),
+        **_trips(215, 5, 3),
+    },
+    # Every trip unobserved: trip counts but no speed fields.
+    {"route": "1", "date": "2025-12-30", "day_type": "business_day", **_trips(215, 215, 0)},
+]
+
+
+class TestBusTripCounts:
+    @pytest.fixture(autouse=True)
+    def fake_query(self, monkeypatch):
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_route", lambda *args: TRIP_COUNT_ROWS)
+
+    def params(self, **extra):
+        return {"start_date": "2025-12-22", "end_date": "2026-01-04", "route": "1"} | extra
+
+    def test_daily_rows_keep_their_counts(self):
+        rows = speed.trip_metrics_by_bus_route(self.params())
+        assert [row.get("unobserved_trips") for row in rows] == [None, 5, 215]
+
+    def test_weekly_sums_counts_only_where_measured(self):
+        before, first = speed.trip_metrics_by_bus_route(self.params(agg="weekly"))
+
+        # Absent, not zero: nothing was measured that week.
+        assert not set(speed.BUS_TRIP_COUNT_FIELDS) & before.keys()
+        assert {field: first[field] for field in speed.BUS_TRIP_COUNT_FIELDS} == _trips(430, 220, 3)
+        # The all-unobserved day adds no speed, but its trips still count.
+        assert first["count"] == 210
+
+    def test_time_band_drops_whole_day_counts(self):
+        rows = speed.trip_metrics_by_bus_route(self.params(time_band="am_peak"))
+        assert not any(set(speed.BUS_TRIP_COUNT_FIELDS) & row.keys() for row in rows)
+
+        weekly = speed.trip_metrics_by_bus_route(self.params(agg="weekly", time_band="am_peak"))
+        assert not any(set(speed.BUS_TRIP_COUNT_FIELDS) & row.keys() for row in weekly)
+
+    def test_grouped_routes_sum_counts_per_day(self, monkeypatch):
+        monkeypatch.setattr(
+            speed.dynamo,
+            "query_daily_trips_on_routes",
+            lambda *args: [
+                [{"route": "114", "date": "2026-01-05", "miles_covered": 1, "total_time": 60, **_trips(20, 1, 1)}],
+                [{"route": "116", "date": "2026-01-05", "miles_covered": 2, "total_time": 120, **_trips(80, 3, 0)}],
+            ],
+        )
+        [day] = speed.trip_metrics_by_bus_route(self.params(route="114,116"))
+        assert {field: day[field] for field in speed.BUS_TRIP_COUNT_FIELDS} == _trips(100, 4, 1)
+
+
+class TestBusLeaderboardTripCounts:
+    @pytest.fixture
+    def ranked(self, monkeypatch):
+        fake_s3 = FakeS3(download_error=not_found_error())
+        monkeypatch.setattr(speed.s3, "download", fake_s3.download)
+        monkeypatch.setattr(speed.s3, "upload", fake_s3.upload)
+        rows = [
+            {"route": "1", "miles_covered": 10, "total_time": 3600, "count": 5, "n_traversals": 5, **_trips(6, 1, 1)},
+            {"route": "1", "miles_covered": 5, "total_time": 1800, "count": 3, "n_traversals": 3},
+            {"route": "1", **_trips(4, 4, 0)},
+            {"route": "66", "miles_covered": 2, "total_time": 3600, "count": 2, "n_traversals": 2},
+            # Trips, but never observed in the range, so no speed to rank by.
+            {"route": "8993", **_trips(3, 3, 0)},
+        ]
+        monkeypatch.setattr(speed.dynamo, "scan_trip_metrics_in_range", lambda *args: rows)
+        return {entry["route"]: entry for entry in speed.bus_speed_leaderboard(START_DATE, END_DATE, limit=10)}
+
+    def test_sums_counts_per_route(self, ranked):
+        assert ranked["1"] == {
+            "route": "1",
+            "miles_covered": 15,
+            "total_time": 5400,
+            "count": 8,
+            "n_traversals": 8,
+            **_trips(10, 5, 1),
+        }
+
+    def test_route_without_counts_omits_them(self, ranked):
+        assert not set(speed.BUS_TRIP_COUNT_FIELDS) & ranked["66"].keys()
+
+    def test_route_without_speed_left_out(self, ranked):
+        assert "8993" not in ranked
+
+    def test_cache_key_versioned(self):
+        # So a list cached before the trip counts isn't served without them.
+        assert f"/v{speed.LEADERBOARD_CACHE_VERSION}/" in speed._leaderboard_cache_key(START_DATE, END_DATE)
+
+
 def _row(route, date, **fleet):
     return {
         "route": route,
