@@ -17,6 +17,7 @@ import { watermarkLayout } from '../../../constants/charts';
 import { getFormattedTimeString } from '../../../utils/time';
 import { SERVICE_DAY_START_HOUR } from '../../../constants/time';
 import type { HoverCardContent } from '../hoverCard/types';
+import { ChartDiv } from '../ChartDiv';
 import type { ByHourDataset, DisplayStyle, ValueAxis as ValueAxis } from './types';
 import { resolveStyle } from './styles';
 
@@ -30,6 +31,8 @@ interface Props {
   datasetRoundTrips?: boolean;
   /** The datasets are the same service on two dates, so hovering shows the change between them */
   compareDatasets?: boolean;
+  /** Take the parent's height instead of a fixed one, as an embed does. */
+  fill?: boolean;
 }
 
 const allTimeLabels = ['AM', 'PM']
@@ -64,6 +67,7 @@ export const ByHourHistogram = (props: Props) => {
     style: baseStyle = null,
     datasetRoundTrips = false,
     compareDatasets = false,
+    fill = false,
   } = props;
   const { data, timeLabels } = useMemo(
     () => toServiceDayWithoutEmptyHours(dataWithZeros),
@@ -166,13 +170,14 @@ export const ByHourHistogram = (props: Props) => {
   }, [valueAxis.title, isMobile, hoverCard]);
 
   return (
-    <BarChart
-      redraw
-      ref={ref}
-      data={chartData}
-      options={chartOptions}
-      height={isMobile ? 200 : 75}
-      plugins={[ChartjsPluginWatermark]}
-    />
+    <ChartDiv isMobile={isMobile} fill={fill}>
+      <BarChart
+        redraw
+        ref={ref}
+        data={chartData}
+        options={chartOptions}
+        plugins={[ChartjsPluginWatermark]}
+      />
+    </ChartDiv>
   );
 };

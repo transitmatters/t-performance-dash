@@ -47,14 +47,10 @@ export const DailyServiceHistogram = (props: Props) => {
       valueAxis={{ title: 'Scheduled round trips', tooltipItemLabel: 'round trips' }}
       datasetRoundTrips
       compareDatasets
+      fill={fill}
     />
   );
-  if (fill)
-    return (
-      <ChartStack className="h-full">
-        <div className="relative min-h-0 flex-1">{histogram}</div>
-      </ChartStack>
-    );
+  if (fill) return <ChartStack className="h-full">{histogram}</ChartStack>;
   return (
     <ChartStack>
       {histogram}
