@@ -66,6 +66,12 @@ BUS_AGG_MAX_DAYS = {
     "monthly": 30 * BUS_TRIP_METRICS_MAX_DAYS,
 }
 BUS_SUMMED_FIELDS = ("miles_covered", "total_time", "count", "n_traversals")
+# Every trip LAMP scheduled, the ones with no observed stop (an estimate of trips dropped: a trip that
+# ran untracked looks the same), and the unobserved ones that have an MBTA waiver. mbta-performance
+# writes them from 2025-12-24, for the whole day only. They're summed like BUS_SUMMED_FIELDS, but a
+# period only has them if one of its days does, so a week before they existed reads as unmeasured
+# rather than as zero trips scheduled.
+BUS_TRIP_COUNT_FIELDS = ("scheduled_trips", "unobserved_trips", "unobserved_waived_trips")
 # The departure windows a DeliveredTripMetricsBus row breaks its totals down by, in its `time_bands`
 # map -- TIME_BANDS in mbta-performance's chalicelib/lamp/bus/constants.py, the same bands the bus
 # speed map uses. The row's top-level fields are the all-day figure, so there is no "all_day" band:
@@ -78,8 +84,9 @@ BUS_DAY_TYPES = ("business_day", "weekend_or_holiday")
 # Everything a `time_bands` entry holds. Band counts don't add up to the row's `count` (a trip crossing
 # a band boundary counts in both), but each is still a straight sum across days.
 BUS_BAND_FIELDS = ("count", "n_traversals", "n_interpolated", "miles_covered", "total_time")
-# Only exist for the whole day: medians and means can't be split into bands or summed back together.
-BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph")
+# Only exist for the whole day: medians and means can't be split into bands or summed back together,
+# and trip counts aren't broken down by band.
+BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph", *BUS_TRIP_COUNT_FIELDS)
 
 CR_TRIP_METRICS_TABLE = "DeliveredTripMetricsCR"
 
@@ -329,8 +336,9 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
     """Roll daily rows (from one or more routes) up per day, ISO week (dated by its Monday),
     or calendar month (dated the 1st).
 
-    summed_fields are summed. Fleet stats are pooled by _rollup_fleet_fields. Per-day
-    medians/means can't be combined, so they're dropped.
+    summed_fields are summed, and so are BUS_TRIP_COUNT_FIELDS where the period's rows have them.
+    Fleet stats are pooled by _rollup_fleet_fields. Per-day medians/means can't be combined, so
+    they're dropped.
     """
     periods: dict[date, list[dict]] = {}
     for row in rows:
@@ -347,10 +355,21 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
             "date": period_start.isoformat(),
             "route": route,
             **{field: sum(row.get(field) or 0 for row in periods[period_start]) for field in summed_fields},
+            **_sum_trip_counts(periods[period_start]),
             **_rollup_fleet_fields(periods[period_start]),
         }
         for period_start in sorted(periods)
     ]
+
+
+def _sum_trip_counts(rows: list[dict]) -> dict:
+    """Sum each of BUS_TRIP_COUNT_FIELDS over the rows that have it, leaving out any no row has."""
+    sums = {}
+    for row in rows:
+        for field in BUS_TRIP_COUNT_FIELDS:
+            if row.get(field) is not None:
+                sums[field] = sums.get(field, 0) + row[field]
+    return sums
 
 
 def _is_fleet_stat(field: str) -> bool:
@@ -383,6 +402,11 @@ def _rollup_fleet_fields(rows: list[dict]) -> dict:
     return pooled
 
 
+# Bump when the fields of a cached leaderboard entry change, so lists cached without them aren't served.
+# 2: BUS_TRIP_COUNT_FIELDS.
+LEADERBOARD_CACHE_VERSION = 2
+
+
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
     """S3 key for a cached leaderboard, scoped to a date range only (not limit).
 
@@ -390,7 +414,7 @@ def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
     read, since the scan/aggregation work is identical regardless of how many
     rows the caller asked for.
     """
-    return f"bus-speed-leaderboard/{start_date}_{end_date}.json"
+    return f"bus-speed-leaderboard/v{LEADERBOARD_CACHE_VERSION}/{start_date}_{end_date}.json"
 
 
 def _read_cached_leaderboard(start_date: str | date, end_date: str | date):
@@ -437,6 +461,8 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
     Returns:
         The `limit` slowest routes, each a dict with route, miles_covered, total_time,
         count, and n_traversals summed across the range, sorted slowest (lowest mph) first.
+        BUS_TRIP_COUNT_FIELDS are summed too, where the range has them. A route with no
+        recorded time in the range has no speed to rank by, so it's left out.
 
     Raises:
         ForbiddenError: If the date range exceeds the maximum allowed entries (150).
@@ -450,16 +476,17 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
     if ranked is None:
         rows = dynamo.scan_trip_metrics_in_range(BUS_TRIP_METRICS_TABLE, start_date, end_date)
 
-        totals = {}
+        rows_by_route: dict[str, list[dict]] = {}
         for row in rows:
-            entry = totals.setdefault(
-                row["route"],
-                {"route": row["route"], "miles_covered": 0, "total_time": 0, "count": 0, "n_traversals": 0},
-            )
-            entry["miles_covered"] += row.get("miles_covered", 0)
-            entry["total_time"] += row.get("total_time", 0)
-            entry["count"] += row.get("count", 0)
-            entry["n_traversals"] += row.get("n_traversals", 0)
+            rows_by_route.setdefault(row["route"], []).append(row)
+        totals = {
+            route: {
+                "route": route,
+                **{field: sum(row.get(field) or 0 for row in route_rows) for field in BUS_SUMMED_FIELDS},
+                **_sum_trip_counts(route_rows),
+            }
+            for route, route_rows in rows_by_route.items()
+        }
 
         # Routes with no recorded time have no usable speed and would divide by zero below.
         ranked = [entry for entry in totals.values() if entry["total_time"] > 0]
