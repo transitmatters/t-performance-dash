@@ -1,7 +1,7 @@
 """Time-series aggregation of travel time, headway, and dwell data over date ranges."""
 
 import datetime
-from chalicelib import data_funcs
+from chalicelib import data_funcs, s3
 import pandas as pd
 from pandas.core.groupby.generic import DataFrameGroupBy
 import numpy as np
@@ -65,18 +65,31 @@ def train_peak_status(df: pd.DataFrame):
     return df
 
 
-def faster_describe(grouped: DataFrameGroupBy):
+# Ferry stops see only a handful of trips a day (Lynn runs 3 each way), so the outlier
+# filter would drop every day for them.
+DEFAULT_MIN_COUNT = 5
+FERRY_MIN_COUNT = 1
+
+
+def min_count_for_stops(stops) -> int:
+    """Return the minimum observations per group to keep when aggregating these stops."""
+    stops = [stops] if isinstance(stops, str) else stops
+    return FERRY_MIN_COUNT if any(s3.is_ferry(stop) for stop in stops) else DEFAULT_MIN_COUNT
+
+
+def faster_describe(grouped: DataFrameGroupBy, min_count: int = DEFAULT_MIN_COUNT):
     """Compute descriptive statistics for a grouped DataFrame, optimized for speed.
 
     Equivalent to pandas DataFrame.describe() but up to 25x faster. Computes count,
     mean, min, median (as "50%"), max, sum, std (population), 25th, and 75th percentiles.
-    Filters out groups with 4 or fewer observations to reduce outlier noise.
+    Filters out groups with fewer than ``min_count`` observations to reduce outlier noise.
 
     Args:
         grouped: A grouped single-column DataFrame to compute statistics on.
+        min_count: Smallest group size to keep. (Default value = DEFAULT_MIN_COUNT)
 
     Returns:
-        DataFrame with descriptive statistics per group, excluding groups with count <= 4.
+        DataFrame with descriptive statistics per group, excluding groups below ``min_count``.
     """
     # This does the same thing as pandas.DataFrame.describe(), but is up to 25x faster!
     # also, we can specify population std instead of sample.
@@ -92,7 +105,7 @@ def faster_describe(grouped: DataFrameGroupBy):
     stats = pd.concat([stats, q1, q3, std], axis=1).reset_index()
 
     # This will filter out some probable outliers.
-    return stats.loc[stats["count"] > 4]
+    return stats.loc[stats["count"] >= min_count]
 
 
 ####################
@@ -137,7 +150,7 @@ def aggregate_traveltime_data(start_date: datetime.date, end_date: datetime.date
     return df
 
 
-def calc_travel_times_by_time(df: pd.DataFrame):
+def calc_travel_times_by_time(df: pd.DataFrame, min_count: int = DEFAULT_MIN_COUNT):
     """Aggregate travel times into 30-minute time-of-day buckets, split by peak day status.
 
     Converts departure times to epoch-relative datetimes for resampling, then computes
@@ -146,6 +159,7 @@ def calc_travel_times_by_time(df: pd.DataFrame):
     Args:
         df: DataFrame from aggregate_traveltime_data with "dep_time", "is_peak_day",
             and "travel_time_sec" columns.
+        min_count: Smallest bucket size to keep. (Default value = DEFAULT_MIN_COUNT)
 
     Returns:
         DataFrame with travel time statistics per 30-minute bucket and peak day status.
@@ -155,13 +169,15 @@ def calc_travel_times_by_time(df: pd.DataFrame):
     timedeltas.loc[timedeltas < SERVICE_HR_OFFSET] += datetime.timedelta(days=1)
     df["dep_time_from_epoch"] = timedeltas + datetime.datetime(1970, 1, 1)
 
-    stats = faster_describe(df.groupby("is_peak_day").resample("30min", on="dep_time_from_epoch")["travel_time_sec"])
+    stats = faster_describe(
+        df.groupby("is_peak_day").resample("30min", on="dep_time_from_epoch")["travel_time_sec"], min_count
+    )
     stats["dep_time_from_epoch"] = stats["dep_time_from_epoch"].dt.strftime("%Y-%m-%dT%H:%M:%S")
 
     return stats
 
 
-def calc_travel_times_by_date(df: pd.DataFrame):
+def calc_travel_times_by_date(df: pd.DataFrame, min_count: int = DEFAULT_MIN_COUNT):
     """Aggregate travel times by service date, with overall and per-peak-period breakdowns.
 
     Computes descriptive statistics grouped by service date for all trips combined
@@ -171,16 +187,17 @@ def calc_travel_times_by_date(df: pd.DataFrame):
     Args:
         df: DataFrame from aggregate_traveltime_data with "service_date", "peak",
             and "travel_time_sec" columns.
+        min_count: Smallest group size to keep. (Default value = DEFAULT_MIN_COUNT)
 
     Returns:
         DataFrame with travel time statistics per service date and peak period.
     """
     # get summary stats
-    summary_stats = faster_describe(df.groupby("service_date")["travel_time_sec"])
+    summary_stats = faster_describe(df.groupby("service_date")["travel_time_sec"], min_count)
     summary_stats["peak"] = "all"
 
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["travel_time_sec"])
+    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["travel_time_sec"], min_count)
 
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
@@ -210,8 +227,9 @@ def travel_times_all(start_date: datetime.date, end_date: datetime.date, from_st
     df = aggregate_traveltime_data(start_date, end_date, from_stops, to_stops)
     if df is None:
         return {"by_date": [], "by_time": []}
-    by_date = calc_travel_times_by_date(df)
-    by_time = calc_travel_times_by_time(df)
+    min_count = min_count_for_stops(from_stops)
+    by_date = calc_travel_times_by_date(df, min_count)
+    by_time = calc_travel_times_by_time(df, min_count)
 
     return {
         "by_date": by_date.to_dict("records"),
@@ -236,7 +254,7 @@ def travel_times_over_time(start_date: datetime.date, end_date: datetime.date, f
     df = aggregate_traveltime_data(start_date, end_date, from_stops, to_stops)
     if df is None:
         return []
-    stats = calc_travel_times_by_date(df)
+    stats = calc_travel_times_by_date(df, min_count_for_stops(from_stops))
     return stats.loc[stats["peak"] == "all"].to_dict("records")
 
 
@@ -275,11 +293,12 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
     df = train_peak_status(df)
 
     # get summary stats
-    summary_stats = faster_describe(df.groupby("service_date")["headway_time_sec"])
+    min_count = min_count_for_stops(stops)
+    summary_stats = faster_describe(df.groupby("service_date")["headway_time_sec"], min_count)
     summary_stats["peak"] = "all"
 
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["headway_time_sec"])
+    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["headway_time_sec"], min_count)
 
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
@@ -342,11 +361,12 @@ def dwells_over_time(start_date: str | datetime.date, end_date: str | datetime.d
     df = train_peak_status(df)
 
     # get summary stats
-    summary_stats = faster_describe(df.groupby("service_date")["dwell_time_sec"])
+    min_count = min_count_for_stops(stops)
+    summary_stats = faster_describe(df.groupby("service_date")["dwell_time_sec"], min_count)
     summary_stats["peak"] = "all"
 
     # summary_stats for peak / off-peak trains
-    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["dwell_time_sec"])
+    summary_stats_peak = faster_describe(df.groupby(["service_date", "peak"])["dwell_time_sec"], min_count)
 
     # combine summary stats
     summary_stats_final = pd.concat([summary_stats, summary_stats_peak])
