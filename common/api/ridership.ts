@@ -1,7 +1,7 @@
 import { FetchRidershipParams } from '../types/api';
 import type { FetchRidershipOptions } from '../types/api';
 import type { RidershipCount, StationRidershipWeek } from '../types/dataPoints';
-import { RIDERSHIP_KEYS, type Line } from '../types/lines';
+import { RIDERSHIP_KEYS } from '../types/lines';
 import { getWeekStart } from '../utils/date';
 import { apiFetch } from './utils/fetch';
 
@@ -60,9 +60,4 @@ export const fetchStationRidership = async (
     },
     errorMessage: 'Failed to fetch station ridership',
   });
-};
-
-export const fetchLandingRidership = async (): Promise<{ [key in Line]: RidershipCount[] }> => {
-  const ridership_url = new URL(`/static/landing/ridership.json`, window.location.origin);
-  return fetch(ridership_url.toString()).then((resp) => resp.json());
 };

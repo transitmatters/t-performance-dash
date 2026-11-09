@@ -72,8 +72,8 @@ export const LINE_OBJECTS: LineObject = {
  * raw GTFS route_ids, the granularity bus trip-metrics data (e.g. the speed leaderboard) is
  * keyed by -- NOT the dashboard's curated BusRoute labels, which group some routes into
  * composites. The Silver Line appears under its GTFS ids: 741/742/743/746 (SL1/SL2/SL3/SLW) and
- * 749/751 (SL5/SL4). Keep in step with the line-level FREQUENT_BUS_LINE_IDS in
- * modules/home/config.ts.
+ * 749/751 (SL5/SL4). The home scoreboard's Frequent Bus row has its own line-level list in
+ * data-ingestion (chalicelib/overview/config.py).
  */
 export const FREQUENT_BUS_ROUTE_IDS: string[] = [
   '1',

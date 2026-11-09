@@ -6,7 +6,7 @@ import type { SingleDayDataPoint } from '../../common/types/charts';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
-import { convertToStationSpeedDataset } from '../landing/utils';
+import { convertToStationSpeedDataset } from './utils/stationSpeed';
 import { SpeedBetweenStationsSingleChart } from './charts/SpeedBetweenStationsSingleChart';
 
 interface SpeedBetweenStationsSingleWrapperProps {
