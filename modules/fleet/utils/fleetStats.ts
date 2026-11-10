@@ -8,10 +8,10 @@ const mean = (values: number[]) =>
 const finiteValues = (values: (number | undefined | null)[]) =>
   values.filter((value): value is number => typeof value === 'number' && Number.isFinite(value));
 
-// Trailing-half average minus leading-half average, as on the Speed page.
-const halvesDelta = (values: number[]) => {
+// Leading- and trailing-half averages, as on the Speed page.
+const halvesMeans = (values: number[]) => {
   const mid = Math.floor(values.length / 2);
-  return mean(values.slice(mid)) - mean(values.slice(0, mid));
+  return { before: mean(values.slice(0, mid)), after: mean(values.slice(mid)) };
 };
 
 const averageWithDelta = (
@@ -19,7 +19,8 @@ const averageWithDelta = (
   read: (datapoint: FleetMetrics) => number | undefined
 ) => {
   const values = finiteValues(data.map(read));
-  return { value: mean(values), delta: halvesDelta(values) };
+  const { before, after } = halvesMeans(values);
+  return { value: mean(values), delta: after - before, before, after };
 };
 
 /**

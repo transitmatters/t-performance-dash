@@ -8,11 +8,8 @@ import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
 import { useCrTripMetrics } from '../../common/api/hooks/crTripMetrics';
 import { Widget } from '../../common/components/widgets';
-import {
-  StatCard,
-  StatCardGrid,
-  type StatSentiment,
-} from '../../common/components/widgets/StatCard';
+import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
+import { formatPercentChange, halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
@@ -27,6 +24,8 @@ dayjs.extend(utc);
 
 // data-ingestion's system-wide row for bus and Commuter Rail.
 const SYSTEM_WIDE_ROUTE = 'all';
+
+type HalvesStat = { delta: number; before: number; after: number };
 
 export function FleetDetails() {
   const {
@@ -91,19 +90,25 @@ export function FleetDetails() {
     : null;
   const percent = (value: number | undefined) =>
     value !== undefined && Number.isFinite(value) ? `${Math.round(value)}%` : '—';
-  // Shares are 0-100, so a percentage-point delta is the raw difference.
-  const shareDelta = (delta: number | undefined) => {
-    if (delta === undefined || !Number.isFinite(delta)) return undefined;
-    const sentiment: StatSentiment = Math.abs(delta) < 0.5 ? 'flat' : delta > 0 ? 'good' : 'bad';
-    return { label: `${delta > 0 ? '+' : ''}${Math.round(delta)}pp`, sentiment };
-  };
+  // Shares here are 0-100 rather than 0-1.
+  const shareDelta = (stat: HalvesStat) =>
+    statDelta({
+      delta: stat.delta / 100,
+      negligible: 0.005,
+      magnitude: formatPercentChange(stat.delta / 100),
+      detail: halvesDetail(stat.before, stat.after, percent),
+    });
+  const years = (value: number) => `${value.toFixed(1)} yrs`;
   // Younger is better, so a falling average age reads as good.
-  const ageDelta = (delta: number) => {
-    if (!Number.isFinite(delta)) return undefined;
-    const sentiment: StatSentiment = Math.abs(delta) < 0.1 ? 'flat' : delta < 0 ? 'good' : 'bad';
-    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'newer' : 'older';
-    return { label: `${delta > 0 ? '+' : ''}${delta.toFixed(1)} yrs · ${word}`, sentiment };
-  };
+  const ageDelta = (stat: HalvesStat) =>
+    statDelta({
+      delta: stat.delta,
+      negligible: 0.1,
+      magnitude: `${stat.delta > 0 ? '+' : ''}${years(stat.delta)}`,
+      words: ['newer', 'older'],
+      higherIsBetter: false,
+      detail: halvesDetail(stat.before, stat.after, years),
+    });
   const shareStat = stats?.share ?? stats?.newestType;
   const shareLabel = metrics.share
     ? metrics.share.axisLabel
@@ -124,14 +129,14 @@ export function FleetDetails() {
               <StatCard
                 label={shareLabel}
                 value={percent(shareStat.value)}
-                delta={shareDelta(shareStat.delta)}
+                delta={shareDelta(shareStat)}
               />
             )}
             <StatCard
               label={metrics.age.title}
               value={stats.age.value.toFixed(1)}
               unit="years"
-              delta={ageDelta(stats.age.delta)}
+              delta={ageDelta(stats.age)}
             />
             {stats.mostCommon && (
               <StatCard
