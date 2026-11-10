@@ -82,7 +82,8 @@ type UseQueriesOverload = {
     routeType: RouteType,
     parameters: SingleDayAPIOptions,
     aggregate: false,
-    enabled?: boolean
+    enabled?: boolean,
+    skip?: QueryNameKeys[]
   ): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
@@ -90,18 +91,21 @@ type UseQueriesOverload = {
     routeType: RouteType,
     parameters: AggregateAPIOptions,
     aggregate: true,
-    enabled?: boolean
+    enabled?: boolean,
+    skip?: QueryNameKeys[]
   ): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<AggregateDataResponse>;
   };
 };
 
 // Return type `any` because the return type is specified in the overload in `UseQueriesOverload`
+// Queries named in `skip` aren't fetched, for charts the page won't show.
 export const useTripExplorerQueries: UseQueriesOverload = (
   routeType: RouteType,
   parameters: SingleDayAPIOptions | AggregateAPIOptions,
   aggregate: boolean,
-  enabled = true
+  enabled = true,
+  skip: QueryNameKeys[] = []
 ): any => {
   const queryTypes = QUERIES[routeType];
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
@@ -128,7 +132,7 @@ export const useTripExplorerQueries: UseQueriesOverload = (
           aggregate
             ? fetchAggregateData(name, queries[name].params)
             : fetchSingleDayData(name, queries[name].params),
-        enabled,
+        enabled: enabled && !skip.includes(name),
         staleTime: ONE_MINUTE,
       };
     }),

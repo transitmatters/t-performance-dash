@@ -8,6 +8,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { MiniWidgetCreator } from '../../common/components/widgets/MiniWidgetCreator';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
+import { DwellsTerminusNotice } from './DwellsTerminusNotice';
 
 interface DwellsSingleWrapperProps {
   query: UseQueryResult<SingleDayDataPoint[]>;
@@ -20,6 +21,8 @@ export const DwellsSingleWrapper: React.FC<DwellsSingleWrapperProps> = ({
   toStation,
   fromStation,
 }) => {
+  if (fromStation?.terminus) return <DwellsTerminusNotice />;
+
   const dataReady =
     !query.isError && query.data && toStation && fromStation && query.data.length > 0;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
