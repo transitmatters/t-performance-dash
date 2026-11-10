@@ -134,7 +134,7 @@ export interface DeliveredTripMetrics extends SpeedTripMetrics {
  * rather than extrapolated, but the mph formula (miles_covered / (total_time / 3600))
  * is the same.
  */
-export interface DeliveredTripMetricsBus extends SpeedTripMetrics {
+export interface DeliveredTripMetricsBus extends SpeedTripMetrics, BusTripCounts {
   route: string;
   n_traversals: number;
   n_interpolated: number;
@@ -149,6 +149,17 @@ export interface DeliveredTripMetricsBus extends SpeedTripMetrics {
   avg_bus_age?: number;
 }
 
+/**
+ * Every trip LAMP scheduled, the ones with no observed stop (an estimate of trips dropped, since a
+ * bus that ran untracked looks the same), and how many of those have an MBTA waiver. From
+ * 2025-12-24, whole day only, and left off when not measured rather than sent as zero.
+ */
+export interface BusTripCounts {
+  scheduled_trips?: number;
+  unobserved_trips?: number;
+  unobserved_waived_trips?: number;
+}
+
 /** Commuter Rail cab-car fleet stats for one route, or `all`, from DeliveredTripMetricsCR. */
 export interface DeliveredTripMetricsCR extends FleetMetrics {
   route: string;
@@ -159,7 +170,7 @@ export interface DeliveredTripMetricsCR extends FleetMetrics {
  * derived client-side the same way as everywhere else (miles_covered / (total_time / 3600))
  * from figures summed across the range, not averaged day-by-day.
  */
-export interface BusSpeedLeaderboardEntry {
+export interface BusSpeedLeaderboardEntry extends BusTripCounts {
   route: string;
   miles_covered: number;
   total_time: number;
