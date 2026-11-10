@@ -1,6 +1,6 @@
 import { FetchRidershipParams } from '../types/api';
 import type { FetchRidershipOptions } from '../types/api';
-import type { RidershipCount, StationRidershipWeek } from '../types/dataPoints';
+import type { BusStopRidership, RidershipCount, StationRidershipWeek } from '../types/dataPoints';
 import { RIDERSHIP_KEYS } from '../types/lines';
 import { getWeekStart } from '../utils/date';
 import { apiFetch } from './utils/fetch';
@@ -61,3 +61,15 @@ export const fetchStationRidership = async (
     errorMessage: 'Failed to fetch station ridership',
   });
 };
+
+/** One request per GTFS route, since a combined route like 17/19 is shown one route at a time */
+export const fetchBusStopRidership = async (routeIds: string[]): Promise<BusStopRidership[]> =>
+  await Promise.all(
+    routeIds.map((routeId) =>
+      apiFetch({
+        path: '/api/bus_stop_ridership',
+        options: { route_id: routeId },
+        errorMessage: 'Failed to fetch bus stop ridership',
+      })
+    )
+  );
