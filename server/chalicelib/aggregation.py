@@ -266,8 +266,9 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
 
     Fetches headway data, computes descriptive statistics by service date, and
     calculates bunched (headway ratio <= 0.5) and on-time (ratio between 0.75
-    and 1.25) trip counts relative to benchmark headways. Results are filtered
-    to the "all" peak category and include holiday/weekend flags.
+    and 1.25) trip counts relative to benchmark headways, plus how many
+    headways had a benchmark at all. Results are filtered to the "all" peak
+    category and include holiday/weekend flags.
 
     Args:
         start_date: Start of the date range (inclusive).
@@ -317,6 +318,12 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
     on_time = grouped.apply(lambda x: ((x["headway_ratio"] < 1.25) & (x["headway_ratio"] > 0.75)).sum())
     on_time.name = "on_time"
     summary_stats_final = summary_stats_final.merge(on_time, on="service_date", how="left")
+
+    # Count the headways that have a scheduled headway to compare against. Bunched and on-time shares are
+    # out of this, not `count`, so days without a schedule (the subway before 2021) don't read as 0%.
+    scheduled = grouped.apply(lambda x: x["headway_ratio"].notna().sum())
+    scheduled.name = "scheduled"
+    summary_stats_final = summary_stats_final.merge(scheduled, on="service_date", how="left")
 
     summary_stats_final = add_holidays(summary_stats_final)
 
