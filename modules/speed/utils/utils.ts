@@ -1,39 +1,44 @@
-import { PEAK_SPEED } from '../../../common/constants/baselines';
 import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
-import type { Line } from '../../../common/types/lines';
-
-const mean = (values: number[]) =>
-  values.length ? values.reduce((sum, v) => sum + v, 0) / values.length : NaN;
 
 const halves = <T>(values: T[]): [T[], T[]] => {
   const mid = Math.floor(values.length / 2);
   return [values.slice(0, mid), values.slice(mid)];
 };
 
+/** Total miles over total hours, so a partial week or a holiday counts for only the trips it ran. */
+const weightedMph = (rows: DeliveredTripMetrics[]) => {
+  const miles = rows.reduce((sum, d) => sum + d.miles_covered, 0);
+  const hours = rows.reduce((sum, d) => sum + d.total_time, 0) / 3600;
+  return hours ? miles / hours : NaN;
+};
+
 /**
  * Headline KPIs for the Speed page's summary cards, derived entirely from data already fetched
  * for the chart (no extra requests). Deltas are trailing-vs-leading half of the selected range —
- * a "trending up/down over this window" signal, not a fresh query.
+ * a "trending up/down over this window" signal, not a fresh query. `historicalMax` should be the
+ * same baseline the chart draws, so the card and the hover agree.
  */
-export const getSpeedStats = (data: DeliveredTripMetrics[], line?: Line) => {
-  const mphs = data
-    .filter((d) => d.miles_covered)
+export const getSpeedStats = (data: DeliveredTripMetrics[], historicalMax: number) => {
+  const rows = data.filter((d) => d.miles_covered && d.total_time);
+  const mphs = rows
     .map((d) => d.miles_covered / (d.total_time / 3600))
     .filter((mph) => Number.isFinite(mph));
-  const [m1, m2] = halves(mphs);
-  const avgSpeed = mean(mphs);
+  const [h1, h2] = halves(rows);
+  const avgSpeed = weightedMph(rows);
+  const avgSpeedBefore = weightedMph(h1);
+  const avgSpeedAfter = weightedMph(h2);
   const peakSpeed = mphs.length ? Math.max(...mphs) : NaN;
-  const historicalMax = PEAK_SPEED[line ?? 'DEFAULT'];
+  const share = (mph: number) => (historicalMax ? mph / historicalMax : NaN);
 
   return {
     avgSpeed,
-    avgSpeedDelta: mean(m2) - mean(m1),
-    avgSpeedBefore: mean(m1),
-    avgSpeedAfter: mean(m2),
+    avgSpeedDelta: avgSpeedAfter - avgSpeedBefore,
+    avgSpeedBefore,
+    avgSpeedAfter,
     peakSpeed,
-    percentOfMax: historicalMax ? avgSpeed / historicalMax : NaN,
-    percentOfMaxDelta: historicalMax ? (mean(m2) - mean(m1)) / historicalMax : NaN,
-    percentOfMaxBefore: historicalMax ? mean(m1) / historicalMax : NaN,
-    percentOfMaxAfter: historicalMax ? mean(m2) / historicalMax : NaN,
+    percentOfMax: share(avgSpeed),
+    percentOfMaxDelta: share(avgSpeedAfter - avgSpeedBefore),
+    percentOfMaxBefore: share(avgSpeedBefore),
+    percentOfMaxAfter: share(avgSpeedAfter),
   };
 };

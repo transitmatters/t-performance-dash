@@ -5,6 +5,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
+import { useSpeedBaseline } from '../../common/api/hooks/baselines';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import {
@@ -35,11 +36,12 @@ export function SpeedDetails() {
     },
     enabled
   );
+  const peak = useSpeedBaseline(line);
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
 
-  const stats = speeds.data ? getSpeedStats(speeds.data, line) : null;
+  const stats = speeds.data ? getSpeedStats(speeds.data, peak) : null;
   const mph = (value: number) => `${value.toFixed(1)} mph`;
   const words: [string, string] = ['faster', 'slower'];
 

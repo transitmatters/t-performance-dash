@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { InfoTooltip } from '../general/InfoTooltip';
 import type { MiniWidgetObject, WidgetComparison } from './MiniWidgetCreator';
-import { formatComparisonDelta, isNegligible } from './internal/comparison';
+import { formatComparisonDelta, isImprovement, isNegligible } from './internal/comparison';
 
 /** On-time share is the one stat that carries a verdict, so it gets sentiment color. */
 const isOnTimeStat = (label: string) => label.toLowerCase().includes('on time');
@@ -50,9 +50,9 @@ const ComparisonArrow = ({ comparison }: { comparison: WidgetComparison }) => {
         'cursor-default text-xs',
         negligible
           ? 'text-muted-foreground'
-          : comparison.delta > 0
-            ? 'text-red-600 dark:text-red-400'
-            : 'text-green-700 dark:text-green-400'
+          : isImprovement(comparison)
+            ? 'text-green-700 dark:text-green-400'
+            : 'text-red-600 dark:text-red-400'
       )}
     >
       <FontAwesomeIcon
