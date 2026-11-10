@@ -87,3 +87,46 @@ def test_subway_lines_read_headway_counts_and_sum_directions(monkeypatch):
     assert "route" not in entry and "source" not in entry
     # Direction "1" is missing on one day, so it's left out rather than reported as a partial total.
     assert entry["byDirection"] == {"0": {"headways_75_125": 100}}
+
+
+def bus(route, day, bunched, on_time, **extra):
+    counts = {"headways_under_50": bunched, "headways_50_75": 1, "headways_75_125": on_time, "headways_125_150": 1,
+              "headways_over_150": 2}  # fmt: skip
+    return {"route": route, "date": day, "count": 100, "fleet_trips": 90, "day_type": "business_day", **counts, **extra}
+
+
+def test_bus_routes_sum_headway_counts_and_skip_rows_without_them(monkeypatch):
+    from datetime import date
+
+    queried = []
+
+    def query(table, routes, start, end):
+        queried.append((table, list(routes), start, end))
+        return [
+            # Fleet-only row from before LAMP bus data: not a day with headway data
+            [{"route": "114", "date": "2025-12-22", "fleet_trips": 50}, bus("114", "2025-12-24", 3, 10)],
+            [bus("116", "2025-12-24", 5, 20, time_bands={"am_peak": {"count": 4}})],
+        ]
+
+    monkeypatch.setattr(reliability, "query_daily_trips_on_routes", query)
+    monkeypatch.setattr(reliability, "query_reliability", lambda *args: pytest.fail("wrong table"))
+
+    [entry] = reliability.get_reliability("114,116", date(2025, 12, 22), date(2025, 12, 28), "weekly")
+    assert queried == [("DeliveredTripMetricsBus", ["114", "116"], "2025-12-22", "2025-12-28")]
+    assert entry == {
+        "date": "2025-12-22",
+        "days": 1,
+        "headways_under_50": 8,
+        "headways_50_75": 2,
+        "headways_75_125": 30,
+        "headways_125_150": 2,
+        "headways_over_150": 4,
+    }
+
+
+def test_bus_route_ids_only_match_raw_gtfs_ids():
+    assert reliability.bus_route_ids("28") == ["28"]
+    assert reliability.bus_route_ids("114, 116,117") == ["114", "116", "117"]
+    assert reliability.bus_route_ids("34E") == ["34E"]
+    for not_bus in ("RIDE", "CR-Worcester", "commuter-rail", "line-red", "", "28,line-red"):
+        assert reliability.bus_route_ids(not_bus) is None
