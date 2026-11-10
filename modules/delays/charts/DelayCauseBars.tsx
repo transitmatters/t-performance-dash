@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { Chart } from '@chartjs-utils';
 import { Bar } from '@chartjs-components';
 
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
@@ -27,6 +28,16 @@ interface DelayCauseBarsProps {
 }
 
 const ROW_HEIGHT = 36;
+const LABEL_FONT_SIZE = 12;
+const LABEL_OFFSET = 6;
+
+let measureContext: CanvasRenderingContext2D | null = null;
+const labelWidth = (text: string) => {
+  measureContext ??= document.createElement('canvas').getContext('2d');
+  if (!measureContext) return text.length * LABEL_FONT_SIZE * 0.6;
+  measureContext.font = `${LABEL_FONT_SIZE}px ${Chart.defaults.font.family}`;
+  return measureContext.measureText(text).width;
+};
 
 export const DelayCauseBars = ({
   data,
@@ -80,6 +91,21 @@ export const DelayCauseBars = ({
     };
   };
 
+  // Only labels on the longest bars reach the right edge. Near-ties count too, since a slightly
+  // shorter bar can have a wider label ("120h 35m" vs "291h"). Rows are sorted longest first.
+  const nearLongest = rows.filter((row) => row.total >= rows[0].total * 0.8);
+  const widestLabel = Math.max(...nearLongest.map((_, index) => labelWidth(valueLabel(index))));
+  const labelRoom = Math.ceil(widestLabel) + LABEL_OFFSET + 2;
+  // The watermark sits in a strip under the bars, clear of every value label
+  const watermark = {
+    ...watermarkLayout(isMobile),
+    alignToChartArea: false,
+    alignY: 'bottom',
+    x: 0,
+    y: 0,
+  };
+  const watermarkRoom = Math.ceil(watermark.height) + 6;
+
   const pick = (index: number) => {
     const { key } = rows[index];
     onFocus?.(key === focus ? null : key);
@@ -89,7 +115,7 @@ export const DelayCauseBars = ({
     <ChartStack className={fill ? 'h-full' : undefined}>
       <div
         className={fill ? 'relative min-h-0 w-full flex-1' : 'w-full'}
-        style={fill ? undefined : { height: rows.length * ROW_HEIGHT + 16 }}
+        style={fill ? undefined : { height: rows.length * ROW_HEIGHT + 16 + watermarkRoom }}
       >
         <Bar
           id={`delayCauses-${linePath}`}
@@ -115,8 +141,7 @@ export const DelayCauseBars = ({
             indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            // Room at the right for the value labels on the longest bar
-            layout: { padding: { right: isMobile ? 88 : 110 } },
+            layout: { padding: { right: labelRoom, bottom: watermarkRoom } },
             onClick: (_event, elements) => {
               if (elements.length) pick(elements[0].index);
             },
@@ -124,7 +149,7 @@ export const DelayCauseBars = ({
               chart.canvas.style.cursor = onFocus && elements.length ? 'pointer' : 'default';
             },
             // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
+            watermark,
             plugins: {
               legend: { display: false },
               tooltip: {
@@ -136,10 +161,11 @@ export const DelayCauseBars = ({
                 display: true,
                 anchor: 'end',
                 align: 'end',
-                offset: 4,
+                offset: LABEL_OFFSET,
+                padding: 0,
                 clip: false,
                 color: chartTheme.tick,
-                font: { size: 12 },
+                font: { size: LABEL_FONT_SIZE },
                 formatter: (_value, context) => valueLabel(context.dataIndex),
               },
             },
