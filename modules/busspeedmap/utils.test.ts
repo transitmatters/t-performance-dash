@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import type { BusSpeedSegmentLeaderboardEntry } from './types';
-import { isPooledSegment, segmentDistanceAndTime, sharedRouteKeys } from './utils';
+import type { BusSpeedSegmentLeaderboardEntry, BusSpeedSegmentProperties } from './types';
+import {
+  isPooledSegment,
+  periodSuffix,
+  segmentDistanceAndTime,
+  segmentDwell,
+  segmentSpeedRange,
+  sharedRouteKeys,
+  stopDwellsByRoute,
+} from './utils';
 
 const entry = (
   overrides: Partial<BusSpeedSegmentLeaderboardEntry> = {}
@@ -35,6 +43,29 @@ describe('segmentDistanceAndTime', () => {
   });
 });
 
+describe('periodSuffix', () => {
+  it('names the week or month, and nothing for a day', () => {
+    expect(periodSuffix('daily')).toBe('');
+    expect(periodSuffix('weekly')).toBe(' this week');
+    expect(periodSuffix('monthly')).toBe(' this month');
+  });
+});
+
+describe('segmentDwell', () => {
+  it('formats seconds, and minutes for a long hold', () => {
+    expect(segmentDwell({ median_dwell_seconds: 25 })).toBe('25s');
+    expect(segmentDwell({ median_dwell_seconds: 1554 })).toBe('25m 54s');
+  });
+
+  it('is undefined for tiles published without it', () => {
+    expect(segmentDwell({})).toBeUndefined();
+  });
+
+  it('is undefined for zero, which can just mean trips start there', () => {
+    expect(segmentDwell({ median_dwell_seconds: 0 })).toBeUndefined();
+  });
+});
+
 describe('sharedRouteKeys', () => {
   it('is empty for a single route', () => {
     expect(sharedRouteKeys(['751'])).toEqual([]);
@@ -64,6 +95,83 @@ describe('sharedRouteKeys', () => {
 
   it('sorts ids as strings, not numbers', () => {
     expect(sharedRouteKeys(['8', '19'])).toEqual(['19,8']);
+  });
+});
+
+describe('segmentSpeedRange', () => {
+  it('runs slowest to fastest, to a tenth under 10 mph and whole above it', () => {
+    expect(segmentSpeedRange({ p90_speed_mph: 2.1, p10_speed_mph: 9 })).toBe('2.1–9.0 mph');
+    expect(segmentSpeedRange({ p90_speed_mph: 8.4, p10_speed_mph: 21 })).toBe('8.4–21 mph');
+  });
+
+  it('is undefined for tiles published without it', () => {
+    expect(segmentSpeedRange({})).toBeUndefined();
+  });
+
+  it('is undefined for a segment with too few trips to say', () => {
+    expect(segmentSpeedRange({ p90_speed_mph: 8.4 })).toBeUndefined();
+  });
+});
+
+describe('stopDwellsByRoute', () => {
+  const segment = (
+    route_id: string,
+    median_dwell_seconds: number | undefined,
+    n_traversals = 40,
+    shared_routes?: string
+  ): BusSpeedSegmentProperties => ({
+    route_id,
+    direction_id: 1,
+    from_stop_id: '12345',
+    from_stop_name: 'A',
+    to_stop_name: 'B',
+    time_band: 'am_peak',
+    p50_speed_mph: 4.0,
+    n_traversals,
+    n_interpolated: 0,
+    median_dwell_seconds,
+    shared_routes,
+  });
+  const routes = (segments: BusSpeedSegmentProperties[]) =>
+    segments.map(({ route_id, median_dwell_seconds }) => [route_id, median_dwell_seconds]);
+
+  it('lists routes in the order a rider would, by their names', () => {
+    expect(
+      routes(stopDwellsByRoute([segment('751', 12), segment('749', 14), segment('10', 8)]))
+    ).toEqual([
+      ['10', 8],
+      ['751', 12],
+      ['749', 14],
+    ]);
+  });
+
+  it('takes the busiest branch of a route that splits at the stop', () => {
+    expect(routes(stopDwellsByRoute([segment('1', 30, 5), segment('1', 12, 80)]))).toEqual([
+      ['1', 12],
+    ]);
+  });
+
+  it('lists a segment split across tiles once', () => {
+    expect(routes(stopDwellsByRoute([segment('1', 12), segment('1', 12)]))).toEqual([['1', 12]]);
+  });
+
+  it('leaves out pooled features, whose routes are listed anyway', () => {
+    expect(
+      routes(
+        stopDwellsByRoute([
+          segment('749,751', 13, 80, '749,751'),
+          segment('749', 14, 40, '749,751'),
+          segment('751', 12, 40, '749,751'),
+        ])
+      )
+    ).toEqual([
+      ['751', 12],
+      ['749', 14],
+    ]);
+  });
+
+  it('leaves out routes with nothing to show', () => {
+    expect(routes(stopDwellsByRoute([segment('1', 0), segment('47', undefined)]))).toEqual([]);
   });
 });
 
