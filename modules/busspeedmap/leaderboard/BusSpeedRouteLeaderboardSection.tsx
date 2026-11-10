@@ -4,8 +4,8 @@ import { useBusSpeedLeaderboard } from '../../../common/api/hooks/busTripMetrics
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { Button } from '../../../common/components/ui/button';
-import type { Period } from '../types';
-import { groupLeaderboardByBusRoute, periodDateRange } from '../utils';
+import type { LeaderboardMetricConfig, Period } from '../types';
+import { groupLeaderboardByBusRoute, periodDateRange, rankLeaderboard } from '../utils';
 import { BusSpeedRouteLeaderboard } from './BusSpeedRouteLeaderboard';
 
 const LEADERBOARD_PREVIEW_SIZE = 25;
@@ -18,12 +18,14 @@ const LEADERBOARD_FETCH_LIMIT = 200;
 interface BusSpeedRouteLeaderboardSectionProps {
   date: string | undefined;
   period: Period;
+  metric: LeaderboardMetricConfig;
   frequentRoutesOnly: boolean;
 }
 
 export const BusSpeedRouteLeaderboardSection = ({
   date,
   period,
+  metric,
   frequentRoutesOnly,
 }: BusSpeedRouteLeaderboardSectionProps) => {
   const [showAll, setShowAll] = useState(false);
@@ -34,19 +36,23 @@ export const BusSpeedRouteLeaderboardSection = ({
     Boolean(dateRange)
   );
 
-  if (!date || !dateRange) return <p>Select a date to load the leaderboard.</p>;
+  if (!date || !dateRange) return <p>Select a date to load the rankings.</p>;
   if (leaderboard.isError || !leaderboard.data) return <ChartPlaceHolder query={leaderboard} />;
 
   const grouped = groupLeaderboardByBusRoute(leaderboard.data, dateRange.end_date);
-  const ranked = frequentRoutesOnly ? grouped.filter((entry) => entry.isFrequentRoute) : grouped;
-  if (ranked.length < 1) return <NoDataNotice isLineMetric />;
+  const routes = frequentRoutesOnly ? grouped.filter((entry) => entry.isFrequentRoute) : grouped;
+  if (routes.length < 1) return <NoDataNotice isLineMetric />;
+  // Sorted here rather than by the API, which only knows speed.
+  const ranked = rankLeaderboard(routes, metric);
+  if (ranked.length < 1)
+    return <NoDataNotice isLineMetric filtered message={metric.emptyMessage} />;
 
   const hasMore = ranked.length > LEADERBOARD_PREVIEW_SIZE;
   const visible = showAll ? ranked : ranked.slice(0, LEADERBOARD_PREVIEW_SIZE);
 
   return (
     <>
-      <BusSpeedRouteLeaderboard data={visible} />
+      <BusSpeedRouteLeaderboard data={visible} metric={metric} />
       {hasMore && (
         <Button
           variant="outline"

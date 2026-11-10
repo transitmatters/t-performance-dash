@@ -165,6 +165,44 @@ class TestBusSpeedLeaderboardCache:
         assert speed._leaderboard_cache_key(START_DATE, END_DATE) == speed._leaderboard_cache_key(START_DATE, END_DATE)
         assert "bus-speed-leaderboard/" in speed._leaderboard_cache_key(START_DATE, END_DATE)
 
+    def test_cache_key_versioned(self):
+        # Lists cached before the fleet fields were added live at the unversioned key, and must miss.
+        key = speed._leaderboard_cache_key(START_DATE, END_DATE)
+        assert key != f"bus-speed-leaderboard/{START_DATE}_{END_DATE}.json"
+        assert f"/v{speed.LEADERBOARD_CACHE_VERSION}/" in key
+
+    def test_entries_carry_pooled_fleet_fields(self, monkeypatch):
+        rows = [
+            {**ROWS[0], "fleet_trips": 300, "pct_battery_trips": 40.0, "fleet_mix_battery": 40.0},
+            {**ROWS[1], "fleet_trips": 100, "pct_battery_trips": 0.0, "fleet_mix_battery": 0.0},
+            # Fleet-only day (no speed data yet): still counts towards the fleet stats.
+            {"route": "1", "fleet_trips": 100, "pct_battery_trips": 100.0, "fleet_mix_battery": 100.0},
+            ROWS[2],
+            # The whole system's fleet stats: no speed, so no leaderboard entry.
+            {"route": "all", "fleet_trips": 500, "pct_battery_trips": 5.0},
+        ]
+        fake_s3 = FakeS3(download_error=not_found_error())
+        monkeypatch.setattr(speed.s3, "download", fake_s3.download)
+        monkeypatch.setattr(speed.s3, "upload", fake_s3.upload)
+        monkeypatch.setattr(speed.dynamo, "scan_trip_metrics_in_range", lambda table, start, end: rows)
+
+        slowest, route_1 = speed.bus_speed_leaderboard(START_DATE, END_DATE, limit=10)
+
+        assert slowest == {"route": "66", "miles_covered": 2, "total_time": 3600, "count": 2, "n_traversals": 2}
+        assert route_1 == {
+            "route": "1",
+            "miles_covered": 15,
+            "total_time": 5400,
+            "count": 8,
+            "n_traversals": 8,
+            "fleet_trips": 500,
+            "pct_battery_trips": 44.0,
+            "fleet_mix_battery": 44.0,
+        }
+        # The cached copy has the fleet fields too.
+        [(_, cached)] = fake_s3.upload_calls
+        assert json.loads(cached)["data"] == [slowest, route_1]
+
 
 DAILY_BUS_ROWS = [
     # 2026-01-05 is a Monday; 2026-01-11 closes that ISO week, 2026-01-12 opens the next.

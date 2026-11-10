@@ -1061,6 +1061,10 @@ class CrTripMetricsResponse(RootModel[List[CrTripMetricsEntry]]):
 class BusSpeedLeaderboardEntry(BaseModel):
     """A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.
 
+    Routes with fleet data also have its stats for the range, each day weighted by `fleet_trips`:
+    the fields below and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).
+    These are omitted when unknown.
+
     Attributes:
         route: Route ID.
         count: Trips delivered.
@@ -1072,6 +1076,9 @@ class BusSpeedLeaderboardEntry(BaseModel):
             Omitted with `scheduled_trips`.
         unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
             `scheduled_trips`.
+        fleet_trips: Trips with a known vehicle.
+        pct_battery_trips: Percentage of those trips run by battery-electric buses.
+        avg_bus_age: Average bus age in years.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1083,6 +1090,9 @@ class BusSpeedLeaderboardEntry(BaseModel):
     scheduled_trips: int | None = None
     unobserved_trips: int | None = None
     unobserved_waived_trips: int | None = None
+    fleet_trips: float | None = None
+    pct_battery_trips: float | None = None
+    avg_bus_age: float | None = None
 
 
 class BusSpeedLeaderboardResponse(RootModel[List[BusSpeedLeaderboardEntry]]):
