@@ -1,5 +1,13 @@
 import { COLORS } from '../../common/constants/colors';
-import type { DayType, DirectionFilter, Period, TerminalSection, TimeBand } from './types';
+import type {
+  DayType,
+  DirectionFilter,
+  LeaderboardMetric,
+  LeaderboardMetricConfig,
+  Period,
+  TerminalSection,
+  TimeBand,
+} from './types';
 
 /**
  * Buckets thinner than this are dropped before anything is drawn. The median row covers
@@ -161,3 +169,46 @@ export const NETWORK_BOUNDS: [number, number, number, number] = [-71.3, 42.1, -7
  * map to one of them. Never a real route_id.
  */
 export const ALL_ROUTES = 'all';
+
+/**
+ * The Rank by options on the route leaderboard. Speed leads and is the default, as the page
+ * was a speed leaderboard first.
+ */
+export const LEADERBOARD_METRICS: LeaderboardMetricConfig[] = [
+  {
+    key: 'speed',
+    label: 'Speed',
+    title: 'Slowest routes',
+    rankedBy: 'Ranked by average speed',
+    value: (entry) =>
+      entry.total_time > 0 ? entry.miles_covered / (entry.total_time / 3600) : undefined,
+    format: (mph) => `${mph.toFixed(1)} mph`,
+    order: 'ascending',
+    emptyMessage: 'No route has speed data for this period.',
+  },
+  {
+    key: 'battery',
+    label: 'Battery-electric',
+    title: 'Most battery-electric trips',
+    rankedBy: 'Ranked by share of trips on battery-electric buses',
+    // Battery buses run on only a handful of routes, so the rest (0%, or no fleet data) are left
+    // off rather than listed as a long tie for last.
+    value: (entry) => (entry.pct_battery_trips ? entry.pct_battery_trips : undefined),
+    format: (pct) => `${pct.toFixed(1)}%`,
+    order: 'descending',
+    emptyMessage: 'No battery-electric buses ran on these routes in this period.',
+  },
+];
+
+export const DEFAULT_LEADERBOARD_METRIC: LeaderboardMetric = 'speed';
+
+/**
+ * Routes on the leaderboard's dwell summary must average at least this many stops with a dwell
+ * per day of service. Below it, a route's average swings 3-8s from one weekday to the next
+ * (October 2026), against about 1s for busier routes, so a handful of trips could top the list.
+ * At 200 it leaves out 3 of 121 routes on a weekday, Route 55 (about 140 stops) among them.
+ */
+export const MIN_DWELL_STOPS_PER_DAY = 200;
+
+/** How many routes each of the dwell summary's two lists shows. */
+export const DWELL_SUMMARY_SIZE = 5;

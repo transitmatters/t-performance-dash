@@ -6,6 +6,7 @@ import { lineColorBackground } from '../../styles/general';
 import { readableOn } from '../../utils/general';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
+import { MajorEventsToggle } from './MajorEventsToggle';
 import { RouteSelector } from './RouteSelector';
 import { TripModeToggle } from './TripModeToggle';
 
@@ -44,6 +45,7 @@ export const MobileControlPanel = ({
               dateStoreSection={dateStoreSection}
               queryType={singleDate ? 'single' : 'range'}
             />
+            {!singleDate && <MajorEventsToggle />}
           </div>
           {/* See ControlPanel: a single-date page isn't necessarily a stop-to-stop page. */}
           {hasStationStore && (
@@ -75,6 +77,7 @@ export const MobileControlPanel = ({
               routes (rail, System), so this only shows on bus/CR/ferry pages. */}
           {hasRouteSelector && <RouteSelector />}
           <DateControl dateStoreSection={dateStoreSection} queryType={'range'} />
+          <MajorEventsToggle />
         </div>
       );
     }
