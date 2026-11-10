@@ -20,6 +20,11 @@ import {
   getNoDataSinceLatestAnnotation,
   getShuttlingBlockAnnotations,
 } from '../../service/utils/graphUtils';
+import {
+  getMajorEventAnnotations,
+  hideGapsExplainedByEvents,
+  useMajorEvents,
+} from '../../../common/utils/majorEvents';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
@@ -50,10 +55,11 @@ export const SpeedGraph = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const shutdowns = usePageShutdowns('line', startDate, endDate);
-  const shuttlingBlocks = explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
-    startDate,
-    endDate,
-  });
+  const events = useMajorEvents(line, startDate, endDate);
+  const shuttlingBlocks = hideGapsExplainedByEvents(
+    explainGaps(getShuttlingBlockAnnotations(data), shutdowns, { startDate, endDate }),
+    events
+  );
   const dataWithMPH = addMPHToSpeedData(data);
 
   return (
@@ -170,6 +176,7 @@ export const SpeedGraph = ({
                     : []),
                   ...shuttlingBlocks,
                   ...getNoDataSinceLatestAnnotation(labels),
+                  ...getMajorEventAnnotations(events),
                 ],
               },
             },
