@@ -73,11 +73,6 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
   const ridershipPeak = useRidershipBaseline('line-bus', busRoute);
   const peak = baselines.isPending ? undefined : ridershipPeak;
   const dailyTripMetrics = useBusTripMetrics(dailyTripMetricsOptions(busRoute));
-  const ridership = useRidershipData({
-    line_id: ridershipLineId(busRoute),
-    start_date: WINDOW_START,
-    end_date: TODAY_STRING,
-  });
   const delays = useAlertDelays(delaysOptions(busRoute));
 
   const rows = useMemo(() => {
@@ -100,10 +95,12 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
       });
     if (speedRow) built.push(speedRow);
 
-    const ridershipRow =
-      ridership.data && buildRidershipRow(ridership.data, color, { yearOverYear: true, peak });
     const service = dailyTripMetrics.data && summarizeBusService(dailyTripMetrics.data);
     if (service) built.push(buildBusServiceRow(service, tripMetrics.data ?? [], color));
+
+    const ridershipRow =
+      ridership.data && buildRidershipRow(ridership.data, color, { yearOverYear: true, peak });
+    if (ridershipRow) built.push(ridershipRow);
 
     const delaysRow =
       delays.data &&
@@ -125,7 +122,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     if (delaysRow) built.push(delaysRow);
 
     return built;
-  }, [tripMetrics.data, ridership.data, peak, delays.data]);
+  }, [tripMetrics.data, dailyTripMetrics.data, ridership.data, peak, delays.data]);
 
   return {
     rows,
