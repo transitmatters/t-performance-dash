@@ -26,6 +26,11 @@ export const BusSpeedLegend = () => {
         Median speed from stop to stop, including time spent waiting at the stop — what a rider on
         board experiences.
       </p>
+      <p className="flex items-center gap-2 text-xs text-stone-600 italic">
+        <span aria-hidden className="w-6 shrink-0 border-t-2 border-dashed border-stone-500" />
+        Zoomed in, dashes mark the first and last sections of most trips, which read differently
+        from the rest of a route.
+      </p>
     </div>
   );
 };

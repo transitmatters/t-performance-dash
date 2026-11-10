@@ -16,6 +16,9 @@ export type TimeBand =
 
 export type DirectionFilter = 'inbound' | 'outbound';
 
+/** Whether most of a segment's trips start on it or end on it. */
+export type TerminalSection = 'first' | 'last';
+
 /** Which published tileset to load: a single service date, an ISO week, or a calendar month. */
 export type Period = 'daily' | 'weekly' | 'monthly';
 
@@ -30,8 +33,9 @@ export type DayType = 'business_day' | 'weekend_or_holiday';
 /**
  * Properties read off a rendered vector-tile feature. Deliberately a small subset of the
  * GeoParquet schema: `p50_speed_mph` is arrival-to-arrival and includes dwell at the
- * from-stop, which is what a rider actually experiences. The moving-speed and p90 columns
- * should never be baked into the tileset, so they cannot end up on the map by accident.
+ * from-stop, which is what a rider actually experiences. The moving-speed columns should never
+ * be baked into the tileset, so they cannot end up on the map by accident: LAMP's stop times cut
+ * the moving clock short enough that a 150m segment reads over 40 mph.
  *
  * `day_type` only exists on weekly/monthly features, where it's the true median across every
  * traversal of that (segment, day_type, time_band) in the whole period -- not an average of
@@ -40,6 +44,19 @@ export type DayType = 'business_day' | 'weekend_or_holiday';
  * `segment_length_m` and `p50_total_time_seconds` (whole metres and seconds) are the two numbers
  * `p50_speed_mph` comes from, same as on a leaderboard entry. Both are missing from tiles
  * published before the pipeline started writing them.
+ *
+ * `median_dwell_seconds` (whole seconds) is how long buses stood at the from-stop, which
+ * `p50_speed_mph` already counts, and `from_stop_id` is that stop, matching a stop pole's
+ * `stop_id`: a name won't do, since one can cover both sides of a street, or stops miles apart.
+ * Both are missing from tiles published before the pipeline started writing them.
+ *
+ * `p10_speed_mph` and `p90_speed_mph` are the speeds of the fastest and slowest tenth of trips,
+ * timed the same way as `p50_speed_mph`, to show the range around it. Only on features with at
+ * least 10 trips, as "1 in 10" means nothing with fewer, and missing from older tiles.
+ *
+ * `terminal_section` marks a segment most of whose trips start ("first") or end ("last") on it.
+ * Those two read differently from the rest of a route: a trip's first segment leaves out its
+ * layover, and its last runs slower. Missing everywhere else, and from older tiles.
  *
  * `shared_routes` is on every feature of a stop pair that two or more drawn routes share: their
  * route_ids, sorted and comma-joined ("749,751"). One more feature on the pair has that same
@@ -51,6 +68,7 @@ export type DayType = 'business_day' | 'weekend_or_holiday';
 export interface BusSpeedSegmentProperties {
   route_id: string;
   direction_id: number;
+  from_stop_id?: string;
   from_stop_name: string;
   to_stop_name: string;
   time_band: TimeBand;
@@ -60,6 +78,10 @@ export interface BusSpeedSegmentProperties {
   n_interpolated: number;
   segment_length_m?: number;
   p50_total_time_seconds?: number;
+  median_dwell_seconds?: number;
+  p10_speed_mph?: number;
+  p90_speed_mph?: number;
+  terminal_section?: TerminalSection;
   shared_routes?: string;
 }
 

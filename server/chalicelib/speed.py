@@ -66,6 +66,12 @@ BUS_AGG_MAX_DAYS = {
     "monthly": 30 * BUS_TRIP_METRICS_MAX_DAYS,
 }
 BUS_SUMMED_FIELDS = ("miles_covered", "total_time", "count", "n_traversals")
+# Every trip LAMP scheduled, the ones with no observed stop (an estimate of trips dropped: a trip that
+# ran untracked looks the same), and the unobserved ones that have an MBTA waiver. mbta-performance
+# writes them from 2025-12-24, for the whole day only. They're summed like BUS_SUMMED_FIELDS, but a
+# period only has them if one of its days does, so a week before they existed reads as unmeasured
+# rather than as zero trips scheduled.
+BUS_TRIP_COUNT_FIELDS = ("scheduled_trips", "unobserved_trips", "unobserved_waived_trips")
 # The departure windows a DeliveredTripMetricsBus row breaks its totals down by, in its `time_bands`
 # map -- TIME_BANDS in mbta-performance's chalicelib/lamp/bus/constants.py, the same bands the bus
 # speed map uses. The row's top-level fields are the all-day figure, so there is no "all_day" band:
@@ -78,8 +84,9 @@ BUS_DAY_TYPES = ("business_day", "weekend_or_holiday")
 # Everything a `time_bands` entry holds. Band counts don't add up to the row's `count` (a trip crossing
 # a band boundary counts in both), but each is still a straight sum across days.
 BUS_BAND_FIELDS = ("count", "n_traversals", "n_interpolated", "miles_covered", "total_time")
-# Only exist for the whole day: medians and means can't be split into bands or summed back together.
-BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph")
+# Only exist for the whole day: medians and means can't be split into bands or summed back together,
+# and trip counts aren't broken down by band.
+BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph", *BUS_TRIP_COUNT_FIELDS)
 
 CR_TRIP_METRICS_TABLE = "DeliveredTripMetricsCR"
 
@@ -329,8 +336,9 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
     """Roll daily rows (from one or more routes) up per day, ISO week (dated by its Monday),
     or calendar month (dated the 1st).
 
-    summed_fields are summed. Fleet stats are pooled by _rollup_fleet_fields. Per-day
-    medians/means can't be combined, so they're dropped.
+    summed_fields are summed, and so are BUS_TRIP_COUNT_FIELDS where the period's rows have them.
+    Fleet stats are pooled by _rollup_fleet_fields. Per-day medians/means can't be combined, so
+    they're dropped.
     """
     periods: dict[date, list[dict]] = {}
     for row in rows:
@@ -347,10 +355,42 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
             "date": period_start.isoformat(),
             "route": route,
             **{field: sum(row.get(field) or 0 for row in periods[period_start]) for field in summed_fields},
+            **_sum_trip_counts(periods[period_start]),
             **_rollup_fleet_fields(periods[period_start]),
+            **_rollup_time_bands(periods[period_start]),
         }
         for period_start in sorted(periods)
     ]
+
+
+def _rollup_time_bands(rows: list[dict]) -> dict:
+    """Sum each band's totals across rows, so a rolled-up row carries the same `time_bands` map a
+    daily one does and the Speed graph can draw every band from a single request.
+
+    A band a row lacks counts as zero, exactly as _band_row reads it, so each band here matches
+    what the same request with `time_band` set would roll up to. Returns nothing when no row has a
+    breakdown (rows from before the pipeline recorded one, Commuter Rail, or a request already
+    narrowed to one band), leaving those responses as they were.
+    """
+    banded = [row["time_bands"] for row in rows if row.get("time_bands")]
+    if not banded:
+        return {}
+    return {
+        "time_bands": {
+            band: {field: sum((bands.get(band) or {}).get(field, 0) for bands in banded) for field in BUS_BAND_FIELDS}
+            for band in BUS_TIME_BANDS
+        }
+    }
+
+
+def _sum_trip_counts(rows: list[dict]) -> dict:
+    """Sum each of BUS_TRIP_COUNT_FIELDS over the rows that have it, leaving out any no row has."""
+    sums = {}
+    for row in rows:
+        for field in BUS_TRIP_COUNT_FIELDS:
+            if row.get(field) is not None:
+                sums[field] = sums.get(field, 0) + row[field]
+    return sums
 
 
 def _is_fleet_stat(field: str) -> bool:
@@ -383,8 +423,9 @@ def _rollup_fleet_fields(rows: list[dict]) -> dict:
     return pooled
 
 
-# Bump when the fields of a leaderboard entry change. 2 added the pooled fleet fields.
-LEADERBOARD_CACHE_VERSION = 2
+# Bump when the fields of a cached leaderboard entry change, so lists cached without them aren't served.
+# 2: BUS_TRIP_COUNT_FIELDS. 3: the pooled fleet fields.
+LEADERBOARD_CACHE_VERSION = 3
 
 
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
@@ -442,6 +483,8 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
     Returns:
         The `limit` slowest routes, each a dict with route, miles_covered, total_time,
         count, and n_traversals summed across the range, sorted slowest (lowest mph) first.
+        BUS_TRIP_COUNT_FIELDS are summed too, where the range has them. A route with no
+        recorded time in the range has no speed to rank by, so it's left out.
         Routes with fleet data also carry its fleet stats (fleet_trips, pct_battery_trips,
         avg_bus_age, fleet_mix_*), pooled across the range by _rollup_fleet_fields, so the
         dashboard can rank by those too.
@@ -467,6 +510,7 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
             entry = {
                 "route": route,
                 **{field: sum(row.get(field) or 0 for row in route_rows) for field in BUS_SUMMED_FIELDS},
+                **_sum_trip_counts(route_rows),
             }
             # Routes with no recorded time have no usable speed and would divide by zero below.
             # This also drops route "all", which only carries the system's fleet stats.

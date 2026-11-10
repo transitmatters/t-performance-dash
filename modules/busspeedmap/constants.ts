@@ -5,6 +5,7 @@ import type {
   LeaderboardMetric,
   LeaderboardMetricConfig,
   Period,
+  TerminalSection,
   TimeBand,
 } from './types';
 
@@ -29,6 +30,12 @@ export const TIME_BANDS: { key: TimeBand; label: string; hours: string }[] = [
   { key: 'evening', label: 'Evening', hours: '6:30-10pm' },
   { key: 'late_night', label: 'Late night', hours: 'after 10pm' },
 ];
+
+/** What a terminal section's numbers need read alongside them, in its popup. */
+export const TERMINAL_SECTION_NOTES: Record<TerminalSection, string> = {
+  first: "First section of most trips. Waiting to leave isn't counted.",
+  last: 'Last section of most trips, which tend to run slower than the rest of a route.',
+};
 
 // Not all_day: its archive only exists from the pipeline's all-day backfill onwards, so
 // defaulting to it would open older dates on "no data".
@@ -98,6 +105,13 @@ export const BUS_SPEED_SEGMENTS_BASE_PATH = '/businsights/BusSpeedSegments';
  * (see DAY_TYPES), not a separate layer.
  */
 export const PMTILES_SOURCE_LAYER = 'segments';
+
+/**
+ * From here up every archive holds every segment. Below it a month's band archive keeps about one
+ * stop pair in six (the pipeline's --drop-densest-as-needed), so a stop's popup would list some of
+ * its routes' dwell and silently miss the rest.
+ */
+export const STOP_DWELL_MINIMUM_ZOOM = 12;
 
 /**
  * Subway stations and bus stops, drawn under the segments as context. One fixed archive

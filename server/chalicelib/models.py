@@ -365,7 +365,8 @@ class ReliabilityParams(BaseModel):
     """Parameters for the `/api/reliability` endpoint.
 
     Attributes:
-        route_id: `RIDE`, a commuter rail route, `commuter-rail` for all of commuter rail, or a subway line.
+        route_id: `RIDE`, a commuter rail route, `commuter-rail` for all of commuter rail, a subway line, or
+            comma-separated bus route IDs.
         start_date: Start of date range.
         end_date: End of date range.
         agg: Aggregation level — `daily`, `weekly`, or `monthly`.
@@ -375,7 +376,8 @@ class ReliabilityParams(BaseModel):
         description=(
             "`RIDE` for The RIDE, a commuter rail route ID (e.g. `CR-Worcester`), "
             "`commuter-rail` for every commuter rail route combined, "
-            "or a subway line (`line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`)."
+            "a subway line (`line-red`, `line-orange`, `line-blue`, `line-green`, `line-mattapan`), "
+            "or raw GTFS bus route IDs (e.g. `28`, or `741` for SL1), comma-separated to combine them (e.g. `114,116,117`)."
         )
     )
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
@@ -800,6 +802,14 @@ class HeadwayAggregateByDate(AggregateByDate):
     on_time: int = Field(
         description="Number of headways within 25% of the scheduled headway (0 when there is no schedule)."
     )
+    scheduled: int | None = Field(
+        default=None,
+        description=(
+            "Number of headways with a scheduled headway to compare against. Bunched and on-time shares are out of "
+            "this rather than `count`; 0 means the day has no schedule (the subway before 2021). Missing from "
+            "responses served before it was added, so fall back to `count`."
+        ),
+    )
 
 
 class AggregateByTime(AggregateStats):
@@ -990,6 +1000,11 @@ class BusTripMetricsEntry(BaseModel):
         total_time: Total trip time in seconds.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
+        scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.
+        unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.
+            Omitted with `scheduled_trips`.
+        unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
+            `scheduled_trips`.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -999,6 +1014,9 @@ class BusTripMetricsEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    scheduled_trips: int | None = None
+    unobserved_trips: int | None = None
+    unobserved_waived_trips: int | None = None
 
 
 class BusTripMetricsResponse(RootModel[List[BusTripMetricsEntry]]):
@@ -1040,6 +1058,11 @@ class BusSpeedLeaderboardEntry(BaseModel):
         total_time: Total trip time in seconds.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
+        scheduled_trips: Trips scheduled, on the days in the range from 2025-12-24.
+        unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.
+            Omitted with `scheduled_trips`.
+        unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
+            `scheduled_trips`.
         fleet_trips: Trips with a known vehicle.
         pct_battery_trips: Percentage of those trips run by battery-electric buses.
         avg_bus_age: Average bus age in years.
@@ -1051,6 +1074,9 @@ class BusSpeedLeaderboardEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    scheduled_trips: int | None = None
+    unobserved_trips: int | None = None
+    unobserved_waived_trips: int | None = None
     fleet_trips: float | None = None
     pct_battery_trips: float | None = None
     avg_bus_age: float | None = None
@@ -1197,7 +1223,8 @@ class ReliabilityEntry(BaseModel):
 
     The RIDE entries have `completed` and `onTime`, plus `requests`, `noShows` and `missed` for periods
     where every day recorded them. Commuter rail entries have `otpNumerator`, `otpDenominator`,
-    `cancelled`, `peak` and `offPeak`. Subway entries have the five headway counts and `byDirection`.
+    `cancelled`, `peak` and `offPeak`. Subway entries have the five headway counts and `byDirection`. Bus entries
+    have the five headway counts, measured at mid-route timepoints from 2025-12-24.
 
     Attributes:
         date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
@@ -1212,11 +1239,11 @@ class ReliabilityEntry(BaseModel):
         cancelled: Commuter rail cancelled trips.
         peak: Commuter rail peak-period counts.
         offPeak: Commuter rail off-peak counts.
-        headways_under_50: Subway headways at most half the scheduled headway.
-        headways_50_75: Subway headways over 50% and up to 75% of scheduled.
-        headways_75_125: Subway headways over 75% and under 125% of scheduled.
-        headways_125_150: Subway headways 125% up to 150% of scheduled.
-        headways_over_150: Subway headways 150% of scheduled or more.
+        headways_under_50: Subway or bus headways at most half the scheduled headway.
+        headways_50_75: Subway or bus headways over 50% and up to 75% of scheduled.
+        headways_75_125: Subway or bus headways over 75% and under 125% of scheduled.
+        headways_125_150: Subway or bus headways 125% up to 150% of scheduled.
+        headways_over_150: Subway or bus headways 150% of scheduled or more.
         byDirection: Subway headway counts per direction ID (`"0"`, `"1"`).
     """
 
@@ -1671,7 +1698,11 @@ class StopsResponse(BaseModel):
 
     Attributes:
         type: Route type: `rapidtransit`, `bus`, `commuter-rail` or `ferry`.
-        direction: Map of direction ID to direction name (e.g., `{"0": "Southbound"}`).
+        direction: Map of direction key to direction name. Bus, commuter rail and ferry keys are the GTFS
+            `direction_id` (`{"0": "outbound", "1": "inbound"}`). Rapid transit keys are the reverse of GTFS:
+            `{"0": "northbound", "1": "southbound"}` on Red, but GTFS calls northbound direction 1.
+        gtfs_direction_id: Map of direction key to GTFS `direction_id`. Only set on rapid transit routes, where it is
+            `{"0": 1, "1": 0}`.
         stations: Ordered list of stations/stops along the route.
         service_start: Service start date, if applicable.
         service_end: Service end date, if applicable.
@@ -1680,6 +1711,7 @@ class StopsResponse(BaseModel):
     model_config = ConfigDict(extra="allow")
     type: str
     direction: Dict[str, str]
+    gtfs_direction_id: Dict[str, int] | None = None
     stations: List[StationStop]
     service_start: str | None = None
     service_end: str | None = None

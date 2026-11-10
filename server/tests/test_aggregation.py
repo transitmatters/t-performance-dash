@@ -35,6 +35,19 @@ def test_headways_keep_low_frequency_ferry_days(monkeypatch, stop, expected_days
         assert result[0]["count"] == 3
 
 
+def test_headways_count_scheduled_headways(monkeypatch):
+    # Scheduled every 10 minutes: one bunched (4 min), two on time (10, 11 min), two with no schedule
+    records = [
+        {"current_dep_dt": f"2025-07-15T08:{i:02d}:00", "headway_time_sec": sec, "benchmark_headway_time_sec": bench}
+        for i, (sec, bench) in enumerate([(240, 600), (600, 600), (660, 600), (600, None), (300, None)])
+    ]
+    monkeypatch.setattr(data_funcs, "headways", lambda *_args: records)
+
+    [day] = aggregation.headways_over_time(DAY, DAY, ["70061"])
+
+    assert (day["count"], day["scheduled"], day["bunched"], day["on_time"]) == (5, 3, 1, 2)
+
+
 def test_travel_times_keep_low_frequency_ferry_days(monkeypatch):
     records = [
         {"dep_dt": f"2025-07-15T{8 + i:02d}:00:00", "travel_time_sec": 1800, "route_id": "Boat-Lynn"} for i in range(3)

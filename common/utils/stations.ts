@@ -162,6 +162,14 @@ export const getParentStationForStopId = (stopId: string, line?: LineShort) => {
   return parentStationIndex[stopId];
 };
 
+/** The station serving a stop, if it is one of `options`; a stop from another line or route is not. */
+export const getStationInOptions = (stopId: string | undefined, options: Station[] | undefined) =>
+  stopId
+    ? options?.find(
+        (station) => station.stops['0'].includes(stopId) || station.stops['1'].includes(stopId)
+      )
+    : undefined;
+
 export const getStationForInvalidFromSelection = (
   line: Line,
   busRoute?: BusRoute,

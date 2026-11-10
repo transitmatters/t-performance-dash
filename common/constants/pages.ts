@@ -242,6 +242,7 @@ export const ALL_PAGES: PageMap = {
       'line-blue',
       'line-green',
       'line-mattapan',
+      'line-bus',
       'line-commuter-rail',
       'line-RIDE',
     ],
@@ -292,6 +293,7 @@ export const BUS_OVERVIEW = [
   ALL_PAGES.speed,
   ALL_PAGES.fleet,
   ALL_PAGES.delays,
+  ALL_PAGES.reliability,
   ALL_PAGES.speedmap,
   ALL_PAGES.leaderboard,
 ];

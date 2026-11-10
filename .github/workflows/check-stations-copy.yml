@@ -1,0 +1,55 @@
+name: check stations copy
+
+# Other TransitMatters repos keep their own copy of common/constants/stations.json. They call this workflow to check
+# that their copy still matches the dashboard's on every field both files have:
+#
+#   jobs:
+#     stations:
+#       uses: transitmatters/t-performance-dash/.github/workflows/check-stations-copy.yml@main
+#       with:
+#         path: resources/stations.json
+#         lines: Red,Orange,Blue,Green # optional; compares every line by default
+#
+# The comparison is server/scripts/check_stations_copy.py, run against the dashboard's main branch.
+
+on:
+  workflow_call:
+    inputs:
+      path:
+        description: Path to the copy of stations.json in the calling repo
+        required: true
+        type: string
+      lines:
+        description: Comma-separated lines to compare, such as `Red,Orange,Blue,Green`. Compares every line by default.
+        required: false
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout calling repo
+        uses: actions/checkout@v7
+        with:
+          path: copy
+          persist-credentials: false
+      - name: Checkout dashboard stations.json
+        uses: actions/checkout@v7
+        with:
+          repository: transitmatters/t-performance-dash
+          ref: main
+          path: t-performance-dash
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            common/constants/stations.json
+            server/scripts/check_stations_copy.py
+      - name: Compare
+        env:
+          COPY_PATH: copy/${{ inputs.path }}
+          LINES: ${{ inputs.lines }}
+        run: python3 t-performance-dash/server/scripts/check_stations_copy.py "$COPY_PATH" --lines "$LINES"

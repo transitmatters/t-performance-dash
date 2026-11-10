@@ -4,6 +4,8 @@
   ``Reliability`` table keyed by ``routeId`` (``"RIDE"``, ``"CR-Worcester"``, ...) and ``date``.
 - Subway lines: headways bucketed by their ratio to the scheduled headway, measured by TransitMatters
   from per-stop events, in the ``HeadwayReliability`` table keyed by ``route`` (``"line-red"``, ...).
+- Bus routes: the same five headway buckets at mid-route timepoints, written by mbta-performance from
+  LAMP onto each route/day row of ``DeliveredTripMetricsBus`` (from 2025-12-24).
 
 Everything here is a raw count, so rolling up to weekly/monthly or across commuter rail routes is a
 sum; percentages are computed by the client.
@@ -12,7 +14,8 @@ sum; percentages are computed by the client.
 from datetime import date, timedelta
 from typing import Dict, Iterable, List
 
-from .dynamo import query_headway_reliability, query_reliability
+from .delays import BUS_ROUTE_ID
+from .dynamo import query_daily_trips_on_routes, query_headway_reliability, query_reliability
 
 THE_RIDE_ROUTE_ID = "RIDE"
 COMMUTER_RAIL_ROUTE_ID = "commuter-rail"
@@ -35,6 +38,9 @@ COMMUTER_RAIL_ROUTES = [
     "CR-Worcester",
     "CapeFlyer",
 ]
+
+BUS_TRIP_METRICS_TABLE = "DeliveredTripMetricsBus"
+HEADWAY_FIELDS = ("headways_under_50", "headways_50_75", "headways_75_125", "headways_125_150", "headways_over_150")
 
 # Attributes that aren't additive counts. MBTA's published RIDE OTP is recomputed client-side
 # from the counts so it stays correct when aggregated.
@@ -92,12 +98,33 @@ def aggregate(items: Iterable[Dict], agg: str) -> List[Dict]:
     return results
 
 
+def bus_route_ids(route_id: str) -> List[str] | None:
+    """The raw GTFS bus route ids in a comma-separated ``route_id`` (``"114,116,117"``), or None if it isn't one."""
+    route_ids = [rid.strip() for rid in route_id.split(",") if rid.strip()]
+    if route_ids and all(BUS_ROUTE_ID.match(rid) for rid in route_ids):
+        return route_ids
+    return None
+
+
+def _bus_headway_items(rows: Iterable[Dict]) -> List[Dict]:
+    """Just the date and headway counts of each bus row. Rows without them (fleet-only rows, and every
+    day before LAMP bus data starts) are dropped, so they neither count as days with data nor make
+    ``_sum_counts`` discard the headway fields for a period they share."""
+    return [
+        {"date": row["date"], **{field: row[field] for field in HEADWAY_FIELDS}}
+        for row in rows
+        if all(field in row for field in HEADWAY_FIELDS)
+    ]
+
+
 def get_reliability(route_id: str, start_date: date, end_date: date, agg: str) -> List[Dict]:
-    """Retrieve reliability counts for The RIDE, commuter rail, or a subway line.
+    """Retrieve reliability counts for The RIDE, commuter rail, a subway line, or bus routes.
 
     Args:
         route_id: ``"RIDE"``, a commuter rail route (``"CR-Worcester"``), ``"commuter-rail"`` for
             every commuter rail route combined, or a subway line (``"line-red"``).
+            Bus routes are raw GTFS route ids (``"28"``, ``"741"`` for SL1), comma-separated to sum
+            a group (``"114,116,117"``).
         start_date: First date of the range (inclusive).
         end_date: Last date of the range (inclusive).
         agg: ``daily``, ``weekly``, or ``monthly``.
@@ -108,10 +135,16 @@ def get_reliability(route_id: str, start_date: date, end_date: date, agg: str) -
         Commuter rail has ``otpNumerator``, ``otpDenominator``, ``cancelled``, and the same
         three counts under ``peak`` and ``offPeak``. Subway lines have five headway counts
         (``headways_under_50`` ... ``headways_over_150``) and the same per direction under
-        ``byDirection``.
+        ``byDirection``. Bus routes have the five headway counts only.
     """
     if route_id in SUBWAY_LINES:
         return aggregate(query_headway_reliability(route_id, start_date, end_date), agg)
+    bus_routes = bus_route_ids(route_id)
+    if bus_routes:
+        per_route = query_daily_trips_on_routes(
+            BUS_TRIP_METRICS_TABLE, bus_routes, start_date.isoformat(), end_date.isoformat()
+        )
+        return aggregate(_bus_headway_items(row for rows in per_route for row in rows), agg)
     route_ids = COMMUTER_RAIL_ROUTES if route_id == COMMUTER_RAIL_ROUTE_ID else [route_id]
     items = [item for rid in route_ids for item in query_reliability(rid, start_date, end_date)]
     return aggregate(items, agg)

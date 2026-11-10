@@ -28,8 +28,12 @@ export const getSpeedStats = (data: DeliveredTripMetrics[], line?: Line) => {
   return {
     avgSpeed,
     avgSpeedDelta: mean(m2) - mean(m1),
+    avgSpeedBefore: mean(m1),
+    avgSpeedAfter: mean(m2),
     peakSpeed,
     percentOfMax: historicalMax ? avgSpeed / historicalMax : NaN,
     percentOfMaxDelta: historicalMax ? (mean(m2) - mean(m1)) / historicalMax : NaN,
+    percentOfMaxBefore: historicalMax ? mean(m1) / historicalMax : NaN,
+    percentOfMaxAfter: historicalMax ? mean(m2) / historicalMax : NaN,
   };
 };
