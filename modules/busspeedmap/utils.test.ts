@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
+import { getBusRouteGroup } from '../../common/utils/stations';
+import { LEADERBOARD_METRICS } from './constants';
 import type { BusSpeedSegmentLeaderboardEntry, BusSpeedSegmentProperties } from './types';
 import {
   averageDwell,
@@ -7,6 +9,7 @@ import {
   groupLeaderboardByBusRoute,
   isPooledSegment,
   periodSuffix,
+  rankLeaderboard,
   segmentDistanceAndTime,
   segmentDwell,
   segmentSpeedRange,
@@ -203,7 +206,7 @@ const routeTotals = (
   ...overrides,
 });
 
-describe('groupLeaderboardByBusRoute', () => {
+describe('groupLeaderboardByBusRoute dwell', () => {
   it('pools dwell across the routes behind a label, and keeps their shared days', () => {
     // 749 and 751 are SL5 and SL4, shown together as SL4/SL5.
     const [group] = groupLeaderboardByBusRoute(
@@ -283,5 +286,81 @@ describe('summarizeDwell', () => {
     );
 
     expect(summary).toEqual({ overall: undefined, byAverageDwell: [], byDwellShare: [] });
+  });
+});
+
+const DATE = '2026-10-31';
+const [SPEED, BATTERY] = LEADERBOARD_METRICS;
+
+const route = (
+  id: string,
+  mph: number,
+  fleet: Pick<BusSpeedLeaderboardEntry, 'fleet_trips' | 'pct_battery_trips'> = {}
+): BusSpeedLeaderboardEntry => ({
+  route: id,
+  miles_covered: mph,
+  total_time: 3600,
+  count: 10,
+  n_traversals: 10,
+  ...fleet,
+});
+
+describe('groupLeaderboardByBusRoute fleet', () => {
+  it('pools SL4 and SL5 into one row, weighting battery share by fleet trips', () => {
+    const [row] = groupLeaderboardByBusRoute(
+      [
+        route('751', 10, { fleet_trips: 300, pct_battery_trips: 40 }),
+        route('749', 20, { fleet_trips: 100, pct_battery_trips: 0 }),
+      ],
+      DATE
+    );
+    expect(row.route).toBe(getBusRouteGroup('751', DATE));
+    expect(row.route).toBe(getBusRouteGroup('749', DATE));
+    expect(row.miles_covered).toBe(30);
+    expect(row.total_time).toBe(7200);
+    expect(row.fleet_trips).toBe(400);
+    expect(row.pct_battery_trips).toBe(30);
+  });
+
+  it('leaves out routes without fleet data when pooling', () => {
+    const [row] = groupLeaderboardByBusRoute(
+      [route('751', 10, { fleet_trips: 200, pct_battery_trips: 25 }), route('749', 20)],
+      DATE
+    );
+    expect(row.fleet_trips).toBe(200);
+    expect(row.pct_battery_trips).toBe(25);
+  });
+
+  it('has no fleet fields when no route has fleet data', () => {
+    const [row] = groupLeaderboardByBusRoute([route('71', 10)], DATE);
+    expect(row).not.toHaveProperty('fleet_trips');
+    expect(row).not.toHaveProperty('pct_battery_trips');
+  });
+});
+
+describe('rankLeaderboard', () => {
+  const grouped = groupLeaderboardByBusRoute(
+    [
+      route('1', 12, { fleet_trips: 100, pct_battery_trips: 0 }),
+      route('71', 9, { fleet_trips: 100, pct_battery_trips: 43.1 }),
+      route('73', 8, { fleet_trips: 100, pct_battery_trips: 39.5 }),
+      route('66', 7),
+    ],
+    DATE
+  );
+
+  it('ranks by speed, slowest first', () => {
+    expect(rankLeaderboard(grouped, SPEED).map((row) => row.route)).toEqual([
+      '66',
+      '73',
+      '71',
+      '1',
+    ]);
+  });
+
+  it('ranks by battery share, highest first, listing only routes with battery trips', () => {
+    const ranked = rankLeaderboard(grouped, BATTERY);
+    expect(ranked.map((row) => row.route)).toEqual(['71', '73']);
+    expect(BATTERY.format(ranked[0].value)).toBe('43.1%');
   });
 });

@@ -1070,6 +1070,10 @@ class BusSpeedLeaderboardEntry(BaseModel):
     `total_dwell`, `n_dwell_stops` and `n_days` are missing from leaderboards computed before they
     were added, such as the static sample data.
 
+    Routes with fleet data also have its stats for the range, each day weighted by `fleet_trips`:
+    the fields below and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).
+    These are omitted when unknown.
+
     Attributes:
         route: Route ID.
         count: Trips delivered.
@@ -1086,6 +1090,9 @@ class BusSpeedLeaderboardEntry(BaseModel):
         n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).
             Average dwell per stop is `total_dwell / n_dwell_stops`.
         n_days: Days in the range with recorded speed data for the route.
+        fleet_trips: Trips with a known vehicle.
+        pct_battery_trips: Percentage of those trips run by battery-electric buses.
+        avg_bus_age: Average bus age in years.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1100,6 +1107,9 @@ class BusSpeedLeaderboardEntry(BaseModel):
     total_dwell: float | None = None
     n_dwell_stops: float | None = None
     n_days: int | None = None
+    fleet_trips: float | None = None
+    pct_battery_trips: float | None = None
+    avg_bus_age: float | None = None
 
 
 class BusSpeedLeaderboardResponse(RootModel[List[BusSpeedLeaderboardEntry]]):

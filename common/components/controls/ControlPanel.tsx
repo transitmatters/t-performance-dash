@@ -2,6 +2,7 @@ import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/
 import type { DateStoreSection } from '../../constants/pages';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
+import { MajorEventsToggle } from './MajorEventsToggle';
 import { RouteSelector } from './RouteSelector';
 import { TripModeToggle } from './TripModeToggle';
 
@@ -42,6 +43,8 @@ export const PrimaryControls = ({
       {line || dateStoreSection === 'system' ? (
         <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
       ) : null}
+      {/* Events mark dates on a range; a single day has none to mark. */}
+      {queryType === 'range' && <MajorEventsToggle />}
     </div>
   );
 };

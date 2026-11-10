@@ -18,6 +18,7 @@ import type { DisplayedDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
+import { getMajorEventAnnotations, useMajorEvents } from '../../../common/utils/majorEvents';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
 
@@ -43,6 +44,7 @@ export const TotalDelayGraph = ({
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
+  const events = useMajorEvents(line, startDate, endDate);
 
   const lineColor = LINE_COLORS[line ?? 'default'];
 
@@ -140,7 +142,11 @@ export const TotalDelayGraph = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: [...earlierBlocks, ...remainingBlocks],
+                annotations: [
+                  ...earlierBlocks,
+                  ...remainingBlocks,
+                  ...getMajorEventAnnotations(events),
+                ],
               },
             },
             scales: {

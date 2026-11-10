@@ -17,6 +17,11 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { explainGaps, usePageShutdowns } from '../shutdowns';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
+import {
+  getMajorEventAnnotations,
+  hideGapsExplainedByEvents,
+  useMajorEvents,
+} from '../../common/utils/majorEvents';
 import { getNoDataSinceLatestAnnotation, getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface PercentageServiceGraphProps {
@@ -47,13 +52,15 @@ export const PercentageServiceGraph = ({
   const ref = useRef(null);
   const shutdowns = usePageShutdowns('line', startDate, endDate);
 
+  const events = useMajorEvents(line, startDate, endDate);
+
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
-    const shuttlingBlocks = explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
-      startDate,
-      endDate,
-    });
+    const shuttlingBlocks = hideGapsExplainedByEvents(
+      explainGaps(getShuttlingBlockAnnotations(data), shutdowns, { startDate, endDate }),
+      events
+    );
     const compareToScheduled = comparison === 'Scheduled';
     return (
       <ChartStack className={fill ? 'h-full' : undefined}>
@@ -155,6 +162,7 @@ export const PercentageServiceGraph = ({
                     },
                     ...shuttlingBlocks,
                     ...getNoDataSinceLatestAnnotation(labels),
+                    ...getMajorEventAnnotations(events),
                   ],
                 },
               },
@@ -241,6 +249,7 @@ export const PercentageServiceGraph = ({
     callbacks,
     startDate,
     endDate,
+    events,
     unit,
     tooltipFormat,
   ]);

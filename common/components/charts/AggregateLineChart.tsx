@@ -24,6 +24,8 @@ import {
   temperaturePointColor,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
+import { getMajorEventAnnotations, useMajorEvents } from '../../utils/majorEvents';
+import { useDelimitatedRoute } from '../../utils/router';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartDiv } from './ChartDiv';
@@ -111,6 +113,10 @@ export const AggregateLineChart = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
+  const { line } = useDelimitatedRoute();
+  // Charts by time of day span many dates at every point, so there's no day to mark.
+  const lineEvents = useMajorEvents(line, startDate, endDate);
+  const events = hourly || byTime ? [] : lineEvents;
 
   const trendlineData = useMemo(() => {
     if (!isTrendlineVisible) return [];
@@ -282,7 +288,7 @@ export const AggregateLineChart = ({
             watermark: watermarkLayout(isMobile),
             plugins: {
               annotation: {
-                annotations: weatherBlocks,
+                annotations: [...weatherBlocks, ...getMajorEventAnnotations(events)],
               },
               legend: {
                 display: false,

@@ -435,8 +435,8 @@ def _rollup_fleet_fields(rows: list[dict]) -> dict:
 
 
 # Bump when the fields of a cached leaderboard entry change, so lists cached without them aren't served.
-# 2: BUS_TRIP_COUNT_FIELDS. 3: total_dwell, n_dwell_stops and n_days.
-LEADERBOARD_CACHE_VERSION = 3
+# 2: BUS_TRIP_COUNT_FIELDS. 3: the pooled fleet fields. 4: total_dwell, n_dwell_stops and n_days.
+LEADERBOARD_CACHE_VERSION = 4
 
 
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
@@ -444,10 +444,8 @@ def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
 
     The full ranked list is cached once per range and sliced to `limit` on every
     read, since the scan/aggregation work is identical regardless of how many
-    rows the caller asked for.
-
-    Versioned by LEADERBOARD_CACHE_VERSION, because a cached list can be up to three months old
-    (cache.get_cache_max_age).
+    rows the caller asked for. LEADERBOARD_CACHE_VERSION is part of the key, so
+    lists cached before an entry's fields last changed are never read back.
     """
     return f"bus-speed-leaderboard/v{LEADERBOARD_CACHE_VERSION}/{start_date}_{end_date}.json"
 
@@ -498,7 +496,9 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
         route, each of BUS_SUMMED_FIELDS summed across the range, and n_days, the number of days
         with recorded speed data for that route. BUS_TRIP_COUNT_FIELDS are summed too, where the
         range has them. A route with no recorded time in the range has no speed to rank by, so it's
-        left out.
+        left out. Routes with fleet data also carry its fleet stats (fleet_trips, pct_battery_trips,
+        avg_bus_age, fleet_mix_*), pooled across the range by _rollup_fleet_fields, so the
+        dashboard can rank by those too.
 
     Raises:
         ForbiddenError: If the date range exceeds the maximum allowed entries (150).
@@ -515,8 +515,10 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
         rows_by_route: dict[str, list[dict]] = {}
         for row in rows:
             rows_by_route.setdefault(row["route"], []).append(row)
-        totals = {
-            route: {
+
+        ranked = []
+        for route, route_rows in rows_by_route.items():
+            entry = {
                 "route": route,
                 **{field: sum(row.get(field) or 0 for row in route_rows) for field in BUS_SUMMED_FIELDS},
                 **_sum_trip_counts(route_rows),
@@ -525,11 +527,10 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
                 # total_time, so doesn't count as a day of service.
                 "n_days": sum(1 for row in route_rows if (row.get("total_time") or 0) > 0),
             }
-            for route, route_rows in rows_by_route.items()
-        }
-
-        # Routes with no recorded time have no usable speed and would divide by zero below.
-        ranked = [entry for entry in totals.values() if entry["total_time"] > 0]
+            # Routes with no recorded time have no usable speed and would divide by zero below.
+            # This also drops route "all", which only carries the system's fleet stats.
+            if entry["total_time"] > 0:
+                ranked.append(entry | _rollup_fleet_fields(route_rows))
         ranked.sort(key=lambda entry: entry["miles_covered"] / (entry["total_time"] / 3600))
 
         key = _leaderboard_cache_key(start_date, end_date)
