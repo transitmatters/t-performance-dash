@@ -140,6 +140,12 @@ The MBTA changes bus routes every few months, usually as part of [Better Bus Net
 3. Register new keys in `common/constants/stations.ts` and `common/types/lines.ts` (`BusRoute`, `BusRouteId`, `BUS_ROUTES`), and add a `PEAK_RIDERSHIP` entry in `common/constants/baselines.ts` (`server/scripts/update_max_ridership.py` can compute it). Combined routes also need an entry in `getStationForInvalidFromSelection` (`common/utils/stations.ts`).
 4. For Better Bus Network changes, add the phase to `common/constants/bnrd.ts` and banner text to `common/components/notices/BnrdBanner.tsx`.
 
+### Changing rapid transit stations
+
+`common/constants/stations.json` lists the rapid transit stations and their platform stop IDs. Other repos keep their own copies: `slow-zones` (`resources/stations.json`), `shutdown-tracker` (`src/constants/stations.json`) and `mbta-slow-zone-bot` (`slowzonebot/chalicelib/stations.json`). Their CI runs [`check-stations-copy.yml`](.github/workflows/check-stations-copy.yml), which compares each copy with this file on the fields both have. When you change a station or stop ID here, make the same change in those copies.
+
+Rapid transit direction keys are the reverse of the GTFS `direction_id`. `"0"` is northbound or eastbound, which GTFS calls direction 1. Each line's `gtfs_direction_id` maps the keys to GTFS. Bus, commuter rail and ferry keys already match GTFS. See [Directions](https://transitmatters.github.io/architecture/architecture/ids/#directions) in the architecture docs.
+
 ### Updating historical backend data
 
 Historical data is processed in [mbta-performance](https://github.com/transitmatters/mbta-performance). See its [historic data runbook](https://github.com/transitmatters/mbta-performance/blob/main/mbta-performance/chalicelib/historic/README.md).
