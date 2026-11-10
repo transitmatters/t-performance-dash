@@ -10,6 +10,7 @@ import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../com
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
+import { DwellsTerminusNotice } from './DwellsTerminusNotice';
 
 interface DwellsAggregateWrapperProps {
   query: UseQueryResult<AggregateDataResponse>;
@@ -36,6 +37,8 @@ export const DwellsAggregateWrapper: React.FC<DwellsAggregateWrapperProps> = ({
   }, [allData, dayFilter]);
 
   const comparisonData = useMemo(() => getComparisonData(allData, dayFilter), [allData, dayFilter]);
+
+  if (fromStation?.terminus) return <DwellsTerminusNotice />;
 
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;

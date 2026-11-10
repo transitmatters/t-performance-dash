@@ -2,6 +2,7 @@ import React from 'react';
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
@@ -45,7 +46,8 @@ export const SubwayTripGraphs: React.FC<SubwayTripGraphsProps> = ({
     parameters,
     // @ts-expect-error The overloading doesn't seem to handle this const
     aggregate,
-    enabled
+    enabled,
+    fromStation?.terminus ? [QueryNameKeys.dwells] : []
   );
   const location = getLocationDetails(fromStation, toStation);
 

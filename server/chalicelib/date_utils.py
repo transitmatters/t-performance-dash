@@ -5,7 +5,8 @@ timezone info) and provides the cutoff date between monthly and daily
 S3 archives.
 """
 
-from datetime import datetime
+from datetime import date, datetime, time, timedelta, timezone
+from functools import lru_cache
 from zoneinfo import ZoneInfo
 
 
@@ -59,6 +60,44 @@ def parse_event_date(date_str: str):
         return datetime.strptime(date_str, DATE_FORMAT_TIMEZONE_FRACTIONAL)
     else:
         return datetime.strptime(date_str, DATE_FORMAT_TIMEZONE)
+
+
+@lru_cache(maxsize=4096)
+def dst_eve_next_day_offset(service_date: str) -> timedelta | None:
+    """Return the next day's UTC offset if ``service_date`` is the day before a DST change.
+
+    The MBTA's monthly rapid transit archive converts predicted (PRA/PRD) events on
+    these days to local time with the next day's offset, so they are an hour late on
+    the Saturday before clocks spring forward and an hour early before they fall back.
+
+    Args:
+        service_date: Service date as ``YYYY-MM-DD``.
+
+    Returns:
+        The next day's UTC offset, or ``None`` if the offset doesn't change.
+    """
+    day = date.fromisoformat(service_date)
+    today = datetime.combine(day, time(12), EASTERN_TIME).utcoffset()
+    tomorrow = datetime.combine(day + timedelta(days=1), time(12), EASTERN_TIME).utcoffset()
+    return tomorrow if tomorrow != today else None
+
+
+def fix_dst_eve_event_time(event_time: str, next_day_offset: timedelta) -> str:
+    """Undo the archive's next-day-offset conversion of a predicted event's local time.
+
+    Recovers the UTC instant the archive started from, then converts it to Eastern
+    time properly. Events after the clock change were already right and come back
+    unchanged.
+
+    Args:
+        event_time: Local ``YYYY-MM-DD HH:MM:SS`` time from the archive.
+        next_day_offset: Offset returned by ``dst_eve_next_day_offset``.
+
+    Returns:
+        The corrected local time in the same format.
+    """
+    instant = (datetime.strptime(event_time, DATE_FORMAT_MASSDOT) - next_day_offset).replace(tzinfo=timezone.utc)
+    return instant.astimezone(EASTERN_TIME).strftime(DATE_FORMAT_MASSDOT)
 
 
 def return_formatted_date(date: datetime):

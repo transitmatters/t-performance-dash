@@ -1188,7 +1188,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc."
+            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-Boat-{route}` (e.g. `line-Boat-F1`, `line-Boat-F4`). The RIDE: `line-RIDE`. Unknown IDs return an empty list rather than an error."
           }
         ],
         "operationId": "getRidership"
@@ -2372,7 +2372,7 @@
         "type": "object"
       },
       "RidershipParams": {
-        "description": "Parameters for the `/api/ridership` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    line_id: Line identifier (e.g., `line-Red`, `line-1`, `line-Fairmount`).",
+        "description": "Parameters for the `/api/ridership` endpoint.\n\nAttributes:\n    start_date: Start of date range.\n    end_date: End of date range.\n    line_id: Line identifier (e.g., `line-Red`, `line-1`, `line-Fairmount`, `line-Boat-F1`, `line-RIDE`).",
         "properties": {
           "start_date": {
             "description": "Start of the date range, inclusive (YYYY-MM-DD).",
@@ -2387,7 +2387,7 @@
             "type": "string"
           },
           "line_id": {
-            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-F1`, `line-F4`, etc.",
+            "description": "Line identifier for ridership data. Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. Bus: `line-{route}` (e.g. `line-1`, `line-66`). Commuter rail: `line-{line}` (e.g. `line-Fairmount`). Ferry: `line-Boat-{route}` (e.g. `line-Boat-F1`, `line-Boat-F4`). The RIDE: `line-RIDE`. Unknown IDs return an empty list rather than an error.",
             "title": "Line Id",
             "type": "string"
           }
