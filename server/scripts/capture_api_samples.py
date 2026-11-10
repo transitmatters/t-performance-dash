@@ -139,6 +139,7 @@ SAMPLES = [
     ("ridership/bus", "/api/ridership", {**QUARTER, "line_id": "line-1"}, 200),
     ("ridership/commuter_rail", "/api/ridership", {**QUARTER, "line_id": "line-Fairmount"}, 200),
     ("station_ridership/rapid_transit", "/api/station_ridership", {**QUARTER, "line_id": "line-Blue"}, 200),
+    ("bus_stop_ridership/bus", "/api/bus_stop_ridership", {"route_id": "742"}, 200),
     (
         "reliability/ride_monthly",
         "/api/reliability",
