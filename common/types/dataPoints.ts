@@ -181,6 +181,10 @@ export interface DeliveredTripMetricsCR extends FleetMetrics {
  * One route's totals over a date range, as ranked by /api/busspeedleaderboard. mph is
  * derived client-side the same way as everywhere else (miles_covered / (total_time / 3600))
  * from figures summed across the range, not averaged day-by-day.
+ *
+ * Routes with fleet data also have its stats for the range, each day weighted by the trips it
+ * sampled (`fleet_trips`). The API sends avg_bus_age and the fleet_mix_* shares too; only the
+ * fields the leaderboard ranks by are typed here.
  */
 export interface BusSpeedLeaderboardEntry extends BusTripCounts {
   route: string;
@@ -188,6 +192,8 @@ export interface BusSpeedLeaderboardEntry extends BusTripCounts {
   total_time: number;
   count: number;
   n_traversals: number;
+  fleet_trips?: number;
+  pct_battery_trips?: number;
 }
 
 export type LineSegmentData = {
