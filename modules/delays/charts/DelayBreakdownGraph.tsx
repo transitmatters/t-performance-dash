@@ -18,7 +18,14 @@ import { DownloadButton } from '../../../common/components/buttons/DownloadButto
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { DelaysEmbedButton } from '../DelaysEmbedButton';
 import type { LineDelays } from '../../../common/types/delays';
-import { delayAxisTicks, formatDelay } from '../format';
+import {
+  type DelayAgg,
+  axisStart,
+  delayAxisTicks,
+  delayPeriodTitle,
+  delayTimeAxis,
+  formatDelay,
+} from '../format';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 import type { ReasonSeries } from '../reasonSeries';
@@ -35,7 +42,7 @@ interface DelayBreakdownGraphProps {
   /** Text alternative for the canvas. */
   summary?: string;
   showTitle?: boolean;
-  agg?: 'daily' | 'weekly';
+  agg?: DelayAgg;
   /** Fill the parent's height and leave out the buttons, as an embed does. */
   fill?: boolean;
 }
@@ -59,6 +66,7 @@ export const DelayBreakdownGraph = ({
   const isShare = mode === 'share';
   // An embed has no cause list beside it to read the colors from, so it always takes the legend.
   const showLegend = isMobile || fill;
+  const timeAxis = delayTimeAxis(agg);
 
   // ISO date strings sort chronologically
   const sortedDates = [...labels].sort();
@@ -127,11 +135,7 @@ export const DelayBreakdownGraph = ({
                 itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
                 filter: hideZeroUnlessAllZero,
                 callbacks: {
-                  title: (context) => {
-                    return agg === 'weekly'
-                      ? `Week of ${context[0]?.label ?? ''}`
-                      : `${context[0]?.label}`;
-                  },
+                  title: (context) => delayPeriodTitle(agg, context[0]?.label ?? ''),
                   label: (tooltipItem) => {
                     const { y } = tooltipItem.parsed;
                     const minutes = series[tooltipItem.datasetIndex].values[tooltipItem.dataIndex];
@@ -184,22 +188,14 @@ export const DelayBreakdownGraph = ({
                 },
               },
               x: {
-                min: startDate,
+                min: axisStart(data, startDate),
                 max: endDate,
                 type: 'time',
                 // Vertical rules add noise without helping readers compare values.
                 grid: { display: false },
                 border: { color: chartTheme.axisBorder },
-                time: {
-                  unit: 'day',
-                  tooltipFormat: 'MMM d, yyyy',
-                  displayFormats: {
-                    month: 'MMM',
-                  },
-                },
-                ticks: {
-                  color: chartTheme.tick,
-                },
+                time: timeAxis.time,
+                ticks: { ...timeAxis.ticks, color: chartTheme.tick },
                 adapters: {
                   date: {
                     locale: enUS,

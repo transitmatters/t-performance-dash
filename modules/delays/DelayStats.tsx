@@ -5,12 +5,12 @@ import {
 } from '../../common/components/widgets/StatCard';
 import type { LineDelays } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
-import { formatDelay } from './format';
+import { type DelayAgg, AGG_PERIOD, formatDelay } from './format';
 import { getDelayStats } from './utils';
 
 interface DelayStatsProps {
   data: LineDelays[];
-  agg: 'daily' | 'weekly';
+  agg: DelayAgg;
   line?: Line;
 }
 
@@ -32,7 +32,7 @@ export const DelayStats = ({ data, agg, line }: DelayStatsProps) => {
     <StatCardGrid>
       <StatCard label="Total time delayed" value={formatDelay(stats.totalDelay)} />
       <StatCard
-        label={`Avg per ${agg === 'weekly' ? 'week' : 'day'}`}
+        label={`Avg per ${AGG_PERIOD[agg]}`}
         value={formatDelay(stats.avgDelay)}
         delta={deltaFor(stats.avgDelayDelta)}
       />
