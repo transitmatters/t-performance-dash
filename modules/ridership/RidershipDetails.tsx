@@ -19,6 +19,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
 import { getRidershipStats } from './utils/utils';
 import { StationRidershipMap } from './map';
+import { BusStopRidership } from './BusStopRidership';
 import { getStationAverages, getStationSeries, isStationRidershipLine } from './map/utils';
 
 export function RidershipDetails() {
@@ -155,6 +156,7 @@ export function RidershipDetails() {
             )}
           </Widget>
         )}
+        {line === 'line-bus' && busRoute && <BusStopRidership key={busRoute} busRoute={busRoute} />}
       </ChartPageDiv>
     </PageWrapper>
   );
