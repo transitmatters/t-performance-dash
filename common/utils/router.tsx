@@ -92,10 +92,16 @@ const withoutEmbedPrefix = (pathname: string) =>
 /** Query keys that pick a route within a mode. Each one only means something on its own mode. */
 const ROUTE_PARAMS = ['busRoute', 'crRoute', 'ferryRoute'];
 
-const ROUTE_PARAM_FOR_LINE: Partial<Record<Line, string>> = {
+const ROUTE_PARAM_FOR_LINE: Partial<Record<Line, 'busRoute' | 'crRoute' | 'ferryRoute'>> = {
   'line-bus': 'busRoute',
   'line-commuter-rail': 'crRoute',
   'line-ferry': 'ferryRoute',
+};
+
+/** The line and route a from/to pair belongs to. Stop ids only mean something within one. */
+export const stationScope = (line: Line | undefined, query: QueryParams) => {
+  const routeParam = line ? ROUTE_PARAM_FOR_LINE[line] : undefined;
+  return `${line ?? ''}:${routeParam ? (query[routeParam] ?? '') : ''}`;
 };
 
 /** The search without route params from another mode, e.g. `busRoute` on `/orange/`. */
@@ -286,7 +292,14 @@ export const useGenerateHref = () => {
       linePath: LinePath
     ) => {
       const currentPage = ALL_PAGES[currentPageName] ?? undefined;
-      const newQuery = getQueryParams(currentPage, newPage, query, dateStore, stationStore);
+      const newQuery = getQueryParams(
+        currentPage,
+        newPage,
+        query,
+        dateStore,
+        stationStore,
+        linePathToKeyMap[linePath]
+      );
       const newPathName = getPathName(newPage, linePath);
       return {
         pathname: newPathName,
@@ -300,7 +313,7 @@ export const useGenerateHref = () => {
 
 // TODO: We should probably use this anywhere we have links to consolidate the logic. i.e. components like <LineSelection>
 export const useHandleConfigStore = () => {
-  const { page, query } = useDelimitatedRoute();
+  const { page, query, line } = useDelimitatedRoute();
   const currentPage = ALL_PAGES[page];
   const dateStore = useDateStore();
   const stationStore = useStationStore();
@@ -308,9 +321,9 @@ export const useHandleConfigStore = () => {
   const handlePageConfig = useCallback(
     (newPage: PageMetadata) => {
       if (currentPage)
-        savePageConfigIfNecessary(currentPage, newPage, query, dateStore, stationStore);
+        savePageConfigIfNecessary(currentPage, newPage, query, dateStore, stationStore, line);
     },
-    [query, currentPage, dateStore, stationStore]
+    [query, currentPage, dateStore, stationStore, line]
   );
   return handlePageConfig;
 };
@@ -373,33 +386,40 @@ const getFerryRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
   if (query.ferryRoute) return { ferryRoute: query.ferryRoute };
 };
 
+/** Remembered stations are only reused on the line and route they were picked on. */
 const getStationQueryParams = (
   currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
   query: QueryParams,
-  stationStore: StationStore
+  stationStore: StationStore,
+  newScope: string
 ) => {
   if (!newPage.hasStationStore) return null;
   if (currentPage && currentPage.hasStationStore && query.from && query.to)
     return { from: query.from, to: query.to };
-  if (newPage.hasStationStore && stationStore.from && stationStore.to)
+  if (stationStore.from && stationStore.to && stationStore.scope === newScope)
     return { from: stationStore.from, to: stationStore.to };
 };
 
-const getQueryParams = (
+export const getQueryParams = (
   currentPage: PageMetadata | undefined,
   newPage: PageMetadata,
   query: QueryParams,
   dateStore: DateStore,
-  stationStore: StationStore
+  stationStore: StationStore,
+  newLine: Line | undefined
 ) => {
-  return {
-    ...getStationQueryParams(currentPage, newPage, query, stationStore),
-    ...getDateQueryParams(currentPage, newPage, query, dateStore),
-    ...getChartQueryParams(currentPage, newPage, query),
+  const routeParams = {
     ...getBusRouteQueryParam(newPage, query),
     ...getCRRouteQueryParam(newPage, query),
     ...getFerryRouteQueryParam(newPage, query),
+  };
+  const newScope = stationScope(newLine, routeParams);
+  return {
+    ...getStationQueryParams(currentPage, newPage, query, stationStore, newScope),
+    ...getDateQueryParams(currentPage, newPage, query, dateStore),
+    ...getChartQueryParams(currentPage, newPage, query),
+    ...routeParams,
   };
 };
 
@@ -412,12 +432,17 @@ const savePageConfigIfNecessary = (
   newPage: PageMetadata,
   query: QueryParams,
   dateStore: DateStore,
-  stationStore: StationStore
+  stationStore: StationStore,
+  line: Line | undefined
 ) => {
   if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
     saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
   }
   if (!(currentPage.hasStationStore === newPage.hasStationStore)) {
-    stationStore.setStationStore({ from: query.from, to: query.to });
+    stationStore.setStationStore({
+      from: query.from,
+      to: query.to,
+      scope: stationScope(line, query),
+    });
   }
 };
