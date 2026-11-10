@@ -6,11 +6,13 @@ import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { Widget } from '../../common/components/widgets';
+import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import {
-  StatCard,
-  StatCardGrid,
-  type StatSentiment,
-} from '../../common/components/widgets/StatCard';
+  formatPercent,
+  formatPercentChange,
+  halvesDetail,
+  statDelta,
+} from '../../common/utils/statDelta';
 import { getSpeedGraphConfig } from './constants/speeds';
 import { getSpeedStats } from './utils/utils';
 import { SpeedGraphWrapper } from './SpeedGraphWrapper';
@@ -38,15 +40,8 @@ export function SpeedDetails() {
   }
 
   const stats = speeds.data ? getSpeedStats(speeds.data, line) : null;
-  const deltaFor = (delta: number, negligible: number, unit: 'mph' | 'pp') => {
-    if (!Number.isFinite(delta)) return undefined;
-    // Speed is a "higher is better" metric, so a positive trend reads as good.
-    const sentiment: StatSentiment =
-      Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
-    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'faster' : 'slower';
-    const magnitude = unit === 'pp' ? `${Math.round(delta * 100)}pp` : `${delta.toFixed(1)} mph`;
-    return { label: `${delta > 0 ? '+' : ''}${magnitude} · ${word}`, sentiment };
-  };
+  const mph = (value: number) => `${value.toFixed(1)} mph`;
+  const words: [string, string] = ['faster', 'slower'];
 
   return (
     <PageWrapper pageTitle={'Speed'}>
@@ -57,7 +52,13 @@ export function SpeedDetails() {
               label="Average speed"
               value={stats.avgSpeed.toFixed(1)}
               unit="mph"
-              delta={deltaFor(stats.avgSpeedDelta, 0.2, 'mph')}
+              delta={statDelta({
+                delta: stats.avgSpeedDelta,
+                negligible: 0.2,
+                magnitude: `${stats.avgSpeedDelta > 0 ? '+' : ''}${mph(stats.avgSpeedDelta)}`,
+                words,
+                detail: halvesDetail(stats.avgSpeedBefore, stats.avgSpeedAfter, mph),
+              })}
             />
             <StatCard
               label="Peak speed"
@@ -71,7 +72,17 @@ export function SpeedDetails() {
                   ? `${Math.round(stats.percentOfMax * 100)}%`
                   : '—'
               }
-              delta={deltaFor(stats.percentOfMaxDelta, 0.005, 'pp')}
+              delta={statDelta({
+                delta: stats.percentOfMaxDelta,
+                negligible: 0.005,
+                magnitude: formatPercentChange(stats.percentOfMaxDelta),
+                words,
+                detail: halvesDetail(
+                  stats.percentOfMaxBefore,
+                  stats.percentOfMaxAfter,
+                  formatPercent
+                ),
+              })}
             />
           </StatCardGrid>
         )}
