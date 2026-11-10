@@ -248,6 +248,28 @@ export type StationRidershipWeek = {
   stations: Record<string, number>;
 };
 
+/** Average weekday riders at one bus stop, in one direction and season */
+export type BusStopRidershipStop = {
+  stop_id: string;
+  boardings: number;
+  alightings: number;
+};
+
+export type BusStopRidershipDirection = {
+  /** 0 is outbound, 1 is inbound */
+  direction_id: number;
+  /** In order along the route */
+  stops: BusStopRidershipStop[];
+};
+
+/** A bus route's ridership by stop, from the MBTA's seasonal counts of every trip */
+export type BusStopRidership = {
+  route_id: string;
+  /** Each fall season the MBTA counted the route in, oldest first */
+  seasons: { season: string; directions: BusStopRidershipDirection[] }[];
+  stop_names: Record<string, string>;
+};
+
 export type ReliabilityCounts = {
   otpNumerator: number;
   otpDenominator: number;

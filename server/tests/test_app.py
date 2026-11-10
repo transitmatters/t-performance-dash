@@ -219,6 +219,16 @@ class TestStationRidershipValidation:
         assert result.status_code == 400
 
 
+class TestBusStopRidershipValidation:
+    def test_missing_route_id_returns_400(self, client):
+        result = client.http.get("/api/bus_stop_ridership")
+        assert result.status_code == 400
+
+    def test_route_id_that_is_not_a_gtfs_id_returns_400(self, client):
+        result = client.http.get("/api/bus_stop_ridership?route_id=..%2F28")
+        assert result.status_code == 400
+
+
 class TestReliabilityValidation:
     def test_missing_params_returns_400(self, client):
         result = client.http.get("/api/reliability?route_id=RIDE&start_date=2024-01-01")

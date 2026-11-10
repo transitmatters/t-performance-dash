@@ -1,24 +1,23 @@
-import type { CSSProperties } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import classNames from 'classnames';
 import type { TooltipSide } from '@transitmatters/stripmap';
 
 import styles from './StationRidershipTooltip.module.css';
 
-interface StationRidershipTooltipProps {
+interface RidershipMapTooltipProps {
   stationName: string;
   side: TooltipSide;
   color: string;
-  average?: number;
-  otherLines: string[];
+  children: ReactNode;
 }
 
-export const StationRidershipTooltip = ({
+/** The tooltip shell shared by the station and bus stop ridership maps */
+export const RidershipMapTooltip = ({
   stationName,
   side,
   color,
-  average,
-  otherLines,
-}: StationRidershipTooltipProps) => (
+  children,
+}: RidershipMapTooltipProps) => (
   <div
     style={{ '--tooltip-accent-color': color } as CSSProperties}
     className={classNames(
@@ -32,24 +31,39 @@ export const StationRidershipTooltip = ({
     <div className={classNames(styles.content, 'shadow-dataBox')}>
       <div className={styles.title}>{stationName}</div>
       <div className={classNames(styles.body, 'text-sm text-stone-800 dark:text-stone-100')}>
-        {average === undefined ? (
-          <span className="text-xs text-stone-500 italic dark:text-stone-400">
-            No fare gates here, so there are no station counts.
-          </span>
-        ) : (
-          <>
-            <span>
-              <b>{Math.round(average).toLocaleString('en-us')}</b> weekday fare validations
-            </span>
-            {otherLines.length > 0 && (
-              <span className="text-xs text-stone-500 italic dark:text-stone-400">
-                Includes riders for the {otherLines.join(' and ')} Line
-                {otherLines.length > 1 ? 's' : ''}
-              </span>
-            )}
-          </>
-        )}
+        {children}
       </div>
     </div>
   </div>
+);
+
+interface StationRidershipTooltipProps extends Omit<RidershipMapTooltipProps, 'children'> {
+  average?: number;
+  otherLines: string[];
+}
+
+export const StationRidershipTooltip = ({
+  average,
+  otherLines,
+  ...tooltipProps
+}: StationRidershipTooltipProps) => (
+  <RidershipMapTooltip {...tooltipProps}>
+    {average === undefined ? (
+      <span className="text-xs text-stone-500 italic dark:text-stone-400">
+        No fare gates here, so there are no station counts.
+      </span>
+    ) : (
+      <>
+        <span>
+          <b>{Math.round(average).toLocaleString('en-us')}</b> weekday fare validations
+        </span>
+        {otherLines.length > 0 && (
+          <span className="text-xs text-stone-500 italic dark:text-stone-400">
+            Includes riders for the {otherLines.join(' and ')} Line
+            {otherLines.length > 1 ? 's' : ''}
+          </span>
+        )}
+      </>
+    )}
+  </RidershipMapTooltip>
 );

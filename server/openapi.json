@@ -1318,6 +1318,48 @@
         "operationId": "getStationRidership"
       }
     },
+    "/api/bus_stop_ridership": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusStopRidershipResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve a bus route's average weekday boardings and alightings at each stop, for each fall season.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "route_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "GTFS bus route ID, e.g. `28`, `34E` or `741` (SL1). Combined routes like `17/19` are one request per route."
+          }
+        ],
+        "operationId": "getBusStopRidership"
+      }
+    },
     "/api/reliability": {
       "get": {
         "responses": {
@@ -2605,6 +2647,51 @@
         },
         "title": "StationRidershipResponse",
         "type": "array"
+      },
+      "BusStopRidershipParams": {
+        "description": "Parameters for the `/api/bus_stop_ridership` endpoint.\n\nAttributes:\n    route_id: GTFS bus route ID.",
+        "properties": {
+          "route_id": {
+            "description": "GTFS bus route ID, e.g. `28`, `34E` or `741` (SL1). Combined routes like `17/19` are one request per route.",
+            "title": "Route Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "route_id"
+        ],
+        "title": "BusStopRidershipParams",
+        "type": "object"
+      },
+      "BusStopRidershipResponse": {
+        "description": "Response for `/api/bus_stop_ridership`: average weekday boardings and alightings at each stop of a bus route.\n\nFrom the MBTA's seasonal per-trip ridership counts, published about once a year. It doesn't follow a date range.\n\nAttributes:\n    route_id: GTFS bus route ID.\n    seasons: Each fall season the MBTA has counted the route in, oldest first. Empty if the route isn't covered.\n    stop_names: Names of the stops in `seasons`, keyed by GTFS stop ID.",
+        "properties": {
+          "route_id": {
+            "title": "Route Id",
+            "type": "string"
+          },
+          "seasons": {
+            "items": {
+              "$ref": "#/components/schemas/BusStopRidershipSeason"
+            },
+            "title": "Seasons",
+            "type": "array"
+          },
+          "stop_names": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Stop Names",
+            "type": "object"
+          }
+        },
+        "required": [
+          "route_id",
+          "seasons",
+          "stop_names"
+        ],
+        "title": "BusStopRidershipResponse",
+        "type": "object"
       },
       "ReliabilityParams": {
         "description": "Parameters for the `/api/reliability` endpoint.\n\nAttributes:\n    route_id: `RIDE`, a commuter rail route, `commuter-rail` for all of commuter rail, a subway line, or\n        comma-separated bus route IDs.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
@@ -4090,6 +4177,74 @@
           "stations"
         ],
         "title": "StationRidershipEntry",
+        "type": "object"
+      },
+      "BusStopRidershipDirection": {
+        "description": "One direction of a route in one season.\n\nAttributes:\n    direction_id: GTFS direction: `0` (outbound) or `1` (inbound).\n    stops: Every stop the direction served that season, in order along the route. Stops that only some trips\n        serve, like a short turn or deviation, sit among the stops around them.",
+        "properties": {
+          "direction_id": {
+            "title": "Direction Id",
+            "type": "integer"
+          },
+          "stops": {
+            "items": {
+              "$ref": "#/components/schemas/BusStopRidershipStop"
+            },
+            "title": "Stops",
+            "type": "array"
+          }
+        },
+        "required": [
+          "direction_id",
+          "stops"
+        ],
+        "title": "BusStopRidershipDirection",
+        "type": "object"
+      },
+      "BusStopRidershipSeason": {
+        "description": "A route's ridership by stop in one season.\n\nAttributes:\n    season: The season, e.g. `Fall 2025`.\n    directions: Each direction the route ran.",
+        "properties": {
+          "season": {
+            "title": "Season",
+            "type": "string"
+          },
+          "directions": {
+            "items": {
+              "$ref": "#/components/schemas/BusStopRidershipDirection"
+            },
+            "title": "Directions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "season",
+          "directions"
+        ],
+        "title": "BusStopRidershipSeason",
+        "type": "object"
+      },
+      "BusStopRidershipStop": {
+        "description": "Average weekday riders at one stop in one direction.\n\nAttributes:\n    stop_id: GTFS stop ID. Each side of the street has its own.\n    boardings: Average weekday riders getting on here.\n    alightings: Average weekday riders getting off here.",
+        "properties": {
+          "stop_id": {
+            "title": "Stop Id",
+            "type": "string"
+          },
+          "boardings": {
+            "title": "Boardings",
+            "type": "number"
+          },
+          "alightings": {
+            "title": "Alightings",
+            "type": "number"
+          }
+        },
+        "required": [
+          "stop_id",
+          "boardings",
+          "alightings"
+        ],
+        "title": "BusStopRidershipStop",
         "type": "object"
       },
       "HeadwayCounts": {

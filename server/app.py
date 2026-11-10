@@ -755,6 +755,36 @@ def get_station_ridership():
 
 
 @app.route(
+    "/api/bus_stop_ridership",
+    cors=cors_config,
+    docs=Docs(request=models.BusStopRidershipParams, responses=[Resp(models.BusStopRidershipResponse), BAD_REQUEST]),
+)
+def get_bus_stop_ridership():
+    """Retrieve a bus route's average weekday boardings and alightings at each stop, for each fall season."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["route_id"])
+    route_id = query_params["route_id"]
+    if not ridership.BUS_ROUTE_ID_REGEX.match(route_id):
+        raise BadRequestError(f"Invalid route_id '{route_id}'. Expected a GTFS bus route ID like 28 or 741.")
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_bus_stop_ridership(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/bus_stop_ridership", query_params)
+    else:
+        data = ridership.get_bus_stop_ridership(route_id)
+
+    return Response(
+        body=json.dumps(data),
+        headers={
+            "Content-Type": "application/json",
+            # The MBTA publishes a season about once a year, so a day at the edge is plenty fresh
+            "Cache-Control": f"public, max-age={cache.ONE_DAY}",
+        },
+    )
+
+
+@app.route(
     "/api/reliability",
     cors=cors_config,
     docs=Docs(request=models.ReliabilityParams, responses=[Resp(models.ReliabilityResponse), BAD_REQUEST]),

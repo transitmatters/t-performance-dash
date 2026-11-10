@@ -243,6 +243,19 @@ class StationRidershipParams(BaseModel):
     )
 
 
+class BusStopRidershipParams(BaseModel):
+    """Parameters for the `/api/bus_stop_ridership` endpoint.
+
+    Attributes:
+        route_id: GTFS bus route ID.
+    """
+
+    route_id: str = Field(
+        description="GTFS bus route ID, e.g. `28`, `34E` or `741` (SL1). Combined routes like `17/19` are one request "
+        "per route.",
+    )
+
+
 class TimePredictionParams(BaseModel):
     """Parameters for the `/api/time_predictions` endpoint.
 
@@ -1164,6 +1177,61 @@ class StationRidershipEntry(BaseModel):
 
 class StationRidershipResponse(RootModel[List[StationRidershipEntry]]):
     """Response for `/api/station_ridership`: weekly ridership by station over the date range."""
+
+
+class BusStopRidershipStop(BaseModel):
+    """Average weekday riders at one stop in one direction.
+
+    Attributes:
+        stop_id: GTFS stop ID. Each side of the street has its own.
+        boardings: Average weekday riders getting on here.
+        alightings: Average weekday riders getting off here.
+    """
+
+    stop_id: str
+    boardings: float
+    alightings: float
+
+
+class BusStopRidershipDirection(BaseModel):
+    """One direction of a route in one season.
+
+    Attributes:
+        direction_id: GTFS direction: `0` (outbound) or `1` (inbound).
+        stops: Every stop the direction served that season, in order along the route. Stops that only some trips
+            serve, like a short turn or deviation, sit among the stops around them.
+    """
+
+    direction_id: int
+    stops: List[BusStopRidershipStop]
+
+
+class BusStopRidershipSeason(BaseModel):
+    """A route's ridership by stop in one season.
+
+    Attributes:
+        season: The season, e.g. `Fall 2025`.
+        directions: Each direction the route ran.
+    """
+
+    season: str
+    directions: List[BusStopRidershipDirection]
+
+
+class BusStopRidershipResponse(BaseModel):
+    """Response for `/api/bus_stop_ridership`: average weekday boardings and alightings at each stop of a bus route.
+
+    From the MBTA's seasonal per-trip ridership counts, published about once a year. It doesn't follow a date range.
+
+    Attributes:
+        route_id: GTFS bus route ID.
+        seasons: Each fall season the MBTA has counted the route in, oldest first. Empty if the route isn't covered.
+        stop_names: Names of the stops in `seasons`, keyed by GTFS stop ID.
+    """
+
+    route_id: str
+    seasons: List[BusStopRidershipSeason]
+    stop_names: Dict[str, str]
 
 
 # Reliability
