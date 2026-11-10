@@ -1,5 +1,6 @@
 import type { Line } from '../../../common/types/lines';
 import type { FleetMetrics } from '../../../common/types/dataPoints';
+import type { ChartDatasetName } from '../../../common/utils/chartTitles';
 
 export interface FleetType {
   // fleet_mix_<key>, from data-ingestion's CAR_TYPES, PROPULSIONS and CR_TYPES
@@ -45,7 +46,7 @@ export interface FleetMetric {
   field: 'pct_new_trips' | 'pct_battery_trips' | 'avg_car_age' | 'avg_bus_age' | 'avg_cab_car_age';
   title: string;
   axisLabel: string;
-  datasetName: string;
+  datasetName: ChartDatasetName;
 }
 
 export interface FleetModeMetrics {

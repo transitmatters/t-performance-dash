@@ -11,9 +11,9 @@ import type { DataPoint } from '../types/dataPoints';
 import { BUNCHED_RATIO, isOnTimeHeadwayRatio } from './chartTheme';
 
 const BUNCHED_HEADWAYS =
-  'Share of headways at this stop that were half the scheduled headway or less. Headways with no scheduled headway still count toward the total.';
+  'Share of headways at this stop that were half the scheduled headway or less. Headways with no scheduled headway are left out.';
 const ON_TIME_HEADWAYS =
-  'Share of headways at this stop within 25% of the scheduled headway. Headways with no scheduled headway still count toward the total.';
+  'Share of headways at this stop within 25% of the scheduled headway. Headways with no scheduled headway are left out.';
 
 const getAverage = (data: (number | undefined)[]) => {
   // Filter out undefined, null, NaN, and non-finite values
@@ -28,29 +28,24 @@ const getAverage = (data: (number | undefined)[]) => {
   return 0;
 };
 
-const getBunchedPercentage = (data: SingleDayDataPoint[]) => {
-  const bunchedPoints = data.map((point: DataPoint) => {
-    const ratio =
-      point[MetricFieldKeys.headwayTimeSec] / point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec];
-    if (ratio <= BUNCHED_RATIO) {
-      return 1;
-    }
-    return 0;
-  });
-  return bunchedPoints.reduce((a, b) => a + b, 0) / data.length;
+/**
+ * Share of the headways with a scheduled headway whose ratio to it matches. Headways with no
+ * schedule are left out, and it's undefined when none has one.
+ */
+const getHeadwayShare = (data: SingleDayDataPoint[], matches: (ratio: number) => boolean) => {
+  const scheduled = data.filter((point: DataPoint) =>
+    Boolean(point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec])
+  );
+  if (scheduled.length === 0) return undefined;
+  const matching = scheduled.filter((point: DataPoint) =>
+    matches(
+      point[MetricFieldKeys.headwayTimeSec] / point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec]
+    )
+  );
+  return matching.length / scheduled.length;
 };
 
-const getOnTimePercentage = (data: SingleDayDataPoint[]) => {
-  const onTimePoints = data.map((point: DataPoint) => {
-    const ratio =
-      point[MetricFieldKeys.headwayTimeSec] / point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec];
-    if (isOnTimeHeadwayRatio(ratio)) {
-      return 1;
-    }
-    return 0;
-  });
-  return onTimePoints.reduce((a, b) => a + b, 0) / data.length;
-};
+const isBunchedHeadwayRatio = (ratio: number) => ratio <= BUNCHED_RATIO;
 
 /**
  * Share of trips running no more than 25% over their scheduled travel time — the same threshold the
@@ -99,13 +94,17 @@ const getAggDataPointsOfInterest = (aggData: AggregateDataPoint[]) => {
   return { average, min, max, median, p10, p90 };
 };
 
-const getAggHeadwayDataPoints = (aggData: AggregateDataPoint[]) => {
-  const totalTrips = aggData.map((tt) => tt.count).reduce((a, b) => a + b, 0);
-  const bunchedTrips = aggData.map((tt) => tt.bunched).reduce((a = 0, b = 0) => a + b, 0) || 0;
-  const onTimeTrips = aggData.map((tt) => tt.on_time).reduce((a = 0, b = 0) => a + b, 0) || 0;
+const sum = (values: number[]) => values.reduce((a, b) => a + b, 0);
 
-  const bunched = bunchedTrips / totalTrips;
-  const onTime = onTimeTrips / totalTrips;
+const getAggHeadwayDataPoints = (aggData: AggregateDataPoint[]) => {
+  // Counts are added up across days rather than averaging daily shares. Responses from before
+  // `scheduled` existed fall back to every headway, as the shares used to be counted.
+  const scheduledTrips = sum(aggData.map((tt) => tt.scheduled ?? tt.count));
+  const bunchedTrips = sum(aggData.map((tt) => tt.bunched ?? 0));
+  const onTimeTrips = sum(aggData.map((tt) => tt.on_time ?? 0));
+
+  const bunched = scheduledTrips ? bunchedTrips / scheduledTrips : undefined;
+  const onTime = scheduledTrips ? onTimeTrips / scheduledTrips : undefined;
 
   const { average, min, max, median, p10, p90 } = getAggDataPointsOfInterest(aggData);
   return { average, min, max, median, p10, p90, bunched, onTime };
@@ -136,6 +135,35 @@ const makeComparison = (
 ): WidgetComparison | undefined => {
   if (current === undefined || other === undefined) return undefined;
   return { delta: current - other, label, unit };
+};
+
+/**
+ * The Bunched and On time cells for a headway chart. They're left out when no headway had a
+ * scheduled headway to compare against, rather than showing 0%.
+ */
+const getHeadwayShareWidgets = (
+  bunched: number | undefined,
+  onTime: number | undefined,
+  comparison?: { bunched: number | undefined; onTime: number | undefined; label: string }
+): MiniWidgetObject[] => {
+  if (bunched === undefined || onTime === undefined) return [];
+  const label = comparison?.label ?? '';
+  return [
+    {
+      text: 'Bunched (≤50%)',
+      description: BUNCHED_HEADWAYS,
+      widgetValue: new PercentageWidgetValue(bunched),
+      type: 'data',
+      comparison: makeComparison(bunched, comparison?.bunched, label, 'percentage'),
+    },
+    {
+      text: 'On time (±25%)',
+      description: ON_TIME_HEADWAYS,
+      widgetValue: new PercentageWidgetValue(onTime),
+      type: 'data',
+      comparison: makeComparison(onTime, comparison?.onTime, label, 'percentage'),
+    },
+  ];
 };
 
 export const getAggDataWidgets = (
@@ -233,20 +261,7 @@ export const getAggHeadwayDataWidgets = (
       type: 'data',
       comparison: comp ? makeComparison(max, comp.max, label, 'time') : undefined,
     },
-    {
-      text: 'Bunched',
-      description: BUNCHED_HEADWAYS,
-      widgetValue: new PercentageWidgetValue(bunched),
-      type: 'data',
-      comparison: comp ? makeComparison(bunched, comp.bunched, label, 'percentage') : undefined,
-    },
-    {
-      text: 'On time',
-      description: ON_TIME_HEADWAYS,
-      widgetValue: new PercentageWidgetValue(onTime),
-      type: 'data',
-      comparison: comp ? makeComparison(onTime, comp.onTime, label, 'percentage') : undefined,
-    },
+    ...getHeadwayShareWidgets(bunched, onTime, comp && { ...comp, label }),
   ];
 };
 
@@ -268,9 +283,7 @@ const getSingleDayPointsOfInterest = (
   const _data = getSingleDayNumberArray(data, type);
   const { max, min, median, p10, p90 } = getPeaks(_data);
   const average = getAverage(_data);
-  const onTimePercentage = getOnTimePercentage(data);
-  const bunchedPercentage = getBunchedPercentage(data);
-  return { max, min, median, average, p10, p90, onTimePercentage, bunchedPercentage };
+  return { max, min, median, average, p10, p90 };
 };
 
 function getWidget(type: string, value: number | undefined) {
@@ -285,8 +298,7 @@ export const getSingleDayWidgets = (
   data: SingleDayDataPoint[],
   type: 'traveltimes' | 'dwells' | 'headways' | 'speeds'
 ): MiniWidgetObject[] => {
-  const { max, min, median, average, p10, p90, onTimePercentage, bunchedPercentage } =
-    getSingleDayPointsOfInterest(data, type);
+  const { max, min, median, average, p10, p90 } = getSingleDayPointsOfInterest(data, type);
 
   const widgets: MiniWidgetObject[] = [
     { text: 'Average', widgetValue: getWidget(type, average), type: 'data' },
@@ -308,19 +320,13 @@ export const getSingleDayWidgets = (
     }
   }
 
-  if (type === 'headways' && data.some((point) => point.benchmark_headway_time_sec)) {
-    widgets.push({
-      text: 'On time',
-      description: ON_TIME_HEADWAYS,
-      widgetValue: new PercentageWidgetValue(onTimePercentage),
-      type: 'data',
-    });
-    widgets.push({
-      text: 'Bunched',
-      description: BUNCHED_HEADWAYS,
-      widgetValue: new PercentageWidgetValue(bunchedPercentage),
-      type: 'data',
-    });
+  if (type === 'headways') {
+    widgets.push(
+      ...getHeadwayShareWidgets(
+        getHeadwayShare(data, isBunchedHeadwayRatio),
+        getHeadwayShare(data, isOnTimeHeadwayRatio)
+      )
+    );
   }
 
   return widgets;

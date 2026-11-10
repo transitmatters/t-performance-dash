@@ -1,7 +1,15 @@
+import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import { DELAY_CAUSES, type LineDelays } from '../../common/types/delays';
 import { REASON_BY_KEY, reasonLabel } from './constants/reasons';
-import { delayAxisTicks, formatDelay } from './format';
+import {
+  axisStart,
+  barAxisBounds,
+  delayAggFor,
+  delayAxisTicks,
+  delayTimeAxis,
+  formatDelay,
+} from './format';
 import {
   buildSeries,
   causeRows,
@@ -9,6 +17,7 @@ import {
   minShareMinutes,
   periodTotals,
   toActualDelays,
+  toMonthly,
   withinRange,
 } from './reasonSeries';
 
@@ -133,5 +142,70 @@ describe('withinRange', () => {
       '2026-10-05',
       '2026-10-09',
     ]);
+  });
+});
+
+describe('toMonthly', () => {
+  // Mondays from Jan 26 to Feb 23, 2026: all of February, six days of January, one of March
+  const weeks = (overrides: Partial<LineDelays>) =>
+    ['2026-01-26', '2026-02-02', '2026-02-09', '2026-02-16', '2026-02-23'].map((date) =>
+      row({ date, ...overrides })
+    );
+
+  it('splits weeks across months by day and keeps only fully covered months', () => {
+    const { rows } = toActualDelays(
+      weeks({
+        total_delay_time: 14,
+        signal_problem: 14,
+        delay_alert_minutes: 70,
+        delay_alert_minutes_signal_problem: 70,
+      })
+    );
+    const months = toMonthly(rows);
+    expect(months.map((month) => month.date)).toEqual(['2026-02-01']);
+    // 1/7 of the first week, three whole weeks, 6/7 of the last
+    expect(months[0].total_delay_time).toBeCloseTo(280);
+    expect(months[0].signal_problem).toBeCloseTo(280);
+    expect(months[0].delay_alert_minutes).toBeCloseTo(280);
+    expect(months[0].stated_delay_time).toBeCloseTo(56);
+    expect(months[0].stated_by_cause.signal_problem).toBeCloseTo(56);
+    expect(months[0].line).toBe('line-red');
+  });
+
+  it('leaves fields no week has unset', () => {
+    const { rows } = toActualDelays(weeks({ total_delay_time: 7 }));
+    const [month] = toMonthly(rows);
+    expect(month.total_delay_time).toBeCloseTo(28);
+    expect(month.delay_alert_minutes).toBeUndefined();
+  });
+
+  it('drops a month with a missing week', () => {
+    const { rows } = toActualDelays(weeks({}).filter((week) => week.date !== '2026-02-09'));
+    expect(toMonthly(rows)).toEqual([]);
+  });
+});
+
+describe('long range axes', () => {
+  it('picks days, weeks, then months', () => {
+    expect(delayAggFor('2026-08-01', '2026-10-01')).toBe('daily');
+    expect(delayAggFor('2025-10-01', '2026-10-01')).toBe('weekly');
+    expect(delayAggFor('2016-01-01', '2026-10-01')).toBe('monthly');
+    expect(delayTimeAxis('monthly').time.unit).toBe('year');
+    expect(delayTimeAxis('weekly').time.unit).toBe('month');
+  });
+
+  it('starts the axis at the first row when data begins after the selected start', () => {
+    expect(axisStart([row({ date: '2020-01-01' })], '2016-01-01')).toBe('2020-01-01');
+    expect(axisStart([row({ date: '2025-12-29' })], '2026-01-01')).toBe('2026-01-01');
+    expect(axisStart([], '2016-01-01')).toBe('2016-01-01');
+  });
+
+  it('pads bars by half a period and ends monthly bars at the last month', () => {
+    const months = [row({ date: '2020-01-01' }), row({ date: '2026-09-01' })];
+    const { min, max } = barAxisBounds(months, '2016-01-01', '2026-11-09', 'monthly');
+    expect(dayjs(min).format('YYYY-MM-DD')).toBe('2019-12-17');
+    expect(dayjs(max).format('YYYY-MM-DD')).toBe('2026-09-16');
+    const daily = barAxisBounds([], '2026-10-01', '2026-10-31', 'daily');
+    expect(dayjs(daily.max).diff('2026-10-31', 'hour')).toBe(12);
   });
 });

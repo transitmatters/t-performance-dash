@@ -77,14 +77,7 @@ const HEADWAY_FIELDS: HeadwayField[] = [
   'headways_over_150',
 ];
 
-export const WITHIN_75_125: HeadwayField[] = ['headways_75_125'];
-export const WITHIN_50_150: HeadwayField[] = [
-  'headways_50_75',
-  'headways_75_125',
-  'headways_125_150',
-];
-export const BUNCHED: HeadwayField[] = ['headways_under_50'];
-export const LONG_GAPS: HeadwayField[] = ['headways_over_150'];
+export const ON_TIME: HeadwayField[] = ['headways_75_125'];
 
 const sumFields = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
   fields.reduce((total, field) => total + (counts?.[field] ?? 0), 0);
@@ -93,35 +86,103 @@ const sumFields = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayFi
 export const headwayShare = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
   percent(sumFields(counts, fields), sumFields(counts, HEADWAY_FIELDS));
 
-/**
- * Each headway count, in ratio order, with how the breakdown chart shows it. Colors are the
- * severity ramp the trip charts use for headway dots, so a bucket reads the same on both.
- */
-export const HEADWAY_BUCKETS: {
+export const headwayCount = (counts: Partial<HeadwayCounts> | undefined) =>
+  sumFields(counts, HEADWAY_FIELDS);
+
+export interface HeadwayBucket {
   field: HeadwayField;
   label: string;
   range: string;
+  /** Which side of the schedule: drawn below the axis, not at all, or above it on the diverging chart. */
+  side: 'closer' | 'on' | 'longer';
   color: string;
-}[] = [
-  { field: 'headways_under_50', label: 'Bunched', range: '≤50%', color: SEVERITY_COLORS.off50 },
-  { field: 'headways_50_75', label: 'Short', range: '50–75%', color: SEVERITY_COLORS.off25 },
-  { field: 'headways_75_125', label: 'On time', range: '75–125%', color: SEVERITY_COLORS.onTime },
-  { field: 'headways_125_150', label: 'Long', range: '125–150%', color: SEVERITY_COLORS.off25 },
-  { field: 'headways_over_150', label: 'Long gap', range: '≥150%', color: SEVERITY_COLORS.off50 },
+}
+
+/**
+ * Each headway count in ratio order. Colors are the severity ramp the trip charts use for headway
+ * dots, so a bucket reads the same on both; which side of the schedule it's on is told by position.
+ */
+export const HEADWAY_BUCKETS: HeadwayBucket[] = [
+  {
+    field: 'headways_under_50',
+    label: 'Bunched',
+    range: '≤50%',
+    side: 'closer',
+    color: SEVERITY_COLORS.off50,
+  },
+  {
+    field: 'headways_50_75',
+    label: 'Short',
+    range: '50–75%',
+    side: 'closer',
+    color: SEVERITY_COLORS.off25,
+  },
+  {
+    field: 'headways_75_125',
+    label: 'On time',
+    range: '75–125%',
+    side: 'on',
+    color: SEVERITY_COLORS.onTime,
+  },
+  {
+    field: 'headways_125_150',
+    label: 'Long',
+    range: '125–150%',
+    side: 'longer',
+    color: SEVERITY_COLORS.off25,
+  },
+  {
+    field: 'headways_over_150',
+    label: 'Long gap',
+    range: '≥150%',
+    side: 'longer',
+    color: SEVERITY_COLORS.off50,
+  },
 ];
 
+export const OFF_SCHEDULE_BUCKETS = HEADWAY_BUCKETS.filter(({ side }) => side !== 'on');
+
+/** "both" for every headway, or a GTFS direction_id. */
+export type HeadwayDirection = 'both' | '0' | '1';
+
+/** One period's headway counts, for every headway or just one direction's. */
+export interface HeadwayRow {
+  date: string;
+  counts?: Partial<HeadwayCounts>;
+}
+
+export const toHeadwayRows = (
+  data: ReliabilityEntry[],
+  direction: HeadwayDirection
+): HeadwayRow[] =>
+  data.map((entry) => ({
+    date: entry.date,
+    counts: direction === 'both' ? entry : entry.byDirection?.[direction],
+  }));
+
 /** Every headway count summed over the range. */
-export const getHeadwayTotals = (data: ReliabilityEntry[]) =>
+export const getHeadwayTotals = (rows: HeadwayRow[]) =>
   Object.fromEntries(
-    HEADWAY_FIELDS.map((field) => [field, data.reduce((t, e) => t + (e[field] ?? 0), 0)])
+    HEADWAY_FIELDS.map((field) => [
+      field,
+      rows.reduce((t, row) => t + (row.counts?.[field] ?? 0), 0),
+    ])
   ) as HeadwayCounts;
 
-export const getHeadwayStats = (data: ReliabilityEntry[]) => {
-  const total = getHeadwayTotals(data);
-  return {
-    within75: headwayShare(total, WITHIN_75_125),
-    within50: headwayShare(total, WITHIN_50_150),
-    bunched: headwayShare(total, BUNCHED),
-    longGaps: headwayShare(total, LONG_GAPS),
-  };
-};
+/**
+ * A bucket's share of each period for the diverging chart: negative for headways closer than
+ * scheduled so they hang below the axis, null where nothing was measured.
+ */
+export const divergingShares = (rows: HeadwayRow[], bucket: HeadwayBucket) =>
+  rows.map((row) => {
+    const share = headwayShare(row.counts, [bucket.field]);
+    if (share == null) return null;
+    return bucket.side === 'closer' ? -share : share;
+  });
+
+/** Plain headway counts per period, for the CSV download. */
+export const toCsvRows = (rows: HeadwayRow[]) =>
+  rows.map((row) => ({
+    date: row.date,
+    ...Object.fromEntries(HEADWAY_FIELDS.map((field) => [field, row.counts?.[field] ?? 0])),
+  }));

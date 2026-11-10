@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import type { ScriptableContext } from 'chart.js';
 import type { WeatherHourly } from '../../../common/types/weather';
 import { TWO_HOURS } from '../../../common/constants/time';
 
@@ -10,8 +11,70 @@ export type DailyTemperatureSeries = {
   mean: DailyTempPoint[];
 };
 
-export const TEMPERATURE_BAND_COLOR = 'rgba(234, 88, 12, 0.18)';
-export const TEMPERATURE_LINE_COLOR = 'rgb(234, 88, 12)';
+/**
+ * Cold to hot in °F. Fixed, so a temperature reads as the same color in every date range, and
+ * each color holds 3:1 against both the light and the dark card, so it doesn't vary with theme.
+ */
+export const TEMPERATURE_COLOR_STOPS: [number, string][] = [
+  [20, '#3b82f6'],
+  [50, '#16a34a'],
+  [75, '#ea580c'],
+  [95, '#dc2626'],
+];
+
+// The opacity of the daily low–high band under the mean line
+export const TEMPERATURE_BAND_OPACITY = 0.18;
+
+const COLDEST = TEMPERATURE_COLOR_STOPS[0][0];
+const HOTTEST = TEMPERATURE_COLOR_STOPS[TEMPERATURE_COLOR_STOPS.length - 1][0];
+
+/** Where a stop sits along a gradient running from the coldest stop to the hottest. */
+export const temperatureStopOffset = (temperature: number) =>
+  (temperature - COLDEST) / (HOTTEST - COLDEST);
+
+const toRgb = (hex: string) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+
+/**
+ * The ramp's color at a temperature, blended in sRGB the way SVG and canvas gradients blend, so a
+ * hover dot matches the line under it. Past either end it keeps the end color.
+ */
+export const temperatureColor = (temperature: number): string => {
+  const clamped = Math.min(Math.max(temperature, COLDEST), HOTTEST);
+  const upper = Math.max(
+    1,
+    TEMPERATURE_COLOR_STOPS.findIndex(([stop]) => clamped <= stop)
+  );
+  const [fromStop, fromColor] = TEMPERATURE_COLOR_STOPS[upper - 1];
+  const [toStop, toColor] = TEMPERATURE_COLOR_STOPS[upper];
+  const share = (clamped - fromStop) / (toStop - fromStop);
+  const from = toRgb(fromColor);
+  const to = toRgb(toColor);
+  const [r, g, b] = from.map((channel, i) => Math.round(channel + share * (to[i] - channel)));
+  return `rgb(${r}, ${g}, ${b})`;
+};
+
+/** A Chart.js color option painting the ramp along the chart's `yTemp` axis. */
+export const temperatureGradient =
+  (opacity = 1) =>
+  ({ chart }: ScriptableContext<'line'>): CanvasGradient | string => {
+    const scale = chart.scales.yTemp;
+    if (!chart.chartArea || !scale) return temperatureColor((COLDEST + HOTTEST) / 2);
+    const gradient = chart.ctx.createLinearGradient(
+      0,
+      scale.getPixelForValue(COLDEST),
+      0,
+      scale.getPixelForValue(HOTTEST)
+    );
+    TEMPERATURE_COLOR_STOPS.forEach(([stop, color]) => {
+      const [r, g, b] = toRgb(color);
+      gradient.addColorStop(temperatureStopOffset(stop), `rgba(${r}, ${g}, ${b}, ${opacity})`);
+    });
+    return gradient;
+  };
+
+/** A Chart.js color option coloring a hovered point by its own temperature. */
+export const temperaturePointColor = ({ parsed }: ScriptableContext<'line'>) =>
+  typeof parsed?.y === 'number' ? temperatureColor(parsed.y) : undefined;
 
 // A fixed scale so a mild day looks mild; colder or hotter readings stretch it
 export const TEMPERATURE_SCALE = { min: 0, max: 100 };
