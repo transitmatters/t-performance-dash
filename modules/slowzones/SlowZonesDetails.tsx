@@ -12,6 +12,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
+  useSlowzoneZoneDelays,
   useSpeedRestrictionData,
 } from '../../common/api/hooks/slowzones';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -42,6 +43,7 @@ export function SlowZonesDetails() {
 
   const delayTotals = useSlowzoneDelayTotalData();
   const allSlow = useSlowzoneAllData();
+  const zoneDelays = useSlowzoneZoneDelays(lineShort);
   const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
@@ -102,6 +104,7 @@ export function SlowZonesDetails() {
               <SlowZonesMap
                 key={lineShort}
                 slowZones={allSlow.data}
+                zoneDelays={zoneDelays.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
                 direction={isDesktop ? 'horizontal' : 'vertical'}

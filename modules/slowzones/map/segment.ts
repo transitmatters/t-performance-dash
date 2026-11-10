@@ -3,6 +3,7 @@ import type { Diagram, SegmentLocation } from '@transitmatters/stripmap';
 import dayjs from 'dayjs';
 import type {
   SlowZoneAllSlowResponse,
+  SlowZoneDailyDelays,
   SlowZoneResponse,
   SpeedRestriction,
 } from '../../../common/types/dataPoints';
@@ -16,9 +17,14 @@ export type SlowZoneDirection = '0' | '1';
 
 export type ByDirection<T> = Record<SlowZoneDirection, T>;
 
+export type MapSlowZone = SlowZoneResponse & {
+  /** Seconds over baseline on the map's date (see getDayDelay). */
+  dayDelay: number;
+};
+
 export type SlowZonesSegment = {
   segmentLocation: SegmentLocation;
-  slowZones: ByDirection<SlowZoneResponse[]>;
+  slowZones: ByDirection<MapSlowZone[]>;
   speedRestrictions: ByDirection<SpeedRestriction[]>;
 };
 
@@ -32,6 +38,8 @@ type SegmentSlowZonesOptions = {
   diagram: Diagram;
   speedRestrictions: SpeedRestriction[];
   slowZones: SlowZoneAllSlowResponse;
+  /** Per-day delays for the line's zones. Without them, zones show their median delay. */
+  zoneDelays?: SlowZoneDailyDelays[];
   lineName: LineShort;
 };
 
@@ -50,6 +58,28 @@ const getEffectiveDate = (desiredDate: Date, slowZones: SlowZoneAllSlowResponse)
     return maxEndDate;
   }
   return dayjs(desiredDate).startOf('day').toDate();
+};
+
+const zoneKey = (zone: { fr_id: string; to_id: string; start: string }) =>
+  `${zone.fr_id}|${zone.to_id}|${zone.start.slice(0, 10)}`;
+
+/**
+ * A zone's delay on `date`: the latest measurement on or before that day, so days with no
+ * data (e.g. shuttles) carry the last value forward and fast days count as zero, matching the
+ * line's total slow time. Without daily data, falls back to the zone's last-day delay on its
+ * final day and its median delay otherwise.
+ */
+const getDayDelay = (zone: SlowZoneResponse, date: Date, daily?: SlowZoneDailyDelays) => {
+  const day = dayjs(date).format('YYYY-MM-DD');
+  if (daily) {
+    const dayIndex = dayjs(day).diff(dayjs(daily.start), 'day');
+    for (let i = Math.min(dayIndex, daily.delays.length - 1); i >= 0; i--) {
+      const delay = daily.delays[i];
+      if (delay !== null) return Math.max(delay, 0);
+    }
+  }
+  if (day === zone.end.slice(0, 10) && zone.latest_delay !== null) return zone.latest_delay;
+  return zone.delay;
 };
 
 const filterActiveElements = <T extends Record<string, unknown>>(
@@ -109,7 +139,7 @@ const indexByDirection = <T>(records: WithSegmentLocation<T>[]): ByDirection<T[]
 };
 
 const mergeByLocation = (
-  slowZones: WithSegmentLocation<SlowZoneResponse>[],
+  slowZones: WithSegmentLocation<MapSlowZone>[],
   speedRestrictions: WithSegmentLocation<SpeedRestriction>[],
   diagram: Diagram
 ) => {
@@ -131,8 +161,16 @@ const mergeByLocation = (
 };
 
 export const segmentSlowZones = (options: SegmentSlowZonesOptions): SegmentationResult => {
-  const { date: desiredDate, slowZones, speedRestrictions, lineName, diagram } = options;
+  const {
+    date: desiredDate,
+    slowZones,
+    zoneDelays,
+    speedRestrictions,
+    lineName,
+    diagram,
+  } = options;
   const effectiveDate = getEffectiveDate(desiredDate, slowZones);
+  const dailyByZone = new Map(zoneDelays?.map((daily) => [zoneKey(daily), daily]));
   const activeSlowZones = locateIntoSegments(
     filterActiveElements(
       slowZones.data,
@@ -140,6 +178,11 @@ export const segmentSlowZones = (options: SegmentSlowZonesOptions): Segmentation
       effectiveDate,
       (sz) => [new Date(sz.start), new Date(sz.end)],
       (sz) => sz.color
+    ).map(
+      (sz): MapSlowZone => ({
+        ...sz,
+        dayDelay: getDayDelay(sz, effectiveDate, dailyByZone.get(zoneKey(sz))),
+      })
     ),
     (sz) => getParentStationForStopId(sz.fr_id),
     (sz) => getParentStationForStopId(sz.to_id)

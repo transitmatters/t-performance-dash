@@ -92,6 +92,24 @@ export interface SlowZoneDayTotalsResponse {
   updated_on: string;
 }
 
+/** One slow zone's delay on each day it was active. Matches a SlowZoneResponse on color, fr_id, to_id and start date. */
+export interface SlowZoneDailyDelays {
+  color: Exclude<LineShort, 'Bus'>;
+  fr_id: string;
+  to_id: string;
+  /** YYYY-MM-DD */
+  start: string;
+  /** YYYY-MM-DD */
+  end: string;
+  /** Seconds over baseline on start + i days, or null when there was no data that day. */
+  delays: (number | null)[];
+}
+
+export interface SlowZoneDailyDelaysResponse {
+  data: SlowZoneDailyDelays[];
+  updated_on: string;
+}
+
 export interface SpeedDataPoint {
   count: number;
   date: string;

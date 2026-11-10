@@ -1,8 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchAllSlow, fetchDelayTotals, fetchSpeedRestrictions } from '../slowzones';
+import {
+  fetchAllSlow,
+  fetchDelayTotals,
+  fetchSpeedRestrictions,
+  fetchZoneDelays,
+} from '../slowzones';
 import { ONE_HOUR } from '../../constants/time';
 import type { FetchSpeedRestrictionsOptions } from '../../types/api';
 import type { SpeedRestriction } from '../../types/dataPoints';
+import type { LineShort } from '../../types/lines';
+import { SLOW_ZONES_LINES } from '../../../modules/slowzones/types';
+import type { SlowZonesLineName } from '../../../modules/slowzones/types';
 
 export const useSlowzoneAllData = () => {
   return useQuery({ queryKey: ['allSlow'], queryFn: fetchAllSlow, staleTime: ONE_HOUR });
@@ -10,6 +18,17 @@ export const useSlowzoneAllData = () => {
 
 export const useSlowzoneDelayTotalData = () => {
   return useQuery({ queryKey: ['delayTotals'], queryFn: fetchDelayTotals, staleTime: ONE_HOUR });
+};
+
+/** Per-day delay for every slow zone on a line. Consumers should fall back to all_slow if this errors. */
+export const useSlowzoneZoneDelays = (lineShort: LineShort | undefined) => {
+  const isSlowZonesLine = SLOW_ZONES_LINES.includes(lineShort as SlowZonesLineName);
+  return useQuery({
+    queryKey: ['zoneDelays', lineShort],
+    queryFn: () => fetchZoneDelays(lineShort as SlowZonesLineName),
+    enabled: isSlowZonesLine,
+    staleTime: ONE_HOUR,
+  });
 };
 
 // Retired 2026-09-21: the upstream ArcGIS source data-ingestion reads from is
