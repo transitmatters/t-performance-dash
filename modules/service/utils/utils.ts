@@ -92,8 +92,12 @@ export const getServiceStats = (
   return {
     avgRoundTrips: mean(counts),
     roundTripsDelta: mean(c2) - mean(c1),
+    roundTripsBefore: mean(c1),
+    roundTripsAfter: mean(c2),
     percentDelivered: mean(pct) / 100,
     percentDeliveredDelta: (mean(p2) - mean(p1)) / 100,
+    percentDeliveredBefore: mean(p1) / 100,
+    percentDeliveredAfter: mean(p2) / 100,
     peakCount: peak?.count,
     peakDate: peak?.date,
   };

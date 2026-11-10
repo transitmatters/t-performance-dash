@@ -368,9 +368,30 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
             **{field: sum(row.get(field) or 0 for row in periods[period_start]) for field in summed_fields},
             **_sum_trip_counts(periods[period_start]),
             **_rollup_fleet_fields(periods[period_start]),
+            **_rollup_time_bands(periods[period_start]),
         }
         for period_start in sorted(periods)
     ]
+
+
+def _rollup_time_bands(rows: list[dict]) -> dict:
+    """Sum each band's totals across rows, so a rolled-up row carries the same `time_bands` map a
+    daily one does and the Speed graph can draw every band from a single request.
+
+    A band a row lacks counts as zero, exactly as _band_row reads it, so each band here matches
+    what the same request with `time_band` set would roll up to. Returns nothing when no row has a
+    breakdown (rows from before the pipeline recorded one, Commuter Rail, or a request already
+    narrowed to one band), leaving those responses as they were.
+    """
+    banded = [row["time_bands"] for row in rows if row.get("time_bands")]
+    if not banded:
+        return {}
+    return {
+        "time_bands": {
+            band: {field: sum((bands.get(band) or {}).get(field, 0) for bands in banded) for field in BUS_BAND_FIELDS}
+            for band in BUS_TIME_BANDS
+        }
+    }
 
 
 def _sum_trip_counts(rows: list[dict]) -> dict:

@@ -641,6 +641,85 @@ class TestBusTripMetricsFilters:
             }
         ]
 
+    @pytest.mark.parametrize("agg", ["weekly", "monthly"])
+    @pytest.mark.parametrize("day_type", [None, "business_day"])
+    def test_rollup_carries_each_band_as_its_filtered_request_would(self, query_calls, agg, day_type):
+        filters = {"agg": agg} | ({"day_type": day_type} if day_type else {})
+        rolled = speed.trip_metrics_by_bus_route(self.params(**filters))
+
+        for band in speed.BUS_TIME_BANDS:
+            narrowed = speed.trip_metrics_by_bus_route(self.params(**filters, time_band=band))
+            assert [row["date"] for row in rolled] == [row["date"] for row in narrowed]
+            for whole, one_band in zip(rolled, narrowed):
+                for field in ("miles_covered", "total_time", "count", "n_traversals"):
+                    assert whole["time_bands"][band][field] == one_band[field], (band, whole["date"], field)
+
+    def test_rollup_band_sums_by_hand(self, query_calls):
+        weeks = self.by_date(speed.trip_metrics_by_bus_route(self.params(agg="weekly")))
+
+        # Mon 1/5 (am_peak, midday) + Sat 1/10 (midday only).
+        assert weeks["2026-01-05"]["time_bands"]["midday"] == {
+            "count": 32,
+            "n_traversals": 650,
+            "n_interpolated": 5,
+            "miles_covered": 80,
+            "total_time": 22200,
+            "total_dwell": 6500,
+            "n_dwell_stops": 610,
+        }
+        # A band no row ran in is still listed, as zeros.
+        assert weeks["2026-01-05"]["time_bands"]["late_night"] == dict.fromkeys(speed.BUS_BAND_FIELDS, 0)
+        # The holiday Monday has a breakdown and the pre-breakdown Tuesday reads as zero beside it,
+        # while the all-day totals still include both.
+        assert weeks["2026-01-19"]["time_bands"]["am_peak"]["miles_covered"] == 12
+        assert weeks["2026-01-19"]["miles_covered"] == 140
+
+    def test_rollup_without_any_breakdown_has_no_time_bands(self, monkeypatch):
+        legacy = [row for row in BANDED_BUS_ROWS if "time_bands" not in row]
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_route", lambda *args: legacy)
+
+        [week] = speed.trip_metrics_by_bus_route(self.params(agg="weekly"))
+
+        assert "time_bands" not in week
+        assert week["miles_covered"] == 80
+
+    def test_grouped_daily_rows_sum_bands_across_routes(self, monkeypatch):
+        def fake_query_routes(table, routes, start, end):
+            return [
+                [
+                    {
+                        "route": "114",
+                        "date": "2026-01-05",
+                        "miles_covered": 10,
+                        "total_time": 3600,
+                        "time_bands": _bands(am_peak=(1, 10, 0, 2, 600, 150, 9)),
+                    }
+                ],
+                [
+                    {
+                        "route": "116",
+                        "date": "2026-01-05",
+                        "miles_covered": 30,
+                        "total_time": 7200,
+                        "time_bands": _bands(am_peak=(3, 30, 1, 6, 1200, 400, 28), evening=(2, 20, 0, 4, 900, 300, 20)),
+                    }
+                ],
+            ]
+
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_routes", fake_query_routes)
+        [day] = speed.trip_metrics_by_bus_route(self.params(route="114,116"))
+
+        assert day["time_bands"]["am_peak"] == {
+            "count": 4,
+            "n_traversals": 40,
+            "n_interpolated": 1,
+            "miles_covered": 8,
+            "total_time": 1800,
+            "total_dwell": 550,
+            "n_dwell_stops": 37,
+        }
+        assert day["time_bands"]["evening"]["miles_covered"] == 4
+
     def test_filters_leave_the_dynamo_query_unchanged(self, query_calls):
         speed.trip_metrics_by_bus_route(self.params(agg="weekly"))
         speed.trip_metrics_by_bus_route(self.params(agg="weekly", time_band="pm_peak", day_type="business_day"))

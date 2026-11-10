@@ -1,5 +1,6 @@
 import type { LineDelays } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
+import type { DelayAgg } from './format';
 import { causeRows } from './reasonSeries';
 
 const mean = (values: number[]) =>
@@ -10,7 +11,7 @@ const halves = <T>(values: T[]): [T[], T[]] => {
   return [values.slice(0, mid), values.slice(mid)];
 };
 
-export const getDelayStats = (data: LineDelays[], agg: 'daily' | 'weekly', line?: Line) => {
+export const getDelayStats = (data: LineDelays[], agg: DelayAgg, line?: Line) => {
   const totals = data.map((point) => point.total_delay_time);
   const totalDelay = totals.reduce((sum, v) => sum + v, 0);
   const [leading, trailing] = halves(totals);
@@ -20,7 +21,7 @@ export const getDelayStats = (data: LineDelays[], agg: 'daily' | 'weekly', line?
 
   return {
     totalDelay, // total minutes delayed across the window
-    avgDelay: mean(totals), // minutes delayed per period (day or week)
+    avgDelay: mean(totals), // minutes delayed per period (day, week or month)
     avgDelayDelta: mean(trailing) - mean(leading), // minutes, trailing minus leading half
     agg,
     topReasonLabel: topReason?.label ?? null,

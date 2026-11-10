@@ -24,6 +24,7 @@ import {
   SPEED_COLOR_STOPS,
   STATION_LINES,
   STATIONS_SOURCE_LAYER,
+  STOP_DWELL_MINIMUM_ZOOM,
 } from '../constants';
 import type {
   BusSpeedSegmentProperties,
@@ -34,7 +35,7 @@ import type {
   StationProperties,
   TimeBand,
 } from '../types';
-import { compareRouteNames, isPooledSegment, sharedRouteKeys } from '../utils';
+import { compareRouteNames, isPooledSegment, sharedRouteKeys, stopDwellsByRoute } from '../utils';
 import { SegmentPopupContent } from './BusSpeedSegmentPopupContent';
 import { BusStopPopupContent, StationPopupContent } from './BusSpeedStopPopupContent';
 import { ResetViewControl } from './ResetViewControl';
@@ -131,6 +132,16 @@ const zoomWidth = (
   ] as unknown as DataDrivenPropertyValueSpecification<number>;
 
 const lineWidth = zoomWidth(1.5, 3.5, 6);
+/** Below this a dash is too small to read as one, against lines this thin. */
+const TERMINAL_DASHES_MIN_ZOOM = 13;
+const SOLID_LINE = ['literal', [1, 0]];
+const lineDashes = [
+  'step',
+  ['zoom'],
+  SOLID_LINE,
+  TERMINAL_DASHES_MIN_ZOOM,
+  ['case', ['has', 'terminal_section'], ['literal', [1, 2.5]], SOLID_LINE],
+] as unknown as DataDrivenPropertyValueSpecification<number[]>;
 const casingWidth = zoomWidth(3.5, 5.5, 8);
 const hoverHaloWidth = zoomWidth(7, 11, 16);
 
@@ -237,7 +248,7 @@ const HOVER_HALO_COLOR = '#FFC72C';
 type Hovered = { longitude: number; latitude: number; anchor: 'top-left' | 'bottom-left' } & (
   | { kind: 'segment'; segments: BusSpeedSegmentProperties[] }
   | { kind: 'station'; properties: StationProperties }
-  | { kind: 'busStop'; properties: BusStopProperties }
+  | { kind: 'busStop'; properties: BusStopProperties; dwells?: BusSpeedSegmentProperties[] }
 );
 
 /**
@@ -395,7 +406,8 @@ export const BusSpeedMapView = ({
     };
   }, [routeIds, routeFilterClause]);
 
-  const [filter, hitboxFilter] = useMemo<[FilterSpecification, FilterSpecification]>(() => {
+  // The slice of the data on show, whichever segments of it are drawn.
+  const sliceClauses = useMemo<FilterSpecification[]>(() => {
     const clauses: FilterSpecification[] = [
       ['>=', ['get', 'n_traversals'], MIN_TRAVERSALS],
       ['==', ['get', 'time_band'], timeBand],
@@ -403,6 +415,11 @@ export const BusSpeedMapView = ({
     // Daily features carry no `day_type` at all (a single day is already wholly one type),
     // so this clause only applies to weekly/monthly tiles.
     if (period !== 'daily') clauses.push(['==', ['get', 'day_type'], dayType]);
+    return clauses;
+  }, [timeBand, period, dayType]);
+
+  const [filter, hitboxFilter] = useMemo<[FilterSpecification, FilterSpecification]>(() => {
+    const clauses = [...sliceClauses];
     if (segmentStops) {
       clauses.push(['==', ['get', 'from_stop_name'], segmentStops.from]);
       clauses.push(['==', ['get', 'to_stop_name'], segmentStops.to]);
@@ -412,7 +429,7 @@ export const BusSpeedMapView = ({
     const withRoutes = (routeClause?: FilterSpecification) =>
       ['all', ...clauses, ...(routeClause ? [routeClause] : [])] as unknown as FilterSpecification;
     return [withRoutes(routeClauses.drawn), withRoutes(routeClauses.hoverable)];
-  }, [timeBand, period, dayType, routeClauses, segmentStops, direction]);
+  }, [sliceClauses, routeClauses, segmentStops, direction]);
 
   // Identifies the exact hovered features (one per route on the segment) so the halo layer
   // below can single them out -- the same route_id/direction_id/from/to tuple used as a
@@ -429,6 +446,26 @@ export const BusSpeedMapView = ({
     ] as unknown as FilterSpecification;
   }, [hovered]);
 
+  // A stop's dwell is on the segments leaving it, whichever way the direction toggle points:
+  // stops are drawn for both directions, so their popups should be too. Undefined until the whole
+  // list can be read, below STOP_DWELL_MINIMUM_ZOOM or while tiles are loading.
+  const stopDwells = (
+    map: MaplibreMap,
+    stopId: string
+  ): BusSpeedSegmentProperties[] | undefined => {
+    if (map.getZoom() < STOP_DWELL_MINIMUM_ZOOM || !map.areTilesLoaded()) return undefined;
+    const features = map.querySourceFeatures(SOURCE_ID, {
+      sourceLayer: PMTILES_SOURCE_LAYER,
+      filter: [
+        'all',
+        ...sliceClauses,
+        ['==', ['get', 'from_stop_id'], stopId],
+        ...(routeFilterClause ? [routeFilterClause] : []),
+      ] as unknown as FilterSpecification,
+    });
+    return stopDwellsByRoute(features.map((f) => f.properties as BusSpeedSegmentProperties));
+  };
+
   const onMouseMove = (event: MapLayerMouseEvent) => {
     const features = event.features ?? [];
     for (const [layerId, kind] of HOVER_PRIORITY) {
@@ -444,18 +481,25 @@ export const BusSpeedMapView = ({
             ? ('top-left' as const)
             : ('bottom-left' as const),
       };
-      setHovered(
-        kind === 'segment'
-          ? {
-              kind,
-              ...position,
-              segments: segmentsSharingStops(
-                features,
-                feature.properties as BusSpeedSegmentProperties
-              ),
-            }
-          : ({ kind, ...position, properties: feature.properties } as Hovered)
-      );
+      if (kind === 'segment') {
+        const segments = segmentsSharingStops(
+          features,
+          feature.properties as BusSpeedSegmentProperties
+        );
+        setHovered({ kind, ...position, segments });
+      } else if (kind === 'busStop') {
+        const properties = feature.properties as BusStopProperties;
+        // Kept while the mouse stays on the stop, which it moves on far more often than it leaves:
+        // the lookup takes about 40ms at zoom 12 downtown.
+        const dwells =
+          (hovered?.kind === 'busStop' &&
+            hovered.properties.stop_id === properties.stop_id &&
+            hovered.dwells) ||
+          stopDwells(event.target, properties.stop_id);
+        setHovered({ kind, ...position, properties, dwells });
+      } else {
+        setHovered({ kind, ...position, properties: feature.properties as StationProperties });
+      }
       return;
     }
     setHovered(undefined);
@@ -658,7 +702,11 @@ export const BusSpeedMapView = ({
           source-layer={PMTILES_SOURCE_LAYER}
           filter={filter}
           layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-          paint={{ 'line-color': speedColor, 'line-width': lineWidth }}
+          paint={{
+            'line-color': speedColor,
+            'line-width': lineWidth,
+            'line-dasharray': lineDashes,
+          }}
         />
         {/* Direction of travel, only once a route is picked: unfiltered, many routes share each
             street and one route's inbound can run against another's, so arrows there would be
@@ -776,7 +824,13 @@ export const BusSpeedMapView = ({
           offset={16}
         >
           {hovered.kind === 'station' && <StationPopupContent station={hovered.properties} />}
-          {hovered.kind === 'busStop' && <BusStopPopupContent busStop={hovered.properties} />}
+          {hovered.kind === 'busStop' && (
+            <BusStopPopupContent
+              busStop={hovered.properties}
+              dwells={hovered.dwells}
+              period={period}
+            />
+          )}
           {hovered.kind === 'segment' && (
             <SegmentPopupContent segments={hovered.segments} period={period} />
           )}

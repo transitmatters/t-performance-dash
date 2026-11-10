@@ -36,7 +36,8 @@ def proxy_request(path: str, query_params: dict = None):
 
     Args:
         path: The API path to request, appended to the production base URL.
-        query_params: Optional dict of query parameters to include in the request.
+        query_params: Optional query parameters to include in the request: a dict (list values become
+            repeated parameters) or a Chalice MultiDict.
 
     Returns:
         The parsed JSON response from the production API.
@@ -46,6 +47,9 @@ def proxy_request(path: str, query_params: dict = None):
     """
     url = f"{PRODUCTION_API}{path}"
     if query_params:
+        # A MultiDict's items() keeps only the last value of a repeated parameter, so expand it with getlist().
+        if hasattr(query_params, "getlist"):
+            query_params = [(key, value) for key in query_params for value in query_params.getlist(key)]
         url = f"{url}?{urlencode(query_params, doseq=True)}"
     response = requests.get(url, timeout=30)
     response.raise_for_status()

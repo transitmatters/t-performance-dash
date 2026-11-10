@@ -5,6 +5,10 @@
       "0": "northbound",
       "1": "southbound"
     },
+    "gtfs_direction_id": {
+      "0": 1,
+      "1": 0
+    },
     "stations": [
       {
         "stop_name": "Alewife",
@@ -294,6 +298,10 @@
       "0": "northbound",
       "1": "southbound"
     },
+    "gtfs_direction_id": {
+      "0": 1,
+      "1": 0
+    },
     "stations": [
       {
         "stop_name": "Oak Grove",
@@ -549,6 +557,10 @@
       "0": "northbound",
       "1": "southbound"
     },
+    "gtfs_direction_id": {
+      "0": 1,
+      "1": 0
+    },
     "stations": [
       {
         "stop_name": "Wonderland",
@@ -701,6 +713,10 @@
     "direction": {
       "0": "eastbound",
       "1": "westbound"
+    },
+    "gtfs_direction_id": {
+      "0": 1,
+      "1": 0
     },
     "stations": [
       {
@@ -1506,6 +1522,10 @@
     "direction": {
       "0": "northbound",
       "1": "southbound"
+    },
+    "gtfs_direction_id": {
+      "0": 1,
+      "1": 0
     },
     "stations": [
       {

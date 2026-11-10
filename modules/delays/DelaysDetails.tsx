@@ -116,7 +116,9 @@ export function DelaysDetails() {
             almost always include a reason for the delay, and an estimate of how long trains may be
             delayed: "delays of about 15 minutes" on the subway, or "operating 10-20 minutes behind
             schedule" for a Commuter Rail train. We collect these alerts, group them by general
-            matching categories, and add up the delay time for each day or week.
+            matching categories, and add up the delay time for each day or week. Over more than two
+            years, each bar is a month instead: each week's delay is split evenly across its seven
+            days, and only months with a full set of data are shown.
           </p>
           {line === 'line-bus' && (
             <p>

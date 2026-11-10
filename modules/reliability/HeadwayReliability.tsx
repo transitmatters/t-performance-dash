@@ -1,24 +1,19 @@
+import type { ReactNode } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { startCase } from '@lodash-utils';
 import { Widget } from '../../common/components/widgets';
-import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
+import { InfoTooltip } from '../../common/components/general/InfoTooltip';
 import { rtStations } from '../../common/constants/stations';
+import { useChartToggle } from '../../common/hooks/useChartToggle';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
 import type { Line, LineShort } from '../../common/types/lines';
 import type { AggType } from '../speed/constants/speeds';
 import { HeadwayBreakdown } from './charts/HeadwayBreakdown';
-import { ReliabilityGraph } from './charts/ReliabilityGraph';
-import {
-  BUNCHED,
-  formatPercent,
-  getHeadwayStats,
-  getHeadwayTotals,
-  headwayShare,
-  LONG_GAPS,
-  toPoints,
-  WITHIN_50_150,
-  WITHIN_75_125,
-} from './utils';
+import { OffScheduleDivergingBars } from './charts/OffScheduleDivergingBars';
+import { OnTimeBars } from './charts/OnTimeBars';
+import { periodName } from './charts/timeAxis';
+import type { HeadwayDirection } from './utils';
+import { getHeadwayTotals, toHeadwayRows } from './utils';
 
 interface HeadwayReliabilityProps {
   reliability: UseQueryResult<ReliabilityEntry[]>;
@@ -35,6 +30,13 @@ const directionName = (lineShort: LineShort, directionId: '0' | '1') => {
   return startCase(names?.[directionId === '0' ? '1' : '0'] ?? `Direction ${directionId}`);
 };
 
+const TitleWithInfo = ({ title, info }: { title: string; info: string }) => (
+  <span className="inline-flex items-center gap-2">
+    {title}
+    <InfoTooltip info={info} className="leading-none text-muted-foreground" />
+  </span>
+);
+
 /** Headway reliability for a subway line or bus route. Only subway counts are split by direction. */
 export const HeadwayReliability = ({
   reliability,
@@ -44,86 +46,64 @@ export const HeadwayReliability = ({
   startDate,
   endDate,
 }: HeadwayReliabilityProps) => {
-  const data = reliability.data ?? [];
-  const stats = reliability.data ? getHeadwayStats(reliability.data) : null;
-  const showDirections = line !== 'line-bus';
+  const isBus = line === 'line-bus';
+  const vehicle = isBus ? 'bus' : 'train';
+  const period = periodName(agg);
+
+  const { value: direction, control: directionControl } = useChartToggle<HeadwayDirection, string>(
+    'both',
+    [
+      ['both', 'Both directions'],
+      ['0', directionName(lineShort, '0')],
+      ['1', directionName(lineShort, '1')],
+    ],
+    { variant: 'toggle', paramKey: 'relDir' }
+  );
+  // Bus counts aren't split by direction
+  const shownDirection = isBus ? 'both' : direction;
+  const rows = toHeadwayRows(reliability.data ?? [], shownDirection);
   const ready = [reliability, startDate, endDate];
-  const graphProps = {
-    line,
-    agg,
-    startDate: startDate!,
-    endDate: endDate!,
-    kind: 'percent' as const,
-  };
+
+  if (!startDate || !endDate) return null;
+  const chartProps = { rows, agg, startDate, endDate };
+
+  const card = (
+    title: string,
+    info: string,
+    subtitle: string,
+    chart: ReactNode,
+    action?: ReactNode
+  ) => (
+    <Widget
+      title={<TitleWithInfo title={title} info={info} />}
+      subtitle={subtitle}
+      ready={ready}
+      action={action}
+    >
+      {chart}
+    </Widget>
+  );
 
   return (
     <>
-      {stats && (
-        <StatCardGrid>
-          <StatCard label="Within 75–125% of schedule" value={formatPercent(stats.within75)} />
-          <StatCard label="Within 50–150% of schedule" value={formatPercent(stats.within50)} />
-          <StatCard label="Bunched (≤50%)" value={formatPercent(stats.bunched)} />
-          <StatCard label="Long gaps (≥150%)" value={formatPercent(stats.longGaps)} />
-        </StatCardGrid>
+      {card(
+        'How reliable was service',
+        `A headway is the gap between one ${vehicle} and the next. Each is compared with the scheduled headway at that time: on time is within 25% of it (with a ${vehicle} every 8 minutes, a gap of 6 to 10 minutes), bunched is half of it or less, and a long gap is half again as long or more.`,
+        'Every headway in these dates, compared with the scheduled headway',
+        <HeadwayBreakdown counts={getHeadwayTotals(rows)} />,
+        !isBus && directionControl
       )}
-      <Widget
-        title="Headways compared with the schedule"
-        subtitle="Every headway in these dates, by how it compared with the scheduled headway"
-        ready={ready}
-      >
-        <HeadwayBreakdown counts={getHeadwayTotals(data)} />
-      </Widget>
-      <Widget
-        title="Headway reliability"
-        subtitle="Share of headways close to the scheduled headway"
-        ready={ready}
-      >
-        <ReliabilityGraph
-          data={[
-            {
-              label: '75–125%',
-              data: toPoints(data, (e) => headwayShare(e, WITHIN_75_125)),
-            },
-            {
-              label: '50–150%',
-              data: toPoints(data, (e) => headwayShare(e, WITHIN_50_150)),
-            },
-          ]}
-          valueAxisLabel="Headways"
-          {...graphProps}
-        />
-      </Widget>
-      <Widget
-        title="Bunching and long gaps"
-        subtitle="Share of headways at half the scheduled gap or less, or half again as long or more"
-        ready={ready}
-      >
-        <ReliabilityGraph
-          data={[
-            {
-              label: 'Bunched',
-              data: toPoints(data, (e) => headwayShare(e, BUNCHED)),
-            },
-            {
-              label: 'Long gaps',
-              data: toPoints(data, (e) => headwayShare(e, LONG_GAPS)),
-            },
-          ]}
-          valueAxisLabel="Headways"
-          {...graphProps}
-        />
-      </Widget>
-      {showDirections && (
-        <Widget title="By direction" subtitle="Share of headways within 75–125%" ready={ready}>
-          <ReliabilityGraph
-            data={(['0', '1'] as const).map((direction) => ({
-              label: directionName(lineShort, direction),
-              data: toPoints(data, (e) => headwayShare(e.byDirection?.[direction], WITHIN_75_125)),
-            }))}
-            valueAxisLabel="Within 75–125%"
-            {...graphProps}
-          />
-        </Widget>
+      {card(
+        'On time over time',
+        `The share of headways within 25% of the scheduled headway. This is the measure the home page judges each line on.`,
+        `Share of headways on time, per ${period}`,
+        <OnTimeBars {...chartProps} />
+      )}
+      {card(
+        'Bunching or long gaps',
+        `Long gaps mean longer waits. Bunching often follows them, as the next ${vehicle} catches up to the late one, so the two tend to rise together.`,
+        `Each ${period}: headways longer than scheduled above the line, shorter (bunching) below it`,
+        <OffScheduleDivergingBars {...chartProps} />
       )}
     </>
   );

@@ -1,11 +1,48 @@
 import { describe, expect, it } from 'vitest';
 import type { Route } from '../types/router';
+import { ALL_PAGES } from '../constants/pages';
+import { useDateStore } from '../state/dateStore';
+import type { StationStore } from '../state/stationStore';
 import {
   getBusRouteSelectionItemHref,
   getLineSelectionItemHref,
+  getQueryParams,
   parseRoutePath,
+  stationScope,
   stripForeignRouteParams,
 } from './router';
+
+describe('getQueryParams stations', () => {
+  // Malden Center -> Wellington, remembered on the way out of Orange Line trips.
+  const orangeStore: StationStore = {
+    from: '70034',
+    to: '70032',
+    scope: stationScope('line-orange', {}),
+    setStationStore: () => {},
+  };
+  const toTrips = (query: Route['query'], line: Route['line'], store = orangeStore) =>
+    getQueryParams(
+      ALL_PAGES.overview,
+      ALL_PAGES.singleTrips,
+      query,
+      useDateStore.getState(),
+      store,
+      line
+    );
+
+  it('reuses remembered stations on the line they were picked on', () => {
+    expect(toTrips({}, 'line-orange')).toMatchObject({ from: '70034', to: '70032' });
+  });
+
+  it('leaves remembered stations behind on another line or route', () => {
+    expect(toTrips({ crRoute: 'CR-Fairmount' }, 'line-commuter-rail')).not.toHaveProperty('from');
+    expect(toTrips({}, 'line-red')).not.toHaveProperty('from');
+
+    const busStore = { ...orangeStore, scope: stationScope('line-bus', { busRoute: '1' }) };
+    expect(toTrips({ busRoute: '1' }, 'line-bus', busStore)).toMatchObject({ from: '70034' });
+    expect(toTrips({ busRoute: '28' }, 'line-bus', busStore)).not.toHaveProperty('from');
+  });
+});
 
 describe('parseRoutePath', () => {
   it('resolves each mode root to its overview', () => {

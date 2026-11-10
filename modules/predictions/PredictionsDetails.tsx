@@ -10,11 +10,13 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { usePredictionData } from '../../common/api/hooks/predictions';
 import type { LineRouteId } from '../../common/types/lines';
 import { Widget } from '../../common/components/widgets';
+import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import {
-  StatCard,
-  StatCardGrid,
-  type StatSentiment,
-} from '../../common/components/widgets/StatCard';
+  formatPercent,
+  formatPercentChange,
+  halvesDetail,
+  statDelta,
+} from '../../common/utils/statDelta';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { BranchSelector } from '../../common/components/inputs/BranchSelector';
 import { prettyDate } from '../../common/utils/date';
@@ -51,14 +53,6 @@ export function PredictionsDetails() {
   }
 
   const stats = predictions.data?.length ? getPredictionStats(predictions.data) : null;
-  const accuracyDelta = (delta: number) => {
-    if (!Number.isFinite(delta)) return undefined;
-    const negligible = 0.005;
-    const sentiment: StatSentiment =
-      Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
-    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
-    return { label: `${delta > 0 ? '+' : ''}${Math.round(delta * 100)}pp · ${word}`, sentiment };
-  };
 
   return (
     <PageWrapper pageTitle={'Predictions'}>
@@ -68,7 +62,13 @@ export function PredictionsDetails() {
             <StatCard
               label="Prediction accuracy"
               value={`${Math.round(stats.overallAccuracy * 100)}%`}
-              delta={accuracyDelta(stats.accuracyDelta)}
+              delta={statDelta({
+                delta: stats.accuracyDelta,
+                negligible: 0.005,
+                magnitude: formatPercentChange(stats.accuracyDelta),
+                words: ['better', 'worse'],
+                detail: halvesDetail(stats.accuracyBefore, stats.accuracyAfter, formatPercent),
+              })}
             />
             <StatCard
               label="Best week"

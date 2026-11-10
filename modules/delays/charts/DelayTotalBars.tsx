@@ -16,7 +16,15 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import type { DelayRow } from '../reasonSeries';
-import { delayAxisTicks, formatDelay } from '../format';
+import {
+  type DelayAgg,
+  AGG_PERIOD,
+  barAxisBounds,
+  delayAxisTicks,
+  delayPeriodTitle,
+  delayTimeAxis,
+  formatDelay,
+} from '../format';
 import type { DelayReasonKey } from '../constants/reasons';
 import { REASON_BY_KEY, reasonLabel } from '../constants/reasons';
 import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
@@ -26,7 +34,7 @@ interface DelayTotalBarsProps {
   data: DelayRow[];
   startDate: string;
   endDate: string;
-  agg: 'daily' | 'weekly';
+  agg: DelayAgg;
   focus: DelayReasonKey | null;
   /** Fill the parent's height and leave out the buttons, as an embed does. */
   fill?: boolean;
@@ -45,7 +53,8 @@ export const DelayTotalBars = ({
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
   const lineColor = LINE_COLORS[line ?? 'default'];
-  const period = agg === 'weekly' ? 'week' : 'day';
+  const period = AGG_PERIOD[agg];
+  const timeAxis = delayTimeAxis(agg);
 
   const labels = data.map((point) => point.date);
   const totals = data.map((point) => point.total_delay_time);
@@ -96,8 +105,7 @@ export const DelayTotalBars = ({
               tooltip: {
                 filter: hideZeroUnlessAllZero,
                 callbacks: {
-                  title: (context) =>
-                    agg === 'weekly' ? `Week of ${context[0]?.label ?? ''}` : context[0]?.label,
+                  title: (context) => delayPeriodTitle(agg, context[0]?.label ?? ''),
                   hoverCard: (items) => {
                     const point = data[items[0]?.dataIndex];
                     if (!point) return null;
@@ -155,17 +163,12 @@ export const DelayTotalBars = ({
               x: {
                 stacked: true,
                 type: 'time',
-                min: startDate,
-                max: endDate,
-                offset: true,
+                ...barAxisBounds(data, startDate, endDate, agg),
+                offset: false,
                 grid: { display: false },
                 border: { color: chartTheme.axisBorder },
-                time: {
-                  unit: agg === 'weekly' ? 'month' : 'week',
-                  tooltipFormat: 'MMM d, yyyy',
-                  displayFormats: { month: 'MMM', week: 'MMM d' },
-                },
-                ticks: { color: chartTheme.tick },
+                time: timeAxis.time,
+                ticks: { ...timeAxis.ticks, color: chartTheme.tick },
                 adapters: { date: { locale: enUS } },
               },
             },
