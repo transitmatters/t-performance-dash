@@ -12,7 +12,7 @@ const relativeLuminance = (hexColor: string): number => {
   return 0.2126 * rl + 0.7152 * gl + 0.0722 * bl;
 };
 
-const contrastRatio = (hexA: string, hexB: string): number => {
+export const contrastRatio = (hexA: string, hexB: string): number => {
   const [lA, lB] = [relativeLuminance(hexA), relativeLuminance(hexB)];
   const [lighter, darker] = lA > lB ? [lA, lB] : [lB, lA];
   return (lighter + 0.05) / (darker + 0.05);
