@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 from chalicelib import config
 
 bos_tz = pytz.timezone("America/New_York")
-now = datetime.now(tz=bos_tz)
 
 BASE_URL_V3 = "https://api-v3.mbta.com/{command}?{parameters}"
 
@@ -140,7 +139,7 @@ def format_alerts_response(alerts_data):  # TODO: separate logic for bus to avoi
     return alerts_filtered
 
 
-def get_active(alert_period):
+def get_active(alert_period, now=None):
     """Append a field to each time period on the alert to determine:
     1) If the period is current (ongoing or starts today)
     2) If the period is upcoming (affects a day beyond today)
@@ -148,22 +147,25 @@ def get_active(alert_period):
     These two things are not mutually exclusive.
 
     Args:
-      alert_period:
+      alert_period: An active period dict with ``start`` and ``end`` ISO timestamp strings.
+      now: The time to judge against. Defaults to the current Boston time, read per call so a
+        warm Lambda doesn't keep the time it started.
 
     Returns:
-
+      dict: The same period with ``current`` and ``upcoming`` set.
     """
     if alert_period["end"] is None:
         alert_period["current"] = True
         alert_period["upcoming"] = False
         return alert_period  # No end date
 
+    now = now or datetime.now(tz=bos_tz)
     start = bos_tz.localize(datetime.fromisoformat(alert_period["start"][:-6]))
     end = bos_tz.localize(datetime.fromisoformat(alert_period["end"][:-6]))
     today = bos_tz.localize(datetime(now.year, now.month, now.day))
 
     end_tomorrow = today + timedelta(days=1, hours=4)  # Anything before 4 am is "today"
-    end_today = today + timedelta(hours=11, minutes=59)
+    end_today = today + timedelta(hours=23, minutes=59)
 
     if end <= now:
         alert_period["current"] = False
