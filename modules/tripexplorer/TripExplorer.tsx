@@ -7,7 +7,7 @@ import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { getParentStationForStopId } from '../../common/utils/stations';
+import { getStationInOptions, optionsStation } from '../../common/utils/stations';
 import { TripDataNotes } from '../../common/components/notices/TripDataNotes';
 import { CrBetaAccuracyNotice } from '../../common/components/notices/CrBetaAccuracyNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
@@ -40,8 +40,10 @@ export const TripExplorer = () => {
     ferryRoute
   );
 
-  const fromStation = from ? getParentStationForStopId(from, lineShort) : undefined;
-  const toStation = to ? getParentStationForStopId(to, lineShort) : undefined;
+  // Stops from another line wait here until the station selector swaps in this line's defaults.
+  const stations = optionsStation(lineShort, busRoute, crRoute, ferryRoute);
+  const fromStation = getStationInOptions(from, stations);
+  const toStation = getStationInOptions(to, stations);
   const matchingAlerts = useMemo(() => alerts?.filter(findMatch), [alerts]);
   const setAlerts = useAlertStore((store) => store.setAlerts);
   useEffect(() => {

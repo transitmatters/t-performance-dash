@@ -1,10 +1,10 @@
-import dayjs from 'dayjs';
 import { useAlertDelays } from '../../common/api/hooks/delays';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { getWeekStart } from '../../common/utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { lineToDefaultRouteId } from '../predictions/utils/utils';
-import { buildSeries, toActualDelays, withinRange } from './reasonSeries';
+import { AGG_PERIOD, delayAggFor } from './format';
+import { buildSeries, toActualDelays, toMonthly, withinRange } from './reasonSeries';
 import { useGreenBranch } from './useGreenBranch';
 
 /** The delays for the line, route and branch in the URL over these dates, as the Delays page shows them. */
@@ -23,9 +23,9 @@ export const useDelays = (startDate: string | undefined, endDate: string | undef
         ? crRoute
         : lineToDefaultRouteId(line);
 
-  // Use daily data for 90 days or less, weekly for longer ranges
-  const agg =
-    startDate && endDate && dayjs(endDate).diff(dayjs(startDate), 'day') <= 90 ? 'daily' : 'weekly';
+  const agg = startDate && endDate ? delayAggFor(startDate, endDate) : 'weekly';
+  // There's no monthly table: months are summed from the weekly rows.
+  const fetchAgg = agg === 'daily' ? 'daily' : 'weekly';
 
   // Bus delays are stored per GTFS route id; grouped labels (e.g. 114/116/117) are summed
   // server-side, and "Bus" is every route together.
@@ -33,20 +33,25 @@ export const useDelays = (startDate: string | undefined, endDate: string | undef
     line === 'line-bus' ? (busRoute ? getBusRouteIds(busRoute).join(',') : 'Bus') : routeId;
 
   const alertDelays = useAlertDelays(
-    { start_date: startDate, end_date: endDate, line: delaysLine, agg: agg },
+    { start_date: startDate, end_date: endDate, line: delaysLine, agg: fetchAgg },
     Boolean(startDate && endDate && line)
   );
 
   const actual = alertDelays.data && toActualDelays(alertDelays.data);
-  const delayData =
+  const rows =
     actual && startDate && endDate
-      ? withinRange(actual.rows, agg === 'weekly' ? getWeekStart(startDate) : startDate, endDate)
+      ? withinRange(
+          actual.rows,
+          fetchAgg === 'weekly' ? getWeekStart(startDate) : startDate,
+          endDate
+        )
       : undefined;
+  const delayData = rows && agg === 'monthly' ? toMonthly(rows) : rows;
 
   return {
     alertDelays,
     agg,
-    period: agg === 'weekly' ? 'week' : 'day',
+    period: AGG_PERIOD[agg],
     isActual: actual?.isActual ?? false,
     delayData,
     series: delayData ? buildSeries(delayData, line) : [],

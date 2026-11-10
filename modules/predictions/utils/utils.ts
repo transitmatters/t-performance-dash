@@ -116,13 +116,17 @@ export const getPredictionStats = (data: TimePredictionWeek[]) => {
   const mid = Math.floor(perWeek.length / 2);
   const leading = perWeek.slice(0, mid);
   const trailing = perWeek.slice(mid);
-  const accuracyDelta = leading.length && trailing.length ? mean(trailing) - mean(leading) : NaN;
+  const hasHalves = leading.length > 0 && trailing.length > 0;
+  const accuracyBefore = hasHalves ? mean(leading) : NaN;
+  const accuracyAfter = hasHalves ? mean(trailing) : NaN;
 
   const { peak, worst } = calcValues(data);
 
   return {
     overallAccuracy,
-    accuracyDelta,
+    accuracyDelta: accuracyAfter - accuracyBefore,
+    accuracyBefore,
+    accuracyAfter,
     peakAccuracy: peak.num_accurate_predictions / peak.num_predictions,
     peakDate: peak.weekly,
     worstAccuracy: worst.num_accurate_predictions / worst.num_predictions,

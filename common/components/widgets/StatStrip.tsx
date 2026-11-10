@@ -2,27 +2,9 @@ import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { getFormattedTimeString } from '../../utils/time';
 import { InfoTooltip } from '../general/InfoTooltip';
 import type { MiniWidgetObject, WidgetComparison } from './MiniWidgetCreator';
-
-const formatComparisonDelta = (comparison: WidgetComparison) => {
-  const abs = Math.abs(comparison.delta);
-  if (comparison.unit === 'percentage') return `${Math.round(abs * 100)}pp`;
-  if (comparison.unit === 'mph') return `${abs.toFixed(1)} mph`;
-  return getFormattedTimeString(abs);
-};
-
-const isNegligible = (comparison: WidgetComparison) => {
-  const abs = Math.abs(comparison.delta);
-  if (comparison.unit === 'percentage') return abs <= 0.01;
-  if (comparison.unit === 'mph') return abs < 0.05;
-  return abs <= 1;
-};
-
-/** A longer trip or wait is worse; a higher speed or on-time share is better. */
-const isWorse = (comparison: WidgetComparison) =>
-  comparison.higherIsBetter ? comparison.delta < 0 : comparison.delta > 0;
+import { formatComparisonDelta, isNegligible, isWorse } from './internal/comparison';
 
 /** On-time share is the one stat that carries a verdict, so it gets sentiment color. */
 const isOnTimeStat = (label: string) => label.toLowerCase().includes('on time');

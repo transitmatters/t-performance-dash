@@ -60,8 +60,10 @@ const SubwayOverview = ({ lineShort }: { lineShort: LineShort }) => {
   );
 };
 
-// Bus uses how long delay alerts were up, not the delay they stated
+// Bus uses how long delay alerts were up, not the delay they stated, and counts dropped trips
+// rather than round trips
 const BUS_CHART_COPY: MetricCopy = {
+  service: { title: 'Service delivered', subtitle: 'Trips dropped per day (est.), last 30 days' },
   delays: { title: 'Delays', subtitle: 'Minutes a delay alert was up per day, last 30 days' },
 };
 
@@ -75,7 +77,7 @@ const BusOverview = () => {
     <OverviewLayout
       rows={rows}
       isLoading={isLoading}
-      skeletonRows={3}
+      skeletonRows={4}
       selectedMetric={selectedMetric}
       onSelectMetric={setSelectedMetric}
       chart={<BusMetricChart metric={selectedMetric} busRoute={busRoute} />}

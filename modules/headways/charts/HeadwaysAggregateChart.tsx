@@ -18,12 +18,21 @@ import { filterByDayType } from '../../../common/utils/widgets';
 
 const formatShare = (part: number, total: number) => `${Math.round((part / total) * 100)}%`;
 
-/** The day's share of the Bunched and On time stats under the chart. */
-const bunchingRows = ({ count, bunched, on_time }: AggregateDataPoint): HoverCardRow[] => {
-  if (!count || bunched == null || on_time == null) return [];
+/**
+ * The day's share of the Bunched and On time stats under the chart, out of the headways with a
+ * scheduled headway (every headway, in responses from before `scheduled` existed).
+ */
+const bunchingRows = ({
+  count,
+  scheduled,
+  bunched,
+  on_time,
+}: AggregateDataPoint): HoverCardRow[] => {
+  const total = scheduled ?? count;
+  if (!total || bunched == null || on_time == null) return [];
   return [
-    { label: 'Bunched', value: formatShare(bunched, count), color: SEVERITY_COLORS.off50 },
-    { label: 'On time', value: formatShare(on_time, count), color: SEVERITY_COLORS.onTime },
+    { label: 'Bunched', value: formatShare(bunched, total), color: SEVERITY_COLORS.off50 },
+    { label: 'On time', value: formatShare(on_time, total), color: SEVERITY_COLORS.onTime },
   ];
 };
 

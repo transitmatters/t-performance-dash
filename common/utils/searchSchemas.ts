@@ -71,7 +71,8 @@ const comparisonSearch = (search: RawSearch) => ({
 // Same idea for the page-level toggles on Speed, Service and Fleet.
 const speedSearch = (search: RawSearch) => ({
   speedDays: str(search.speedDays),
-  speedBand: str(search.speedBand),
+  /** The lines shown on the bus Speed graph, comma-separated TIME_BANDS keys. Left off for all of them. */
+  speedBands: str(search.speedBands),
 });
 
 const serviceSearch = (search: RawSearch) => ({
@@ -91,6 +92,11 @@ const delaysSearch = (search: RawSearch) => ({
   focus: str(search.focus),
   /** The Green Line branch, as its letter. */
   branch: str(search.branch),
+});
+
+const reliabilitySearch = (search: RawSearch) => ({
+  /** The subway direction every reliability chart shows, as its GTFS direction_id. */
+  relDir: str(search.relDir),
 });
 
 const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[];
@@ -136,6 +142,11 @@ export const validateFleetSearch = (search: RawSearch) => ({
 export const validateDelaysSearch = (search: RawSearch) => ({
   ...validateLineSearch(search),
   ...delaysSearch(search),
+});
+
+export const validateReliabilitySearch = (search: RawSearch) => ({
+  ...validateLineSearch(search),
+  ...reliabilitySearch(search),
 });
 
 export const validateSystemSearch = dateSearch;
@@ -192,6 +203,7 @@ export const validateAnySearch = (search: RawSearch) => ({
   ...serviceSearch(search),
   ...fleetSearch(search),
   ...delaysSearch(search),
+  ...reliabilitySearch(search),
   ...validateEmbedSearch(search),
   ...trendSearch(search),
 });
