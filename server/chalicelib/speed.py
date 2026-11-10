@@ -381,6 +381,8 @@ def _rollup_time_bands(rows: list[dict]) -> dict:
             for band in BUS_TIME_BANDS
         }
     }
+
+
 def _sum_trip_counts(rows: list[dict]) -> dict:
     """Sum each of BUS_TRIP_COUNT_FIELDS over the rows that have it, leaving out any no row has."""
     sums = {}
