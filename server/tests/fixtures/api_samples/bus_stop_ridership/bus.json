@@ -1,0 +1,223 @@
+{
+  "route_id": "742",
+  "seasons": [
+    {
+      "season": "Fall 2024",
+      "directions": [
+        {
+          "direction_id": 0,
+          "stops": [
+            {
+              "stop_id": "74611",
+              "boardings": 1453.8,
+              "alightings": 0.0
+            },
+            {
+              "stop_id": "74612",
+              "boardings": 75.8,
+              "alightings": 580.2
+            },
+            {
+              "stop_id": "74613",
+              "boardings": 69.5,
+              "alightings": 345.6
+            },
+            {
+              "stop_id": "74624",
+              "boardings": 54.7,
+              "alightings": 180.8
+            },
+            {
+              "stop_id": "247",
+              "boardings": 5.6,
+              "alightings": 73.6
+            },
+            {
+              "stop_id": "30249",
+              "boardings": 15.5,
+              "alightings": 303.5
+            },
+            {
+              "stop_id": "30250",
+              "boardings": 0.0,
+              "alightings": 214.9
+            }
+          ]
+        },
+        {
+          "direction_id": 1,
+          "stops": [
+            {
+              "stop_id": "30250",
+              "boardings": 45.3,
+              "alightings": 0.0
+            },
+            {
+              "stop_id": "30251",
+              "boardings": 66.0,
+              "alightings": 50.5
+            },
+            {
+              "stop_id": "31259",
+              "boardings": 61.3,
+              "alightings": 90.3
+            },
+            {
+              "stop_id": "31255",
+              "boardings": 188.9,
+              "alightings": 58.2
+            },
+            {
+              "stop_id": "31257",
+              "boardings": 259.8,
+              "alightings": 5.2
+            },
+            {
+              "stop_id": "31256",
+              "boardings": 51.3,
+              "alightings": 1.2
+            },
+            {
+              "stop_id": "74614",
+              "boardings": 202.9,
+              "alightings": 54.4
+            },
+            {
+              "stop_id": "74615",
+              "boardings": 339.1,
+              "alightings": 49.9
+            },
+            {
+              "stop_id": "74616",
+              "boardings": 502.3,
+              "alightings": 83.0
+            },
+            {
+              "stop_id": "74617",
+              "boardings": 0.0,
+              "alightings": 1276.2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "season": "Fall 2025",
+      "directions": [
+        {
+          "direction_id": 0,
+          "stops": [
+            {
+              "stop_id": "74611",
+              "boardings": 1589.7,
+              "alightings": 0.0
+            },
+            {
+              "stop_id": "74612",
+              "boardings": 108.7,
+              "alightings": 724.3
+            },
+            {
+              "stop_id": "74613",
+              "boardings": 77.9,
+              "alightings": 370.1
+            },
+            {
+              "stop_id": "74624",
+              "boardings": 51.6,
+              "alightings": 157.5
+            },
+            {
+              "stop_id": "247",
+              "boardings": 11.8,
+              "alightings": 93.2
+            },
+            {
+              "stop_id": "30249",
+              "boardings": 22.1,
+              "alightings": 298.2
+            },
+            {
+              "stop_id": "30250",
+              "boardings": 0.0,
+              "alightings": 180.8
+            }
+          ]
+        },
+        {
+          "direction_id": 1,
+          "stops": [
+            {
+              "stop_id": "30250",
+              "boardings": 36.6,
+              "alightings": 0.0
+            },
+            {
+              "stop_id": "30251",
+              "boardings": 62.0,
+              "alightings": 27.9
+            },
+            {
+              "stop_id": "31259",
+              "boardings": 69.7,
+              "alightings": 74.7
+            },
+            {
+              "stop_id": "31255",
+              "boardings": 188.5,
+              "alightings": 57.9
+            },
+            {
+              "stop_id": "31257",
+              "boardings": 322.5,
+              "alightings": 11.2
+            },
+            {
+              "stop_id": "31256",
+              "boardings": 73.2,
+              "alightings": 1.9
+            },
+            {
+              "stop_id": "74614",
+              "boardings": 174.9,
+              "alightings": 43.9
+            },
+            {
+              "stop_id": "74615",
+              "boardings": 321.9,
+              "alightings": 59.8
+            },
+            {
+              "stop_id": "74616",
+              "boardings": 613.5,
+              "alightings": 94.4
+            },
+            {
+              "stop_id": "74617",
+              "boardings": 0.0,
+              "alightings": 1503.2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "stop_names": {
+    "247": "Northern Ave @ Harbor St",
+    "30249": "Northern Ave @ Tide St",
+    "30250": "23 Drydock Ave",
+    "31255": "Drydock Ave @ Design Center Pl",
+    "31259": "Drydock Ave @ Black Falcon Ave",
+    "74611": "South Station Silver Line",
+    "74612": "Courthouse",
+    "74613": "World Trade Center",
+    "74624": "Silver Line Way After Manulife",
+    "31256": "Northern Ave opp Harbor St",
+    "31257": "Northern Ave @ Tide St",
+    "74614": "Silver Line Way Before Manulif",
+    "74615": "World Trade Center",
+    "74616": "Courthouse",
+    "74617": "South Station Silver Line",
+    "30251": "27 Drydock Ave"
+  }
+}

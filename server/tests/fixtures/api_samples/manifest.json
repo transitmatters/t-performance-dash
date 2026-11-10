@@ -94,6 +94,11 @@
     "status": 200,
     "captured_at": "2026-10-14T18:52:08+00:00"
   },
+  "bus_stop_ridership/bus": {
+    "url": "https://dashboard-api.labs.transitmatters.org/api/bus_stop_ridership?route_id=742",
+    "status": 200,
+    "captured_at": null
+  },
   "busspeedleaderboard/week": {
     "url": "https://dashboard-api-beta.labs.transitmatters.org/api/busspeedleaderboard?start_date=2026-09-01&end_date=2026-09-07&limit=5",
     "status": 200,
