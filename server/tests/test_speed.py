@@ -1051,3 +1051,15 @@ def test_days_without_fleet_data_omit_fleet_fields():
 
     assert "avg_car_age" not in no_data and "fleet_mix_red4" not in no_data
     assert has_data["fleet_mix_red4"] == 95.9
+
+
+class TestEmptyRanges:
+    def test_no_trip_metrics_aggregate_to_empty(self):
+        # e.g. today before the nightly ingest
+        assert speed.aggregate_actual_trips([[], []], "daily", "2026-11-10") == []
+
+    def test_malformed_dates_raise_400(self):
+        from chalice import BadRequestError
+
+        with pytest.raises(BadRequestError):
+            speed.is_invalid_range("abc", "2026-01-01", 150)
