@@ -142,6 +142,9 @@ def aggregate_actual_trips(actual_trips, agg, start_date):
         count, line, and (when present) avg_car_age/pct_new_trips/fleet_mix_* fields.
     """
     flat_data = [entry for sublist in actual_trips for entry in sublist]
+    # No rows yet, e.g. today before the nightly ingest
+    if not flat_data:
+        return []
     # Create a DataFrame from the flattened data
     df = pd.DataFrame(flat_data)
     # Set miles_covered to NaN for each date with any entry having miles_covered as nan
@@ -550,6 +553,9 @@ def is_invalid_range(start_date, end_date, max_delta):
     Returns:
         ``True`` if the range exceeds ``max_delta`` days.
     """
-    start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
-    end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
+    try:
+        start_datetime = datetime.strptime(start_date, DATE_FORMAT_BACKEND)
+        end_datetime = datetime.strptime(end_date, DATE_FORMAT_BACKEND)
+    except TypeError, ValueError:
+        raise BadRequestError("Invalid start_date or end_date. Expected format: YYYY-MM-DD.")
     return start_datetime + timedelta(days=max_delta) < end_datetime

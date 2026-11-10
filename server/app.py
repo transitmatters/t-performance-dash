@@ -102,7 +102,34 @@ def validate_query_params(query_params, required: list[str]):
         raise BadRequestError(f"Missing required query parameter(s): {', '.join(missing)}")
 
 
+def parse_date_range(query_params) -> tuple[date, date]:
+    """Parse the required ``start_date`` and ``end_date``, rejecting a malformed or reversed range.
+
+    A reversed range would otherwise reach DynamoDB's ``BETWEEN`` and fail there as a 500.
+
+    Args:
+      query_params: The request's query parameters.
+
+    Returns:
+      tuple[date, date]: The start and end dates.
+    """
+    validate_query_params(query_params, ["start_date", "end_date"])
+    start_date = parse_user_date(query_params["start_date"])
+    end_date = parse_user_date(query_params["end_date"])
+    if start_date > end_date:
+        raise BadRequestError("start_date must be on or before end_date.")
+    return start_date, end_date
+
+
 TWO_YEARS_DAYS = 730
+
+SERVICE_AGGS = ("daily", "weekly", "monthly")
+
+
+def validate_agg(query_params):
+    """Reject an ``agg`` other than daily, weekly or monthly, which would otherwise read as weekly."""
+    if query_params["agg"] not in SERVICE_AGGS:
+        raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(SERVICE_AGGS)}.")
 
 
 def is_large_date_range(query_params):
@@ -331,6 +358,7 @@ def traveltime_aggregate_route():
     """Retrieve aggregated travel time data over a date range, grouped by date."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
+    start_date, end_date = parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -338,8 +366,6 @@ def traveltime_aggregate_route():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/aggregate/traveltimes", query_params)
     else:
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
         from_stops = query_params.getlist("from_stop")
         to_stops = query_params.getlist("to_stop")
         data = aggregation.travel_times_over_time(start_date, end_date, from_stops, to_stops)
@@ -366,6 +392,7 @@ def traveltime_aggregate_route_2():
     """Retrieve aggregated travel time data with by-time-of-day and by-date breakdowns."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
+    start_date, end_date = parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -373,8 +400,6 @@ def traveltime_aggregate_route_2():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/aggregate/traveltimes2", query_params)
     else:
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
         from_stop = query_params.getlist("from_stop")
         to_stop = query_params.getlist("to_stop")
         data = aggregation.travel_times_all(start_date, end_date, from_stop, to_stop)
@@ -401,6 +426,7 @@ def headways_aggregate_route():
     """Retrieve aggregated headway data over a date range for the given stop(s)."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
+    start_date, end_date = parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -408,8 +434,6 @@ def headways_aggregate_route():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/aggregate/headways", query_params)
     else:
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
         stops = query_params.getlist("stop")
         data = aggregation.headways_over_time(start_date, end_date, stops)
 
@@ -432,6 +456,7 @@ def dwells_aggregate_route():
     """Retrieve aggregated dwell time data over a date range for the given stop(s)."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
+    start_date, end_date = parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -439,8 +464,6 @@ def dwells_aggregate_route():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/aggregate/dwells", query_params)
     else:
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
         stops = query_params.getlist("stop")
         data = aggregation.dwells_over_time(start_date, end_date, stops)
 
@@ -487,6 +510,7 @@ def get_alerts():
 def get_delays_by_line():
     """Retrieve alert-based delay data aggregated by line over a date range."""
     query_params = app.current_request.query_params or {}
+    parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -514,6 +538,7 @@ def get_shutdowns():
     """Retrieve shuttles, suspensions, and station closures on a line that overlap a date range."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["line", "start_date", "end_date"])
+    start_date, end_date = parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -521,8 +546,6 @@ def get_shutdowns():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/shutdowns", query_params)
     else:
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
         data = shutdowns.get_shutdowns(query_params["line"], start_date, end_date)
 
     return Response(
@@ -542,6 +565,7 @@ def get_shutdowns():
 def get_trips_by_line():
     """Retrieve trip metrics (speed, travel time, etc.) aggregated by line over a date range."""
     query_params = app.current_request.query_params or {}
+    parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -572,6 +596,7 @@ def get_bus_trip_metrics():
     """Retrieve daily speed/trip metrics for a single bus route over a date range."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date", "route"])
+    parse_date_range(query_params)
     # Checked here as well as in speed.py so every backend source rejects them alike.
     speed.validate_bus_trip_filters(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
@@ -601,6 +626,7 @@ def get_cr_trip_metrics():
     """Retrieve Commuter Rail fleet metrics for one route, or `all`, over a date range."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date", "route"])
+    parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -628,6 +654,7 @@ def get_bus_speed_leaderboard():
     """Retrieve the slowest bus routes (by average speed) over a date range."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
+    parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
     try:
         # 200 comfortably covers every route the dashboard tracks (~115 as of writing), so a
@@ -662,6 +689,8 @@ def get_scheduled_service():
     """Retrieve scheduled service counts for a route over a date range."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
+    start_date, end_date = parse_date_range(query_params)
+    validate_agg(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -669,8 +698,6 @@ def get_scheduled_service():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/scheduledservice", query_params)
     else:
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
         route_id = query_params["route_id"]
         agg = query_params["agg"]
         data = scheduled_service.get_scheduled_service_counts(
@@ -698,6 +725,7 @@ def get_ridership():
     """Retrieve ridership data for a line over a date range."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
+    start_date, end_date = parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -705,8 +733,6 @@ def get_ridership():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/ridership", query_params)
     else:
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
         line_id = query_params.get("line_id")
         data = ridership.get_ridership(
             start_date=start_date,
@@ -732,6 +758,7 @@ def get_station_ridership():
     """Retrieve weekly ridership at each gated station on a rapid transit line over a date range."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date", "line_id"])
+    start_date, end_date = parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -740,8 +767,8 @@ def get_station_ridership():
         data = static_data.proxy_request("/api/station_ridership", query_params)
     else:
         data = ridership.get_station_ridership(
-            start_date=parse_user_date(query_params["start_date"]),
-            end_date=parse_user_date(query_params["end_date"]),
+            start_date=start_date,
+            end_date=end_date,
             line_id=query_params["line_id"],
         )
 
@@ -793,6 +820,7 @@ def get_reliability():
     """Retrieve on-time counts for The RIDE or commuter rail, or headway counts for a subway line or bus route."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
+    start_date, end_date = parse_date_range(query_params)
     if query_params["agg"] not in reliability.AGGS:
         raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(reliability.AGGS)}.")
     cache_max_age = cache.get_cache_max_age(query_params)
@@ -804,8 +832,8 @@ def get_reliability():
     else:
         data = reliability.get_reliability(
             route_id=query_params["route_id"],
-            start_date=parse_user_date(query_params["start_date"]),
-            end_date=parse_user_date(query_params["end_date"]),
+            start_date=start_date,
+            end_date=end_date,
             agg=query_params["agg"],
         )
 
@@ -824,6 +852,7 @@ def get_cr_scorecard():
     """Retrieve a Commuter Rail route's schedule measured against Regional Rail standards."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg", "day_kind"])
+    start_date, end_date = parse_date_range(query_params)
     if query_params["agg"] not in regional_rail.AGGS:
         raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(regional_rail.AGGS)}.")
     if query_params["day_kind"] not in regional_rail.DAY_KINDS:
@@ -839,8 +868,8 @@ def get_cr_scorecard():
     else:
         data = regional_rail.get_scorecard(
             route_id=query_params["route_id"],
-            start_date=parse_user_date(query_params["start_date"]),
-            end_date=parse_user_date(query_params["end_date"]),
+            start_date=start_date,
+            end_date=end_date,
             agg=query_params["agg"],
             kind=query_params["day_kind"],
         )
@@ -860,6 +889,7 @@ def get_weather():
     """Retrieve hourly weather observations for a date range (downtown Boston)."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
+    start_date, end_date = parse_date_range(query_params)
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -867,8 +897,6 @@ def get_weather():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/weather", query_params)
     else:
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
         data = weather.get_weather(start_date=start_date, end_date=end_date)
 
     return Response(
@@ -934,7 +962,11 @@ def get_speed_restrictions():
 def get_service_hours():
     """Retrieve delivered service hours for a line over a date range."""
     query_params = app.current_request.query_params or {}
-    validate_query_params(query_params, ["start_date", "end_date", "agg"])
+    validate_query_params(query_params, ["line_id", "start_date", "end_date", "agg"])
+    start_date, end_date = parse_date_range(query_params)
+    validate_agg(query_params)
+    if query_params["line_id"] not in service_hours.ROUTE_IDS_BY_LINE:
+        raise BadRequestError(f"Invalid line_id '{query_params['line_id']}'. Expected e.g. line-red.")
     cache_max_age = cache.get_cache_max_age(query_params)
 
     if config.BACKEND_SOURCE == "static":
@@ -942,9 +974,7 @@ def get_service_hours():
     elif config.BACKEND_SOURCE == "prod":
         data = static_data.proxy_request("/api/service_hours", query_params)
     else:
-        line_id = query_params.get("line_id")
-        start_date = parse_user_date(query_params["start_date"])
-        end_date = parse_user_date(query_params["end_date"])
+        line_id = query_params["line_id"]
         agg = query_params["agg"]
         data = service_hours.get_service_hours(
             single_route_id=line_id,

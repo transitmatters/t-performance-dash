@@ -2,7 +2,6 @@
 
 import datetime
 import pytz
-import traceback
 from datetime import date, timedelta
 from typing import Dict, Any, Callable, List, Union
 from botocore.exceptions import ClientError
@@ -236,7 +235,8 @@ def alerts(day: date, params):
                 except KeyError as e:
                     print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
             elif "attributes" in alert_item and any(
-                alert_item["attributes"]["effect"] == x for x in ["DETOUR", "DELAY", "STOP_CLOSURE", "SERVICE_CHANGE"]
+                alert_item["attributes"].get("effect") == x
+                for x in ["DETOUR", "DELAY", "STOP_CLOSURE", "SERVICE_CHANGE"]
             ):
                 try:
                     for alert_version in alert_item["attributes"]["active_period"]:
@@ -250,6 +250,9 @@ def alerts(day: date, params):
                 except KeyError as e:
                     print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
         return flat_alerts
-    except Exception:
-        traceback.print_exc()
+    except ClientError as e:
+        # No file for this day in any source means no alerts were recorded. Anything else
+        # (throttling, a 5xx) raises, so the request fails uncached instead of caching an empty day.
+        if e.response["Error"]["Code"] != "NoSuchKey":
+            raise
         return None
