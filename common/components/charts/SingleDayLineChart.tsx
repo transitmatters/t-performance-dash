@@ -7,10 +7,11 @@ import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import type { SingleDayLineProps } from '../../types/charts';
 import {
-  TEMPERATURE_LINE_COLOR,
   TEMPERATURE_SCALE,
   getHourlyTemperatureSeries,
   temperatureAt,
+  temperatureColor,
+  temperatureGradient,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { prettyDate } from '../../utils/date';
 import { DownloadButton } from '../buttons/DownloadButton';
@@ -182,7 +183,7 @@ export const SingleDayLineChart = ({
       label: 'Temperature',
       data: temperaturePoints,
       yAxisID: 'yTemp',
-      borderColor: TEMPERATURE_LINE_COLOR,
+      borderColor: temperatureGradient(),
       borderWidth: 2,
       pointRadius: 0,
       // Hovering matches trips by index, which would light up an unrelated hour
@@ -290,7 +291,7 @@ export const SingleDayLineChart = ({
                       content.rows?.push({
                         label: 'Outdoor temperature',
                         value: `${Math.round(temperature)} °F`,
-                        color: TEMPERATURE_LINE_COLOR,
+                        color: temperatureColor(temperature),
                       });
                     }
                     const weatherRow = hoveredTime === null ? undefined : weatherAt(hoveredTime);

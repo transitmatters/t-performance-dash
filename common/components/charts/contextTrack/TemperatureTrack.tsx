@@ -1,11 +1,14 @@
+import { useId } from 'react';
 import type { MouseEvent } from 'react';
 import dayjs from 'dayjs';
 import {
-  TEMPERATURE_BAND_COLOR,
-  TEMPERATURE_LINE_COLOR,
+  TEMPERATURE_BAND_OPACITY,
+  TEMPERATURE_COLOR_STOPS,
   TEMPERATURE_SCALE,
   getDailyTemperatureSeries,
   getHourlyTemperatureSeries,
+  temperatureColor,
+  temperatureStopOffset,
 } from '../../../../modules/weather/utils/temperatureDataset';
 import type { WeatherHourly } from '../../../types/weather';
 import type { ResolvedHoverCardContent } from '../hoverCard/types';
@@ -68,6 +71,7 @@ export const TemperatureTrack = ({
   pinned,
   onToggle,
 }: TemperatureTrackProps) => {
+  const gradientId = useId();
   const lows = points.map((point) => point.low ?? point.mean);
   const highs = points.map((point) => point.high ?? point.mean);
   const min = Math.min(...lows);
@@ -101,7 +105,7 @@ export const TemperatureTrack = ({
           point.low !== undefined && point.high !== undefined
             ? `${degrees(point.low)} – ${degrees(point.high)}`
             : undefined,
-        color: TEMPERATURE_LINE_COLOR,
+        color: temperatureColor(point.mean),
       },
     ],
     notes: [pinned ? 'Click to hide the line on the chart' : 'Click to plot it on the chart'],
@@ -141,7 +145,9 @@ export const TemperatureTrack = ({
             {
               label: 'Range',
               value: `${degrees(min)} – ${degrees(max)}`,
-              color: TEMPERATURE_LINE_COLOR,
+              color: temperatureColor(
+                points.reduce((sum, point) => sum + point.mean, 0) / points.length
+              ),
             },
           ],
           notes: [pinned ? 'Press Enter to hide the line' : 'Press Enter to plot it on the chart'],
@@ -161,11 +167,32 @@ export const TemperatureTrack = ({
         preserveAspectRatio="none"
         className="block overflow-hidden"
       >
-        {band && <polygon points={band} fill={TEMPERATURE_BAND_COLOR} />}
+        <defs>
+          {/* In the viewBox's units, so each °F keeps its color however the scale stretches */}
+          <linearGradient
+            id={gradientId}
+            gradientUnits="userSpaceOnUse"
+            x1="0"
+            x2="0"
+            y1={y(TEMPERATURE_COLOR_STOPS[0][0])}
+            y2={y(TEMPERATURE_COLOR_STOPS[TEMPERATURE_COLOR_STOPS.length - 1][0])}
+          >
+            {TEMPERATURE_COLOR_STOPS.map(([stop, color]) => (
+              <stop key={stop} offset={temperatureStopOffset(stop)} stopColor={color} />
+            ))}
+          </linearGradient>
+        </defs>
+        {band && (
+          <polygon
+            points={band}
+            fill={`url(#${gradientId})`}
+            fillOpacity={TEMPERATURE_BAND_OPACITY}
+          />
+        )}
         <path
           d={line}
           fill="none"
-          stroke={TEMPERATURE_LINE_COLOR}
+          stroke={`url(#${gradientId})`}
           strokeWidth={pinned ? 2 : 1.5}
           strokeLinejoin="round"
           vectorEffect="non-scaling-stroke"
