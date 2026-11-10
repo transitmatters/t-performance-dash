@@ -164,6 +164,7 @@ _OPERATION_IDS = {
     ("/api/scheduledservice", "get"): "getScheduledService",
     ("/api/ridership", "get"): "getRidership",
     ("/api/station_ridership", "get"): "getStationRidership",
+    ("/api/bus_stop_ridership", "get"): "getBusStopRidership",
     ("/api/reliability", "get"): "getReliability",
     ("/api/crscorecard", "get"): "getCommuterRailScorecard",
     ("/api/weather", "get"): "getWeather",
