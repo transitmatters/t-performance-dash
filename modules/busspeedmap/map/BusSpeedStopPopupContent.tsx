@@ -1,6 +1,12 @@
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import { STATION_LINES } from '../constants';
-import type { BusStopProperties, StationProperties } from '../types';
+import type {
+  BusSpeedSegmentProperties,
+  BusStopProperties,
+  Period,
+  StationProperties,
+} from '../types';
+import { periodSuffix, segmentDwell } from '../utils';
 
 const splitList = (value: string): string[] => (value ? value.split(',') : []);
 
@@ -36,7 +42,14 @@ export const StationPopupContent = ({ station }: { station: StationProperties })
   );
 };
 
-export const BusStopPopupContent = ({ busStop }: { busStop: BusStopProperties }) => {
+interface BusStopPopupContentProps {
+  busStop: BusStopProperties;
+  /** One segment per route leaving the stop, read for its dwell (see stopDwellsByRoute). */
+  dwells?: BusSpeedSegmentProperties[];
+  period: Period;
+}
+
+export const BusStopPopupContent = ({ busStop, dwells = [], period }: BusStopPopupContentProps) => {
   const routes = splitList(busStop.routes).map(getBusRouteDisplayName);
   return (
     <div className="text-xs text-stone-900">
@@ -46,6 +59,19 @@ export const BusStopPopupContent = ({ busStop }: { busStop: BusStopProperties })
       <p className="mt-1">
         {routes.length === 1 ? 'Route' : 'Routes'} {routes.join(', ')}
       </p>
+      {dwells.length > 0 && (
+        <div className="mt-1 border-t border-stone-200 pt-1 text-stone-600">
+          <p>Median time at this stop{periodSuffix(period)}</p>
+          <ul>
+            {dwells.map((segment) => (
+              <li key={segment.route_id}>
+                {getBusRouteDisplayName(segment.route_id)} · {segmentDwell(segment)} ·{' '}
+                {segment.n_traversals} trips
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

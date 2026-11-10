@@ -1688,7 +1688,11 @@ class StopsResponse(BaseModel):
 
     Attributes:
         type: Route type: `rapidtransit`, `bus`, `commuter-rail` or `ferry`.
-        direction: Map of direction ID to direction name (e.g., `{"0": "Southbound"}`).
+        direction: Map of direction key to direction name. Bus, commuter rail and ferry keys are the GTFS
+            `direction_id` (`{"0": "outbound", "1": "inbound"}`). Rapid transit keys are the reverse of GTFS:
+            `{"0": "northbound", "1": "southbound"}` on Red, but GTFS calls northbound direction 1.
+        gtfs_direction_id: Map of direction key to GTFS `direction_id`. Only set on rapid transit routes, where it is
+            `{"0": 1, "1": 0}`.
         stations: Ordered list of stations/stops along the route.
         service_start: Service start date, if applicable.
         service_end: Service end date, if applicable.
@@ -1697,6 +1701,7 @@ class StopsResponse(BaseModel):
     model_config = ConfigDict(extra="allow")
     type: str
     direction: Dict[str, str]
+    gtfs_direction_id: Dict[str, int] | None = None
     stations: List[StationStop]
     service_start: str | None = None
     service_end: str | None = None

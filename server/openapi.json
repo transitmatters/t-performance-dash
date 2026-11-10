@@ -2988,7 +2988,7 @@
       },
       "StopsResponse": {
         "additionalProperties": true,
-        "description": "Response for `/api/stops/{route_id}` \u2014 station/stop info for a route.\n\nAttributes:\n    type: Route type: `rapidtransit`, `bus`, `commuter-rail` or `ferry`.\n    direction: Map of direction ID to direction name (e.g., `{\"0\": \"Southbound\"}`).\n    stations: Ordered list of stations/stops along the route.\n    service_start: Service start date, if applicable.\n    service_end: Service end date, if applicable.",
+        "description": "Response for `/api/stops/{route_id}` \u2014 station/stop info for a route.\n\nAttributes:\n    type: Route type: `rapidtransit`, `bus`, `commuter-rail` or `ferry`.\n    direction: Map of direction key to direction name. Bus, commuter rail and ferry keys are the GTFS\n        `direction_id` (`{\"0\": \"outbound\", \"1\": \"inbound\"}`). Rapid transit keys are the reverse of GTFS:\n        `{\"0\": \"northbound\", \"1\": \"southbound\"}` on Red, but GTFS calls northbound direction 1.\n    gtfs_direction_id: Map of direction key to GTFS `direction_id`. Only set on rapid transit routes, where it is\n        `{\"0\": 1, \"1\": 0}`.\n    stations: Ordered list of stations/stops along the route.\n    service_start: Service start date, if applicable.\n    service_end: Service end date, if applicable.",
         "properties": {
           "type": {
             "title": "Type",
@@ -2999,6 +2999,15 @@
               "type": "string"
             },
             "title": "Direction",
+            "type": "object"
+          },
+          "gtfs_direction_id": {
+            "default": null,
+            "title": "Gtfs Direction Id",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "integer"
+            },
             "type": "object"
           },
           "stations": {
