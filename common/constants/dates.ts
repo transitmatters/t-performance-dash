@@ -45,9 +45,8 @@ export const FERRY_ARCHIVE_MAX_DATE = '2026-03-31';
 export const FERRY_LIVE_START_DATE = '2026-10-02';
 /** Ferries don't report arriving at a terminal, so Gobble only records the arrivals travel times need from here (gobble#147). */
 export const FERRY_ARRIVALS_START_DATE = '2026-10-12';
-// The archive files historic F2H trips under Boat-F1 and has nothing for F10, so their trip data starts with ours.
+// The archive has nothing for F10, so its trip data starts with ours.
 const FERRY_ROUTE_TRIPS_MIN_DATES: Partial<Record<FerryRoute, string>> = {
-  'Boat-F2H': FERRY_LIVE_START_DATE,
   'Boat-F10': FERRY_LIVE_START_DATE,
 };
 export const BUS_MAX_DATE = '2026-06-30';

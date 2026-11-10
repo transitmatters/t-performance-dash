@@ -458,7 +458,7 @@ def dwells_aggregate_route():
 def get_git_id():
     """Return the current git commit ID. Only available on localhost."""
     # Only do this on localhost
-    if TM_FRONTEND_HOST == "localhost":
+    if TM_FRONTEND_HOST == localhost:
         git_id = str(subprocess.check_output(["git", "describe", "--always", "--dirty", "--abbrev=10"]))[2:-3]
         return json.dumps({"git_id": git_id})
     else:

@@ -4,25 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import type { WidgetComparison } from '../MiniWidgetCreator';
-import { getFormattedTimeString } from '../../../utils/time';
+import { formatComparisonDelta, isNegligible } from './comparison';
 
 type SmallDataProps = {
   analysis: ReactNode;
   widgetValue: WidgetValueInterface;
   comparison?: WidgetComparison;
-};
-
-const formatComparisonDelta = (comparison: WidgetComparison) => {
-  const abs = Math.abs(comparison.delta);
-  if (comparison.unit === 'percentage') {
-    return `${Math.round(abs * 100)}pp`;
-  }
-  return getFormattedTimeString(abs);
-};
-
-const isNegligible = (comparison: WidgetComparison) => {
-  if (comparison.unit === 'percentage') return Math.abs(comparison.delta) <= 0.01;
-  return Math.abs(comparison.delta) <= 1;
 };
 
 export const SmallData = ({ analysis, widgetValue, comparison }: SmallDataProps) => {

@@ -39,7 +39,7 @@ const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
       id: from.station + '-' + to.station,
       from: from,
       to: to,
-      title: `${from.short ?? from.stop_name}-${to.short ?? to.stop_name}`,
+      title: getStationPairName(from, to, true),
       delay: sz.delay,
       latest_delay: sz.latest_delay,
       duration: sz.duration,
@@ -48,8 +48,12 @@ const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
     };
   });
 
+/** Short label without the branch suffix, so "JFK (B)" reads as "JFK". */
+export const getShortStationName = (station: Station): string =>
+  station.short?.replace(/\s*\([^)]*\)$/, '') ?? station.stop_name;
+
 export const getStationPairName = (from: Station, to: Station, short?: boolean): string => {
-  if (short) return `${from.short ?? from.stop_name}-${to.short ?? to.stop_name}`;
+  if (short) return `${getShortStationName(from)}-${getShortStationName(to)}`;
   return `${from.stop_name}-${to.stop_name}`;
 };
 

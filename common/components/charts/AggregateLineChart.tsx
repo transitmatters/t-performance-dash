@@ -15,11 +15,13 @@ import { watermarkLayout } from '../../constants/charts';
 import { useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
 import {
-  TEMPERATURE_BAND_COLOR,
-  TEMPERATURE_LINE_COLOR,
+  TEMPERATURE_BAND_OPACITY,
   TEMPERATURE_SCALE,
   dailyTemperatureOn,
   getDailyTemperatureSeries,
+  temperatureColor,
+  temperatureGradient,
+  temperaturePointColor,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { LegendLongTerm } from './Legend';
@@ -175,7 +177,7 @@ export const AggregateLineChart = ({
       data: temperatureSeries.max,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
-      backgroundColor: TEMPERATURE_BAND_COLOR,
+      backgroundColor: temperatureGradient(TEMPERATURE_BAND_OPACITY),
       pointRadius: 0,
       pointHitRadius: 0,
       fill: { target: minIndex },
@@ -185,11 +187,11 @@ export const AggregateLineChart = ({
       label: 'Daily mean',
       data: temperatureSeries.mean,
       yAxisID: 'yTemp',
-      borderColor: TEMPERATURE_LINE_COLOR,
+      borderColor: temperatureGradient(),
       borderWidth: 2,
       pointRadius: 0,
       pointHoverRadius: 3,
-      pointHoverBackgroundColor: TEMPERATURE_LINE_COLOR,
+      pointHoverBackgroundColor: temperaturePointColor,
       fill: false,
       tension: 0.3,
     });
@@ -342,7 +344,7 @@ export const AggregateLineChart = ({
                                 label: 'Outdoor temperature',
                                 value: `${Math.round(temperature.mean)} °F`,
                                 detail: `${Math.round(temperature.low)}–${Math.round(temperature.high)} °F`,
-                                color: TEMPERATURE_LINE_COLOR,
+                                color: temperatureColor(temperature.mean),
                               },
                             ]
                           : []),

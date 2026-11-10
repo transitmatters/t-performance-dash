@@ -353,3 +353,17 @@ class TestHappyPaths:
         result = client.http.get("/api/stops/made-up-route")
         body = json.loads(result.body)
         assert "made-up-route" in body["error"]
+
+
+class TestGitId:
+    def test_returns_git_id_on_localhost(self, client, monkeypatch):
+        monkeypatch.setattr(chalice_app, "TM_FRONTEND_HOST", chalice_app.localhost)
+        monkeypatch.setattr(chalice_app.subprocess, "check_output", lambda args: b"d8bdd97e12-dirty\n")
+        result = client.http.get("/api/git_id")
+        assert result.status_code == 200
+        assert json.loads(result.body) == {"git_id": "d8bdd97e12-dirty"}
+
+    def test_returns_409_on_a_deployed_host(self, client, monkeypatch):
+        monkeypatch.setattr(chalice_app, "TM_FRONTEND_HOST", "dashboard.transitmatters.org")
+        result = client.http.get("/api/git_id")
+        assert result.status_code == 409

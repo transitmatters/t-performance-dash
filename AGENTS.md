@@ -25,6 +25,7 @@ npm run generate-openapi         # After changing API routes or models
 
 - `server/openapi.json` is generated from the Chalice app. Regenerate it with `npm run generate-openapi` rather than editing by hand; CI fails if it's stale.
 - Every API response's `Cache-Control` header also controls the shared `BackendCloudFront` edge cache in `server/cloudformation.json` (kept at most a day; `deploy.sh` clears it). Give new routes a `Cache-Control`; without one they're never cached. After a backfill, invalidate that distribution if the data must be live sooner.
+- Other repos keep copies of `common/constants/stations.json`, checked by `.github/workflows/check-stations-copy.yml` (see README). Rapid transit direction keys there are the reverse of GTFS `direction_id`; convert with each line's `gtfs_direction_id`.
 - Fetch data through the React Query hooks in `common/api/hooks/` and keep feature code inside its module in `modules/`.
 - TypeScript: use type imports (`import type { Foo }`), keep the enforced import order, and aim for no more than ~20 imports per file.
 - Python: Ruff, 120 character lines.
