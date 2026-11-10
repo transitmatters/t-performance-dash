@@ -149,7 +149,8 @@ type UseQueriesOverload = {
     parameters: SingleDayAPIOptions,
     aggregate: false,
     enabled?: boolean,
-    queryNames?: QueryNameOptions[]
+    queryNames?: QueryNameOptions[],
+    skip?: QueryNameKeys[]
   ): {
     [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
   };
@@ -158,20 +159,24 @@ type UseQueriesOverload = {
     parameters: AggregateAPIOptions,
     aggregate: true,
     enabled?: boolean,
-    queryNames?: QueryNameOptions[]
+    queryNames?: QueryNameOptions[],
+    skip?: QueryNameKeys[]
   ): {
     [key in QueryNameKeys]: ChunkedAggregateQueryResult;
   };
 };
 
 // Return type `any` because the return type is specified in the overload in `UseQueriesOverload`
+// Queries named in `skip` aren't fetched, for charts the page won't show.
 export const useTripExplorerQueries: UseQueriesOverload = (
   routeType: RouteType,
   parameters: SingleDayAPIOptions | AggregateAPIOptions,
   aggregate: boolean,
   enabled = true,
   // An embed shows one chart, so it fetches only that chart's data.
-  queryNames?: QueryNameOptions[]
+  queryNames?: QueryNameOptions[],
+  // Queries named here aren't fetched, for charts the page won't show.
+  skip: QueryNameKeys[] = []
 ): any => {
   const queryTypes = queryNames ?? QUERIES[routeType];
   const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
@@ -242,7 +247,7 @@ export const useTripExplorerQueries: UseQueriesOverload = (
         queryFn: ({ signal }: { signal: AbortSignal }) =>
           aggregate ? fetchAggregateData(name, params, signal) : fetchSingleDayData(name, params),
         select: hideBenchmarks ? withoutBenchmarks : undefined,
-        enabled,
+        enabled: enabled && !skip.includes(name),
         staleTime: ONE_MINUTE,
       }));
     }),

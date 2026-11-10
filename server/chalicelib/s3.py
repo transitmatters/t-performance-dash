@@ -11,6 +11,7 @@ import pandas as pd
 from botocore.exceptions import ClientError
 
 from chalicelib import date_utils, parallel
+from chalicelib.constants import EVENT_PREDICTED
 
 BUCKET = "tm-mbta-performance"
 s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=25))
@@ -165,7 +166,8 @@ def _download_first(keys):
         if key is None:
             continue
         try:
-            return _parse_events(download(key, "ascii", key.endswith(".gz")))
+            csv_text = download(key, "ascii", key.endswith(".gz"))
+            return _parse_events(csv_text, fix_dst_eve=key.startswith("Events/monthly-data/"))
         except ClientError as ex:
             if ex.response["Error"]["Code"] != "NoSuchKey":
                 raise
@@ -227,9 +229,27 @@ def _event_instant(row: dict):
     return date_utils.parse_event_date(row["event_time"])
 
 
-def _parse_events(csv_text: str):
-    """Parse an events CSV into rows sorted by event_time."""
-    return sorted(csv.DictReader(csv_text.splitlines()), key=_event_instant)
+def _fix_dst_eve_prediction(row: dict):
+    """Correct a predicted event the monthly archive shifted by an hour on the day before a DST change."""
+    if row["event_type"] in EVENT_PREDICTED and len(row["event_time"]) == 19:
+        offset = date_utils.dst_eve_next_day_offset(row["service_date"])
+        if offset is not None:
+            row["event_time"] = date_utils.fix_dst_eve_event_time(row["event_time"], offset)
+    return row
+
+
+def _parse_events(csv_text: str, fix_dst_eve=False):
+    """Parse an events CSV into rows sorted by event_time.
+
+    Args:
+      csv_text: str: The CSV file contents.
+      fix_dst_eve: Correct predicted events on days before a DST change. Only the
+        monthly rapid transit archive needs this. (Default value = False)
+    """
+    rows = csv.DictReader(csv_text.splitlines())
+    if fix_dst_eve:
+        rows = map(_fix_dst_eve_prediction, rows)
+    return sorted(rows, key=_event_instant)
 
 
 @parallel.make_parallel

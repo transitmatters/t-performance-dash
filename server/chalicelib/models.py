@@ -211,7 +211,7 @@ class RidershipParams(BaseModel):
     Attributes:
         start_date: Start of date range.
         end_date: End of date range.
-        line_id: Line identifier (e.g., `line-Red`, `line-1`, `line-Fairmount`).
+        line_id: Line identifier (e.g., `line-Red`, `line-1`, `line-Fairmount`, `line-Boat-F1`, `line-RIDE`).
     """
 
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
@@ -222,7 +222,9 @@ class RidershipParams(BaseModel):
             "Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. "
             "Bus: `line-{route}` (e.g. `line-1`, `line-66`). "
             "Commuter rail: `line-{line}` (e.g. `line-Fairmount`). "
-            "Ferry: `line-F1`, `line-F4`, etc."
+            "Ferry: `line-Boat-{route}` (e.g. `line-Boat-F1`, `line-Boat-F4`). "
+            "The RIDE: `line-RIDE`. "
+            "Unknown IDs return an empty list rather than an error."
         ),
     )
 
