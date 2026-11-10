@@ -44,6 +44,7 @@ ENDPOINTS = {
     "time_predictions": ("/api/time_predictions", models.TimePredictionResponse),
     "ridership": ("/api/ridership", models.RidershipResponse),
     "station_ridership": ("/api/station_ridership", models.StationRidershipResponse),
+    "bus_stop_ridership": ("/api/bus_stop_ridership", models.BusStopRidershipResponse),
     "reliability": ("/api/reliability", models.ReliabilityResponse),
     "crscorecard": ("/api/crscorecard", models.CrScorecardResponse),
     "weather": ("/api/weather", models.WeatherResponse),
