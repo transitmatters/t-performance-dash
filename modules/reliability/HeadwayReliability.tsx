@@ -6,11 +6,13 @@ import { rtStations } from '../../common/constants/stations';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
 import type { Line, LineShort } from '../../common/types/lines';
 import type { AggType } from '../speed/constants/speeds';
+import { HeadwayBreakdown } from './charts/HeadwayBreakdown';
 import { ReliabilityGraph } from './charts/ReliabilityGraph';
 import {
   BUNCHED,
   formatPercent,
-  getSubwayStats,
+  getHeadwayStats,
+  getHeadwayTotals,
   headwayShare,
   LONG_GAPS,
   toPoints,
@@ -18,7 +20,7 @@ import {
   WITHIN_75_125,
 } from './utils';
 
-interface SubwayReliabilityProps {
+interface HeadwayReliabilityProps {
   reliability: UseQueryResult<ReliabilityEntry[]>;
   line: Line;
   lineShort: LineShort;
@@ -33,16 +35,18 @@ const directionName = (lineShort: LineShort, directionId: '0' | '1') => {
   return startCase(names?.[directionId === '0' ? '1' : '0'] ?? `Direction ${directionId}`);
 };
 
-export const SubwayReliability = ({
+/** Headway reliability for a subway line or bus route. Only subway counts are split by direction. */
+export const HeadwayReliability = ({
   reliability,
   line,
   lineShort,
   agg,
   startDate,
   endDate,
-}: SubwayReliabilityProps) => {
+}: HeadwayReliabilityProps) => {
   const data = reliability.data ?? [];
-  const stats = reliability.data ? getSubwayStats(reliability.data) : null;
+  const stats = reliability.data ? getHeadwayStats(reliability.data) : null;
+  const showDirections = line !== 'line-bus';
   const ready = [reliability, startDate, endDate];
   const graphProps = {
     line,
@@ -62,6 +66,13 @@ export const SubwayReliability = ({
           <StatCard label="Long gaps (≥150%)" value={formatPercent(stats.longGaps)} />
         </StatCardGrid>
       )}
+      <Widget
+        title="Headways compared with the schedule"
+        subtitle="Every headway in these dates, by how it compared with the scheduled headway"
+        ready={ready}
+      >
+        <HeadwayBreakdown counts={getHeadwayTotals(data)} />
+      </Widget>
       <Widget
         title="Headway reliability"
         subtitle="Share of headways close to the scheduled headway"
@@ -102,16 +113,18 @@ export const SubwayReliability = ({
           {...graphProps}
         />
       </Widget>
-      <Widget title="By direction" subtitle="Share of headways within 75–125%" ready={ready}>
-        <ReliabilityGraph
-          data={(['0', '1'] as const).map((direction) => ({
-            label: directionName(lineShort, direction),
-            data: toPoints(data, (e) => headwayShare(e.byDirection?.[direction], WITHIN_75_125)),
-          }))}
-          valueAxisLabel="Within 75–125%"
-          {...graphProps}
-        />
-      </Widget>
+      {showDirections && (
+        <Widget title="By direction" subtitle="Share of headways within 75–125%" ready={ready}>
+          <ReliabilityGraph
+            data={(['0', '1'] as const).map((direction) => ({
+              label: directionName(lineShort, direction),
+              data: toPoints(data, (e) => headwayShare(e.byDirection?.[direction], WITHIN_75_125)),
+            }))}
+            valueAxisLabel="Within 75–125%"
+            {...graphProps}
+          />
+        </Widget>
+      )}
     </>
   );
 };

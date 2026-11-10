@@ -458,7 +458,7 @@ def dwells_aggregate_route():
 def get_git_id():
     """Return the current git commit ID. Only available on localhost."""
     # Only do this on localhost
-    if TM_FRONTEND_HOST == "localhost":
+    if TM_FRONTEND_HOST == localhost:
         git_id = str(subprocess.check_output(["git", "describe", "--always", "--dirty", "--abbrev=10"]))[2:-3]
         return json.dumps({"git_id": git_id})
     else:
@@ -760,7 +760,7 @@ def get_station_ridership():
     docs=Docs(request=models.ReliabilityParams, responses=[Resp(models.ReliabilityResponse), BAD_REQUEST]),
 )
 def get_reliability():
-    """Retrieve on-time performance counts for The RIDE or commuter rail, or headway counts for a subway line."""
+    """Retrieve on-time counts for The RIDE or commuter rail, or headway counts for a subway line or bus route."""
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["route_id", "start_date", "end_date", "agg"])
     if query_params["agg"] not in reliability.AGGS:
