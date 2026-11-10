@@ -96,7 +96,7 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
   const footerPadding = 8 * dpr;
 
   const titleFontSize = 20 * dpr;
-  const badgeFontSize = 14 * dpr;
+  const badgeFontSize = 16 * dpr;
   const subtitleFontSize = 14 * dpr;
   const dateFontSize = 14 * dpr;
   const locationFontSize = 16 * dpr;
@@ -182,17 +182,17 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
   // Widget headings can be long, so each row stops short of the date or location beside it.
   const leftMaxWidth = (rightWidth: number) => width - 3 * headerPadding - rightWidth;
 
-  // Route badge before the title, matching WidgetTitle (#114). Every bus route shares one colour,
+  // Route tile before the title, matching BusRouteBadge (#114). Every bus route shares one colour,
   // so without it an exported bus chart can't say which route it shows. Dark text on bus yellow
   // reads in both themes, so the badge ignores the theme.
   let titleX = headerPadding;
   if (busRoute) {
-    const label = `Route ${busRoute}`;
+    const label = busRoute;
     const badgePaddingX = 6 * dpr;
-    const badgeHeight = badgeFontSize + 8 * dpr;
+    const badgeHeight = 24 * dpr;
     const badgeY = headerPadding + titleFontSize / 2 - badgeHeight / 2;
     ctx.font = `bold ${badgeFontSize}px system-ui, sans-serif`;
-    const badgeWidth = ctx.measureText(label).width + 2 * badgePaddingX;
+    const badgeWidth = Math.max(28 * dpr, ctx.measureText(label).width + 2 * badgePaddingX);
 
     ctx.fillStyle = LINE_COLORS['line-bus'];
     ctx.beginPath();
@@ -202,7 +202,9 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
     ctx.fillStyle = IMAGE_LIGHT.title;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(label, headerPadding + badgePaddingX, badgeY + badgeHeight / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText(label, headerPadding + badgeWidth / 2, badgeY + badgeHeight / 2);
+    ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
 
     titleX += badgeWidth + 8 * dpr;
