@@ -8,7 +8,10 @@ import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlace
 import { LINE_COLORS } from '../../../common/constants/colors';
 import { TODAY_STRING } from '../../../common/constants/dates';
 import { getBusRouteIds } from '../../../common/constants/lines';
-import type { FetchAlertDelaysByLineOptions } from '../../../common/types/api';
+import type {
+  FetchAlertDelaysByLineOptions,
+  FetchBusTripMetricsOptions,
+} from '../../../common/types/api';
 import type { BusRoute } from '../../../common/types/lines';
 import { getRidershipLineId } from '../../../common/utils/ridership';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
@@ -26,6 +29,7 @@ import {
   trimTrailingEmpty,
 } from './scorecardUtils';
 import { BusReliabilityChart, useBusReliabilityRow } from './busReliability';
+import { BusServiceChart, buildBusServiceRow, summarizeBusService } from './busService';
 import type { MetricKey, ScorecardRow } from './types';
 
 const ridershipLineId = (busRoute: BusRoute) =>
@@ -40,6 +44,15 @@ const delaysOptions = (busRoute: BusRoute): FetchAlertDelaysByLineOptions => ({
   agg: 'daily',
 });
 
+// The chart card's 60 days. The Service row pools the last 30 of them, the days its chart shows, and
+// fetches them on page load with the speed chart, so the row costs no extra request.
+const dailyTripMetricsOptions = (busRoute: BusRoute): FetchBusTripMetricsOptions => ({
+  start_date: CHART_FETCH_START,
+  end_date: TODAY_STRING,
+  route: getBusRouteIds(busRoute).join(','),
+  agg: 'daily',
+});
+
 export const useBusScorecardRows = (busRoute: BusRoute) => {
   const tripMetrics = useBusTripMetrics({
     start_date: WINDOW_START,
@@ -47,6 +60,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     route: getBusRouteIds(busRoute).join(','),
     agg: 'weekly',
   });
+  const dailyTripMetrics = useBusTripMetrics(dailyTripMetricsOptions(busRoute));
   const ridership = useRidershipData({
     line_id: ridershipLineId(busRoute),
     start_date: WINDOW_START,
@@ -76,6 +90,9 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     if (speedRow) built.push(speedRow);
     if (reliability.row) built.push(reliability.row);
 
+    const service = dailyTripMetrics.data && summarizeBusService(dailyTripMetrics.data);
+    if (service) built.push(buildBusServiceRow(service, tripMetrics.data ?? [], color));
+
     const ridershipRow = ridership.data && buildRidershipRow(ridership.data, color);
     if (ridershipRow) built.push(ridershipRow);
 
@@ -99,26 +116,26 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     if (delaysRow) built.push(delaysRow);
 
     return built;
-  }, [tripMetrics.data, reliability.row, ridership.data, delays.data]);
+  }, [tripMetrics.data, dailyTripMetrics.data, reliability.row, ridership.data, delays.data]);
 
   return {
     rows,
     isLoading:
-      tripMetrics.isLoading || reliability.isLoading || ridership.isLoading || delays.isLoading,
+      tripMetrics.isLoading ||
+      dailyTripMetrics.isLoading ||
+      reliability.isLoading ||
+      ridership.isLoading ||
+      delays.isLoading,
   };
 };
 
 export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRoute: BusRoute }) => {
   const config = getSpeedGraphConfig(dayjs(CHART_FETCH_START), dayjs(TODAY_STRING));
 
+  // 60 days is under getSpeedGraphConfig's daily cut-off, so this is the speed chart's query too
   const tripMetrics = useBusTripMetrics(
-    {
-      start_date: CHART_FETCH_START,
-      end_date: TODAY_STRING,
-      route: getBusRouteIds(busRoute).join(','),
-      agg: config.agg,
-    },
-    metric === 'speed'
+    dailyTripMetricsOptions(busRoute),
+    metric === 'speed' || metric === 'service'
   );
   // Same query as the scorecard row, so it's already cached; ridership is weekly and can lag.
   const ridership = useRidershipData(
@@ -141,6 +158,10 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
         peakLineDashed
       />
     );
+  }
+  if (metric === 'service') {
+    if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
+    return <BusServiceChart daily={tripMetrics.data} color={LINE_COLORS['line-bus']} />;
   }
   if (metric === 'delays') {
     if (!delays.data) return <ChartPlaceHolder query={delays} />;

@@ -6,7 +6,7 @@ import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
 import {
-  getParentStationForStopId,
+  getStationInOptions,
   getStationForInvalidFromSelection,
   optionsStation,
   stopIdsForStations,
@@ -39,8 +39,8 @@ export const StationSelectorWidget = ({
 
   const stations = optionsStation(lineShort, busRoute, crRoute, ferryRoute);
   const { defaultFrom, defaultTo } = findValidDefaultStations(stations);
-  const toStation = to ? getParentStationForStopId(to, lineShort) : defaultTo;
-  const fromStation = from ? getParentStationForStopId(from, lineShort) : defaultFrom;
+  const toStation = getStationInOptions(to, stations) ?? defaultTo;
+  const fromStation = getStationInOptions(from, stations) ?? defaultFrom;
 
   useEffect(() => {
     if (fromStation && toStation && fromStation.station === toStation.station) {

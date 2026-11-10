@@ -105,9 +105,9 @@
     "captured_at": "2026-10-17T00:51:11+00:00"
   },
   "bustripmetrics/daily": {
-    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/bustripmetrics?start_date=2026-09-01&end_date=2026-09-07&route=1",
+    "url": "https://dashboard-api.labs.transitmatters.org/api/bustripmetrics?start_date=2026-09-01&end_date=2026-09-07&route=1",
     "status": 200,
-    "captured_at": "2026-10-17T00:51:11+00:00"
+    "captured_at": "2026-11-09T22:45:10+00:00"
   },
   "bustripmetrics/grouped_weekly": {
     "url": "https://dashboard-api-beta.labs.transitmatters.org/api/bustripmetrics?start_date=2026-09-01&end_date=2026-09-30&route=114%2C116%2C117&agg=weekly",

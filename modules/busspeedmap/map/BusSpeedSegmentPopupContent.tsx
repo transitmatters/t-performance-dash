@@ -1,6 +1,14 @@
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
+import { TERMINAL_SECTION_NOTES } from '../constants';
 import type { BusSpeedSegmentProperties, Period } from '../types';
-import { compareRouteNames, isPooledSegment, segmentDistanceAndTime } from '../utils';
+import {
+  compareRouteNames,
+  isPooledSegment,
+  periodSuffix,
+  segmentDistanceAndTime,
+  segmentDwell,
+  segmentSpeedRange,
+} from '../utils';
 
 interface SegmentPopupContentProps {
   /**
@@ -24,6 +32,8 @@ const SegmentStats = ({
   period: Period;
 }) => {
   const distanceAndTime = segmentDistanceAndTime(segment);
+  const dwell = segmentDwell(segment);
+  const speedRange = segmentSpeedRange(segment);
   return (
     <div className="mt-1">
       <p className="text-sm font-semibold">
@@ -31,11 +41,20 @@ const SegmentStats = ({
         {segment.p50_speed_mph.toFixed(1)} mph
       </p>
       {distanceAndTime && <p className="text-stone-600">{distanceAndTime}</p>}
+      {dwell && (
+        <p className="text-stone-600">
+          Includes about {dwell} at {segment.from_stop_name}
+        </p>
+      )}
       <p className="text-stone-600">
         Median of {trips}
-        {period !== 'daily' && ` this ${period === 'weekly' ? 'week' : 'month'}`}
+        {periodSuffix(period)}
         {segment.n_interpolated > 0 && `, ${segment.n_interpolated} with an interpolated stop time`}
       </p>
+      {speedRange && <p className="text-stone-600">8 in 10 trips ran {speedRange}</p>}
+      {segment.terminal_section && (
+        <p className="text-stone-600">{TERMINAL_SECTION_NOTES[segment.terminal_section]}</p>
+      )}
     </div>
   );
 };

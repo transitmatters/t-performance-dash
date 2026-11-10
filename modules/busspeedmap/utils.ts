@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
-import { FREQUENT_BUS_ROUTE_IDS } from '../../common/constants/lines';
+import { FREQUENT_BUS_ROUTE_IDS, getBusRouteDisplayName } from '../../common/constants/lines';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { getFormattedTimeString } from '../../common/utils/time';
-import { BUNCHED, HEADWAY_FIELDS, headwayShare, WITHIN_75_125 } from '../reliability/utils';
+import { BUNCHED, HEADWAY_FIELDS, headwayShare, ON_TIME } from '../reliability/utils';
 import type {
   BusSpeedSegmentLeaderboardByBand,
   BusSpeedSegmentLeaderboardByDayType,
@@ -99,6 +99,35 @@ export const segmentDistanceAndTime = (
   return `${miles} mi · ${getFormattedTimeString(entry.p50_total_time_seconds)}`;
 };
 
+/** " this week" or " this month", to follow "Median of 40 trips"; nothing for a single day. */
+export const periodSuffix = (period: Period): string =>
+  period === 'daily' ? '' : ` this ${period === 'weekly' ? 'week' : 'month'}`;
+
+/**
+ * "25s" -- the median time buses spent at a segment's first stop, which its speed already counts.
+ * Undefined for tiles published without it, and for zero, which says nothing about the stop: it
+ * can mean most buses pass without stopping, or that trips start there, since a trip's layover at
+ * its first stop isn't counted as dwell.
+ */
+export const segmentDwell = (
+  segment: Pick<BusSpeedSegmentProperties, 'median_dwell_seconds'>
+): string | undefined =>
+  segment.median_dwell_seconds ? getFormattedTimeString(segment.median_dwell_seconds) : undefined;
+
+const formatSpeed = (speed: number): string => speed.toFixed(speed < 10 ? 1 : 0);
+
+/**
+ * "2.1-9.0 mph" -- the speeds eight in ten trips fell between, slowest first: enough to tell a
+ * section that's always slow from one a few trips hold up. Undefined for tiles published without
+ * them, and for a segment with too few trips to say.
+ */
+export const segmentSpeedRange = (
+  segment: Pick<BusSpeedSegmentProperties, 'p10_speed_mph' | 'p90_speed_mph'>
+): string | undefined => {
+  if (segment.p10_speed_mph == null || segment.p90_speed_mph == null) return undefined;
+  return `${formatSpeed(segment.p90_speed_mph)}–${formatSpeed(segment.p10_speed_mph)} mph`;
+};
+
 /**
  * Every `shared_routes` a pooled segment could carry with all of its routes among `routeIds`:
  * each combination of two or more, sorted and comma-joined as the pipeline writes them ("749,751"
@@ -125,6 +154,27 @@ export const isPooledSegment = (
 /** Route names in the order a rider would list them: SL1 before SL2, 9 before 10. */
 export const compareRouteNames = (a: string, b: string): number =>
   a.localeCompare(b, 'en', { numeric: true });
+
+/**
+ * A stop's dwell, one row per route in route order, from the segments leaving it. A route that
+ * branches at the stop has a segment per next stop, and the one most of its trips took speaks for
+ * it. A segment comes back once per tile it crosses, and a pooled one repeats its routes.
+ */
+export const stopDwellsByRoute = (
+  segments: BusSpeedSegmentProperties[]
+): BusSpeedSegmentProperties[] => {
+  const busiest = new Map<string, BusSpeedSegmentProperties>();
+  for (const segment of segments) {
+    if (isPooledSegment(segment) || !segmentDwell(segment)) continue;
+    const current = busiest.get(segment.route_id);
+    if (!current || segment.n_traversals > current.n_traversals) {
+      busiest.set(segment.route_id, segment);
+    }
+  }
+  return [...busiest.values()].sort((a, b) =>
+    compareRouteNames(getBusRouteDisplayName(a.route_id), getBusRouteDisplayName(b.route_id))
+  );
+};
 
 export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntry {
   /** Whether any raw route_id behind this curated label is a Frequent Bus Route. */
@@ -181,7 +231,7 @@ export const leaderboardHeadwayShare = (
   rankBy: LeaderboardRankBy
 ): number | undefined => {
   if (rankBy === 'speed' || !entry.isFrequentRoute) return undefined;
-  return headwayShare(entry, rankBy === 'bunched' ? BUNCHED : WITHIN_75_125);
+  return headwayShare(entry, rankBy === 'bunched' ? BUNCHED : ON_TIME);
 };
 
 /**

@@ -16,7 +16,7 @@ import type { DatedValue } from '../../../common/utils/dateAggregation';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
 import type { AggType } from '../../speed/constants/speeds';
 import { ReliabilityGraph } from '../../reliability/charts/ReliabilityGraph';
-import { BUNCHED, headwayShare, WITHIN_75_125 } from '../../reliability/utils';
+import { BUNCHED, headwayShare, ON_TIME } from '../../reliability/utils';
 import { CHART_FETCH_START, WINDOW_START, buildRow, chartWindowStart } from './scorecardUtils';
 
 /**
@@ -36,10 +36,7 @@ const frequentSubset = (busRoute: BusRoute) => {
 };
 
 /** Each period's share of headways in `fields`, skipping periods with no headways counted. */
-const toHeadwayPoints = (
-  data: DeliveredTripMetricsBus[],
-  fields: typeof WITHIN_75_125
-): DatedValue[] =>
+const toHeadwayPoints = (data: DeliveredTripMetricsBus[], fields: typeof ON_TIME): DatedValue[] =>
   data.flatMap((entry) => {
     const share = headwayShare(entry, fields);
     return share === undefined ? [] : [{ date: entry.date, value: share }];
@@ -64,7 +61,7 @@ export const useBusReliabilityRow = (busRoute: BusRoute, color: string) => {
         key: 'reliability',
         label: 'Reliability',
         subtitle: `Headways within 75–125% of schedule${subset ? `, Route ${subset} only` : ''}`,
-        points: toHeadwayPoints(tripMetrics.data, WITHIN_75_125),
+        points: toHeadwayPoints(tripMetrics.data, ON_TIME),
         reducer: 'avg',
         unit: '%',
         formatValue: (v) => v.toFixed(1),
@@ -98,7 +95,7 @@ export const BusReliabilityChart = ({ busRoute }: { busRoute: BusRoute }) => {
   const tripMetrics = useFrequentTripMetrics(busRoute, CHART_FETCH_START, config.agg);
 
   if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
-  const within = toHeadwayPoints(tripMetrics.data, WITHIN_75_125);
+  const within = toHeadwayPoints(tripMetrics.data, ON_TIME);
   const chartEnd = within[within.length - 1]?.date ?? TODAY_STRING;
   return (
     <div className="flex flex-col gap-3">

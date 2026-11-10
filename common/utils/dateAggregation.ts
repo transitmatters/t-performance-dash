@@ -19,18 +19,58 @@ const reduce = (values: number[], reducer: Reducer): number => {
   return reducer === 'sum' ? total : total / values.length;
 };
 
-/** Groups dated points into calendar-month buckets, ordered oldest to newest. */
-export const bucketByCalendarMonth = (points: DatedValue[]): MonthlyBucket[] => {
-  const byMonth = new Map<string, number[]>();
-  for (const point of points) {
-    const month = dayjs(point.date).startOf('month').format('YYYY-MM-DD');
-    const values = byMonth.get(month) ?? [];
-    values.push(point.value);
-    byMonth.set(month, values);
+/** Groups dated items by calendar month (dated the 1st), ordered oldest to newest. */
+export const groupByCalendarMonth = <T extends { date: string }>(
+  items: T[]
+): { month: string; items: T[] }[] => {
+  const byMonth = new Map<string, T[]>();
+  for (const item of items) {
+    const month = dayjs(item.date).startOf('month').format('YYYY-MM-DD');
+    const monthItems = byMonth.get(month) ?? [];
+    monthItems.push(item);
+    byMonth.set(month, monthItems);
   }
   return [...byMonth.entries()]
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([month, values]) => ({ month, values }));
+    .map(([month, monthItems]) => ({ month, items: monthItems }));
+};
+
+/** Groups dated points into calendar-month buckets, ordered oldest to newest. */
+export const bucketByCalendarMonth = (points: DatedValue[]): MonthlyBucket[] =>
+  groupByCalendarMonth(points).map(({ month, items }) => ({
+    month,
+    values: items.map((point) => point.value),
+  }));
+
+export interface TrailingWindows<T> {
+  /** The latest date in the series, where the current window ends. */
+  end: string;
+  current: T[];
+  prior: T[];
+}
+
+/**
+ * Splits a dated series into the `days` up to and including its latest date, and the `days`
+ * before those. Anchored to the data rather than today, so a feed that lags still fills both.
+ */
+export const splitTrailingWindows = <T extends { date: string }>(
+  items: T[],
+  days = 30
+): TrailingWindows<T> | null => {
+  if (!items.length) return null;
+  const end = items.reduce((max, item) => (item.date > max ? item.date : max), items[0].date);
+  const endDay = dayjs(end);
+  const currentStart = endDay.subtract(days, 'day');
+  const priorStart = endDay.subtract(days * 2, 'day');
+  const between = (item: T, from: dayjs.Dayjs, to: dayjs.Dayjs) => {
+    const d = dayjs(item.date);
+    return d.isAfter(from) && (d.isSame(to, 'day') || d.isBefore(to));
+  };
+  return {
+    end,
+    current: items.filter((item) => between(item, currentStart, endDay)),
+    prior: items.filter((item) => between(item, priorStart, currentStart)),
+  };
 };
 
 export interface MonthlyDelta {

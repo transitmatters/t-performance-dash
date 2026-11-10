@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { LineShort } from '../types/lines';
 import type { SlowZoneResponse } from '../types/dataPoints';
-import { getTripSlowZoneSummary, isZoneOnTrip } from './slowZoneUtils';
+import { getStationPairName, getTripSlowZoneSummary, isZoneOnTrip } from './slowZoneUtils';
 import { getParentStationForStopId } from './stations';
 
 const zone = (
@@ -124,5 +124,21 @@ describe('getTripSlowZoneSummary', () => {
     expect(
       getTripSlowZoneSummary(data, ashmontJfk, braintree, 'Red', '2025-01-15', '2025-01-15')
     ).toBeNull();
+  });
+});
+
+describe('getStationPairName', () => {
+  const andrew = station('70083', 'Red');
+  const braintreeJfk = station('70095', 'Red');
+
+  it('drops the branch suffix from short names', () => {
+    expect(getStationPairName(andrew, ashmontJfk, true)).not.toContain('(');
+    expect(getStationPairName(braintreeJfk, braintree, true)).toMatch(/^JFK-/);
+  });
+
+  it('keeps full stop names when not short', () => {
+    expect(getStationPairName(andrew, braintreeJfk)).toBe(
+      `${andrew.stop_name}-${braintreeJfk.stop_name}`
+    );
   });
 });

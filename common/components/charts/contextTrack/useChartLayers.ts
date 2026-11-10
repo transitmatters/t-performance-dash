@@ -92,7 +92,11 @@ export const useChartLayers = ({
   const pinned = useLayerStore((store) => store.pinned);
   const temperatureEnabled = useLayerStore((store) => store.temperature) && enabled;
   const [geometry, setGeometry] = useState<TrackGeometry | null>(null);
-  const geometryPlugin: Plugin = useMemo(() => chartGeometryPlugin(setGeometry), []);
+  // Charts without a track have no use for the plot's position, so don't re-render them with it
+  const geometryPlugin: Plugin = useMemo(
+    () => (enabled ? chartGeometryPlugin(setGeometry) : { id: 'trackGeometry' }),
+    [enabled]
+  );
 
   const pinnedRuns = useMemo(
     () => weatherRuns.filter(({ key }) => pinned[key]),
