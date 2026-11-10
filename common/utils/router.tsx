@@ -111,6 +111,26 @@ export const stripForeignRouteParams = (pathname: string, search: SearchObject):
   return pickBy(search, (_, key) => !ROUTE_PARAMS.includes(key) || key === ownParam);
 };
 
+/** The route a mode's pages open on when the URL doesn't name one. */
+const DEFAULT_ROUTE_FOR_LINE: Partial<Record<Line, string>> = {
+  'line-bus': '1',
+  'line-commuter-rail': 'CR-Fairmount',
+  'line-ferry': 'Boat-F6',
+};
+
+/**
+ * The search with the mode's default route filled in, e.g. `/bus/ridership/` with no `busRoute`.
+ * Pages that rank every route at once, like the leaderboard, are left without one.
+ */
+export const withDefaultRouteParam = (pathname: string, search: SearchObject): SearchObject => {
+  const { line, page } = parseRoutePath(withoutEmbedPrefix(pathname));
+  const param = line ? ROUTE_PARAM_FOR_LINE[line] : undefined;
+  // Embed paths carry a chart name after the page, so their page may not resolve; they still need a route.
+  if (!line || !param || ALL_PAGES[page]?.hasRouteSelector === false) return search;
+  if (search[param]) return search;
+  return { ...search, [param]: DEFAULT_ROUTE_FOR_LINE[line] };
+};
+
 export const useDelimitatedRoute = (): Route => {
   const { pathname, search } = useLocation();
   // Merged like TanStack merges a route's validated search, so unknown params still carry over.
