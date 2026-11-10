@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage } from '@fortawesome/free-solid-svg-icons';
 import type { Location } from '../../types/charts';
 import { useDelimitatedRoute } from '../../utils/router';
+import { useChartBusRoute } from '../../hooks/useChartBusRoute';
 import { Button } from '../ui/button';
 import { getImageFilename } from '../../utils/csv';
 import { downloadChartAsImage } from '../../utils/image';
@@ -29,6 +30,7 @@ export const SaveChartImageButton = ({
   chartTitle,
 }: SaveChartImageButtonProps) => {
   const { line } = useDelimitatedRoute();
+  const busRoute = useChartBusRoute();
 
   const handleClick = useCallback(() => {
     if (!chartRef.current) return;
@@ -42,7 +44,16 @@ export const SaveChartImageButton = ({
     });
     downloadChartAsImage(
       chartRef.current,
-      { datasetName, startDate, endDate, location, line, includeBothStopsForLocation, chartTitle },
+      {
+        datasetName,
+        startDate,
+        endDate,
+        location,
+        line,
+        busRoute,
+        includeBothStopsForLocation,
+        chartTitle,
+      },
       filename
     );
   }, [
@@ -51,6 +62,7 @@ export const SaveChartImageButton = ({
     includeBothStopsForLocation,
     startDate,
     line,
+    busRoute,
     location,
     endDate,
     chartTitle,

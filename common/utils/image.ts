@@ -83,6 +83,7 @@ export interface ChartImageOptions {
   endDate?: string;
   location?: Location;
   line?: string;
+  busRoute?: string;
   includeBothStopsForLocation?: boolean;
   chartTitle?: string;
 }
@@ -98,6 +99,7 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
     endDate,
     location,
     line,
+    busRoute,
     includeBothStopsForLocation,
     chartTitle,
   } = options;
@@ -114,6 +116,7 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
   const footerPadding = 8 * dpr;
 
   const titleFontSize = 20 * dpr;
+  const badgeFontSize = 14 * dpr;
   const subtitleFontSize = 14 * dpr;
   const dateFontSize = 14 * dpr;
   const locationFontSize = 16 * dpr;
@@ -135,11 +138,36 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
   const title = chartTitle ?? getChartTitle(datasetName);
   const subtitle = getChartSubtitle(datasetName);
 
+  // Route badge before the title, matching WidgetTitle (#114). Every bus route shares one colour,
+  // so without it an exported bus chart can't say which route it shows. Dark text on bus yellow
+  // reads in both themes, so the badge ignores the theme.
+  let titleX = headerPadding;
+  if (busRoute) {
+    const label = `Route ${busRoute}`;
+    const badgePaddingX = 6 * dpr;
+    const badgeHeight = badgeFontSize + 8 * dpr;
+    const badgeY = headerPadding + titleFontSize / 2 - badgeHeight / 2;
+    ctx.font = `bold ${badgeFontSize}px system-ui, sans-serif`;
+    const badgeWidth = ctx.measureText(label).width + 2 * badgePaddingX;
+
+    ctx.fillStyle = LINE_COLORS['line-bus'];
+    ctx.beginPath();
+    ctx.roundRect(headerPadding, badgeY, badgeWidth, badgeHeight, 4 * dpr);
+    ctx.fill();
+
+    ctx.fillStyle = IMAGE_LIGHT.title;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(label, headerPadding + badgePaddingX, badgeY + badgeHeight / 2);
+
+    titleX += badgeWidth + 8 * dpr;
+  }
+
   ctx.fillStyle = theme.title;
   ctx.font = `bold ${titleFontSize}px system-ui, sans-serif`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
-  ctx.fillText(title, headerPadding, headerPadding);
+  ctx.fillText(title, titleX, headerPadding);
 
   if (subtitle) {
     ctx.fillStyle = theme.subtitle;

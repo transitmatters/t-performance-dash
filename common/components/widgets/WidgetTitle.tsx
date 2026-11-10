@@ -13,6 +13,7 @@ import { ALL_PAGES } from '../../constants/pages';
 import { mbtaTextConfig } from '../../styles/general';
 import { LocationTitle } from '../../../modules/dashboard/LocationTitle';
 import { CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { BusRouteBadge } from './BusRouteBadge';
 
 interface WidgetTitle {
   title: ReactNode;
@@ -81,7 +82,12 @@ export const WidgetTitle = ({
     // an action in a fixed second column, which cannot wrap, so the layout stays flex here.
     <CardHeader className="flex w-full flex-col items-baseline justify-between gap-x-4 gap-y-1 px-0 md:flex-row">
       <div className="flex w-full flex-col gap-0.5 md:w-auto">
-        {titleElement}
+        {/* Wraps on phones so a long combined route (SL1/SL2/SL3/SLW) can sit above the title; on
+            desktop it stays on one line, like the title itself. */}
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 md:flex-nowrap">
+          <BusRouteBadge />
+          {titleElement}
+        </div>
         {subtitle && (
           <CardDescription className="text-[13px] leading-tight md:whitespace-nowrap">
             {subtitle}

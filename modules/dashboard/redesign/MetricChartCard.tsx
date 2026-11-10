@@ -7,6 +7,7 @@ import {
   CardDescription,
   CardContent,
 } from '../../../common/components/ui/card';
+import { BusRouteBadge } from '../../../common/components/widgets/BusRouteBadge';
 import type { MetricKey } from './types';
 
 export type MetricCopy = Partial<Record<MetricKey, { title: string; subtitle: string }>>;
@@ -32,7 +33,10 @@ export const MetricChartCard = ({ metric, copy, children }: MetricChartCardProps
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+          <BusRouteBadge />
+          <CardTitle>{title}</CardTitle>
+        </div>
         <CardDescription>{subtitle}</CardDescription>
       </CardHeader>
       <CardContent>{children}</CardContent>
