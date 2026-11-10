@@ -32,6 +32,8 @@ export interface AggregateDataPoint {
   count: number;
   bunched?: number;
   on_time?: number;
+  /** Headways with a scheduled headway, which `bunched` and `on_time` are shares of. Older responses lack it. */
+  scheduled?: number;
   max: number;
   mean: number;
   min: number;

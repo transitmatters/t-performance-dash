@@ -802,6 +802,14 @@ class HeadwayAggregateByDate(AggregateByDate):
     on_time: int = Field(
         description="Number of headways within 25% of the scheduled headway (0 when there is no schedule)."
     )
+    scheduled: int | None = Field(
+        default=None,
+        description=(
+            "Number of headways with a scheduled headway to compare against. Bunched and on-time shares are out of "
+            "this rather than `count`; 0 means the day has no schedule (the subway before 2021). Missing from "
+            "responses served before it was added, so fall back to `count`."
+        ),
+    )
 
 
 class AggregateByTime(AggregateStats):
