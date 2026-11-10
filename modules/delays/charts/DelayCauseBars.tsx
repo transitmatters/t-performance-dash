@@ -175,6 +175,7 @@ export const DelayCauseBars = ({
           <SaveChartImageButton
             chartRef={ref}
             datasetName="delay-causes"
+            chartSubtitle="Total for these dates"
             includeBothStopsForLocation={false}
             startDate={startDate}
             endDate={endDate}

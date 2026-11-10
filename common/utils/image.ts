@@ -41,32 +41,12 @@ const IMAGE_DARK: ImageTheme = {
 const getImageTheme = (): ImageTheme =>
   useThemeStore.getState().theme === 'dark' ? IMAGE_DARK : IMAGE_LIGHT;
 
-const CHART_TITLES: Record<string, string> = {
-  headways: 'Headways',
-  traveltimes: 'Travel Times',
-  dwells: 'Dwells',
-  speeds: 'Speed',
-  speed: 'Speed',
-  ridership: 'Ridership',
-  predictions: 'Arrival Predictions',
-  service: 'Service',
-};
-
-const CHART_SUBTITLES: Record<string, string> = {
-  headways: 'Time between trains',
-  traveltimes: 'Time between stops',
-  dwells: 'Time spent at station',
-  speeds: 'Average speed between stops',
-  speed: 'Average speed between stops',
-  slowtime: 'Time over baseline',
-};
-
-export function getChartTitle(datasetName: string): string {
-  return CHART_TITLES[datasetName] ?? datasetName;
-}
-
-function getChartSubtitle(datasetName: string): string | undefined {
-  return CHART_SUBTITLES[datasetName];
+/** Shortens text with an ellipsis until it fits maxWidth in the context's current font. */
+function fitText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string {
+  if (ctx.measureText(text).width <= maxWidth) return text;
+  let end = text.length;
+  while (end > 0 && ctx.measureText(`${text.slice(0, end).trimEnd()}…`).width > maxWidth) end--;
+  return `${text.slice(0, end).trimEnd()}…`;
 }
 
 function formatDateForImage(startDate: string, endDate?: string): string {
@@ -78,13 +58,13 @@ function formatDateForImage(startDate: string, endDate?: string): string {
 }
 
 export interface ChartImageOptions {
-  datasetName: string;
+  title: string;
+  subtitle?: string;
   startDate: string;
   endDate?: string;
   location?: Location;
   line?: string;
   includeBothStopsForLocation?: boolean;
-  chartTitle?: string;
 }
 
 /**
@@ -92,15 +72,8 @@ export interface ChartImageOptions {
  * the on-screen WidgetTitle layout and a URL footer.
  */
 export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, filename: string) {
-  const {
-    datasetName,
-    startDate,
-    endDate,
-    location,
-    line,
-    includeBothStopsForLocation,
-    chartTitle,
-  } = options;
+  const { title, subtitle, startDate, endDate, location, line, includeBothStopsForLocation } =
+    options;
   const { canvas } = chart;
   const { width, height } = canvas;
 
@@ -131,30 +104,17 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
   ctx.fillStyle = theme.background;
   ctx.fillRect(0, 0, offscreen.width, offscreen.height);
 
-  // --- Header: Left side (title + subtitle) ---
-  const title = chartTitle ?? getChartTitle(datasetName);
-  const subtitle = getChartSubtitle(datasetName);
-
-  ctx.fillStyle = theme.title;
-  ctx.font = `bold ${titleFontSize}px system-ui, sans-serif`;
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'top';
-  ctx.fillText(title, headerPadding, headerPadding);
-
-  if (subtitle) {
-    ctx.fillStyle = theme.subtitle;
-    ctx.font = `italic ${subtitleFontSize}px system-ui, sans-serif`;
-    ctx.fillText(subtitle, headerPadding, headerPadding + titleFontSize + 4 * dpr);
-  }
-
-  // --- Header: Right side (date + location) ---
+  // --- Header: Right side (date) ---
   const dateStr = formatDateForImage(startDate, endDate);
   ctx.fillStyle = theme.meta;
   ctx.font = `${dateFontSize}px system-ui, sans-serif`;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'top';
   ctx.fillText(dateStr, width - headerPadding, headerPadding);
+  const dateWidth = ctx.measureText(dateStr).width;
 
+  // --- Header: Right side (location) ---
+  let locationWidth = 0;
   if (location) {
     const lineColor =
       theme.lineColors[line as keyof typeof LINE_COLORS] ?? theme.lineColors.default;
@@ -186,6 +146,7 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
       ctx.font = `bold ${locationFontSize}px system-ui, sans-serif`;
       ctx.fillStyle = lineColor;
       ctx.fillText(location.from, rightEdge - toStationWidth - toTextWidth - fromWidth, locationY);
+      locationWidth = toStationWidth + toTextWidth + fromWidth;
     } else {
       // Single station (headways, dwells) — show origin + direction
       ctx.font = `${locationFontSize}px system-ui, sans-serif`;
@@ -203,7 +164,27 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
       ctx.font = `bold ${locationFontSize}px system-ui, sans-serif`;
       ctx.fillStyle = lineColor;
       ctx.fillText(location.from, rightEdge - dirWidth - fromWidth, locationY);
+      locationWidth = dirWidth + fromWidth;
     }
+  }
+
+  // --- Header: Left side (title + subtitle) ---
+  // Widget headings can be long, so each row stops short of the date or location beside it.
+  const leftMaxWidth = (rightWidth: number) => width - 3 * headerPadding - rightWidth;
+
+  ctx.fillStyle = theme.title;
+  ctx.font = `bold ${titleFontSize}px system-ui, sans-serif`;
+  ctx.textAlign = 'left';
+  ctx.fillText(fitText(ctx, title, leftMaxWidth(dateWidth)), headerPadding, headerPadding);
+
+  if (subtitle) {
+    ctx.fillStyle = theme.subtitle;
+    ctx.font = `italic ${subtitleFontSize}px system-ui, sans-serif`;
+    ctx.fillText(
+      fitText(ctx, subtitle, leftMaxWidth(locationWidth)),
+      headerPadding,
+      headerPadding + titleFontSize + 4 * dpr
+    );
   }
 
   // --- Chart ---
