@@ -85,6 +85,11 @@ const delaysSearch = (search: RawSearch) => ({
   branch: str(search.branch),
 });
 
+const reliabilitySearch = (search: RawSearch) => ({
+  /** The subway direction every reliability chart shows, as its GTFS direction_id. */
+  relDir: str(search.relDir),
+});
+
 const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[];
 
 const overviewSearch = (search: RawSearch) => ({
@@ -127,6 +132,11 @@ export const validateFleetSearch = (search: RawSearch) => ({
 export const validateDelaysSearch = (search: RawSearch) => ({
   ...validateLineSearch(search),
   ...delaysSearch(search),
+});
+
+export const validateReliabilitySearch = (search: RawSearch) => ({
+  ...validateLineSearch(search),
+  ...reliabilitySearch(search),
 });
 
 export const validateSystemSearch = dateSearch;
@@ -181,6 +191,7 @@ export const validateAnySearch = (search: RawSearch) => ({
   ...serviceSearch(search),
   ...fleetSearch(search),
   ...delaysSearch(search),
+  ...reliabilitySearch(search),
   ...validateEmbedSearch(search),
   ...trendSearch(search),
 });
