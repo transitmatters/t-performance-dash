@@ -13,7 +13,22 @@ import { Skeleton } from '../../../common/components/ui/skeleton';
 import { useAlertsData } from '../../../common/api/hooks/alerts';
 import { getRelevantAlerts } from '../../commute/alerts/AlertBox';
 import { UpcomingTime } from '../../commute/alerts/Time';
+import type { FormattedAlert } from '../../../common/types/alerts';
 import type { BusRoute, CommuterRailRoute, LineShort } from '../../../common/types/lines';
+
+const MAX_ROWS = 4;
+
+const AlertRow = ({ alert }: { alert: FormattedAlert }) => (
+  <div className="flex items-start gap-3 py-3 first:pt-0">
+    <TriangleAlert className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+    <div className="flex flex-1 flex-col gap-1">
+      <span className="text-sm font-medium">{alert.header}</span>
+      <span className="flex items-center text-xs text-muted-foreground">
+        <UpcomingTime times={alert.relevantTimes} />
+      </span>
+    </div>
+  </div>
+);
 
 interface ServiceAlertsCardProps {
   lineShort: LineShort;
@@ -33,7 +48,13 @@ export const ServiceAlertsCard = ({
   const { isLoading } = alerts;
   const { isError } = alerts;
   const current = alerts.data ? getRelevantAlerts(alerts.data, 'current') : [];
-  const upcoming = alerts.data ? getRelevantAlerts(alerts.data, 'upcoming') : [];
+  // An alert running today and on later days is both; it's listed once, as current.
+  const currentIds = new Set(current.map((alert) => alert.id));
+  const upcoming = alerts.data
+    ? getRelevantAlerts(alerts.data, 'upcoming').filter((alert) => !currentIds.has(alert.id))
+    : [];
+  const shownCurrent = current.slice(0, MAX_ROWS);
+  const shownUpcoming = upcoming.slice(0, MAX_ROWS - shownCurrent.length);
 
   return (
     <Card className="flex flex-col">
@@ -81,27 +102,28 @@ export const ServiceAlertsCard = ({
           </div>
         ) : (
           <>
-            {upcoming.length > 0 && (
-              <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
-                Upcoming · {upcoming.length}
+            {shownCurrent.length > 0 && (
+              <div className="flex flex-col divide-y">
+                {shownCurrent.map((alert) => (
+                  <AlertRow key={alert.id} alert={alert} />
+                ))}
               </div>
             )}
-            <div className="flex flex-col divide-y">
-              {[...current, ...upcoming].slice(0, 4).map((alert) => (
-                <div key={alert.id} className="flex items-start gap-3 py-3 first:pt-0">
-                  <TriangleAlert className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-                  <div className="flex flex-1 flex-col gap-1">
-                    <span className="text-sm font-medium">{alert.header}</span>
-                    <span className="flex items-center text-xs text-muted-foreground">
-                      <UpcomingTime times={alert.relevantTimes} />
-                    </span>
-                  </div>
+            {shownUpcoming.length > 0 && (
+              <>
+                <div className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+                  Upcoming · {upcoming.length}
                 </div>
-              ))}
-              {!current.length && !upcoming.length && (
-                <p className="py-2 text-sm text-muted-foreground">No alerts for {label}.</p>
-              )}
-            </div>
+                <div className="flex flex-col divide-y">
+                  {shownUpcoming.map((alert) => (
+                    <AlertRow key={alert.id} alert={alert} />
+                  ))}
+                </div>
+              </>
+            )}
+            {!current.length && !upcoming.length && (
+              <p className="py-2 text-sm text-muted-foreground">No alerts for {label}.</p>
+            )}
           </>
         )}
       </CardContent>

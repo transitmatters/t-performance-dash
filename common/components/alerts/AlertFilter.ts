@@ -22,6 +22,7 @@ const anti = [
  */
 export const findMatch = (alert: OldAlert): boolean => {
   const { text } = alert;
+  if (!text) return false;
 
   if (anti.some((exp) => text.match(exp))) {
     return false;

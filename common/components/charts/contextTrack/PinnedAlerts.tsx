@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import type { OldAlert } from '../../../types/alerts';
-import { ALERT_COLOR, alertKey, formatTimeRange } from './segments';
+import { ALERT_COLOR, alertKey, formatAlertRange } from './segments';
 
 interface PinnedAlertsProps {
   alerts: OldAlert[];
@@ -30,7 +30,7 @@ export const PinnedAlerts = ({ alerts, indent, onRemove }: PinnedAlertsProps) =>
             />
             <p className="min-w-0 flex-1">
               <span className="mr-1.5 font-medium whitespace-nowrap tabular-nums">
-                {formatTimeRange(alert.valid_from, alert.valid_to)}
+                {formatAlertRange(alert)}
               </span>
               <span className="text-muted-foreground">{alert.text}</span>
             </p>
