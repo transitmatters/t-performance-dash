@@ -69,8 +69,10 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
               const disabled = isDisabled(option);
               return (
                 <CommandItem
-                  key={option.stop_name}
-                  value={option.stop_name}
+                  // Some routes repeat a stop name, so the station id keeps each option distinct.
+                  key={option.station}
+                  value={option.station}
+                  keywords={[option.stop_name]}
                   disabled={disabled}
                   onSelect={() => {
                     setStation(option);

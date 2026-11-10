@@ -31,20 +31,22 @@ export function PredictionsDetails() {
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const enabled = Boolean(line);
-
-  const [greenRouteId, setGreenRouteId] = useState<LineRouteId>(lineToDefaultRouteId('line-green'));
+  const [greenRouteId, setGreenRouteId] = useState<LineRouteId>('Green-B');
   const routeId = line === 'line-green' ? greenRouteId : lineToDefaultRouteId(line);
+  const enabled = Boolean(routeId);
 
   const greenBranchToggle = useMemo(() => {
     return (
-      line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setGreenRouteId} />
+      line === 'line-green' && (
+        <BranchSelector routeId={greenRouteId} setRouteId={setGreenRouteId} />
+      )
     );
-  }, [line, routeId]);
+  }, [line, greenRouteId]);
 
   const predictions = usePredictionData(
     {
-      route_id: routeId,
+      // Only subway lines have a Predictions page, and each has a default route.
+      route_id: routeId!,
     },
     enabled
   );

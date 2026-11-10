@@ -2,7 +2,8 @@ import { flatten } from '@lodash-utils';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import type { Line, LineRouteId } from '../../../common/types/lines';
 
-export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId => {
+/** The route a subway line's charts read by default. Other modes pick a route in the URL, so they have none. */
+export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId | undefined => {
   switch (line) {
     case 'line-blue': {
       return 'Blue';
@@ -23,7 +24,7 @@ export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId => {
       return 'bus';
     }
     default: {
-      return 'Red';
+      return undefined;
     }
   }
 };
