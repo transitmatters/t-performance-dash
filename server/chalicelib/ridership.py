@@ -1,9 +1,18 @@
-"""Ridership data retrieval from DynamoDB."""
+"""Ridership data retrieval from DynamoDB and S3."""
 
+import json
+import re
 from datetime import date
 from typing import Dict, List, TypedDict
 
+from botocore.exceptions import ClientError
+
+from . import s3
 from .dynamo import query_ridership, query_station_ridership
+
+BUS_STOP_RIDERSHIP_PREFIX = "BusStopRidership"
+# GTFS bus route IDs are short and alphanumeric (e.g. "28", "34E", "741"), which keeps the S3 key well formed
+BUS_ROUTE_ID_REGEX = re.compile(r"^[A-Za-z0-9]{1,10}$")
 
 
 class RidershipEntry(TypedDict):
@@ -77,3 +86,23 @@ def get_station_ridership(
         line_id=line_id,
     )
     return [{"date": result["date"], "stations": result["stations"]} for result in query_results]
+
+
+def get_bus_stop_ridership(route_id: str) -> dict:
+    """Retrieve a bus route's average weekday boardings and alightings at each stop, for each fall season.
+
+    data-ingestion writes one file per route to S3 from the MBTA's seasonal ridership counts, so this doesn't take
+    a date range.
+
+    Args:
+        route_id: The GTFS route ID (e.g. ``"28"`` or ``"741"``).
+
+    Returns:
+        The route's file, or one with no seasons if the MBTA's data doesn't cover the route.
+    """
+    try:
+        return json.loads(s3.download(f"{BUS_STOP_RIDERSHIP_PREFIX}/{route_id}.json", compressed=False))
+    except ClientError as error:
+        if error.response.get("Error", {}).get("Code") not in ("NoSuchKey", "404"):
+            raise
+        return {"route_id": route_id, "seasons": [], "stop_names": {}}
