@@ -62,7 +62,8 @@ const chartSearch = (search: RawSearch) => ({
 // Same idea for the page-level toggles on Speed, Service and Fleet.
 const speedSearch = (search: RawSearch) => ({
   speedDays: str(search.speedDays),
-  speedBand: str(search.speedBand),
+  /** The lines shown on the bus Speed graph, comma-separated TIME_BANDS keys. Left off for all of them. */
+  speedBands: str(search.speedBands),
 });
 
 const serviceSearch = (search: RawSearch) => ({

@@ -147,6 +147,18 @@ export interface DeliveredTripMetricsBus extends SpeedTripMetrics, BusTripCounts
   fleet_trips?: number;
   pct_battery_trips?: number;
   avg_bus_age?: number;
+  // The same totals split by departure window (keys are TIME_BANDS minus `all_day`), on daily rows
+  // and weekly/monthly rollups alike. Absent before the pipeline began recording it (2025-12-24) and
+  // when the request set `time_band`; a band with no traversals is zeros or missing.
+  time_bands?: Partial<Record<string, BusBandTotals>>;
+}
+
+export interface BusBandTotals {
+  count: number;
+  n_traversals: number;
+  n_interpolated: number;
+  miles_covered: number;
+  total_time: number;
 }
 
 /**
