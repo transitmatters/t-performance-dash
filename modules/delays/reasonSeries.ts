@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import type { LineDelays } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
 import type { DelayReasonKey } from './constants/reasons';
@@ -121,3 +122,57 @@ export const toActualDelays = (data: LineDelays[]) => {
  */
 export const withinRange = <T extends LineDelays>(data: T[], start: string, end: string): T[] =>
   data.filter((point) => point.date >= start && point.date <= end);
+
+const DAYS_PER_WEEK = 7;
+
+/** Every numeric field of the rows, each scaled by its share before adding up. */
+const weightedSum = (parts: [DelayRow, number][]): Record<string, unknown> => {
+  const keys = new Set(parts.flatMap(([row]) => Object.keys(row)));
+  const sum: Record<string, unknown> = {};
+  for (const key of keys) {
+    const values = parts.map(([row, share]) => [row[key as keyof DelayRow], share] as const);
+    if (values.every(([value]) => typeof value !== 'number')) continue;
+    sum[key] = values.reduce(
+      (total, [value, share]) => total + (typeof value === 'number' ? value * share : 0),
+      0
+    );
+  }
+  return sum;
+};
+
+/**
+ * Weekly rows as calendar months. Each week's delay is split evenly over its seven days, so a month
+ * with five Mondays doesn't read 25% worse than one with four. Only months the weeks fully cover are
+ * kept: a partial first or current month would look like a quiet one.
+ */
+export const toMonthly = (weeks: DelayRow[]): DelayRow[] => {
+  const months = new Map<string, { days: number; parts: Map<DelayRow, number> }>();
+  for (const week of weeks) {
+    for (let offset = 0; offset < DAYS_PER_WEEK; offset++) {
+      const month = dayjs(week.date).add(offset, 'day').format('YYYY-MM');
+      const entry = months.get(month) ?? { days: 0, parts: new Map() };
+      entry.days += 1;
+      entry.parts.set(week, (entry.parts.get(week) ?? 0) + 1 / DAYS_PER_WEEK);
+      months.set(month, entry);
+    }
+  }
+  return [...months.entries()]
+    .filter(([month, { days }]) => days === dayjs(`${month}-01`).daysInMonth())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([month, { parts }]) => {
+      const entries = [...parts.entries()];
+      const [first] = entries[0];
+      const statedByCause = Object.fromEntries(
+        DELAY_REASONS.map(({ key }) => [
+          key,
+          entries.reduce((total, [row, share]) => total + row.stated_by_cause[key] * share, 0),
+        ])
+      ) as Record<DelayReasonKey, number>;
+      return {
+        ...first,
+        ...weightedSum(entries),
+        date: `${month}-01`,
+        stated_by_cause: statedByCause,
+      };
+    });
+};

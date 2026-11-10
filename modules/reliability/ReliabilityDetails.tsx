@@ -85,8 +85,11 @@ export function ReliabilityDetails() {
                 riders there can take any of them.
               </p>
               <p>
-                75–125% of the scheduled headway is the band the home page judges each line on;
-                50–150% is shown alongside it.
+                Every headway falls in one of five groups, by how it compared with the scheduled
+                headway: bunched (half of it or less), short (50–75%), on time (75–125%), long
+                (125–150%), and long gap (150% or more). Each share is every matching headway at
+                every station divided by all of them, added up over the period rather than averaged
+                from daily percentages. On time is the measure the home page judges each line on.
               </p>
             </>
           ) : isBus ? (
@@ -101,7 +104,8 @@ export function ReliabilityDetails() {
               <p>
                 Only buses on the same route count, so where several routes share a street, a bus on
                 another route doesn&apos;t fill the gap. Combined pages such as 114/116/117 add up
-                each route&apos;s headways. LAMP bus data starts on December 24, 2025.
+                each route&apos;s headways. The groups (bunched to long gap) are the same as on the
+                subway. LAMP bus data starts on December 24, 2025.
               </p>
               <BusDataNotice />
             </>

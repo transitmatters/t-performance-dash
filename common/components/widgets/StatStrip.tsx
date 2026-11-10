@@ -2,20 +2,9 @@ import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { getFormattedTimeString } from '../../utils/time';
 import { InfoTooltip } from '../general/InfoTooltip';
 import type { MiniWidgetObject, WidgetComparison } from './MiniWidgetCreator';
-
-const formatComparisonDelta = (comparison: WidgetComparison) => {
-  const abs = Math.abs(comparison.delta);
-  if (comparison.unit === 'percentage') return `${Math.round(abs * 100)}pp`;
-  return getFormattedTimeString(abs);
-};
-
-const isNegligible = (comparison: WidgetComparison) =>
-  comparison.unit === 'percentage'
-    ? Math.abs(comparison.delta) <= 0.01
-    : Math.abs(comparison.delta) <= 1;
+import { formatComparisonDelta, isNegligible } from './internal/comparison';
 
 /** On-time share is the one stat that carries a verdict, so it gets sentiment color. */
 const isOnTimeStat = (label: string) => label.toLowerCase().includes('on time');

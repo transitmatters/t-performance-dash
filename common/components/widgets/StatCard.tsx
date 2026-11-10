@@ -1,14 +1,16 @@
 import type { ReactNode } from 'react';
+import type { StatDelta, StatSentiment } from '../../utils/statDelta';
 import { Card, CardAction, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
-export type StatSentiment = 'good' | 'bad' | 'flat';
+export type { StatSentiment };
 
 interface StatCardProps {
   label: string;
   value: string;
   unit?: string;
-  delta?: { label: string; sentiment: StatSentiment };
+  delta?: StatDelta;
 }
 
 const badgeVariantFor = (sentiment: StatSentiment) =>
@@ -17,6 +19,27 @@ const badgeVariantFor = (sentiment: StatSentiment) =>
     : sentiment === 'bad'
       ? ('destructive' as const)
       : ('outline' as const);
+
+const DeltaBadge = ({ delta }: { delta: StatDelta }) => {
+  const badge = <Badge variant={badgeVariantFor(delta.sentiment)}>{delta.label}</Badge>;
+  if (!delta.detail) return badge;
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          aria-label={`${delta.label}: ${delta.detail}`}
+          className="cursor-pointer rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+        >
+          {badge}
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="w-auto max-w-xs">
+        {delta.detail}
+      </PopoverContent>
+    </Popover>
+  );
+};
 
 /** The row of headline numbers at the top of a page. One grid, so every page's stats line up the same way. */
 export const StatCardGrid = ({ children }: { children: ReactNode }) => (
@@ -33,7 +56,7 @@ export const StatCard = ({ label, value, unit, delta }: StatCardProps) => (
       </CardTitle>
       {delta && (
         <CardAction>
-          <Badge variant={badgeVariantFor(delta.sentiment)}>{delta.label}</Badge>
+          <DeltaBadge delta={delta} />
         </CardAction>
       )}
     </CardHeader>

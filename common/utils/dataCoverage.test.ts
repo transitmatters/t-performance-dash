@@ -92,8 +92,8 @@ describe('getPartialCoverageGaps', () => {
 
 describe('ferry trip date bounds', () => {
   it('starts routes with no archived history at live recording', () => {
-    expect(getDatePickerBounds('Ferry', 'singleTrips', 'Boat-F2H').minDate).toBe('2026-10-02');
     expect(getDatePickerBounds('Ferry', 'multiTrips', 'Boat-F10').minDate).toBe('2026-10-02');
+    expect(getDatePickerBounds('Ferry', 'singleTrips', 'Boat-F2H').minDate).toBe('2018-11-01');
     expect(getDatePickerBounds('Ferry', 'singleTrips', 'Boat-F4').minDate).toBe('2018-11-01');
     expect(getDatePickerBounds('Ferry', 'ridership', 'Boat-F2H').minDate).toBe('2018-11-01');
   });
