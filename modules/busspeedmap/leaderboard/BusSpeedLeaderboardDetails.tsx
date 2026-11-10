@@ -67,6 +67,7 @@ export function BusSpeedLeaderboardDetails() {
   const subtitle = [
     periodLabel(date, period),
     viewMode === 'route' ? metric.rankedBy : undefined,
+    metric.frequentOnly ? 'Frequent bus routes only' : undefined,
     dayTypeLabel?.label,
     viewMode === 'segment' && bandLabel ? `${bandLabel.label} · ${bandLabel.hours}` : undefined,
   ]
@@ -82,11 +83,14 @@ export function BusSpeedLeaderboardDetails() {
             title={viewMode === 'route' ? metric.title : 'Slowest segments'}
             subtitle={subtitle || undefined}
             action={
-              <ToggleSwitch
-                enabled={frequentRoutesOnly}
-                setEnabled={setFrequentRoutesOnly}
-                label="Frequent bus routes only"
-              />
+              // Metrics that rank frequent routes only have nothing for the toggle to change.
+              !metric.frequentOnly && (
+                <ToggleSwitch
+                  enabled={frequentRoutesOnly}
+                  setEnabled={setFrequentRoutesOnly}
+                  label="Frequent bus routes only"
+                />
+              )
             }
           />
           <div className="flex flex-col gap-3">
@@ -173,7 +177,7 @@ export function BusSpeedLeaderboardDetails() {
                 date={date}
                 period={period}
                 metric={metric}
-                frequentRoutesOnly={frequentRoutesOnly}
+                frequentRoutesOnly={frequentRoutesOnly || Boolean(metric.frequentOnly)}
               />
             ) : (
               <BusSpeedSegmentLeaderboardSection

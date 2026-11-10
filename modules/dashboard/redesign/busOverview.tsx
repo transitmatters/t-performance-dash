@@ -30,6 +30,7 @@ import {
   toSpeedPoints,
   trimTrailingEmpty,
 } from './scorecardUtils';
+import { BusReliabilityChart, useBusReliabilityRow } from './busReliability';
 import { BusServiceChart, buildBusServiceRow, summarizeBusService } from './busService';
 import type { MetricKey, ScorecardRow } from './types';
 
@@ -74,6 +75,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
   const peak = baselines.isPending ? undefined : ridershipPeak;
   const dailyTripMetrics = useBusTripMetrics(dailyTripMetricsOptions(busRoute));
   const delays = useAlertDelays(delaysOptions(busRoute));
+  const reliability = useBusReliabilityRow(busRoute, LINE_COLORS['line-bus']);
 
   const rows = useMemo(() => {
     const color = LINE_COLORS['line-bus'];
@@ -94,6 +96,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
         color,
       });
     if (speedRow) built.push(speedRow);
+    if (reliability.row) built.push(reliability.row);
 
     const service = dailyTripMetrics.data && summarizeBusService(dailyTripMetrics.data);
     if (service) built.push(buildBusServiceRow(service, tripMetrics.data ?? [], color));
@@ -122,13 +125,14 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     if (delaysRow) built.push(delaysRow);
 
     return built;
-  }, [tripMetrics.data, dailyTripMetrics.data, ridership.data, peak, delays.data]);
+  }, [tripMetrics.data, dailyTripMetrics.data, reliability.row, ridership.data, peak, delays.data]);
 
   return {
     rows,
     isLoading:
       tripMetrics.isLoading ||
       dailyTripMetrics.isLoading ||
+      reliability.isLoading ||
       ridership.isLoading ||
       delays.isLoading,
   };
@@ -146,6 +150,7 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
   const ridership = useRidershipData(ridershipOptions(busRoute), metric === 'ridership');
   const delays = useAlertDelays(delaysOptions(busRoute), metric === 'delays');
 
+  if (metric === 'reliability') return <BusReliabilityChart busRoute={busRoute} />;
   if (metric === 'speed') {
     if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
     const data = trimTrailingEmpty(tripMetrics.data);

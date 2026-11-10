@@ -67,9 +67,9 @@ export const formatPercent = (value?: number) =>
 export const formatCount = (value?: number) =>
   value == null || !Number.isFinite(value) ? '—' : Math.round(value).toLocaleString('en-us');
 
-type HeadwayField = keyof HeadwayCounts;
+export type HeadwayField = keyof HeadwayCounts;
 
-const HEADWAY_FIELDS: HeadwayField[] = [
+export const HEADWAY_FIELDS: HeadwayField[] = [
   'headways_under_50',
   'headways_50_75',
   'headways_75_125',
@@ -78,6 +78,7 @@ const HEADWAY_FIELDS: HeadwayField[] = [
 ];
 
 export const ON_TIME: HeadwayField[] = ['headways_75_125'];
+export const BUNCHED: HeadwayField[] = ['headways_under_50'];
 
 const sumFields = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
   fields.reduce((total, field) => total + (counts?.[field] ?? 0), 0);

@@ -290,7 +290,7 @@ describe('summarizeDwell', () => {
 });
 
 const DATE = '2026-10-31';
-const [SPEED, BATTERY] = LEADERBOARD_METRICS;
+const [SPEED, BATTERY, BUNCHED, RELIABILITY] = LEADERBOARD_METRICS;
 
 const route = (
   id: string,
@@ -362,5 +362,89 @@ describe('rankLeaderboard', () => {
     const ranked = rankLeaderboard(grouped, BATTERY);
     expect(ranked.map((row) => row.route)).toEqual(['71', '73']);
     expect(BATTERY.format(ranked[0].value)).toBe('43.1%');
+  });
+});
+
+describe('headway rankings', () => {
+  const route = (
+    id: string,
+    mph: number,
+    headways?: [number, number, number, number, number]
+  ): BusSpeedLeaderboardEntry => ({
+    route: id,
+    miles_covered: mph,
+    total_time: 3600,
+    count: 1,
+    n_traversals: 1,
+    ...(headways && {
+      headways_under_50: headways[0],
+      headways_50_75: headways[1],
+      headways_75_125: headways[2],
+      headways_125_150: headways[3],
+      headways_over_150: headways[4],
+    }),
+  });
+
+  const DATE = '2026-11-02';
+
+  it('pools headway counts from only the frequent routes in a group', () => {
+    // 116 is a Frequent Bus Route; 114 and 117 aren't. They shared a label until 2024-12-15.
+    const [group] = groupLeaderboardByBusRoute(
+      [route('114', 8, [50, 0, 0, 0, 50]), route('116', 9, [1, 1, 6, 1, 1]), route('117', 10)],
+      '2024-12-01'
+    );
+
+    expect(group.route).toBe('114/116/117');
+    expect(group.isFrequentRoute).toBe(true);
+    expect(group.headways_under_50).toBe(1);
+    expect(group.headways_75_125).toBe(6);
+    expect(group.miles_covered).toBe(27);
+  });
+
+  it('adds up every frequent route in a group', () => {
+    const [group] = groupLeaderboardByBusRoute(
+      [route('749', 8, [2, 0, 4, 0, 4]), route('751', 9, [3, 0, 1, 0, 1])],
+      DATE
+    );
+
+    expect(group.route).toBe('SL4/SL5');
+    expect(group.headways_under_50).toBe(5);
+    expect(group.headways_75_125).toBe(5);
+  });
+
+  const grouped = () =>
+    groupLeaderboardByBusRoute(
+      [
+        route('1', 6, [1, 0, 8, 0, 1]), // 10% bunched, 80% within
+        route('28', 7, [3, 0, 5, 0, 2]), // 30% bunched, 50% within
+        route('39', 9, [2, 0, 2, 0, 6]), // 20% bunched, 20% within
+        route('7', 5, [9, 0, 0, 0, 1]), // not frequent
+        route('57', 8), // frequent, but no headways counted
+      ],
+      DATE
+    );
+
+  it('ranks frequent routes with headways, most bunched first', () => {
+    const ranked = rankLeaderboard(grouped(), BUNCHED);
+
+    expect(ranked.map((row) => row.route)).toEqual(['28', '39', '1']);
+    expect(BUNCHED.format(ranked[0].value)).toBe('30.0% bunched');
+  });
+
+  it('ranks frequent routes with headways, least reliable first', () => {
+    const ranked = rankLeaderboard(grouped(), RELIABILITY);
+
+    expect(ranked.map((row) => row.route)).toEqual(['39', '28', '1']);
+    expect(RELIABILITY.format(ranked[2].value)).toBe('80.0% within 75–125%');
+  });
+
+  it('still ranks every route by speed', () => {
+    expect(rankLeaderboard(grouped(), SPEED).map((row) => row.route)).toEqual([
+      '7',
+      '1',
+      '28',
+      '57',
+      '39',
+    ]);
   });
 });

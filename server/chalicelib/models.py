@@ -1006,6 +1006,10 @@ class BusTripMetricsEntry(BaseModel):
     These are omitted when unknown. Daily entries for the whole day (no `time_band`) also have
     `median_speed_mph` and `mean_speed_mph`.
 
+    The `headways_*` fields count headways at mid-route timepoints by their ratio to the scheduled
+    headway, in the same buckets as `/api/reliability`. They're counted from 2025-12-24 and for the
+    whole day only, so they're omitted before then and when a `time_band` is requested.
+
     Attributes:
         date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
         route: Route ID, or the comma-separated group that was requested.
@@ -1013,6 +1017,11 @@ class BusTripMetricsEntry(BaseModel):
         total_time: Total trip time in seconds, arrival to arrival, so including dwell.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
+        headways_under_50: Headways at most half the scheduled headway (bunched).
+        headways_50_75: Headways over 50% and up to 75% of scheduled.
+        headways_75_125: Headways over 75% and under 125% of scheduled.
+        headways_125_150: Headways 125% up to 150% of scheduled.
+        headways_over_150: Headways 150% of scheduled or more.
         scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.
         unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.
             Omitted with `scheduled_trips`.
@@ -1031,6 +1040,11 @@ class BusTripMetricsEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    headways_under_50: int | None = None
+    headways_50_75: int | None = None
+    headways_75_125: int | None = None
+    headways_125_150: int | None = None
+    headways_over_150: int | None = None
     scheduled_trips: int | None = None
     unobserved_trips: int | None = None
     unobserved_waived_trips: int | None = None
@@ -1070,6 +1084,9 @@ class BusSpeedLeaderboardEntry(BaseModel):
     `total_dwell`, `n_dwell_stops` and `n_days` are missing from leaderboards computed before they
     were added, such as the static sample data.
 
+    The `headways_*` fields are as in `BusTripMetricsEntry`, summed over the days that have them, and
+    omitted when none do.
+
     Routes with fleet data also have its stats for the range, each day weighted by `fleet_trips`:
     the fields below and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).
     These are omitted when unknown.
@@ -1080,6 +1097,11 @@ class BusSpeedLeaderboardEntry(BaseModel):
         total_time: Total trip time in seconds, arrival to arrival, so including dwell.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
+        headways_under_50: Headways at most half the scheduled headway (bunched).
+        headways_50_75: Headways over 50% and up to 75% of scheduled.
+        headways_75_125: Headways over 75% and under 125% of scheduled.
+        headways_125_150: Headways 125% up to 150% of scheduled.
+        headways_over_150: Headways 150% of scheduled or more.
         scheduled_trips: Trips scheduled, on the days in the range from 2025-12-24.
         unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.
             Omitted with `scheduled_trips`.
@@ -1101,6 +1123,11 @@ class BusSpeedLeaderboardEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    headways_under_50: int | None = None
+    headways_50_75: int | None = None
+    headways_75_125: int | None = None
+    headways_125_150: int | None = None
+    headways_over_150: int | None = None
     scheduled_trips: int | None = None
     unobserved_trips: int | None = None
     unobserved_waived_trips: int | None = None

@@ -4,6 +4,8 @@ import { FREQUENT_BUS_ROUTE_IDS, getBusRouteDisplayName } from '../../common/con
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { getFormattedTimeString } from '../../common/utils/time';
+import type { HeadwayField } from '../reliability/utils';
+import { HEADWAY_FIELDS } from '../reliability/utils';
 import { DWELL_SUMMARY_SIZE, MIN_DWELL_STOPS_PER_DAY } from './constants';
 import type {
   BusSpeedSegmentLeaderboardByBand,
@@ -208,11 +210,30 @@ const poolBatteryShare = (
 };
 
 /**
+ * Each headway count summed over the Frequent Bus Routes among `entries` that have it (116 of
+ * 114/116/117), as on the route overview, so a timetabled route's longer headways don't count toward
+ * a frequent one. Left off when none has it, so a label with no frequent routes, or a range before the
+ * counts start, has no headway share to rank by.
+ */
+const poolFrequentHeadways = (
+  entries: BusSpeedLeaderboardEntry[]
+): Partial<Record<HeadwayField, number>> => {
+  const frequent = entries.filter((entry) => FREQUENT_BUS_ROUTES.has(entry.route));
+  return Object.fromEntries(
+    HEADWAY_FIELDS.flatMap((field) => {
+      const counted = frequent.filter((entry) => entry[field] != null);
+      return counted.length ? [[field, sumOf(counted, (entry) => entry[field] ?? 0)]] : [];
+    })
+  );
+};
+
+/**
  * The API ranks raw GTFS route_ids, but the rest of the dashboard shows curated BusRoute labels
  * (SL4/SL5, 114/116/117, ...), so the leaderboard would otherwise list 751 and 749 as separate
  * "SL4" and "SL5" rows. Summing miles_covered/total_time per label keeps the speed a true
  * weighted average, same as the per-route speed page does for composites, and the battery share
  * is pooled by trips the same way. Dwell is summed too, so its averages stay weighted by stops.
+ * Headway counts are pooled from the label's Frequent Bus Routes only (see poolFrequentHeadways).
  * Routes under one label run on the same days, so the label's days of service are the most of any
  * one route's, not their sum. `date` picks which labels were in service (see getBusRouteGroup).
  * Unordered: rankLeaderboard sorts by whichever metric is picked.
@@ -236,6 +257,7 @@ export const groupLeaderboardByBusRoute = (
     n_dwell_stops: sumOf(members, (entry) => entry.n_dwell_stops ?? 0),
     n_days: Math.max(0, ...members.map((entry) => entry.n_days ?? 0)),
     ...poolBatteryShare(members),
+    ...poolFrequentHeadways(members),
     isFrequentRoute: members.some((entry) => FREQUENT_BUS_ROUTES.has(entry.route)),
   }));
 };

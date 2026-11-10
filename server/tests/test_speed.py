@@ -787,6 +787,129 @@ class TestBusTripMetricsFilters:
         assert query_calls == []
 
 
+def _headways(under_50, from_50, from_75, from_125, over_150):
+    """Headway bucket counts, in BUS_HEADWAY_FIELDS order."""
+    return dict(zip(speed.BUS_HEADWAY_FIELDS, (under_50, from_50, from_75, from_125, over_150)))
+
+
+# Sun 2025-12-21 closes the ISO week before the pipeline started counting headways on 2025-12-24.
+HEADWAY_BUS_ROWS = [
+    {"route": "28", "date": "2025-12-21", "miles_covered": 10, "total_time": 3600, "count": 5},
+    # Mon-Tue of the next week have no counts, Wednesday does.
+    {"route": "28", "date": "2025-12-22", "miles_covered": 10, "total_time": 3600, "count": 5},
+    {
+        "route": "28",
+        "date": "2025-12-24",
+        "miles_covered": 10,
+        "total_time": 3600,
+        "count": 5,
+        **_headways(1, 2, 3, 4, 5),
+    },
+    {
+        "route": "28",
+        "date": "2025-12-25",
+        "miles_covered": 10,
+        "total_time": 3600,
+        "count": 5,
+        **_headways(10, 20, 30, 40, 50),
+    },
+]
+
+
+class TestBusHeadwayCounts:
+    @pytest.fixture(autouse=True)
+    def query(self, monkeypatch):
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_route", lambda *args: HEADWAY_BUS_ROWS)
+
+    def params(self, **extra):
+        return {"start_date": "2025-12-15", "end_date": "2025-12-31", "route": "28"} | extra
+
+    def test_daily_rows_pass_through(self):
+        assert speed.trip_metrics_by_bus_route(self.params()) == HEADWAY_BUS_ROWS
+
+    def test_weekly_sums_the_days_that_have_counts(self):
+        before, after = speed.trip_metrics_by_bus_route(self.params(agg="weekly"))
+
+        # A week with no counts at all leaves them off, rather than reporting zero headways.
+        assert not set(speed.BUS_HEADWAY_FIELDS) & set(before)
+        assert {field: after[field] for field in speed.BUS_HEADWAY_FIELDS} == _headways(11, 22, 33, 44, 55)
+        assert after["count"] == 15
+
+    def test_time_band_leaves_out_all_day_counts(self):
+        rows = speed.trip_metrics_by_bus_route(self.params(time_band="am_peak"))
+        weekly = speed.trip_metrics_by_bus_route(self.params(time_band="am_peak", agg="weekly"))
+
+        for row in rows + weekly:
+            assert not set(speed.BUS_HEADWAY_FIELDS) & set(row)
+
+    def test_day_type_keeps_counts(self, monkeypatch):
+        rows = [row | {"day_type": "business_day"} for row in HEADWAY_BUS_ROWS]
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_route", lambda *args: rows)
+
+        [_, week] = speed.trip_metrics_by_bus_route(self.params(day_type="business_day", agg="weekly"))
+
+        assert week["headways_under_50"] == 11
+
+    def test_grouped_routes_sum_counts_per_day(self, monkeypatch):
+        def fake_query_routes(table, routes, start, end):
+            return [
+                [{"route": "104", "date": "2026-01-05", "count": 1, **_headways(1, 1, 1, 1, 1)}],
+                [
+                    {"route": "109", "date": "2026-01-05", "count": 1, **_headways(2, 0, 5, 0, 1)},
+                    {"route": "109", "date": "2026-01-06", "count": 1},
+                ],
+            ]
+
+        monkeypatch.setattr(speed.dynamo, "query_daily_trips_on_routes", fake_query_routes)
+        monday, tuesday = speed.trip_metrics_by_bus_route(
+            {"start_date": "2026-01-05", "end_date": "2026-01-06", "route": "104,109"}
+        )
+
+        assert {field: monday[field] for field in speed.BUS_HEADWAY_FIELDS} == _headways(3, 1, 6, 1, 2)
+        assert not set(speed.BUS_HEADWAY_FIELDS) & set(tuesday)
+
+
+def test_leaderboard_sums_headway_counts(monkeypatch):
+    rows = [
+        {
+            "route": "28",
+            "miles_covered": 10,
+            "total_time": 3600,
+            "count": 5,
+            "n_traversals": 5,
+            **_headways(1, 2, 3, 4, 5),
+        },
+        # A day from before the pipeline counted headways.
+        {"route": "28", "miles_covered": 10, "total_time": 3600, "count": 5, "n_traversals": 5},
+        {
+            "route": "28",
+            "miles_covered": 10,
+            "total_time": 3600,
+            "count": 5,
+            "n_traversals": 5,
+            **_headways(1, 1, 1, 1, 1),
+        },
+        {"route": "66", "miles_covered": 2, "total_time": 3600, "count": 2, "n_traversals": 2},
+    ]
+    fake_s3 = FakeS3(download_error=not_found_error())
+    monkeypatch.setattr(speed.s3, "download", fake_s3.download)
+    monkeypatch.setattr(speed.s3, "upload", fake_s3.upload)
+    monkeypatch.setattr(speed.dynamo, "scan_trip_metrics_in_range", lambda *args: rows)
+
+    route_66, route_28 = speed.bus_speed_leaderboard(START_DATE, END_DATE, limit=10)
+
+    assert {field: route_28[field] for field in speed.BUS_HEADWAY_FIELDS} == _headways(2, 3, 4, 5, 6)
+    assert route_28["count"] == 15
+    assert not set(speed.BUS_HEADWAY_FIELDS) & set(route_66)
+
+
+def test_leaderboard_cache_key_is_versioned():
+    # Lists cached before entries had headway counts must not be served.
+    assert speed._leaderboard_cache_key(START_DATE, END_DATE) == (
+        f"bus-speed-leaderboard/v{speed.LEADERBOARD_CACHE_VERSION}/{START_DATE}_{END_DATE}.json"
+    )
+
+
 def _trips(scheduled, unobserved, waived):
     return {"scheduled_trips": scheduled, "unobserved_trips": unobserved, "unobserved_waived_trips": waived}
 

@@ -1,4 +1,5 @@
 import { COLORS } from '../../common/constants/colors';
+import { BUNCHED, headwayShare, ON_TIME } from '../reliability/utils';
 import type {
   DayType,
   DirectionFilter,
@@ -197,6 +198,32 @@ export const LEADERBOARD_METRICS: LeaderboardMetricConfig[] = [
     format: (pct) => `${pct.toFixed(1)}%`,
     order: 'descending',
     emptyMessage: 'No battery-electric buses ran on these routes in this period.',
+  },
+  {
+    key: 'bunched',
+    label: 'Bunched',
+    title: 'Most bunched routes',
+    rankedBy: 'Ranked by share of headways at half the scheduled headway or less',
+    // Headways are pooled from frequent routes only (groupLeaderboardByBusRoute), so other routes
+    // have none and drop out.
+    value: (entry) => headwayShare(entry, BUNCHED),
+    format: (pct) => `${pct.toFixed(1)}% bunched`,
+    order: 'descending',
+    emptyMessage:
+      'No frequent route has headways counted for this period. Counts start Dec 24, 2025.',
+    frequentOnly: true,
+  },
+  {
+    key: 'reliability',
+    label: 'Reliability',
+    title: 'Least reliable routes',
+    rankedBy: 'Ranked by share of headways within 75–125% of schedule',
+    value: (entry) => headwayShare(entry, ON_TIME),
+    format: (pct) => `${pct.toFixed(1)}% within 75–125%`,
+    order: 'ascending',
+    emptyMessage:
+      'No frequent route has headways counted for this period. Counts start Dec 24, 2025.',
+    frequentOnly: true,
   },
 ];
 

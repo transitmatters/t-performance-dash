@@ -69,12 +69,27 @@ BUS_AGG_MAX_DAYS = {
 # first stop (layover) and stops LAMP didn't record. Average dwell is total_dwell / n_dwell_stops.
 # total_time runs arrival to arrival, so already includes dwell: total_dwell / total_time is its share.
 BUS_SUMMED_FIELDS = ("miles_covered", "total_time", "count", "n_traversals", "total_dwell", "n_dwell_stops")
+# Headways at mid-route timepoints, counted by actual / scheduled headway into the same buckets
+# /api/reliability serves for subway: HEADWAY_RATIO_BUCKETS in mbta-performance's
+# chalicelib/lamp/bus/constants.py. The pipeline counts them per whole day only, and from 2025-12-24 on,
+# so they're summed over the days that have them and left off a period with none, rather than written
+# as zeros that would read as "no headways at all".
+BUS_HEADWAY_FIELDS = (
+    "headways_under_50",
+    "headways_50_75",
+    "headways_75_125",
+    "headways_125_150",
+    "headways_over_150",
+)
 # Every trip LAMP scheduled, the ones with no observed stop (an estimate of trips dropped: a trip that
 # ran untracked looks the same), and the unobserved ones that have an MBTA waiver. mbta-performance
 # writes them from 2025-12-24, for the whole day only. They're summed like BUS_SUMMED_FIELDS, but a
 # period only has them if one of its days does, so a week before they existed reads as unmeasured
 # rather than as zero trips scheduled.
 BUS_TRIP_COUNT_FIELDS = ("scheduled_trips", "unobserved_trips", "unobserved_waived_trips")
+# Whole-day counts that are summed only over the rows that have them (see _sum_present), so a
+# period from before the pipeline wrote them reads as unmeasured rather than as zero.
+BUS_PRESENT_SUMMED_FIELDS = (*BUS_HEADWAY_FIELDS, *BUS_TRIP_COUNT_FIELDS)
 # The departure windows a DeliveredTripMetricsBus row breaks its totals down by, in its `time_bands`
 # map -- TIME_BANDS in mbta-performance's chalicelib/lamp/bus/constants.py, the same bands the bus
 # speed map uses. The row's top-level fields are the all-day figure, so there is no "all_day" band:
@@ -96,8 +111,8 @@ BUS_BAND_FIELDS = (
     "n_dwell_stops",
 )
 # Only exist for the whole day: medians and means can't be split into bands or summed back together,
-# and trip counts aren't broken down by band.
-BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph", *BUS_TRIP_COUNT_FIELDS)
+# and the pipeline doesn't count headways or trips per band.
+BUS_ALL_DAY_ONLY_FIELDS = ("median_speed_mph", "mean_speed_mph", *BUS_PRESENT_SUMMED_FIELDS)
 
 CR_TRIP_METRICS_TABLE = "DeliveredTripMetricsCR"
 
@@ -347,9 +362,9 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
     """Roll daily rows (from one or more routes) up per day, ISO week (dated by its Monday),
     or calendar month (dated the 1st).
 
-    summed_fields are summed, and so are BUS_TRIP_COUNT_FIELDS where the period's rows have them.
-    Fleet stats are pooled by _rollup_fleet_fields. Per-day medians/means can't be combined, so
-    they're dropped.
+    summed_fields are summed. BUS_PRESENT_SUMMED_FIELDS (headway buckets and trip counts) are summed
+    over the rows that have them (see _sum_present). Fleet stats are pooled by _rollup_fleet_fields.
+    Per-day medians/means can't be combined, so they're dropped.
     """
     periods: dict[date, list[dict]] = {}
     for row in rows:
@@ -366,12 +381,22 @@ def _rollup_daily_route_rows(rows: list[dict], agg: str, route: str, summed_fiel
             "date": period_start.isoformat(),
             "route": route,
             **{field: sum(row.get(field) or 0 for row in periods[period_start]) for field in summed_fields},
-            **_sum_trip_counts(periods[period_start]),
+            **_sum_present(periods[period_start], BUS_PRESENT_SUMMED_FIELDS),
             **_rollup_fleet_fields(periods[period_start]),
             **_rollup_time_bands(periods[period_start]),
         }
         for period_start in sorted(periods)
     ]
+
+
+def _sum_present(rows: list[dict], fields) -> dict:
+    """Each of `fields` summed over the rows that have it, leaving out any field no row has."""
+    totals = {}
+    for row in rows:
+        for field in fields:
+            if row.get(field) is not None:
+                totals[field] = totals.get(field, 0) + row[field]
+    return totals
 
 
 def _rollup_time_bands(rows: list[dict]) -> dict:
@@ -392,16 +417,6 @@ def _rollup_time_bands(rows: list[dict]) -> dict:
             for band in BUS_TIME_BANDS
         }
     }
-
-
-def _sum_trip_counts(rows: list[dict]) -> dict:
-    """Sum each of BUS_TRIP_COUNT_FIELDS over the rows that have it, leaving out any no row has."""
-    sums = {}
-    for row in rows:
-        for field in BUS_TRIP_COUNT_FIELDS:
-            if row.get(field) is not None:
-                sums[field] = sums.get(field, 0) + row[field]
-    return sums
 
 
 def _is_fleet_stat(field: str) -> bool:
@@ -436,7 +451,8 @@ def _rollup_fleet_fields(rows: list[dict]) -> dict:
 
 # Bump when the fields of a cached leaderboard entry change, so lists cached without them aren't served.
 # 2: BUS_TRIP_COUNT_FIELDS. 3: the pooled fleet fields. 4: total_dwell, n_dwell_stops and n_days.
-LEADERBOARD_CACHE_VERSION = 4
+# 5: BUS_HEADWAY_FIELDS.
+LEADERBOARD_CACHE_VERSION = 5
 
 
 def _leaderboard_cache_key(start_date: str | date, end_date: str | date) -> str:
@@ -494,11 +510,11 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
     Returns:
         The `limit` slowest routes, sorted slowest (lowest mph) first. Each is a dict with the
         route, each of BUS_SUMMED_FIELDS summed across the range, and n_days, the number of days
-        with recorded speed data for that route. BUS_TRIP_COUNT_FIELDS are summed too, where the
-        range has them. A route with no recorded time in the range has no speed to rank by, so it's
-        left out. Routes with fleet data also carry its fleet stats (fleet_trips, pct_battery_trips,
-        avg_bus_age, fleet_mix_*), pooled across the range by _rollup_fleet_fields, so the
-        dashboard can rank by those too.
+        with recorded speed data for that route. BUS_PRESENT_SUMMED_FIELDS (headway buckets and trip
+        counts) are summed too, over the days that have them. A route with no recorded time in the
+        range has no speed to rank by, so it's left out. Routes with fleet data also carry its fleet
+        stats (fleet_trips, pct_battery_trips, avg_bus_age, fleet_mix_*), pooled across the range by
+        _rollup_fleet_fields, so the dashboard can rank by those too.
 
     Raises:
         ForbiddenError: If the date range exceeds the maximum allowed entries (150).
@@ -521,7 +537,7 @@ def bus_speed_leaderboard(start_date: str | date, end_date: str | date, limit: i
             entry = {
                 "route": route,
                 **{field: sum(row.get(field) or 0 for row in route_rows) for field in BUS_SUMMED_FIELDS},
-                **_sum_trip_counts(route_rows),
+                **_sum_present(route_rows, BUS_PRESENT_SUMMED_FIELDS),
                 # Lets the dashboard compare a route's service per day across ranges of any length.
                 # A fleet-only row, or a day on which none of the route's trips were observed, has no
                 # total_time, so doesn't count as a day of service.
