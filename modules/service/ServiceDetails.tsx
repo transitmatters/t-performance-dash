@@ -9,11 +9,13 @@ import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { Widget } from '../../common/components/widgets';
+import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import {
-  StatCard,
-  StatCardGrid,
-  type StatSentiment,
-} from '../../common/components/widgets/StatCard';
+  formatPercent,
+  formatPercentChange,
+  halvesDetail,
+  statDelta,
+} from '../../common/utils/statDelta';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
 import { getServiceStats } from './utils/utils';
 import { ServiceGraphWrapper } from './ServiceGraphWrapper';
@@ -88,14 +90,7 @@ export function ServiceDetails() {
     tripsData.data && scheduledData
       ? getServiceStats(tripsData.data, scheduledData, peakService, config.agg)
       : null;
-  const deltaFor = (delta: number, negligible: number, unit: 'trips' | 'pp') => {
-    if (!Number.isFinite(delta)) return undefined;
-    const sentiment: StatSentiment =
-      Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
-    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
-    const magnitude = unit === 'pp' ? `${Math.round(delta * 100)}pp` : `${Math.round(delta)}`;
-    return { label: `${delta > 0 ? '+' : ''}${magnitude} · ${word}`, sentiment };
-  };
+  const words: [string, string] = ['better', 'worse'];
 
   return (
     <PageWrapper pageTitle={'Service'}>
@@ -106,12 +101,32 @@ export function ServiceDetails() {
               label="Round trips / day"
               value={`${Math.round(stats.avgRoundTrips)}`}
               unit="/day"
-              delta={deltaFor(stats.roundTripsDelta, 1, 'trips')}
+              delta={statDelta({
+                delta: stats.roundTripsDelta,
+                negligible: 1,
+                magnitude: `${stats.roundTripsDelta > 0 ? '+' : ''}${Math.round(stats.roundTripsDelta)}`,
+                words,
+                detail: halvesDetail(
+                  stats.roundTripsBefore,
+                  stats.roundTripsAfter,
+                  (value) => `${Math.round(value)}/day`
+                ),
+              })}
             />
             <StatCard
               label="Service delivered"
               value={`${Math.round(stats.percentDelivered * 100)}%`}
-              delta={deltaFor(stats.percentDeliveredDelta, 0.005, 'pp')}
+              delta={statDelta({
+                delta: stats.percentDeliveredDelta,
+                negligible: 0.005,
+                magnitude: formatPercentChange(stats.percentDeliveredDelta),
+                words,
+                detail: halvesDetail(
+                  stats.percentDeliveredBefore,
+                  stats.percentDeliveredAfter,
+                  formatPercent
+                ),
+              })}
             />
             <StatCard
               label="Peak day"
