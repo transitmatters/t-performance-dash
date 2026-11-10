@@ -3957,7 +3957,7 @@
       },
       "BusTripMetricsEntry": {
         "additionalProperties": true,
-        "description": "Delivered trip metrics for a bus route (or group of routes) over one day, week or month.\n\nEntries can also have fleet fields: `fleet_trips` (trips with a known vehicle), `avg_bus_age`,\n`pct_<type>_trips` and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).\nThese are omitted when unknown. Daily entries for the whole day (no `time_band`) also have\n`median_speed_mph` and `mean_speed_mph`.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    route: Route ID, or the comma-separated group that was requested.\n    count: Trips delivered.\n    total_time: Total trip time in seconds.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.\n    scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.\n    unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.\n        Omitted with `scheduled_trips`.\n    unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with\n        `scheduled_trips`.",
+        "description": "Delivered trip metrics for a bus route (or group of routes) over one day, week or month.\n\nEntries can also have fleet fields: `fleet_trips` (trips with a known vehicle), `avg_bus_age`,\n`pct_<type>_trips` and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).\nThese are omitted when unknown. Daily entries for the whole day (no `time_band`) also have\n`median_speed_mph` and `mean_speed_mph`.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    route: Route ID, or the comma-separated group that was requested.\n    count: Trips delivered.\n    total_time: Total trip time in seconds, arrival to arrival, so including dwell.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.\n    scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.\n    unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.\n        Omitted with `scheduled_trips`.\n    unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with\n        `scheduled_trips`.\n    total_dwell: Seconds spent around the stops in `n_dwell_stops`. Missing from daily rows\n        written before the pipeline recorded dwell.\n    n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).\n        Average dwell per stop is `total_dwell / n_dwell_stops`.",
         "properties": {
           "date": {
             "title": "Date",
@@ -4000,6 +4000,18 @@
             "title": "Unobserved Waived Trips",
             "nullable": true,
             "type": "integer"
+          },
+          "total_dwell": {
+            "default": null,
+            "title": "Total Dwell",
+            "nullable": true,
+            "type": "number"
+          },
+          "n_dwell_stops": {
+            "default": null,
+            "title": "N Dwell Stops",
+            "nullable": true,
+            "type": "number"
           }
         },
         "required": [
@@ -4041,7 +4053,7 @@
       },
       "BusSpeedLeaderboardEntry": {
         "additionalProperties": true,
-        "description": "A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.\n\nRoutes with fleet data also have its stats for the range, each day weighted by `fleet_trips`:\nthe fields below and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).\nThese are omitted when unknown.\n\nAttributes:\n    route: Route ID.\n    count: Trips delivered.\n    total_time: Total trip time in seconds.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.\n    scheduled_trips: Trips scheduled, on the days in the range from 2025-12-24.\n    unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.\n        Omitted with `scheduled_trips`.\n    unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with\n        `scheduled_trips`.\n    fleet_trips: Trips with a known vehicle.\n    pct_battery_trips: Percentage of those trips run by battery-electric buses.\n    avg_bus_age: Average bus age in years.",
+        "description": "A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.\n\n`total_dwell`, `n_dwell_stops` and `n_days` are missing from leaderboards computed before they\nwere added, such as the static sample data.\n\nRoutes with fleet data also have its stats for the range, each day weighted by `fleet_trips`:\nthe fields below and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).\nThese are omitted when unknown.\n\nAttributes:\n    route: Route ID.\n    count: Trips delivered.\n    total_time: Total trip time in seconds, arrival to arrival, so including dwell.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.\n    scheduled_trips: Trips scheduled, on the days in the range from 2025-12-24.\n    unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.\n        Omitted with `scheduled_trips`.\n    unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with\n        `scheduled_trips`.\n    total_dwell: Seconds spent around the stops in `n_dwell_stops`. Its share of the route's\n        time is `total_dwell / total_time`.\n    n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).\n        Average dwell per stop is `total_dwell / n_dwell_stops`.\n    n_days: Days in the range with recorded speed data for the route.\n    fleet_trips: Trips with a known vehicle.\n    pct_battery_trips: Percentage of those trips run by battery-electric buses.\n    avg_bus_age: Average bus age in years.",
         "properties": {
           "route": {
             "title": "Route",
@@ -4078,6 +4090,24 @@
           "unobserved_waived_trips": {
             "default": null,
             "title": "Unobserved Waived Trips",
+            "nullable": true,
+            "type": "integer"
+          },
+          "total_dwell": {
+            "default": null,
+            "title": "Total Dwell",
+            "nullable": true,
+            "type": "number"
+          },
+          "n_dwell_stops": {
+            "default": null,
+            "title": "N Dwell Stops",
+            "nullable": true,
+            "type": "number"
+          },
+          "n_days": {
+            "default": null,
+            "title": "N Days",
             "nullable": true,
             "type": "integer"
           },

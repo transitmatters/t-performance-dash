@@ -4,6 +4,7 @@ import { FREQUENT_BUS_ROUTE_IDS, getBusRouteDisplayName } from '../../common/con
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { getFormattedTimeString } from '../../common/utils/time';
+import { DWELL_SUMMARY_SIZE, MIN_DWELL_STOPS_PER_DAY } from './constants';
 import type {
   BusSpeedSegmentLeaderboardByBand,
   BusSpeedSegmentLeaderboardByDayType,
@@ -176,6 +177,10 @@ export const stopDwellsByRoute = (
 };
 
 export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntry {
+  total_dwell: number;
+  n_dwell_stops: number;
+  /** Days any raw route_id behind this label had speed data: the most of any one of them. */
+  n_days: number;
   /** Whether any raw route_id behind this curated label is a Frequent Bus Route. */
   isFrequentRoute: boolean;
 }
@@ -207,8 +212,10 @@ const poolBatteryShare = (
  * (SL4/SL5, 114/116/117, ...), so the leaderboard would otherwise list 751 and 749 as separate
  * "SL4" and "SL5" rows. Summing miles_covered/total_time per label keeps the speed a true
  * weighted average, same as the per-route speed page does for composites, and the battery share
- * is pooled by trips the same way. `date` picks which labels were in service (see
- * getBusRouteGroup). Unordered: rankLeaderboard sorts by whichever metric is picked.
+ * is pooled by trips the same way. Dwell is summed too, so its averages stay weighted by stops.
+ * Routes under one label run on the same days, so the label's days of service are the most of any
+ * one route's, not their sum. `date` picks which labels were in service (see getBusRouteGroup).
+ * Unordered: rankLeaderboard sorts by whichever metric is picked.
  */
 export const groupLeaderboardByBusRoute = (
   entries: BusSpeedLeaderboardEntry[],
@@ -225,9 +232,54 @@ export const groupLeaderboardByBusRoute = (
     total_time: sumOf(members, (entry) => entry.total_time),
     count: sumOf(members, (entry) => entry.count),
     n_traversals: sumOf(members, (entry) => entry.n_traversals),
+    total_dwell: sumOf(members, (entry) => entry.total_dwell ?? 0),
+    n_dwell_stops: sumOf(members, (entry) => entry.n_dwell_stops ?? 0),
+    n_days: Math.max(0, ...members.map((entry) => entry.n_days ?? 0)),
     ...poolBatteryShare(members),
     isFrequentRoute: members.some((entry) => FREQUENT_BUS_ROUTES.has(entry.route)),
   }));
+};
+
+export interface BusDwellSummary {
+  /** Seconds per stop and share of route time, pooled over every route given that has dwell. */
+  overall: { averageDwell: number; dwellShare: number } | undefined;
+  /** Longest average dwell per stop first, among routes serving enough stops. */
+  byAverageDwell: GroupedBusSpeedLeaderboardEntry[];
+  /** Largest share of route time spent at stops first, among routes serving enough stops. */
+  byDwellShare: GroupedBusSpeedLeaderboardEntry[];
+}
+
+/** Seconds spent around each stop, on average. */
+export const averageDwell = (entry: GroupedBusSpeedLeaderboardEntry): number =>
+  entry.total_dwell / entry.n_dwell_stops;
+
+/** The share of time spent around stops, as total_time runs arrival to arrival. */
+export const dwellShare = (entry: GroupedBusSpeedLeaderboardEntry): number =>
+  entry.total_dwell / entry.total_time;
+
+/**
+ * The leaderboard's dwell summary: the routes with the longest average dwell per stop, and with
+ * the largest share of their time spent at stops. Routes serving fewer than
+ * MIN_DWELL_STOPS_PER_DAY stops per day of service are left out of both lists, which also drops
+ * leaderboards computed before the dwell fields existed (no stops, no days).
+ */
+export const summarizeDwell = (entries: GroupedBusSpeedLeaderboardEntry[]): BusDwellSummary => {
+  const withDwell = entries.filter((entry) => entry.n_dwell_stops > 0);
+  const totalDwell = withDwell.reduce((sum, entry) => sum + entry.total_dwell, 0);
+  const totalStops = withDwell.reduce((sum, entry) => sum + entry.n_dwell_stops, 0);
+  const totalTime = withDwell.reduce((sum, entry) => sum + entry.total_time, 0);
+  const ranked = withDwell.filter(
+    (entry) => entry.n_days > 0 && entry.n_dwell_stops >= MIN_DWELL_STOPS_PER_DAY * entry.n_days
+  );
+  const top = (value: (entry: GroupedBusSpeedLeaderboardEntry) => number) =>
+    [...ranked].sort((a, b) => value(b) - value(a)).slice(0, DWELL_SUMMARY_SIZE);
+  return {
+    overall: withDwell.length
+      ? { averageDwell: totalDwell / totalStops, dwellShare: totalDwell / totalTime }
+      : undefined,
+    byAverageDwell: top(averageDwell),
+    byDwellShare: top(dwellShare),
+  };
 };
 
 export interface RankedBusRoute {
