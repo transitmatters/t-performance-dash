@@ -74,7 +74,7 @@ export function BusSpeedLeaderboardDetails() {
     .join(' · ');
 
   return (
-    <PageWrapper pageTitle={'Bus leaderboard'}>
+    <PageWrapper pageTitle={'Bus rankings'}>
       <ChartPageDiv>
         <BusDataNotice />
         <WidgetDiv>

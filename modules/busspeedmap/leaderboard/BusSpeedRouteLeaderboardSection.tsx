@@ -36,7 +36,7 @@ export const BusSpeedRouteLeaderboardSection = ({
     Boolean(dateRange)
   );
 
-  if (!date || !dateRange) return <p>Select a date to load the leaderboard.</p>;
+  if (!date || !dateRange) return <p>Select a date to load the rankings.</p>;
   if (leaderboard.isError || !leaderboard.data) return <ChartPlaceHolder query={leaderboard} />;
 
   const grouped = groupLeaderboardByBusRoute(leaderboard.data, dateRange.end_date);
