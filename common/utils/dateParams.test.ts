@@ -203,6 +203,13 @@ describe('getCanonicalSearchHref', () => {
     ).toBe(`/orange/speed/?startDate=2025-01-01&endDate=${TODAY_STRING}`);
   });
 
+  it('opens a bus, Commuter Rail or ferry page with no route on the default one', () => {
+    expect(getCanonicalSearchHref('/bus/', {})).toBe('/bus/?busRoute=1');
+    expect(getCanonicalSearchHref('/commuter-rail/', {})).toBe(
+      '/commuter-rail/?crRoute=CR-Fairmount'
+    );
+  });
+
   it('leaves canonical URLs alone', () => {
     expect(getCanonicalSearchHref('/bus/', { busRoute: '1' })).toBeUndefined();
     expect(getCanonicalSearchHref('/red/', {})).toBeUndefined();

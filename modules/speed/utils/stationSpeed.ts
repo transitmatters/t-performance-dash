@@ -30,17 +30,23 @@ export const convertToAggregateStationSpeedDataset = (
   fromStationId: string,
   toStationId: string,
   data: AggregateDataPoint[]
-) => {
+): AggregateDataPoint[] => {
   const intervalDistance = getStationDistance(fromStationId, toStationId);
-  return data.map((datapoint) => ({
-    ...datapoint,
-    // could be bad to default to zero here
-    '25%': convertSecondsToMph(datapoint['25%'], intervalDistance) ?? 0,
-    '50%': convertSecondsToMph(datapoint['50%'], intervalDistance) ?? 0,
-    '75%': convertSecondsToMph(datapoint['75%'], intervalDistance) ?? 0,
-    mean: convertSecondsToMph(datapoint.mean, intervalDistance) ?? 0,
-    max: convertSecondsToMph(datapoint.max, intervalDistance) ?? 0,
-    min: convertSecondsToMph(datapoint.min, intervalDistance) ?? 0,
-    std: convertSecondsToMph(datapoint.std, intervalDistance) ?? 0,
-  }));
+  const mph = (sec: number) => convertSecondsToMph(sec, intervalDistance) ?? 0;
+  // Speed runs opposite to time, so the slowest trip is the longest one: the 25th-percentile
+  // speed comes from the 75th-percentile time, and min/max swap too. A time std has no mph
+  // equivalent, so it's left off.
+  return data.map((datapoint) => {
+    const speed: AggregateDataPoint = {
+      ...datapoint,
+      '25%': mph(datapoint['75%']),
+      '50%': mph(datapoint['50%']),
+      '75%': mph(datapoint['25%']),
+      mean: mph(datapoint.mean),
+      min: mph(datapoint.max),
+      max: mph(datapoint.min),
+    };
+    delete speed.std;
+    return speed;
+  });
 };

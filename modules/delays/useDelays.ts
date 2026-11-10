@@ -19,7 +19,7 @@ export const useDelays = (startDate: string | undefined, endDate: string | undef
   const routeId =
     line === 'line-green'
       ? greenBranch.routeId
-      : line === 'line-commuter-rail' && crRoute
+      : line === 'line-commuter-rail'
         ? crRoute
         : lineToDefaultRouteId(line);
 
@@ -34,7 +34,7 @@ export const useDelays = (startDate: string | undefined, endDate: string | undef
 
   const alertDelays = useAlertDelays(
     { start_date: startDate, end_date: endDate, line: delaysLine, agg: fetchAgg },
-    Boolean(startDate && endDate && line)
+    Boolean(startDate && endDate && line && delaysLine)
   );
 
   const actual = alertDelays.data && toActualDelays(alertDelays.data);

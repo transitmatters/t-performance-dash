@@ -12,3 +12,6 @@ export const isNegligible = (comparison: WidgetComparison) =>
   comparison.unit === 'percentage'
     ? Math.abs(comparison.delta) <= 0.01
     : Math.abs(comparison.delta) <= 1;
+
+export const isImprovement = (comparison: WidgetComparison) =>
+  comparison.higherIsBetter ? comparison.delta > 0 : comparison.delta < 0;

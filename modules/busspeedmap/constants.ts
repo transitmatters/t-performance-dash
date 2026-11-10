@@ -1,8 +1,10 @@
 import { COLORS } from '../../common/constants/colors';
+import { BUNCHED, headwayShare, ON_TIME } from '../reliability/utils';
 import type {
   DayType,
   DirectionFilter,
-  LeaderboardRankBy,
+  LeaderboardMetric,
+  LeaderboardMetricConfig,
   Period,
   TerminalSection,
   TimeBand,
@@ -73,25 +75,6 @@ export const DAY_TYPES: { key: DayType; label: string }[] = [
 ];
 
 export const DEFAULT_DAY_TYPE: DayType = 'business_day';
-
-export const RANK_BY: { key: LeaderboardRankBy; label: string; title: string; subtitle: string }[] =
-  [
-    { key: 'speed', label: 'Speed', title: 'Slowest routes', subtitle: 'Ranked by average speed' },
-    {
-      key: 'bunched',
-      label: 'Bunched',
-      title: 'Most bunched routes',
-      subtitle: 'Ranked by share of headways at half the scheduled headway or less',
-    },
-    {
-      key: 'reliability',
-      label: 'Reliability',
-      title: 'Least reliable routes',
-      subtitle: 'Ranked by share of headways within 75–125% of schedule',
-    },
-  ];
-
-export const DEFAULT_RANK_BY: LeaderboardRankBy = 'speed';
 
 /**
  * Speed ramp in mph, low (slow) to high. Red-yellow-blue rather than red-green so it stays
@@ -187,3 +170,72 @@ export const NETWORK_BOUNDS: [number, number, number, number] = [-71.3, 42.1, -7
  * map to one of them. Never a real route_id.
  */
 export const ALL_ROUTES = 'all';
+
+/**
+ * The Rank by options on the route leaderboard. Speed leads and is the default, as the page
+ * was a speed leaderboard first.
+ */
+export const LEADERBOARD_METRICS: LeaderboardMetricConfig[] = [
+  {
+    key: 'speed',
+    label: 'Speed',
+    title: 'Slowest routes',
+    rankedBy: 'Ranked by average speed',
+    value: (entry) =>
+      entry.total_time > 0 ? entry.miles_covered / (entry.total_time / 3600) : undefined,
+    format: (mph) => `${mph.toFixed(1)} mph`,
+    order: 'ascending',
+    emptyMessage: 'No route has speed data for this period.',
+  },
+  {
+    key: 'battery',
+    label: 'Battery-electric',
+    title: 'Most battery-electric trips',
+    rankedBy: 'Ranked by share of trips on battery-electric buses',
+    // Battery buses run on only a handful of routes, so the rest (0%, or no fleet data) are left
+    // off rather than listed as a long tie for last.
+    value: (entry) => (entry.pct_battery_trips ? entry.pct_battery_trips : undefined),
+    format: (pct) => `${pct.toFixed(1)}%`,
+    order: 'descending',
+    emptyMessage: 'No battery-electric buses ran on these routes in this period.',
+  },
+  {
+    key: 'bunched',
+    label: 'Bunched',
+    title: 'Most bunched routes',
+    rankedBy: 'Ranked by share of headways at half the scheduled headway or less',
+    // Headways are pooled from frequent routes only (groupLeaderboardByBusRoute), so other routes
+    // have none and drop out.
+    value: (entry) => headwayShare(entry, BUNCHED),
+    format: (pct) => `${pct.toFixed(1)}% bunched`,
+    order: 'descending',
+    emptyMessage:
+      'No frequent route has headways counted for this period. Counts start Dec 24, 2025.',
+    frequentOnly: true,
+  },
+  {
+    key: 'reliability',
+    label: 'Reliability',
+    title: 'Least reliable routes',
+    rankedBy: 'Ranked by share of headways within 75–125% of schedule',
+    value: (entry) => headwayShare(entry, ON_TIME),
+    format: (pct) => `${pct.toFixed(1)}% within 75–125%`,
+    order: 'ascending',
+    emptyMessage:
+      'No frequent route has headways counted for this period. Counts start Dec 24, 2025.',
+    frequentOnly: true,
+  },
+];
+
+export const DEFAULT_LEADERBOARD_METRIC: LeaderboardMetric = 'speed';
+
+/**
+ * Routes on the leaderboard's dwell summary must average at least this many stops with a dwell
+ * per day of service. Below it, a route's average swings 3-8s from one weekday to the next
+ * (October 2026), against about 1s for busier routes, so a handful of trips could top the list.
+ * At 200 it leaves out 3 of 121 routes on a weekday, Route 55 (about 140 stops) among them.
+ */
+export const MIN_DWELL_STOPS_PER_DAY = 200;
+
+/** How many routes each of the dwell summary's two lists shows. */
+export const DWELL_SUMMARY_SIZE = 5;

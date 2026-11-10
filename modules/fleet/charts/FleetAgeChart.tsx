@@ -22,6 +22,11 @@ import {
   getNoDataSinceLatestAnnotation,
   getShuttlingBlockAnnotations,
 } from '../../service/utils/graphUtils';
+import {
+  getMajorEventAnnotations,
+  hideGapsExplainedByEvents,
+  useMajorEvents,
+} from '../../../common/utils/majorEvents';
 import type { ParamsType } from '../../speed/constants/speeds';
 import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import { hasFleetMetric, type FleetMetric } from '../constants/fleetTypes';
@@ -55,14 +60,20 @@ export const FleetAgeChart = ({
   // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
   // service metrics while cars still ran (and were sampled) on the remaining branches.
   const shutdowns = usePageShutdowns('line', startDate, endDate);
+  const events = useMajorEvents(line, startDate, endDate);
   const shuttlingBlocks = showShuttling
-    ? explainGaps(
-        getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field)),
-        shutdowns,
-        {
-          startDate,
-          endDate,
-        }
+    ? hideGapsExplainedByEvents(
+        explainGaps(
+          getShuttlingBlockAnnotations(data, (datapoint) =>
+            hasFleetMetric(datapoint, metric.field)
+          ),
+          shutdowns,
+          {
+            startDate,
+            endDate,
+          }
+        ),
+        events
       )
     : [];
 
@@ -129,7 +140,11 @@ export const FleetAgeChart = ({
                 text: '',
               },
               annotation: {
-                annotations: [...shuttlingBlocks, ...getNoDataSinceLatestAnnotation(labels)],
+                annotations: [
+                  ...shuttlingBlocks,
+                  ...getNoDataSinceLatestAnnotation(labels),
+                  ...getMajorEventAnnotations(events),
+                ],
               },
             },
             scales: {

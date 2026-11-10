@@ -71,7 +71,7 @@ export const BusSpeedSegmentLeaderboardSection = ({
   }, [leaderboard.data, period, date]);
 
   const renderList = () => {
-    if (!date) return <p>Select a date to load the leaderboard.</p>;
+    if (!date) return <p>Select a date to load the rankings.</p>;
     if (leaderboard.isLoading) return <ChartPlaceHolder />;
     // A date with no published file isn't a failure, it's just outside coverage.
     if (leaderboard.error instanceof BusSpeedDataUnavailableError)

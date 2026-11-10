@@ -1,3 +1,5 @@
+import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
+
 /**
  * The six departure windows, plus `all_day`: not a seventh window but every traversal the six
  * cover, aggregated directly rather than combined from band medians. Its map features live in
@@ -164,7 +166,28 @@ export type BusSpeedSegmentLeaderboardResponse =
 export type LeaderboardViewMode = 'route' | 'segment';
 
 /**
- * What the route leaderboard ranks by, worst first. Bunched and Reliability measure headways, which
- * suit routes riders turn up for without a schedule, so they rank Frequent Bus Routes only.
+ * What the route leaderboard ranks by. Only speed has a segment view; the rest are per route.
  */
-export type LeaderboardRankBy = 'speed' | 'bunched' | 'reliability';
+export type LeaderboardMetric = 'speed' | 'battery' | 'bunched' | 'reliability';
+
+export interface LeaderboardMetricConfig {
+  key: LeaderboardMetric;
+  /** The Rank by option. */
+  label: string;
+  /** The list's heading. */
+  title: string;
+  /** Said under the heading, after the period. */
+  rankedBy: string;
+  /** The route's figure, or undefined to leave the route off the list. */
+  value: (entry: BusSpeedLeaderboardEntry) => number | undefined;
+  format: (value: number) => string;
+  /** Which end of the list comes first: the slowest, most bunched or least reliable, but the highest battery share. */
+  order: 'ascending' | 'descending';
+  /** Shown when the data has routes but this metric lists none of them. */
+  emptyMessage: string;
+  /**
+   * Ranks Frequent Bus Routes only, so the Frequent toggle is hidden. Headways suit routes riders turn
+   * up for without a schedule.
+   */
+  frequentOnly?: boolean;
+}

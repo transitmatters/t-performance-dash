@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useLocation } from '@tanstack/react-router';
 import { ErrorBoundary } from 'react-error-boundary';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
@@ -8,16 +9,21 @@ import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
  * anywhere in the chart tree — a malformed API response, a Chart.js failure — unmounted the whole
  * route and left a blank screen. One failing chart should cost one card, not the page.
  */
-export const TripGraphsBoundary = ({ children }: { children: ReactNode }) => (
-  <ErrorBoundary
-    fallbackRender={() => (
-      <WidgetDiv>
-        <div className="flex h-60 items-center justify-center">
-          <ErrorNotice />
-        </div>
-      </WidgetDiv>
-    )}
-  >
-    {children}
-  </ErrorBoundary>
-);
+export const TripGraphsBoundary = ({ children }: { children: ReactNode }) => {
+  // Picking other stops or dates tries the charts again.
+  const { href } = useLocation();
+  return (
+    <ErrorBoundary
+      resetKeys={[href]}
+      fallbackRender={() => (
+        <WidgetDiv>
+          <div className="flex h-60 items-center justify-center">
+            <ErrorNotice />
+          </div>
+        </WidgetDiv>
+      )}
+    >
+      {children}
+    </ErrorBoundary>
+  );
+};

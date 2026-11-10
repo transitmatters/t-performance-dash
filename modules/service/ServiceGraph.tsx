@@ -11,6 +11,7 @@ import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { HoverCardContent } from '../../common/components/charts/hoverCard/types';
+import { hideBlocksExplainedByEvents, useMajorEvents } from '../../common/utils/majorEvents';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
 import { getScheduledAndDeliveredRoundTrips } from './utils/utils';
@@ -75,16 +76,21 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
     [peak, lineColor]
   );
 
+  const events = useMajorEvents(line, startDate, endDate);
+
   const blocks = useMemo(() => {
     const shuttlingBlocks = getShuttlingBlockAnnotations(data).map((block) => ({
       from: block.xMin as string,
       to: block.xMax as string,
     }));
     return [
-      ...explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate }),
+      ...hideBlocksExplainedByEvents(
+        explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate }),
+        events
+      ),
       ...getNoDataSinceLatestBlock(data.map((point) => point.date)),
     ];
-  }, [data, shutdowns, startDate, endDate]);
+  }, [data, shutdowns, startDate, endDate, events]);
 
   const roundTrips = useMemo(
     () => getScheduledAndDeliveredRoundTrips(data, predictedData, config.agg),

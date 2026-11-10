@@ -78,10 +78,13 @@ const getPeaks = (data: (number | undefined)[]) => {
     return { min: undefined, max: undefined, median: undefined, p10: undefined, p90: undefined };
   }
 
+  const mid = Math.floor(validData.length / 2);
+  const median = validData.length % 2 ? validData[mid] : (validData[mid - 1] + validData[mid]) / 2;
+
   return {
     min: validData[0],
     max: validData[validData.length - 1],
-    median: validData[Math.round(validData.length / 2)],
+    median,
     p10: validData[Math.floor(validData.length / 10)],
     p90: validData[Math.floor(9 * (validData.length / 10))],
   };
@@ -131,10 +134,11 @@ const makeComparison = (
   current: number | undefined,
   other: number | undefined,
   label: string,
-  unit: WidgetComparison['unit']
+  unit: WidgetComparison['unit'],
+  higherIsBetter?: boolean
 ): WidgetComparison | undefined => {
   if (current === undefined || other === undefined) return undefined;
-  return { delta: current - other, label, unit };
+  return { delta: current - other, label, unit, higherIsBetter };
 };
 
 /**
@@ -161,7 +165,7 @@ const getHeadwayShareWidgets = (
       description: ON_TIME_HEADWAYS,
       widgetValue: new PercentageWidgetValue(onTime),
       type: 'data',
-      comparison: makeComparison(onTime, comparison?.onTime, label, 'percentage'),
+      comparison: makeComparison(onTime, comparison?.onTime, label, 'percentage', true),
     },
   ];
 };

@@ -5,9 +5,11 @@ export type AlertTime = {
   current: boolean;
 };
 export interface OldAlert {
-  text: string;
+  /** Null when the feed had neither a header nor a short header. */
+  text: string | null;
   valid_from: string;
-  valid_to: string;
+  /** Null for an alert with no announced end. */
+  valid_to: string | null;
 }
 
 export type UpcomingOrCurrent = 'upcoming' | 'current';

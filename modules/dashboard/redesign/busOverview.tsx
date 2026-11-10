@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 
+import { useHistoricalBaselines, useRidershipBaseline } from '../../../common/api/hooks/baselines';
 import { useBusTripMetrics } from '../../../common/api/hooks/busTripMetrics';
 import { useAlertDelays } from '../../../common/api/hooks/delays';
 import { useRidershipData } from '../../../common/api/hooks/ridership';
@@ -22,6 +23,7 @@ import { toDisplayedDelays } from '../../delays/charts/utils';
 import {
   CHART_FETCH_START,
   WINDOW_START,
+  YEAR_OVER_YEAR_START,
   buildRidershipRow,
   buildRow,
   chartWindowStart,
@@ -32,8 +34,13 @@ import { BusReliabilityChart, useBusReliabilityRow } from './busReliability';
 import { BusServiceChart, buildBusServiceRow, summarizeBusService } from './busService';
 import type { MetricKey, ScorecardRow } from './types';
 
-const ridershipLineId = (busRoute: BusRoute) =>
-  getRidershipLineId('line-bus', busRoute, undefined, undefined);
+// From YEAR_OVER_YEAR_START so the row can compare with a year ago. The chart makes the same
+// request, so it's already cached.
+const ridershipOptions = (busRoute: BusRoute) => ({
+  line_id: getRidershipLineId('line-bus', busRoute, undefined, undefined),
+  start_date: YEAR_OVER_YEAR_START,
+  end_date: TODAY_STRING,
+});
 
 // Grouped routes (e.g. SL1/SL2/SL3/SLW) are summed per route server-side, so an alert posted on
 // several of them counts once for each.
@@ -60,12 +67,13 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     route: getBusRouteIds(busRoute).join(','),
     agg: 'weekly',
   });
+  const ridership = useRidershipData(ridershipOptions(busRoute));
+  // The same peak as the Ridership page. It falls back to a hard-coded figure until baselines.json
+  // loads, and some of those are inflated by stray mid-week records (data-ingestion#198), so wait.
+  const baselines = useHistoricalBaselines();
+  const ridershipPeak = useRidershipBaseline('line-bus', busRoute);
+  const peak = baselines.isPending ? undefined : ridershipPeak;
   const dailyTripMetrics = useBusTripMetrics(dailyTripMetricsOptions(busRoute));
-  const ridership = useRidershipData({
-    line_id: ridershipLineId(busRoute),
-    start_date: WINDOW_START,
-    end_date: TODAY_STRING,
-  });
   const delays = useAlertDelays(delaysOptions(busRoute));
   const reliability = useBusReliabilityRow(busRoute, LINE_COLORS['line-bus']);
 
@@ -93,7 +101,8 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     const service = dailyTripMetrics.data && summarizeBusService(dailyTripMetrics.data);
     if (service) built.push(buildBusServiceRow(service, tripMetrics.data ?? [], color));
 
-    const ridershipRow = ridership.data && buildRidershipRow(ridership.data, color);
+    const ridershipRow =
+      ridership.data && buildRidershipRow(ridership.data, color, { yearOverYear: true, peak });
     if (ridershipRow) built.push(ridershipRow);
 
     const delaysRow =
@@ -116,7 +125,7 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     if (delaysRow) built.push(delaysRow);
 
     return built;
-  }, [tripMetrics.data, dailyTripMetrics.data, reliability.row, ridership.data, delays.data]);
+  }, [tripMetrics.data, dailyTripMetrics.data, reliability.row, ridership.data, peak, delays.data]);
 
   return {
     rows,
@@ -137,11 +146,8 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
     dailyTripMetricsOptions(busRoute),
     metric === 'speed' || metric === 'service'
   );
-  // Same query as the scorecard row, so it's already cached; ridership is weekly and can lag.
-  const ridership = useRidershipData(
-    { line_id: ridershipLineId(busRoute), start_date: WINDOW_START, end_date: TODAY_STRING },
-    metric === 'ridership'
-  );
+  // Ridership is weekly and can lag.
+  const ridership = useRidershipData(ridershipOptions(busRoute), metric === 'ridership');
   const delays = useAlertDelays(delaysOptions(busRoute), metric === 'delays');
 
   if (metric === 'reliability') return <BusReliabilityChart busRoute={busRoute} />;

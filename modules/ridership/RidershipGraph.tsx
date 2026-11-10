@@ -22,6 +22,7 @@ import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
 import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
 import { getNoDataSinceLatestAnnotation } from '../service/utils/graphUtils';
+import { getMajorEventAnnotations, useMajorEvents } from '../../common/utils/majorEvents';
 
 interface RidershipGraphProps {
   data: RidershipCount[];
@@ -55,6 +56,7 @@ export const RidershipGraph = ({
   const ref = useRef(null);
   const linePeak = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
   const peak = stationName ? 0 : linePeak;
+  const events = useMajorEvents(line, startDate, endDate);
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
@@ -168,6 +170,7 @@ export const RidershipGraph = ({
                       serviceEnd
                     ),
                     ...serviceDateBlocks,
+                    ...getMajorEventAnnotations(events),
                   ],
                 },
               },
@@ -270,6 +273,7 @@ export const RidershipGraph = ({
     callbacks,
     startDate,
     endDate,
+    events,
     unit,
     tooltipFormat,
     serviceEnd,
