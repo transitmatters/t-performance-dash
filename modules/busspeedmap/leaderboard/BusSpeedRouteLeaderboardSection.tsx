@@ -6,6 +6,7 @@ import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { Button } from '../../../common/components/ui/button';
 import type { LeaderboardMetricConfig, Period } from '../types';
 import { groupLeaderboardByBusRoute, periodDateRange, rankLeaderboard } from '../utils';
+import { BusDwellSummary } from './BusDwellSummary';
 import { BusSpeedRouteLeaderboard } from './BusSpeedRouteLeaderboard';
 
 const LEADERBOARD_PREVIEW_SIZE = 25;
@@ -63,6 +64,7 @@ export const BusSpeedRouteLeaderboardSection = ({
           {showAll ? `Show top ${LEADERBOARD_PREVIEW_SIZE}` : `Show all ${ranked.length} routes`}
         </Button>
       )}
+      <BusDwellSummary data={routes} />
     </>
   );
 };

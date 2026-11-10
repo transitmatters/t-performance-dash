@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import type { OldAlert } from '../../../types/alerts';
 import { FIVE_MINUTES } from '../../../constants/time';
 import { hexWithAlpha } from '../../../utils/general';
+import { wallClock } from '../../../utils/date';
 
 /** The x scale's range, in epoch milliseconds. */
 export interface Domain {
@@ -38,8 +39,8 @@ export const packLanes = <T extends Span>(spans: T[]): (T & { lane: number })[] 
 };
 
 export const formatTimeRange = (start: string, end: string, daily = false) => {
-  const from = dayjs(start);
-  const to = dayjs(end);
+  const from = wallClock(start);
+  const to = wallClock(end);
   if (daily) {
     const last = to.subtract(1, 'day');
     return last.isSame(from, 'day')
@@ -49,6 +50,11 @@ export const formatTimeRange = (start: string, end: string, daily = false) => {
   if (to.diff(from, 'hour') >= 24) return 'All day';
   return `${from.format('h:mm A')} – ${to.format('h:mm A')}`;
 };
+
+export const formatAlertRange = (alert: OldAlert) =>
+  alert.valid_to
+    ? formatTimeRange(alert.valid_from, alert.valid_to)
+    : `Since ${wallClock(alert.valid_from).format('MMM D, h:mm A')}`;
 
 export const alertKey = (alert: OldAlert) =>
   `alert|${alert.valid_from}|${alert.valid_to}|${alert.text}`;
@@ -84,8 +90,10 @@ export const singleDayAxisBounds = (date: string, times: string[]): Domain => {
 /** Clips an alert to the service day, or returns null when it falls outside it. */
 export const clipAlert = (alert: OldAlert, date: string) => {
   const { open, close } = serviceDay(date);
-  const from = dayjs(alert.valid_from);
-  const to = dayjs(alert.valid_to);
+  // Alerts are Eastern times with an offset; the charts' axis is Eastern wall clock.
+  const from = wallClock(alert.valid_from);
+  // An alert with no announced end runs through the day.
+  const to = alert.valid_to ? wallClock(alert.valid_to) : close;
   const start = from.isBefore(open) ? open : from;
   const end = to.isAfter(close) ? close : to;
   // Outside the service day entirely

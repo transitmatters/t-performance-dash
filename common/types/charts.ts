@@ -37,7 +37,7 @@ export interface AggregateDataPoint {
   max: number;
   mean: number;
   min: number;
-  std: number;
+  std?: number;
   service_date?: string;
   dep_time_from_epoch?: string;
   is_peak_day?: boolean;

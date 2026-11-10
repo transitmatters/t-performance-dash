@@ -13,7 +13,13 @@ import {
 import { describeWeather } from '../../../../modules/weather/utils/weatherDetails';
 import { useHoverCardStore } from '../hoverCard/hoverCardStore';
 import type { HoverCard } from '../hoverCard/hoverCardStore';
-import { ALERT_COLOR, alertSegments, formatTimeRange, toFraction } from './segments';
+import {
+  ALERT_COLOR,
+  alertSegments,
+  formatAlertRange,
+  formatTimeRange,
+  toFraction,
+} from './segments';
 import type { ChartLayers } from './useChartLayers';
 import { useLayerStore } from './layerStore';
 import { Segment, TrackRow } from './TrackRow';
@@ -88,7 +94,7 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             lanes={Math.max(...alertSpans.map((span) => span.lane + 1), 1)}
           >
             {alertSpans.map((span) => {
-              const range = formatTimeRange(span.alert.valid_from, span.alert.valid_to);
+              const range = formatAlertRange(span.alert);
               return (
                 <Segment
                   key={span.key}
@@ -98,7 +104,7 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
                   color={ALERT_COLOR}
                   pinned={Boolean(pinned[span.key])}
                   label={`Service alert, ${range}: ${span.alert.text}`}
-                  card={{ title: range, notes: [span.alert.text] }}
+                  card={{ title: range, notes: [span.alert.text ?? ''] }}
                   onToggle={() => toggle(span.key)}
                 />
               );

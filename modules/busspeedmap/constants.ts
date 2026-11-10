@@ -201,3 +201,14 @@ export const LEADERBOARD_METRICS: LeaderboardMetricConfig[] = [
 ];
 
 export const DEFAULT_LEADERBOARD_METRIC: LeaderboardMetric = 'speed';
+
+/**
+ * Routes on the leaderboard's dwell summary must average at least this many stops with a dwell
+ * per day of service. Below it, a route's average swings 3-8s from one weekday to the next
+ * (October 2026), against about 1s for busier routes, so a handful of trips could top the list.
+ * At 200 it leaves out 3 of 121 routes on a weekday, Route 55 (about 140 stops) among them.
+ */
+export const MIN_DWELL_STOPS_PER_DAY = 200;
+
+/** How many routes each of the dwell summary's two lists shows. */
+export const DWELL_SUMMARY_SIZE = 5;

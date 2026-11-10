@@ -8,6 +8,8 @@ export interface WidgetComparison {
   delta: number;
   label: string;
   unit: 'time' | 'percentage';
+  /** Colors a rise green instead of red, for stats like On time where more is better. */
+  higherIsBetter?: boolean;
 }
 
 export interface MiniWidgetObject {
