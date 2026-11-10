@@ -1,4 +1,5 @@
 import type { ChunkedAggregateQueryResult, DayFilter, TravelTimesUnit } from '../../types/charts';
+import type { TripComparison } from '../../types/comparison';
 import type { Station } from '../../types/stations';
 import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../notices/NoDataNotice';
@@ -20,6 +21,8 @@ interface AggregateChartWrapperProps {
   startDate?: string;
   endDate?: string;
   trendline?: boolean;
+  /** A second period drawn over the chart; see useTripComparisonQueries. */
+  comparison?: TripComparison;
 }
 
 export const AggregateChartWrapper = ({

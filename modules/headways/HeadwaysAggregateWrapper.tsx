@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import type { ChunkedAggregateQueryResult, DayFilter } from '../../common/types/charts';
+import type { TripComparison } from '../../common/types/comparison';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { ChartStack } from '../../common/components/charts/ChartStack';
@@ -9,7 +10,7 @@ import { StatStrip } from '../../common/components/widgets/StatStrip';
 import {
   filterByDayType,
   getAggHeadwayDataWidgets,
-  getComparisonData,
+  getWidgetComparisonData,
 } from '../../common/utils/widgets';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 
@@ -19,6 +20,8 @@ interface HeadwaysAggregateWrapperProps {
   fromStation: Station;
   /** Owned by the parent, whose card header renders the day-filter control. */
   dayFilter: DayFilter;
+  /** A second period to draw and compare the stats against. */
+  comparison?: TripComparison;
 }
 
 export const HeadwaysAggregateWrapper = ({
@@ -26,6 +29,7 @@ export const HeadwaysAggregateWrapper = ({
   toStation,
   fromStation,
   dayFilter,
+  comparison,
 }: HeadwaysAggregateWrapperProps) => {
   const allData = useMemo(
     () => query.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [],
@@ -37,7 +41,10 @@ export const HeadwaysAggregateWrapper = ({
     return filterByDayType(allData, dayFilter);
   }, [allData, dayFilter]);
 
-  const comparisonData = useMemo(() => getComparisonData(allData, dayFilter), [allData, dayFilter]);
+  const comparisonData = useMemo(
+    () => getWidgetComparisonData(allData, dayFilter, comparison),
+    [allData, dayFilter, comparison]
+  );
 
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
@@ -55,6 +62,7 @@ export const HeadwaysAggregateWrapper = ({
           toStation={toStation}
           fromStation={fromStation}
           dayFilter={dayFilter}
+          comparison={comparison}
         />
         {!query.chunks?.pending && <StatStrip widgetObjects={widgetObjects} />}
         <PartialDataNotice query={query} />

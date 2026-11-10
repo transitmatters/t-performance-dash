@@ -1,4 +1,5 @@
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripPageComparisons } from '../../common/api/hooks/comparison';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -44,6 +45,7 @@ export const BusTripGraphs = ({
     aggregate,
     enabled
   );
+  const comparisons = useTripPageComparisons('bus', parameters, aggregate, enabled);
   const location = getLocationDetails(fromStation, toStation);
   const { query } = useDelimitatedRoute();
   const busRouteLabel = query.busRoute ? `Route ${query.busRoute}` : undefined;
@@ -77,6 +79,7 @@ export const BusTripGraphs = ({
             />
             <TravelTimesAggregateWrapper
               query={traveltimes}
+              comparison={comparisons.traveltimes}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={travelTimesDayFilter}
@@ -92,6 +95,7 @@ export const BusTripGraphs = ({
             />
             <HeadwaysAggregateWrapper
               query={headways}
+              comparison={comparisons.headways}
               toStation={toStation}
               fromStation={fromStation}
               dayFilter={headwaysDayFilter}
@@ -108,6 +112,7 @@ export const BusTripGraphs = ({
             />
             <AggregateChartWrapper
               query={traveltimes}
+              comparison={comparisons.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}

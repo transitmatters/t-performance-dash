@@ -9,13 +9,20 @@ import type { MiniWidgetObject, WidgetComparison } from './MiniWidgetCreator';
 const formatComparisonDelta = (comparison: WidgetComparison) => {
   const abs = Math.abs(comparison.delta);
   if (comparison.unit === 'percentage') return `${Math.round(abs * 100)}pp`;
+  if (comparison.unit === 'mph') return `${abs.toFixed(1)} mph`;
   return getFormattedTimeString(abs);
 };
 
-const isNegligible = (comparison: WidgetComparison) =>
-  comparison.unit === 'percentage'
-    ? Math.abs(comparison.delta) <= 0.01
-    : Math.abs(comparison.delta) <= 1;
+const isNegligible = (comparison: WidgetComparison) => {
+  const abs = Math.abs(comparison.delta);
+  if (comparison.unit === 'percentage') return abs <= 0.01;
+  if (comparison.unit === 'mph') return abs < 0.05;
+  return abs <= 1;
+};
+
+/** A longer trip or wait is worse; a higher speed or on-time share is better. */
+const isWorse = (comparison: WidgetComparison) =>
+  comparison.higherIsBetter ? comparison.delta < 0 : comparison.delta > 0;
 
 /** On-time share is the one stat that carries a verdict, so it gets sentiment color. */
 const isOnTimeStat = (label: string) => label.toLowerCase().includes('on time');
@@ -37,7 +44,8 @@ const StatCell = ({ label, description, children, valueClassName }: StatCellProp
     </span>
     <span
       className={classNames(
-        'text-card-foreground flex flex-row items-baseline gap-x-1 text-[17px] leading-none font-semibold',
+        // Wraps so a comparison delta drops below the figure instead of squeezing it in a narrow cell.
+        'text-card-foreground flex flex-row flex-wrap items-baseline gap-x-1 gap-y-1 text-[17px] leading-none font-semibold',
         valueClassName
       )}
     >
@@ -58,10 +66,10 @@ const ComparisonArrow = ({ comparison }: { comparison: WidgetComparison }) => {
             } than ${comparison.label}`
       }
       className={classNames(
-        'cursor-default text-xs',
+        'flex cursor-default items-baseline gap-x-0.5 text-xs font-medium whitespace-nowrap',
         negligible
           ? 'text-muted-foreground'
-          : comparison.delta > 0
+          : isWorse(comparison)
             ? 'text-red-600 dark:text-red-400'
             : 'text-green-700 dark:text-green-400'
       )}
@@ -70,6 +78,7 @@ const ComparisonArrow = ({ comparison }: { comparison: WidgetComparison }) => {
         icon={negligible ? faMinus : comparison.delta > 0 ? faArrowUp : faArrowDown}
         size="xs"
       />
+      {!negligible && formatComparisonDelta(comparison)}
     </span>
   );
 };

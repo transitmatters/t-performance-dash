@@ -8,10 +8,13 @@ import type {
   DayFilter,
 } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
+import type { TripComparison } from '../../../common/types/comparison';
 import type { Station } from '../../../common/types/stations';
 import { SEVERITY_COLORS } from '../../../common/utils/chartTheme';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
+import { getComparisonSeries } from '../../../common/utils/comparison';
+import { filterByDayType } from '../../../common/utils/widgets';
 
 const formatShare = (part: number, total: number) => `${Math.round((part / total) * 100)}%`;
 
@@ -35,6 +38,8 @@ interface HeadwaysAggregateChartProps {
   endDate?: string;
   fill?: boolean;
   trendline?: boolean;
+  /** A second period, drawn as a dashed median over this one. */
+  comparison?: TripComparison;
 }
 
 export const HeadwaysAggregateChart = ({
@@ -46,22 +51,19 @@ export const HeadwaysAggregateChart = ({
   endDate: endDateProp,
   fill = false,
   trendline = false,
+  comparison,
 }: HeadwaysAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
   const endDate = endDateProp ?? query.endDate;
 
   const chart = useMemo(() => {
-    // Filter data based on dayFilter
-    let filteredData = headways.by_date.filter((datapoint) => datapoint.peak === 'all');
-
-    if (dayFilter !== 'all') {
-      filteredData = filteredData.filter((datapoint) => {
-        if (!datapoint.service_date) return true; // Include data without service_date
-        const isWeekendOrHolidayDate = datapoint.holiday || datapoint.weekend;
-        return dayFilter === 'weekend' ? isWeekendOrHolidayDate : !isWeekendOrHolidayDate;
-      });
-    }
+    // The same filter runs over the comparison period, so both lines show the same kind of day.
+    const selectData = (response: AggregateDataResponse) => {
+      const byDate = response.by_date.filter((datapoint) => datapoint.peak === 'all');
+      return dayFilter === 'all' ? byDate : filterByDayType(byDate, dayFilter);
+    };
+    const filteredData = selectData(headways);
 
     return (
       <AggregateLineChart
@@ -83,9 +85,20 @@ export const HeadwaysAggregateChart = ({
         fill={fill}
         trendline={trendline}
         embedChart={'headways'}
+        comparison={getComparisonSeries(comparison, selectData)}
       />
     );
-  }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline]);
+  }, [
+    headways,
+    startDate,
+    endDate,
+    fromStation,
+    toStation,
+    dayFilter,
+    fill,
+    trendline,
+    comparison,
+  ]);
 
   return chart;
 };

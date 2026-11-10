@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { useMemo } from 'react';
 import { EmbedFrame } from '../../common/components/embed/EmbedFrame';
 import { EmbedMessage } from '../../common/components/embed/EmbedMessage';
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
@@ -6,6 +7,7 @@ import { DAY_FILTER_OPTIONS } from '../../common/hooks/useChartToggle';
 import type { RouteType } from '../../common/types/api';
 import type { DayFilter } from '../../common/types/charts';
 import type { QueryParams, Tab } from '../../common/types/router';
+import { getComparisonPeriod } from '../../common/utils/comparison';
 import { normalizeDateParams } from '../../common/utils/dateParams';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getLocationDetails, getParentStationForStopId } from '../../common/utils/stations';
@@ -50,6 +52,10 @@ export const TripChartEmbed = (embed: TripEmbed) => {
     }),
   };
   const days = getDays(embed, query);
+  const comparisonPeriod = useMemo(
+    () => (single ? undefined : getComparisonPeriod(dates.startDate, dates.endDate, query.vs)),
+    [single, dates.startDate, dates.endDate, query.vs]
+  );
 
   const fromStation = query.from ? getParentStationForStopId(query.from, lineShort) : undefined;
   const toStation = query.to ? getParentStationForStopId(query.to, lineShort) : undefined;
@@ -61,6 +67,8 @@ export const TripChartEmbed = (embed: TripEmbed) => {
     ? formatDate(dates.date as string)
     : `${formatDate(dates.startDate as string)} – ${formatDate(dates.endDate as string)}`;
   const dayLabel = DAY_FILTER_OPTIONS.find(([option]) => option === days && option !== 'all')?.[1];
+  // An embed has no legend, so the subtitle is what explains the dashed line.
+  const comparisonLabel = comparisonPeriod && `vs ${comparisonPeriod.rangeLabel}`;
 
   const renderChart = () => {
     if (!fromStation || !toStation)
@@ -75,6 +83,7 @@ export const TripChartEmbed = (embed: TripEmbed) => {
         endDate={dates.endDate as string}
         days={days}
         trendline={query.trend === '1'}
+        comparisonPeriod={comparisonPeriod}
         {...props}
       />
     );
@@ -83,7 +92,7 @@ export const TripChartEmbed = (embed: TripEmbed) => {
   return (
     <EmbedFrame
       title={getTripEmbedTitle(embed, route)}
-      subtitle={[where, when, dayLabel].filter(Boolean).join(' · ')}
+      subtitle={[where, when, comparisonLabel, dayLabel].filter(Boolean).join(' · ')}
       href={getTripPageUrl(embed, { ...route, query: dates })}
     >
       {renderChart()}

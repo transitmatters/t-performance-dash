@@ -14,6 +14,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { watermarkLayout } from '../../constants/charts';
 import { useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
+import { alignComparisonSeries, comparisonDateFor } from '../../utils/comparison';
 import {
   TEMPERATURE_BAND_COLOR,
   TEMPERATURE_LINE_COLOR,
@@ -89,6 +90,7 @@ export const AggregateLineChart = ({
   fill = false,
   embedChart,
   trendline = false,
+  comparison,
 }: AggregateLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -106,9 +108,31 @@ export const AggregateLineChart = ({
     [hourly, fill, tempEnabled, weather]
   );
   const isMobile = !useBreakpoint('md');
-  const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
+
+  // With a comparison, both series share one set of labels so the index tooltip pairs them, and
+  // `points` stands in for `data` wherever a dataIndex is looked up.
+  const aligned = useMemo(
+    () =>
+      comparison?.data.length
+        ? alignComparisonSeries(data, comparison.data, pointField, comparison.offsetDays)
+        : undefined,
+    [data, comparison, pointField]
+  );
+  const labels = useMemo(
+    () => aligned?.labels ?? data.map((item) => item[pointField]),
+    [aligned, data, pointField]
+  );
+  const points: (AggregateDataPoint | undefined)[] = aligned?.primary ?? data;
+  const valueOf = (point: AggregateDataPoint | undefined, field: '25%' | '50%' | '75%') =>
+    point ? (point[field] * multiplier).toFixed(2) : null;
+  const comparisonSeriesLabel = comparison ? `${comparison.label} median` : undefined;
+  // The comparison's own date for a hovered day, e.g. "Sep 3, 2025 median"; by hour, just its range.
+  const comparisonRowLabel = (index: number) =>
+    comparison && !hourly
+      ? `${comparisonDateFor(labels[index], comparison.offsetDays)} median`
+      : comparisonSeriesLabel;
 
   const trendlineData = useMemo(() => {
     if (!isTrendlineVisible) return [];
@@ -136,7 +160,8 @@ export const AggregateLineChart = ({
       pointRadius: byTime ? 0 : 3,
       pointHitRadius: 10,
       stepped: byTime,
-      data: data.map((item: AggregateDataPoint) => (item['50%'] * multiplier).toFixed(2)),
+      spanGaps: true,
+      data: points.map((point) => valueOf(point, '50%')),
     },
     {
       label: '25th percentile',
@@ -145,7 +170,8 @@ export const AggregateLineChart = ({
       stepped: byTime,
       tension: 0.4,
       pointRadius: 0,
-      data: data.map((item: AggregateDataPoint) => (item['25%'] * multiplier).toFixed(2)),
+      spanGaps: true,
+      data: points.map((point) => valueOf(point, '25%')),
     },
     {
       label: '75th percentile',
@@ -154,9 +180,28 @@ export const AggregateLineChart = ({
       stepped: byTime,
       tension: 0.4,
       pointRadius: 0,
-      data: data.map((item: AggregateDataPoint) => (item['75%'] * multiplier).toFixed(2)),
+      spanGaps: true,
+      data: points.map((point) => valueOf(point, '75%')),
     },
   ];
+
+  if (aligned && comparison) {
+    datasets.push({
+      label: comparisonSeriesLabel,
+      fill: false,
+      tension: 0.1,
+      borderColor: chartTheme.comparisonLine,
+      borderDash: [6, 4],
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 3,
+      pointHitRadius: 10,
+      pointHoverBackgroundColor: chartTheme.comparisonLine,
+      stepped: byTime,
+      spanGaps: true,
+      data: aligned.comparison.map((point) => valueOf(point, '50%')),
+    });
+  }
 
   if (temperatureSeries && temperatureSeries.mean.length > 0) {
     const minIndex = datasets.length;
@@ -300,6 +345,10 @@ export const AggregateLineChart = ({
                     const p25 = valueOf('25th percentile');
                     const p75 = valueOf('75th percentile');
                     const trend = valueOf('Trend');
+                    const comparisonItem = items.find(
+                      (item) => item.dataset.label === comparisonSeriesLabel
+                    );
+                    const comparisonMedian = comparisonItem?.parsed.y || undefined;
                     const medianItem = items.find((item) => item.dataset.label === seriesName);
                     // Read by date, as the weather days don't always line up with the data's
                     const temperature =
@@ -314,8 +363,8 @@ export const AggregateLineChart = ({
                       hoveredDay === undefined || hoveredDay === null
                         ? undefined
                         : weatherAt(hoveredDay);
-                    const extraRows =
-                      hoverRows && medianItem ? hoverRows(data[medianItem.dataIndex]) : [];
+                    const hoveredPoint = medianItem ? points[medianItem.dataIndex] : undefined;
+                    const extraRows = hoverRows && hoveredPoint ? hoverRows(hoveredPoint) : [];
 
                     return {
                       hero: median
@@ -326,6 +375,15 @@ export const AggregateLineChart = ({
                           }
                         : undefined,
                       rows: [
+                        ...(comparisonMedian && comparisonItem
+                          ? [
+                              {
+                                label: comparisonRowLabel(comparisonItem.dataIndex) ?? '',
+                                value: format(comparisonMedian),
+                                color: chartTheme.comparisonLine,
+                              },
+                            ]
+                          : []),
                         ...(p75
                           ? [{ label: '75th percentile', value: format(p75), color: fillColor }]
                           : []),
@@ -365,6 +423,7 @@ export const AggregateLineChart = ({
               <LegendLongTerm
                 isTrendlineVisible={isTrendlineVisible}
                 onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
+                comparison={comparison}
               />
             )}
             {startDate && (
