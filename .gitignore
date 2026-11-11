@@ -61,13 +61,11 @@ storybook-static
 # committed, since public/ is synced to the frontend bucket at deploy time.
 public/businsights
 
-# maplibre-gl's worker module, vended into public/ by copy-maplibre-worker.js (see
-# scripts/copy-maplibre-worker.js for why). Copied fresh from node_modules on every
-# `npm install`, so it should never be committed.
-public/maplibre-gl-worker.mjs
-public/maplibre-gl-worker-dev.mjs
-public/maplibre-gl-shared.mjs
-public/maplibre-gl-shared-dev.mjs
+# maplibre-gl's worker module, vended into public/maplibre-gl/<version>/ by
+# copy-maplibre-worker.js (see scripts/copy-maplibre-worker.js for why). Copied fresh from
+# node_modules on every `npm install`, so it should never be committed. The pattern also
+# covers the loose public/maplibre-gl-*.mjs copies that older checkouts still have.
+public/maplibre-gl*
 
 # Playwright MCP snapshots, screenshots and console logs
 .playwright-mcp/
