@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { addProtocol, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
+import { addProtocol, getVersion, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { PMTiles, Protocol } from 'pmtiles';
 import type { RangeResponse, Source as PMTilesSource } from 'pmtiles';
@@ -53,8 +53,9 @@ addProtocol('pmtiles', protocol.tile);
 // code into instead of the real one. Left alone, the worker request 404s and the map never
 // paints (basemap included) with no maplibre-level error, just a browser-level "module
 // script" MIME-type error. `scripts/copy-maplibre-worker.js` vends fixed, unbundled copies
-// into public/ on every install; this just points maplibre at them.
-setWorkerUrl('/maplibre-gl-worker.mjs');
+// into public/maplibre-gl/<version>/ on every install; this just points maplibre at them.
+// The version in the path gives each upgrade a new URL, so browsers can't reuse an old worker.
+setWorkerUrl(`/maplibre-gl/${getVersion()}/maplibre-gl-worker.mjs`);
 
 /** Serves an archive already held in memory, so maplibre never goes back to the network for it. */
 class ArrayBufferSource implements PMTilesSource {
