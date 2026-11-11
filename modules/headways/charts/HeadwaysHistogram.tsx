@@ -4,9 +4,7 @@ import { useMemo, useRef } from 'react';
 import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
-import type { HeadwayTooltipData, HeadwaysChartProps } from '../../../common/types/charts';
-import { MetricFieldKeys } from '../../../common/types/charts';
-import type { HeadwayPoint } from '../../../common/types/dataPoints';
+import type { HeadwaysChartProps } from '../../../common/types/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { useChartTheme } from '../../../common/utils/chartTheme';
@@ -14,6 +12,7 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { TripEmbedButton } from '../../tripexplorer/TripEmbedButton';
+import { getHeadwayBuckets } from './utils';
 
 export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps) => {
   const { line, linePath, lineShort } = useDelimitatedRoute();
@@ -22,36 +21,11 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
 
-  const benchmarkTime = headways[0]?.benchmark_headway_time_sec ?? 0;
-
-  // dataObject is a mapping from headway bucket -> number of trains.
-  // All keys are increased by 0.5. This is a workaround to get chartjs to display the tick labels in between the bars.
-  const dataObject: Record<string, number> = useMemo(() => {
-    const values = headways
-      .map((datapoint: HeadwayPoint) => datapoint[MetricFieldKeys.headwayTimeSec])
-      .filter((seconds) => seconds >= 0)
-      .map((seconds) => Math.floor(seconds / 60) + 0.5);
-    const max = Math.max(...values);
-    const headwayBuckets: { [key in number]: number } = {};
-    for (let i = 0.5; i <= max; i++) {
-      headwayBuckets[i] = 0;
-    }
-    values.forEach((datapoint) => {
-      headwayBuckets[datapoint] += 1;
-    });
-    return headwayBuckets;
-  }, [headways]);
-
-  // headway bucket => % [of trains in that bucket, difference from benchmark]
-  const headwayBucketPercentages: Record<string, HeadwayTooltipData> = useMemo(() => {
-    const headwayBucketPercentages: { [key in string]: { pct_trains: number } } = {};
-    Object.entries(dataObject).forEach(([k, v]) => {
-      headwayBucketPercentages[k] = {
-        pct_trains: Math.floor((100 * v) / headways.length),
-      };
-    });
-    return headwayBucketPercentages;
-  }, [headways, dataObject]);
+  const buckets = useMemo(() => getHeadwayBuckets(headways), [headways]);
+  const dataObject = useMemo(
+    () => Object.fromEntries(Object.entries(buckets).map(([key, { count }]) => [key, count])),
+    [buckets]
+  );
 
   const histogram = useMemo(() => {
     return (
@@ -123,7 +97,7 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
                             ? ['ferry', 'ferries']
                             : ['train', 'trains'];
                       const count = item.parsed.y ?? 0;
-                      const { pct_trains } = headwayBucketPercentages[x.toString()];
+                      const { pctTrips, benchmark } = buckets[x.toString()];
                       return {
                         title: `${x - 0.5}–${x + 0.5} min headways`,
                         hero: {
@@ -132,20 +106,23 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
                           color: LINE_COLORS[line ?? 'default'],
                         },
                         meter: {
-                          fraction: pct_trains / 100,
-                          label: `${pct_trains}% of ${vehicles}`,
+                          fraction: pctTrips / 100,
+                          label: `${pctTrips}% of ${vehicles}`,
                           color: LINE_COLORS[line ?? 'default'],
                         },
-                        rows:
-                          !Number.isNaN(benchmarkTime) && benchmarkTime > 0
-                            ? [
-                                {
-                                  label: 'Benchmark headway',
-                                  value: getFormattedTimeString(benchmarkTime, 'seconds'),
-                                  color: CHART_COLORS.ANNOTATIONS,
-                                },
-                              ]
-                            : [],
+                        rows: benchmark
+                          ? [
+                              {
+                                label: 'Benchmark headway',
+                                value: getFormattedTimeString(benchmark.median),
+                                detail:
+                                  benchmark.min !== benchmark.max
+                                    ? `${getFormattedTimeString(benchmark.min)}–${getFormattedTimeString(benchmark.max)}`
+                                    : undefined,
+                                color: CHART_COLORS.ANNOTATIONS,
+                              },
+                            ]
+                          : [],
                       };
                     },
                   },
@@ -169,16 +146,6 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
         )}
       </ChartStack>
     );
-  }, [
-    fill,
-    dataObject,
-    isMobile,
-    line,
-    linePath,
-    lineShort,
-    benchmarkTime,
-    headwayBucketPercentages,
-    chartTheme,
-  ]);
+  }, [fill, dataObject, isMobile, line, linePath, lineShort, buckets, chartTheme]);
   return histogram;
 };
