@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { FREQUENT_BUS_ROUTE_IDS, getBusRouteDisplayName } from '../../common/constants/lines';
-import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
+import type { BusSpeedLeaderboardEntry, BusTripCounts } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { getFormattedTimeString } from '../../common/utils/time';
 import type { HeadwayField } from '../reliability/utils';
@@ -210,6 +210,21 @@ const poolBatteryShare = (
 };
 
 /**
+ * Each of `fields` summed over the entries that have it, and left off when none does, so a range
+ * from before the pipeline counted it reads as unmeasured rather than as zero.
+ */
+const sumPresent = <F extends HeadwayField | keyof BusTripCounts>(
+  entries: BusSpeedLeaderboardEntry[],
+  fields: readonly F[]
+): Partial<Record<F, number>> =>
+  Object.fromEntries(
+    fields.flatMap((field) => {
+      const counted = entries.filter((entry) => entry[field] != null);
+      return counted.length ? [[field, sumOf(counted, (entry) => entry[field] ?? 0)]] : [];
+    })
+  ) as Partial<Record<F, number>>;
+
+/**
  * Each headway count summed over the Frequent Bus Routes among `entries` that have it (116 of
  * 114/116/117), as on the route overview, so a timetabled route's longer headways don't count toward
  * a frequent one. Left off when none has it, so a label with no frequent routes, or a range before the
@@ -217,15 +232,17 @@ const poolBatteryShare = (
  */
 const poolFrequentHeadways = (
   entries: BusSpeedLeaderboardEntry[]
-): Partial<Record<HeadwayField, number>> => {
-  const frequent = entries.filter((entry) => FREQUENT_BUS_ROUTES.has(entry.route));
-  return Object.fromEntries(
-    HEADWAY_FIELDS.flatMap((field) => {
-      const counted = frequent.filter((entry) => entry[field] != null);
-      return counted.length ? [[field, sumOf(counted, (entry) => entry[field] ?? 0)]] : [];
-    })
+): Partial<Record<HeadwayField, number>> =>
+  sumPresent(
+    entries.filter((entry) => FREQUENT_BUS_ROUTES.has(entry.route)),
+    HEADWAY_FIELDS
   );
-};
+
+const TRIP_COUNT_FIELDS = [
+  'scheduled_trips',
+  'unobserved_trips',
+  'unobserved_waived_trips',
+] as const satisfies readonly (keyof BusTripCounts)[];
 
 /**
  * The API ranks raw GTFS route_ids, but the rest of the dashboard shows curated BusRoute labels
@@ -233,7 +250,8 @@ const poolFrequentHeadways = (
  * "SL4" and "SL5" rows. Summing miles_covered/total_time per label keeps the speed a true
  * weighted average, same as the per-route speed page does for composites, and the battery share
  * is pooled by trips the same way. Dwell is summed too, so its averages stay weighted by stops.
- * Headway counts are pooled from the label's Frequent Bus Routes only (see poolFrequentHeadways).
+ * Headway counts are pooled from the label's Frequent Bus Routes only (see poolFrequentHeadways), and
+ * trip counts from all of them, so its dropped-trip rate is pooled over trips.
  * Routes under one label run on the same days, so the label's days of service are the most of any
  * one route's, not their sum. `date` picks which labels were in service (see getBusRouteGroup).
  * Unordered: rankLeaderboard sorts by whichever metric is picked.
@@ -258,6 +276,7 @@ export const groupLeaderboardByBusRoute = (
     n_days: Math.max(0, ...members.map((entry) => entry.n_days ?? 0)),
     ...poolBatteryShare(members),
     ...poolFrequentHeadways(members),
+    ...sumPresent(members, TRIP_COUNT_FIELDS),
     isFrequentRoute: members.some((entry) => FREQUENT_BUS_ROUTES.has(entry.route)),
   }));
 };
@@ -307,6 +326,8 @@ export const summarizeDwell = (entries: GroupedBusSpeedLeaderboardEntry[]): BusD
 export interface RankedBusRoute {
   route: string;
   value: number;
+  /** See LeaderboardMetricConfig's `detail`. */
+  detail?: string;
   isFrequentRoute: boolean;
 }
 
@@ -320,6 +341,32 @@ export const rankLeaderboard = (
       const value = metric.value(entry);
       return value === undefined
         ? []
-        : [{ route: entry.route, value, isFrequentRoute: entry.isFrequentRoute }];
+        : [
+            {
+              route: entry.route,
+              value,
+              detail: metric.detail?.(entry),
+              isFrequentRoute: entry.isFrequentRoute,
+            },
+          ];
     })
     .sort((a, b) => (metric.order === 'ascending' ? a.value - b.value : b.value - a.value));
+
+/**
+ * The routes `metric` ranks, and the ones it sets aside to list below them (see its `setAside`),
+ * each in its order.
+ */
+export const rankAndSetAside = (
+  entries: GroupedBusSpeedLeaderboardEntry[],
+  metric: LeaderboardMetricConfig
+): { ranked: RankedBusRoute[]; setAside: RankedBusRoute[] } => {
+  const isSetAside = (entry: GroupedBusSpeedLeaderboardEntry) =>
+    metric.setAside?.test(entry) ?? false;
+  return {
+    ranked: rankLeaderboard(
+      entries.filter((entry) => !isSetAside(entry)),
+      metric
+    ),
+    setAside: rankLeaderboard(entries.filter(isSetAside), metric),
+  };
+};

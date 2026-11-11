@@ -49,6 +49,9 @@ export function BusSpeedLeaderboardDetails() {
     (option) => [option.key, option.label] as [LeaderboardMetric, string]
   );
   const selectedMetricIndex = LEADERBOARD_METRICS.indexOf(metric);
+  // A metric that ranks whole months shows the month the date is in. The period chosen is kept,
+  // so going back to another metric returns to it.
+  const shownPeriod: Period = metric.monthlyOnly ? 'monthly' : period;
 
   // Segments only have a speed, so the other metrics are by route alone. The choice is kept
   // rather than reset, so going back to Speed returns to the view that was showing.
@@ -61,11 +64,11 @@ export function BusSpeedLeaderboardDetails() {
 
   const bandLabel = TIME_BANDS.find((band) => band.key === timeBand);
   const dayTypeLabel =
-    viewMode === 'segment' && period !== 'daily'
+    viewMode === 'segment' && shownPeriod !== 'daily'
       ? DAY_TYPES.find((dt) => dt.key === dayType)
       : undefined;
   const subtitle = [
-    periodLabel(date, period),
+    periodLabel(date, shownPeriod),
     viewMode === 'route' ? metric.rankedBy : undefined,
     metric.frequentOnly ? 'Frequent bus routes only' : undefined,
     dayTypeLabel?.label,
@@ -154,28 +157,31 @@ export function BusSpeedLeaderboardDetails() {
                 </>
               )}
             </div>
-            <BusSpeedMapControls
-              period={period}
-              setPeriod={setPeriod}
-              dayType={dayType}
-              setDayType={setDayType}
-              timeBand={timeBand}
-              setTimeBand={setTimeBand}
-              // The route view has no notion of day type or time-of-day bucketing at all --
-              // its API just sums over a date range -- so these only apply to segments.
-              showDayType={viewMode === 'segment'}
-              showTimeBand={viewMode === 'segment'}
-            />
-            {isPeriodInProgress(date, period) && (
+            {/* A metric ranking whole months has only the route view, so no control applies. */}
+            {!metric.monthlyOnly && (
+              <BusSpeedMapControls
+                period={period}
+                setPeriod={setPeriod}
+                dayType={dayType}
+                setDayType={setDayType}
+                timeBand={timeBand}
+                setTimeBand={setTimeBand}
+                // The route view has no notion of day type or time-of-day bucketing at all --
+                // its API just sums over a date range -- so these only apply to segments.
+                showDayType={viewMode === 'segment'}
+                showTimeBand={viewMode === 'segment'}
+              />
+            )}
+            {isPeriodInProgress(date, shownPeriod) && (
               <p className="text-xs text-stone-500">
-                This {period === 'weekly' ? 'week' : 'month'} is still in progress — figures reflect
-                service so far, not the full period.
+                This {shownPeriod === 'weekly' ? 'week' : 'month'} is still in progress — figures
+                reflect service so far, not the full period.
               </p>
             )}
             {viewMode === 'route' ? (
               <BusSpeedRouteLeaderboardSection
                 date={date}
-                period={period}
+                period={shownPeriod}
                 metric={metric}
                 frequentRoutesOnly={frequentRoutesOnly || Boolean(metric.frequentOnly)}
               />

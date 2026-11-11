@@ -1,4 +1,5 @@
 import { COLORS } from '../../common/constants/colors';
+import { mayIncludeTrackingGaps, sumTrips } from '../../common/utils/busTripCounts';
 import { BUNCHED, headwayShare, ON_TIME } from '../reliability/utils';
 import type {
   DayType,
@@ -172,6 +173,18 @@ export const NETWORK_BOUNDS: [number, number, number, number] = [-71.3, 42.1, -7
 export const ALL_ROUTES = 'all';
 
 /**
+ * Routes need at least this many scheduled trips in the month to be ranked by dropped trips, so one
+ * or two dropped trips can't put a small route near the top. In October 2026, Route 451 (2 of 252
+ * trips) would otherwise have ranked 8th, ahead of Route 1. At 500, one dropped trip moves a rate by
+ * 0.2 points at most. Before grouping, the route_ids under it that month (17 of 152) ran at most 21
+ * trips a day.
+ */
+export const MIN_SCHEDULED_TRIPS = 500;
+
+/** One decimal, without rounding down to 0% while any trip was dropped. */
+const formatDroppedPct = (pct: number) => (pct > 0 && pct < 0.05 ? '<0.1%' : `${pct.toFixed(1)}%`);
+
+/**
  * The Rank by options on the route leaderboard. Speed leads and is the default, as the page
  * was a speed leaderboard first.
  */
@@ -224,6 +237,37 @@ export const LEADERBOARD_METRICS: LeaderboardMetricConfig[] = [
     emptyMessage:
       'No frequent route has headways counted for this period. Counts start Dec 24, 2025.',
     frequentOnly: true,
+  },
+  {
+    key: 'dropped',
+    label: 'Dropped trips',
+    title: 'Most dropped trips',
+    rankedBy: 'Ranked by share of scheduled trips dropped (est.)',
+    // Pooled over the month's trips, like the overview's Service delivered row.
+    value: (entry) => {
+      const { scheduled, dropped } = sumTrips([entry]);
+      return scheduled >= MIN_SCHEDULED_TRIPS ? (100 * dropped) / scheduled : undefined;
+    },
+    format: formatDroppedPct,
+    detail: (entry) => {
+      const { scheduled, dropped } = sumTrips([entry]);
+      return `${dropped.toLocaleString()} of ${scheduled.toLocaleString()} trips`;
+    },
+    order: 'descending',
+    emptyMessage: `No route has ${MIN_SCHEDULED_TRIPS} scheduled trips counted for this period. Counts start Dec 24, 2025.`,
+    note:
+      "Estimated. A trip counts as dropped when it was scheduled but the MBTA's tracking data (LAMP) " +
+      'recorded none of its stops, which also happens when a bus runs with its tracking off. Ranked ' +
+      'by month, as over a week or a day the order is mostly chance. Routes with fewer than ' +
+      `${MIN_SCHEDULED_TRIPS} scheduled trips aren't ranked.`,
+    monthlyOnly: true,
+    setAside: {
+      test: (entry) => mayIncludeTrackingGaps(sumTrips([entry])),
+      title: 'May include tracking gaps',
+      description:
+        'Few of these routes’ trips with no recorded stops have an MBTA waiver, so some may be ' +
+        'buses that ran without tracking. They aren’t ranked with the others.',
+    },
   },
 ];
 
