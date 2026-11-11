@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import type { BusRoute } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import type { Station } from '../types/stations';
 import {
   findValidDefaultStations,
+  getLocationDetails,
   getStationForInvalidFromSelection,
   getStationInOptions,
   optionsStation,
@@ -90,5 +91,34 @@ describe('getStationForInvalidFromSelection', () => {
     const stations = busStations('17/19');
     const kane = stations.find((station) => station.station === 'kane')!;
     expect(getStationForInvalidFromSelection('line-bus', kane, stations)?.station).toBe('fldcr');
+  });
+});
+
+type Routes = { bus?: BusRoute; cr?: CommuterRailRoute; ferry?: FerryRoute };
+
+/** The direction label for a trip between two stops, looked up by name. */
+const directionOf = (line: LineShort, from: string, to: string, routes: Routes = {}) => {
+  const stations = optionsStation(line, routes.bus, routes.cr, routes.ferry);
+  const find = (name: string) => stations?.find((station) => station.stop_name === name);
+  return getLocationDetails(find(from), find(to)).direction;
+};
+
+describe('getLocationDetails direction', () => {
+  it('names subway directions as each line does', () => {
+    expect(directionOf('Red', 'Park Street', 'Ashmont')).toBe('southbound');
+    expect(directionOf('Red', 'Park Street', 'Alewife')).toBe('northbound');
+    expect(directionOf('Green', 'Park Street', 'Heath Street')).toBe('westbound');
+    expect(directionOf('Green', 'Kenmore', 'Park Street')).toBe('eastbound');
+  });
+
+  it('names bus, Commuter Rail and ferry trips inbound or outbound', () => {
+    expect(directionOf('Bus', 'Harvard', 'Nubian Station', { bus: '1' })).toBe('inbound');
+    expect(directionOf('Bus', 'Nubian Station', 'Harvard', { bus: '1' })).toBe('outbound');
+    expect(directionOf('Commuter Rail', 'Lowell', 'North Station', { cr: 'CR-Lowell' })).toBe(
+      'inbound'
+    );
+    expect(
+      directionOf('Ferry', 'Central Wharf (South)', 'Charlestown Navy Yard', { ferry: 'Boat-F4' })
+    ).toBe('outbound');
   });
 });

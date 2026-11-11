@@ -12,7 +12,7 @@ import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
 import { SUBWAY_LINES } from '../../../common/types/lines';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
-import { getTimeUnitSlowzones } from '../../../common/utils/slowZoneUtils';
+import { getTimeUnitSlowzones, toChartDateBound } from '../../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
@@ -155,8 +155,8 @@ export const TotalSlowTime = ({
               x: {
                 type: 'time',
 
-                min: startDateUTC?.toISOString(),
-                max: endDateUTC?.toISOString(),
+                min: toChartDateBound(startDateUTC),
+                max: toChartDateBound(endDateUTC),
                 ticks: {
                   color: COLORS.design.subtitleGrey,
                 },

@@ -25,10 +25,17 @@ export function DelaysDetails() {
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const { alertDelays, agg, period, isActual, delayData, series, greenBranch } = useDelays(
-    startDate,
-    endDate
-  );
+  const {
+    alertDelays,
+    agg,
+    period,
+    isActual,
+    delayData,
+    series,
+    rangeData,
+    rangeQueries,
+    greenBranch,
+  } = useDelays(startDate, endDate);
   const greenBranchToggle = line === 'line-green' && (
     <BranchSelector routeId={greenBranch.routeId} setRouteId={greenBranch.setRouteId} />
   );
@@ -47,7 +54,7 @@ export function DelaysDetails() {
   return (
     <PageWrapper pageTitle={'Delays'}>
       <ChartPageDiv>
-        {delayData && <DelayStats data={delayData} agg={agg} line={line} />}
+        {rangeData && <DelayStats data={rangeData} agg={agg} line={line} />}
         <Widget
           title="How much delay"
           subtitle={
@@ -69,7 +76,7 @@ export function DelaysDetails() {
         <Widget
           title="What caused it"
           subtitle="Total for these dates. Click a cause to see it in the chart above."
-          ready={[alertDelays]}
+          ready={rangeQueries}
           action={
             focus && (
               <button
@@ -83,7 +90,7 @@ export function DelaysDetails() {
           }
         >
           <DelayCauseBars
-            data={delayData ?? []}
+            data={rangeData ?? []}
             startDate={startDate}
             endDate={endDate}
             focus={focus}

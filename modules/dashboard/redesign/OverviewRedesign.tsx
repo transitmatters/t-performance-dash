@@ -118,12 +118,14 @@ const CommuterRailOverview = () => {
 };
 
 /** Design-doc option 2b: verdict + scorecard + one chart, replacing the 4-card grid.
- * Each mode picks its own scorecard rows and charts; the layout is shared. */
+ * Each mode picks its own scorecard rows and charts; the layout is shared. Each is keyed by its
+ * line or route so the picked metric starts over on a switch: Slow zones picked on Red would
+ * otherwise stay charted on Mattapan, whose scorecard has no such row. */
 export const OverviewRedesign = () => {
-  const { tab, lineShort } = useDelimitatedRoute();
+  const { tab, lineShort, query } = useDelimitatedRoute();
 
-  if (tab === 'Bus') return <BusOverview />;
-  if (tab === 'Commuter Rail') return <CommuterRailOverview />;
+  if (tab === 'Bus') return <BusOverview key={query.busRoute} />;
+  if (tab === 'Commuter Rail') return <CommuterRailOverview key={query.crRoute} />;
   if (tab !== 'Subway' || !lineShort) return null;
-  return <SubwayOverview lineShort={lineShort} />;
+  return <SubwayOverview key={lineShort} lineShort={lineShort} />;
 };
