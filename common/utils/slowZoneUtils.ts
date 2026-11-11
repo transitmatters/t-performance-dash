@@ -28,9 +28,10 @@ const getDirection = (to: Station, from: Station) => {
 // Data formatting & cleanup
 const formatSlowZones = (data: SlowZoneResponse[]): SlowZone[] =>
   data.map((sz) => {
-    // This will never be undefined unless there is a new station that we don't have in our const file
-    const from = getParentStationForStopId(sz.fr_id);
-    const to = getParentStationForStopId(sz.to_id);
+    // This will never be undefined unless there is a new station that we don't have in our const file.
+    // Pass the line: Red and Mattapan share Ashmont's stop ids, but not its station order.
+    const from = getParentStationForStopId(sz.fr_id, sz.color);
+    const to = getParentStationForStopId(sz.to_id, sz.color);
     const direction = getDirection(to, from);
     return {
       order: from.order,
@@ -100,15 +101,29 @@ export const getRoutes = (direction: Direction, data: SlowZone[], isMobile: bool
   return [...new Set(routes)];
 };
 
-/** The single most time-costly segment among currently-active slow zones, for headlining. */
+/**
+ * Whether a slow zone is still active on `endDateUTC`. Zone `end` is the last slow day, inclusive.
+ * Our latest slow zone data is always a day behind, so a window ending today counts zones active
+ * yesterday. Callers should already have dropped zones that start after `endDateUTC`.
+ */
+export const isSlowZoneActiveAsOf = (zone: { end: string }, endDateUTC: dayjs.Dayjs) => {
+  const zoneEnd = dayjs.utc(zone.end);
+  if (endDateUTC.isSame(TODAY_MIDNIGHT, 'day')) {
+    return zoneEnd.isSameOrAfter(endDateUTC.subtract(1, 'day'));
+  }
+  return zoneEnd.isSameOrAfter(endDateUTC);
+};
+
+/** The single most time-costly segment among slow zones active at the end date, for headlining. */
 export const getWorstSlowZoneSegment = (
   data: SlowZoneResponse[],
   startDateUTC: dayjs.Dayjs,
   endDateUTC: dayjs.Dayjs,
   lineShort: LineShort
 ): SlowZone | null => {
-  const active = filterAllSlow(data, startDateUTC, endDateUTC, lineShort).filter(
-    (sz) => sz.latest_delay !== null
+  // Not `latest_delay !== null`: that's the delay on a zone's last slow day, set for ended zones too.
+  const active = filterAllSlow(data, startDateUTC, endDateUTC, lineShort).filter((sz) =>
+    isSlowZoneActiveAsOf(sz, endDateUTC)
   );
   if (!active.length) return null;
   const worst = active.reduce((max, sz) => (sz.delay > max.delay ? sz : max), active[0]);
@@ -131,11 +146,11 @@ export const filterAllSlow = (
 ) => {
   if (!data) return [];
 
+  // A zone's start and end are its first and last slow days, so keep zones that touch either edge.
   return data.filter((item) => {
     const start = dayjs.utc(item.start);
     const end = dayjs.utc(item.end);
-    const isWithinDateRange =
-      (start.isAfter(startDateUTC) || end.isAfter(startDateUTC)) && start.isBefore(endDateUTC);
+    const isWithinDateRange = end.isSameOrAfter(startDateUTC) && start.isSameOrBefore(endDateUTC);
 
     return (lineShort ? item.color === lineShort : true) && isWithinDateRange;
   });
@@ -174,15 +189,7 @@ export const useSlowZoneQuantityDelta = (
       allSlow.filter((sz) => {
         return dayjs.utc(sz.start).isSameOrBefore(startDateUTC);
       }).length ?? 0;
-    const end =
-      allSlow.filter((sz) => {
-        const zoneEnd = dayjs.utc(sz.end);
-        if (endDateUTC.isSame(TODAY_MIDNIGHT, 'day')) {
-          // Our latest SZ data is always 1 day behind. So use yesterday's data.
-          return zoneEnd.isSameOrAfter(endDateUTC.subtract(1, 'day'));
-        }
-        return zoneEnd.isSameOrAfter(endDateUTC);
-      }).length ?? 0;
+    const end = allSlow.filter((sz) => isSlowZoneActiveAsOf(sz, endDateUTC)).length ?? 0;
 
     return { endValue: end, zonesDelta: end - start };
   }, [allSlow, startDateUTC, endDateUTC]);
@@ -198,10 +205,17 @@ export const getSlowZoneOpacity = (delay: number) => {
   return Math.min(Math.sqrt(delay / 240), 0.9);
 };
 
+/**
+ * A time axis bound for a calendar date. The chart's date adapter reads date-only strings, like the
+ * slow zone dates we plot, as local midnight; a UTC ISO bound would land the evening before west
+ * of UTC and clip the last day.
+ */
+export const toChartDateBound = (date: dayjs.Dayjs) => date.format(DATE_FORMAT);
+
 export const getDateAxisConfig = (startDateUTC: dayjs.Dayjs, endDateUTC: dayjs.Dayjs) => {
   return {
-    min: startDateUTC.toISOString(),
-    max: endDateUTC.toISOString(),
+    min: toChartDateBound(startDateUTC),
+    max: toChartDateBound(endDateUTC),
     time: { unit: getTimeUnitSlowzones(startDateUTC, endDateUTC) },
     adapters: {
       date: {

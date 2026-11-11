@@ -72,7 +72,7 @@ export const SlowZonesMap = ({
         slowZones,
         speedRestrictions,
         lineName: line.short,
-        date: endDate ? new Date(endDate) : new Date(),
+        date: endDate || TODAY_STRING,
         diagram,
       }),
     [slowZones, speedRestrictions, line, diagram, endDate]
