@@ -3,8 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   BUS_SPEED_MAP_MIN_DATE,
   DATE_FORMAT,
+  getDatePickerBounds,
+  getRangePresets,
   OVERVIEW_OPTIONS,
-  RIDE_MAX_DATE,
   TODAY_STRING,
   YESTERDAY_STRING,
 } from '../constants/dates';
@@ -25,6 +26,7 @@ const single = (search: SearchObject) =>
 
 const daysBefore = (date: string, days: number) =>
   dayjs(date).subtract(days, 'day').format(DATE_FORMAT);
+const daysAfter = (date: string, days: number) => daysBefore(date, -days);
 
 // The line pages' default window is the past year: 365 or 366 days.
 const LINE_WINDOW_DAYS = dayjs(TODAY_STRING).diff(OVERVIEW_OPTIONS.year.startDate, 'day');
@@ -109,9 +111,9 @@ describe('normalizeDateParams on range pages', () => {
         section: 'line',
         tab: 'The RIDE',
         page: 'ridership',
-        search: { startDate: '2026-01-01', endDate: '2026-02-01' },
+        search: { startDate: '2015-01-01', endDate: '2016-01-01' },
       })
-    ).toEqual({ startDate: daysBefore(RIDE_MAX_DATE, LINE_WINDOW_DAYS), endDate: RIDE_MAX_DATE });
+    ).toEqual({ startDate: '2017-02-16', endDate: daysAfter('2017-02-16', LINE_WINDOW_DAYS) });
   });
 
   it('clamps to a retired bus route', () => {
@@ -223,4 +225,22 @@ describe('getCanonicalSearchHref', () => {
       '/embed/red/trips/single/headways/'
     );
   });
+});
+
+describe('The RIDE date presets', () => {
+  it.each(['ridership', 'reliability'] as const)(
+    'stay inside the %s bounds and reach today',
+    (page) => {
+      const { minDate, maxDate } = getDatePickerBounds('The RIDE', page);
+      const presets = Object.values(getRangePresets('The RIDE', page));
+      for (const { key, input } of presets) {
+        expect(input.startDate! >= minDate, key).toBe(true);
+        expect(input.endDate! <= maxDate, key).toBe(true);
+      }
+      expect(presets.find(({ key }) => key === 'all')?.input).toEqual({
+        startDate: minDate,
+        endDate: TODAY_STRING,
+      });
+    }
+  );
 });
