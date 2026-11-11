@@ -25,6 +25,7 @@ const CHART_TITLES = {
   'fleet-cab-car-age': 'Average cab car age',
   'reliability-on-time': 'On time over time',
   'reliability-off-schedule': 'Bunching or long gaps',
+  'traveltimes-by-vehicle': 'By vehicle',
 } as const;
 
 export type ChartDatasetName = keyof typeof CHART_TITLES;

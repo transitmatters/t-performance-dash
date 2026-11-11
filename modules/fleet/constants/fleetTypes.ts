@@ -7,25 +7,27 @@ export interface FleetType {
   key: string;
   label: string;
   years?: string;
+  // Inclusive car number ranges, from data-ingestion's CAR_TYPES. Rail car types only.
+  ranges?: [number, number][];
 }
 
 // Oldest to newest (lightest to darkest in the chart). Only lines listed here get a fleet mix chart.
 export const FLEET_TYPES: Partial<Record<Line, FleetType[]>> = {
   'line-red': [
-    { key: 'red1', label: 'Pullman-Standard', years: '1969–70' },
-    { key: 'red2', label: 'UTDC', years: '1987–89' },
-    { key: 'red3', label: 'Bombardier', years: '1993–94' },
-    { key: 'red4', label: 'CRRC', years: '2019–' },
+    { key: 'red1', label: 'Pullman-Standard', years: '1969–70', ranges: [[1500, 1651]] },
+    { key: 'red2', label: 'UTDC', years: '1987–89', ranges: [[1700, 1757]] },
+    { key: 'red3', label: 'Bombardier', years: '1993–94', ranges: [[1800, 1885]] },
+    { key: 'red4', label: 'CRRC', years: '2019–', ranges: [[1900, 2151]] },
   ],
   'line-orange': [
-    { key: 'orange12', label: 'Hawker Siddeley', years: '1979–81' },
-    { key: 'orange14', label: 'CRRC', years: '2018–25' },
+    { key: 'orange12', label: 'Hawker Siddeley', years: '1979–81', ranges: [[1200, 1319]] },
+    { key: 'orange14', label: 'CRRC', years: '2018–25', ranges: [[1400, 1551]] },
   ],
   'line-green': [
-    { key: 'type7', label: 'Type 7', years: '1986–97' },
-    { key: 'type8', label: 'Type 8', years: '1999–2008' },
-    { key: 'type9', label: 'Type 9', years: '2018–20' },
-    { key: 'type10', label: 'Type 10', years: '2026–' },
+    { key: 'type7', label: 'Type 7', years: '1986–97', ranges: [[3600, 3719]] },
+    { key: 'type8', label: 'Type 8', years: '1999–2008', ranges: [[3800, 3894]] },
+    { key: 'type9', label: 'Type 9', years: '2018–20', ranges: [[3900, 3923]] },
+    { key: 'type10', label: 'Type 10', years: '2026–', ranges: [[4001, 4102]] },
   ],
   'line-bus': [
     { key: 'diesel', label: 'Diesel' },
@@ -124,3 +126,13 @@ export const hasFleetMix = (datapoint: FleetMetrics, types: FleetType[]) =>
     const value = getFleetMixValue(datapoint, type);
     return value !== undefined && value !== null;
   });
+
+/** The line's car types that can be told apart by car number, or undefined if it has none. */
+export const getCarTypes = (line: Line | undefined): FleetType[] | undefined => {
+  const types = line ? FLEET_TYPES[line]?.filter((type) => type.ranges) : undefined;
+  return types?.length ? types : undefined;
+};
+
+/** The fleet type a car number belongs to, if it's in a known range. */
+export const getFleetTypeForCar = (types: FleetType[], car: number) =>
+  types.find((type) => type.ranges?.some(([low, high]) => low <= car && car <= high));

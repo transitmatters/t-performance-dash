@@ -15,6 +15,7 @@ import type { Line } from '../../common/types/lines';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
+import { TravelTimesByVehicleWrapper } from '../traveltimes/TravelTimesByVehicleWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { DelayInsight } from '../../common/components/notices/DelayInsight';
@@ -133,6 +134,21 @@ export const BusTripGraphs = ({
               query={traveltimes}
               toStation={toStation}
               fromStation={fromStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title="By bus"
+              subtitle="Median travel time of each bus"
+              location={location}
+              line={line}
+              both
+            />
+            <TravelTimesByVehicleWrapper
+              query={traveltimes}
+              toStation={toStation}
+              fromStation={fromStation}
+              vehicleNoun="Bus"
             />
           </WidgetDiv>
           <WidgetDiv>
