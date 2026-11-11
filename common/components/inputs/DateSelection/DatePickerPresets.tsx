@@ -33,8 +33,8 @@ export const DatePickerPresets = ({
             <div
               className={classNames(
                 item.key === preset
-                  ? 'bg-gray-200 text-gray-900 hover:bg-gray-200/80'
-                  : 'text-gray-70 bg-gray-100/0 hover:bg-gray-100/80',
+                  ? 'bg-stone-100 font-semibold text-stone-900 dark:bg-stone-800 dark:text-stone-100'
+                  : 'text-stone-700 hover:bg-stone-100 dark:text-stone-300 dark:hover:bg-stone-800',
                 'flex w-full items-start px-4 py-2 text-sm'
               )}
             >

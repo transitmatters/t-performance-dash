@@ -3,6 +3,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import { startCase } from '@lodash-utils';
 import { Widget } from '../../common/components/widgets';
 import { InfoTooltip } from '../../common/components/general/InfoTooltip';
+import { HeaderFilter } from '../../common/components/controls/HeaderFilters';
 import { rtStations } from '../../common/constants/stations';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
@@ -53,7 +54,7 @@ export const HeadwayReliability = ({
   const { value: direction, control: directionControl } = useChartToggle<HeadwayDirection, string>(
     'both',
     [
-      ['both', 'Both directions'],
+      ['both', 'Both'],
       ['0', directionName(lineShort, '0')],
       ['1', directionName(lineShort, '1')],
     ],
@@ -67,31 +68,20 @@ export const HeadwayReliability = ({
   if (!startDate || !endDate) return null;
   const chartProps = { rows, agg, startDate, endDate };
 
-  const card = (
-    title: string,
-    info: string,
-    subtitle: string,
-    chart: ReactNode,
-    action?: ReactNode
-  ) => (
-    <Widget
-      title={<TitleWithInfo title={title} info={info} />}
-      subtitle={subtitle}
-      ready={ready}
-      action={action}
-    >
+  const card = (title: string, info: string, subtitle: string, chart: ReactNode) => (
+    <Widget title={<TitleWithInfo title={title} info={info} />} subtitle={subtitle} ready={ready}>
       {chart}
     </Widget>
   );
 
   return (
     <>
+      {!isBus && <HeaderFilter label="Direction">{directionControl}</HeaderFilter>}
       {card(
         'How reliable was service',
         `A headway is the gap between one ${vehicle} and the next. Each is compared with the scheduled headway at that time: on time is within 25% of it (with a ${vehicle} every 8 minutes, a gap of 6 to 10 minutes), bunched is half of it or less, and a long gap is half again as long or more.`,
         'Every headway in these dates, compared with the scheduled headway',
-        <HeadwayBreakdown counts={getHeadwayTotals(rows)} />,
-        !isBus && directionControl
+        <HeadwayBreakdown counts={getHeadwayTotals(rows)} />
       )}
       {card(
         'On time over time',

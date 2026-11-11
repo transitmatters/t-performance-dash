@@ -12,6 +12,7 @@ import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard
 import { formatPercentChange, halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
+import { HeaderFilter } from '../../common/components/controls/HeaderFilters';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { FleetAgeGraphWrapper } from './FleetAgeGraphWrapper';
@@ -121,8 +122,8 @@ export function FleetDetails() {
 
   return (
     <PageWrapper pageTitle={'Fleet'}>
+      {!isRail && selectedRoute && <HeaderFilter label="Showing">{scopeControl}</HeaderFilter>}
       <ChartPageDiv>
-        {!isRail && selectedRoute && <div className="flex justify-end">{scopeControl}</div>}
         {stats && Number.isFinite(stats.age.value) && (
           <StatCardGrid>
             {shareStat && (

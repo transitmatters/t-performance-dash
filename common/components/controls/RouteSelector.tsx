@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import classNames from 'classnames';
 import { useNavigate } from '@tanstack/react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -7,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { getBusRoutes, getCommuterRailRoutes, getFerryRoutes } from '../../constants/stations';
 import type { Line } from '../../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../../types/lines';
+import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../styles/general';
 import {
   getBusRouteSelectionItemHref,
   getCommuterRailRouteSelectionItemHref,
@@ -73,10 +75,17 @@ export const RouteSelector = () => {
           type="button"
           aria-expanded={open}
           aria-label="Select route"
-          className="flex h-7 w-44 min-w-0 items-center justify-between gap-x-2 rounded-md border border-transparent bg-white px-3 text-sm text-stone-900 outline-none hover:bg-stone-50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          className={classNames(
+            'flex h-10 w-full min-w-0 items-center justify-between gap-x-2 rounded-md px-3 text-sm focus-visible:ring-offset-1 md:h-8 md:w-48',
+            CONTROL_SURFACE,
+            FOCUS_RING_ON_SURFACE
+          )}
         >
           <span className="truncate">{selected?.label ?? 'Select route'}</span>
-          <FontAwesomeIcon icon={faChevronDown} className="size-3 shrink-0 text-stone-500" />
+          <FontAwesomeIcon
+            icon={faChevronDown}
+            className="size-3 shrink-0 text-stone-500 dark:text-stone-400"
+          />
         </button>
       </PopoverTrigger>
       <PopoverContent align="start" className="w-72 p-0">

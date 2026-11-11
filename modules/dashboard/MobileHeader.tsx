@@ -1,24 +1,13 @@
 import classNames from 'classnames';
-import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { ALL_PAGES } from '../../common/constants/pages';
 import { lineColorBackground } from '../../common/styles/general';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { readableOn } from '../../common/utils/general';
+import { usePageHeading } from '../../common/hooks/usePageHeading';
 
 export const MobileHeader = () => {
-  const {
-    line,
-    page,
-    tab,
-    query: { busRoute },
-  } = useDelimitatedRoute();
-
-  const getLineName = () => {
-    if (busRoute) return `Route ${busRoute}`;
-    if (line) return LINE_OBJECTS[line]?.name;
-    if (tab === 'System') return 'System';
-  };
+  const { line } = useDelimitatedRoute();
+  const { lineName, pageTitle } = usePageHeading();
   const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
 
   return (
@@ -31,11 +20,11 @@ export const MobileHeader = () => {
     >
       <div className={'flex shrink-0 flex-col pt-2'}>
         <h1 className="flex shrink-0 flex-row items-baseline pl-2 text-lg">
-          <span>{getLineName()}</span>
+          <span>{lineName}</span>
           <span className="px-1" aria-hidden>
             •
           </span>
-          <span className="select-none">{ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name}</span>
+          <span className="select-none">{pageTitle}</span>
         </h1>
       </div>
     </div>
