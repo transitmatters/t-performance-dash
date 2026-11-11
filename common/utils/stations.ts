@@ -1,8 +1,7 @@
 import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '../types/lines';
 import { BUS_ROUTES } from '../types/lines';
-import { type Station } from '../types/stations';
+import type { LineMap, Station } from '../types/stations';
 import type { Location } from '../types/charts';
-import type { Direction } from '../types/dataPoints';
 import {
   stations,
   rtStations,
@@ -137,8 +136,24 @@ const createParentStationIndex = () => {
   return index;
 };
 
+/** What each stop's line calls its two directions: westbound on the Green Line, inbound on a bus. */
+const createDirectionNamesIndex = () => {
+  const index: Record<string, LineMap['direction']> = {};
+  Object.values({ ...rtStations, ...busStations, ...crStations, ...ferryStations }).forEach(
+    (line) => {
+      line.stations.forEach((station) => {
+        [...station.stops['0'], ...station.stops['1']].forEach((stopId) => {
+          index[stopId] = line.direction;
+        });
+      });
+    }
+  );
+  return index;
+};
+
 const stationIndex = createStationIndex();
 const parentStationIndex = createParentStationIndex();
+const directionNamesIndex = createDirectionNamesIndex();
 
 export const getStationById = (stationStopId: string) => {
   return stationIndex[stationStopId];
@@ -221,8 +236,16 @@ export const stopIdsForStations = (from: Station | undefined, to: Station | unde
   };
 };
 
-const travelDirection = (from: Station, to: Station): Direction => {
-  return from.order < to.order ? 'southbound' : 'northbound';
+/**
+ * Names the direction the way the trip's own line does. Station order runs the way of the stops
+ * keyed "1" (see stopIdsForStations), and each line names that key itself: southbound on Red,
+ * westbound on Green, inbound on buses, Commuter Rail and ferries.
+ */
+const travelDirection = (from: Station, to: Station): Location['direction'] => {
+  const key = from.order < to.order ? '1' : '0';
+  const [stopId] = [...from.stops[key], ...from.stops[key === '1' ? '0' : '1']];
+  const name = stopId ? directionNamesIndex[stopId]?.[key] : undefined;
+  return (name as Location['direction'] | undefined) ?? (key === '1' ? 'southbound' : 'northbound');
 };
 
 export const getLocationDetails = (
