@@ -1,19 +1,16 @@
 import React, { useMemo } from 'react';
 
-import type { SlowZoneResponse } from '../../../common/types/dataPoints';
 import type { LineMetadata } from '../../../common/types/lines';
 
 import { getClockFormattedTimeString } from '../../../common/utils/time';
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { TODAY_STRING } from '../../../common/constants/dates';
-import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
+import type { ByDirection, MapSlowZone, SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DIRECTIONS } from './segment';
 
 import styles from './SlowSegmentLabel.module.css';
 
 interface SlowZoneLabelProps {
   direction: SlowZoneDirection;
-  slowZone: SlowZoneResponse;
+  slowZone: MapSlowZone;
   color: string;
   offset: number;
   isHorizontal: boolean;
@@ -30,22 +27,16 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
   containingWidth,
   offset,
   isHorizontal,
-  slowZone: { delay, latest_delay, baseline },
+  slowZone: { dayDelay, baseline },
 }) => {
-  const {
-    query: { endDate },
-  } = useDelimitatedRoute();
-  const isToday = endDate === TODAY_STRING;
-  const delayVal = isToday && latest_delay ? latest_delay : delay;
-
   const delayString = useMemo(
     () =>
-      getClockFormattedTimeString(delayVal, {
+      getClockFormattedTimeString(dayDelay, {
         showHours: false,
         showSeconds: true,
         truncateLeadingZeros: true,
       }),
-    [delayVal]
+    [dayDelay]
   );
   const indicatorBeforeText = direction === '1';
   const indicatorSolidArrow = indicatorBeforeText
@@ -55,7 +46,7 @@ const SlowZoneLabel: React.FC<SlowZoneLabelProps> = ({
     : isHorizontal
       ? '❯'
       : '▼';
-  const fractionOverBaseline = -1 + (delay + baseline) / baseline;
+  const fractionOverBaseline = dayDelay / baseline;
   const isBold = fractionOverBaseline >= 0.5;
 
   const indicator = (
@@ -83,7 +74,7 @@ interface SlowSegmentLabelProps {
   height: number;
 }
 
-const getDirectionLabelOffsets = (slowZones: ByDirection<SlowZoneResponse[]>, height: number) => {
+const getDirectionLabelOffsets = (slowZones: ByDirection<MapSlowZone[]>, height: number) => {
   const hasZero = slowZones['0'].length > 0;
   const hasOne = slowZones['1'].length > 0;
   const isBidi = hasZero && hasOne;

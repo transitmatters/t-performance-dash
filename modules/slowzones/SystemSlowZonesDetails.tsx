@@ -6,6 +6,7 @@ import { isArray } from 'lodash';
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
+  useSlowzoneZoneDelays,
   useSpeedRestrictionData,
 } from '../../common/api/hooks/slowzones';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -51,6 +52,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   } = useDelimitatedRoute();
 
   const speedRestrictions = useSpeedRestrictionData({ lineId: line, date: endDate! });
+  const zoneDelays = useSlowzoneZoneDelays(lineShort);
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
@@ -104,6 +106,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
               <SlowZonesMap
                 key={lineShort}
                 slowZones={allData.data}
+                zoneDelays={zoneDelays.data}
                 speedRestrictions={speedRestrictions.data}
                 lineName={lineShort}
                 direction={isDesktop ? 'horizontal' : 'vertical'}
