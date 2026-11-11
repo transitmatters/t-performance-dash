@@ -94,8 +94,6 @@ const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[
 
 const overviewSearch = (search: RawSearch) => ({
   view: oneOf(OVERVIEW_VIEWS)(search.view),
-  /** `?redesign=0` opts a Subway overview back into the classic page. */
-  redesign: oneOf(['0'])(search.redesign),
 });
 
 export const validateLineSearch = (search: RawSearch) => ({
