@@ -63,7 +63,7 @@ export const LINE_OBJECTS: LineObject = {
     short: 'The RIDE',
     path: 'the-ride',
     key: 'line-RIDE',
-    color: COLORS.mbta.ferry,
+    color: COLORS.mbta.theRide,
   },
 };
 
