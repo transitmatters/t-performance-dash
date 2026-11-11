@@ -1,6 +1,5 @@
 import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
 import { useEffect } from 'react';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
@@ -18,14 +17,19 @@ import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/
 import { LINE_OBJECTS } from '../../constants/lines';
 import type { Station } from '../../types/stations';
 
-interface StationSelectorWidgetProps {
+export interface StationSelectorWidgetProps {
   line: Line;
   busRoute: BusRoute | undefined;
   crRoute: CommuterRailRoute | undefined;
   ferryRoute: FerryRoute | undefined;
 }
 
-export const StationSelectorWidget = ({
+/**
+ * The trip's two ends, falling back to the route's defaults, and kept valid in the URL. Mounted
+ * wherever the trip is shown, even with the picker hidden (the mobile controls sheet), so a
+ * first visit always gets stations.
+ */
+export const useTripStations = ({
   line,
   busRoute,
   crRoute,
@@ -54,6 +58,23 @@ export const StationSelectorWidget = ({
       updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
     }
   }, [fromStation, toStation, updateQueryParams, stations]);
+
+  return { stations, fromStation, toStation, lineShort };
+};
+
+export const StationSelectorWidget = ({
+  line,
+  busRoute,
+  crRoute,
+  ferryRoute,
+}: StationSelectorWidgetProps) => {
+  const updateQueryParams = useUpdateQuery();
+  const { stations, fromStation, toStation, lineShort } = useTripStations({
+    line,
+    busRoute,
+    crRoute,
+    ferryRoute,
+  });
 
   const updateStations = (action: 'to' | 'from' | 'swap', newStation?: Station) => {
     switch (action) {
@@ -112,11 +133,7 @@ export const StationSelectorWidget = ({
   const reversed = stopIdsForStations(toStation, fromStation);
   const canSwap = Boolean(reversed.fromStopIds?.length && reversed.toStopIds?.length);
   return (
-    <div
-      className={classNames(
-        'flex w-full flex-row items-center gap-1 overflow-hidden p-1 md:p-0 xl:w-auto'
-      )}
-    >
+    <div className="flex w-full min-w-0 flex-row items-center gap-1.5 md:w-auto">
       <StationSelector
         type={'from'}
         fromStation={fromStation}

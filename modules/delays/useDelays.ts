@@ -4,11 +4,11 @@ import { getBusRouteIds } from '../../common/constants/lines';
 import { getWeekStart } from '../../common/utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { lineToDefaultRouteId } from '../predictions/utils/utils';
+import { useGreenBranch } from '../../common/hooks/useGreenBranch';
 import { AGG_PERIOD, delayAggFor } from './format';
 import type { DateSpan } from './range';
 import { coverRange, splitByWeek } from './range';
 import { buildSeries, toActualDelays, toMonthly, withinRange } from './reasonSeries';
-import { useGreenBranch } from './useGreenBranch';
 
 /** The delays for the line, route and branch in the URL over these dates, as the Delays page shows them. */
 export const useDelays = (startDate: string | undefined, endDate: string | undefined) => {

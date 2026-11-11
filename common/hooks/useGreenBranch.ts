@@ -1,5 +1,5 @@
-import type { LineRouteId } from '../../common/types/lines';
-import { useDelimitatedRoute, useSetQueryParam } from '../../common/utils/router';
+import type { LineRouteId } from '../types/lines';
+import { useDelimitatedRoute, useSetQueryParam } from '../utils/router';
 
 const BRANCHES = ['B', 'C', 'D', 'E'] as const;
 

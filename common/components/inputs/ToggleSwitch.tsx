@@ -1,5 +1,4 @@
 import { useId } from 'react';
-import classNames from 'classnames';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import { lineColorVar } from '../../styles/general';
@@ -9,16 +8,9 @@ interface ToggleSwitchProps {
   enabled: boolean;
   setEnabled: (enabled: boolean) => void;
   label: string;
-  /** For a switch on a line-colored header, where a line-colored track would vanish. */
-  onLineColor?: boolean;
 }
 
-export const ToggleSwitch = ({
-  enabled,
-  setEnabled,
-  label,
-  onLineColor = false,
-}: ToggleSwitchProps) => {
+export const ToggleSwitch = ({ enabled, setEnabled, label }: ToggleSwitchProps) => {
   const { line } = useDelimitatedRoute();
   const id = useId();
 
@@ -28,20 +20,12 @@ export const ToggleSwitch = ({
         id={id}
         checked={enabled}
         onCheckedChange={setEnabled}
-        style={onLineColor ? undefined : lineColorVar(line)}
-        className={
-          onLineColor
-            ? 'data-[state=checked]:bg-white/60 data-[state=unchecked]:bg-black/25'
-            : 'data-[state=checked]:bg-(--line-color)'
-        }
+        style={lineColorVar(line)}
+        className="data-[state=checked]:bg-(--line-color)"
       />
       <Label
         htmlFor={id}
-        className={classNames(
-          'cursor-pointer text-sm whitespace-nowrap',
-          // On the header, take its text colour: dark on bus yellow, white elsewhere.
-          onLineColor ? 'font-medium text-current' : 'text-stone-500'
-        )}
+        className="cursor-pointer text-sm whitespace-nowrap text-stone-600 dark:text-stone-300"
       >
         {label}
       </Label>

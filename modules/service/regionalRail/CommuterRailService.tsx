@@ -18,6 +18,7 @@ import {
 } from '../../../common/components/widgets/StatCard';
 import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { useChartToggle } from '../../../common/hooks/useChartToggle';
+import { HeaderFilter } from '../../../common/components/controls/HeaderFilters';
 import type { DayKind } from '../../../common/types/dataPoints';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
@@ -151,11 +152,9 @@ export function CommuterRailService() {
 
   return (
     <PageWrapper pageTitle={`Service · ${byLine ? lineName : 'All lines'}`}>
+      {crRoute && <HeaderFilter label="Showing">{scopeControl}</HeaderFilter>}
+      <HeaderFilter label="Day">{dayKindControl}</HeaderFilter>
       <ChartPageDiv>
-        <div className="flex flex-wrap justify-end gap-2">
-          {crRoute && scopeControl}
-          {dayKindControl}
-        </div>
         {stats && (
           <StatCardGrid>
             <StatCard

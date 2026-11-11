@@ -2,7 +2,7 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import { getDatePickerBounds } from '../../../constants/dates';
-import { FOCUS_RING_ON_SURFACE } from '../../../styles/general';
+import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../../styles/general';
 import type { QueryTypeOptions } from '../../../types/router';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import { DateField } from './DateField';
@@ -49,40 +49,42 @@ export const DatePickers = ({ type, clearPreset }: DatePickerProps) => {
   };
 
   const fieldClassName = classNames(
-    'flex w-27 cursor-pointer border-none bg-transparent px-2 py-0 text-center text-sm text-stone-900',
+    'flex h-full min-w-0 flex-1 items-center justify-center rounded-sm bg-transparent px-2 text-sm whitespace-nowrap tabular-nums hover:bg-stone-100 md:flex-none dark:hover:bg-stone-800',
     FOCUS_RING_ON_SURFACE
   );
 
   return (
-    <div className="-ml-px flex h-10 flex-row justify-center self-stretch rounded-r-[calc(var(--radius-md)-1px)] bg-white md:h-7">
-      <div className={classNames('flex h-full flex-row items-center self-stretch')}>
-        <DateField
-          value={range ? startDate : date}
-          minDate={minDate}
-          maxDate={maxDate}
-          line={line}
-          className={fieldClassName}
-          onChange={range ? handleStartDateChange : handleDateChange}
-        />
-        {range ? (
-          <>
-            <div
-              className={classNames('flex items-center self-stretch bg-white text-sm text-black')}
-            >
-              <FontAwesomeIcon icon={faArrowRight} className="h-4 w-4 text-black" />
-            </div>
-
-            <DateField
-              value={endDate}
-              minDate={minDate}
-              maxDate={maxDate}
-              line={line}
-              className={fieldClassName}
-              onChange={handleEndDateChange}
-            />
-          </>
-        ) : null}
-      </div>
+    <div
+      className={classNames(
+        'flex h-10 w-full flex-row items-center gap-0.5 rounded-md px-1 hover:bg-white md:h-8 md:w-auto dark:hover:bg-stone-900',
+        CONTROL_SURFACE
+      )}
+    >
+      <DateField
+        value={range ? startDate : date}
+        minDate={minDate}
+        maxDate={maxDate}
+        line={line}
+        className={fieldClassName}
+        onChange={range ? handleStartDateChange : handleDateChange}
+      />
+      {range ? (
+        <>
+          <FontAwesomeIcon
+            icon={faArrowRight}
+            className="size-3 shrink-0 text-stone-500 dark:text-stone-400"
+            aria-label="to"
+          />
+          <DateField
+            value={endDate}
+            minDate={minDate}
+            maxDate={maxDate}
+            line={line}
+            className={fieldClassName}
+            onChange={handleEndDateChange}
+          />
+        </>
+      ) : null}
     </div>
   );
 };

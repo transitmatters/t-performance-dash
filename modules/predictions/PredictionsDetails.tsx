@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useMemo } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Link } from '../../common/components/general/Link';
@@ -8,7 +7,6 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { usePredictionData } from '../../common/api/hooks/predictions';
-import type { LineRouteId } from '../../common/types/lines';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import {
@@ -19,6 +17,8 @@ import {
 } from '../../common/utils/statDelta';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { BranchSelector } from '../../common/components/inputs/BranchSelector';
+import { HeaderFilter } from '../../common/components/controls/HeaderFilters';
+import { useGreenBranch } from '../../common/hooks/useGreenBranch';
 import { prettyDate } from '../../common/utils/date';
 import { getPredictionStats, lineToDefaultRouteId } from './utils/utils';
 import { PredictionsGraphWrapper } from './charts/PredictionsGraphWrapper';
@@ -31,17 +31,9 @@ export function PredictionsDetails() {
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const [greenRouteId, setGreenRouteId] = useState<LineRouteId>('Green-B');
-  const routeId = line === 'line-green' ? greenRouteId : lineToDefaultRouteId(line);
+  const greenBranch = useGreenBranch();
+  const routeId = line === 'line-green' ? greenBranch.routeId : lineToDefaultRouteId(line);
   const enabled = Boolean(routeId);
-
-  const greenBranchToggle = useMemo(() => {
-    return (
-      line === 'line-green' && (
-        <BranchSelector routeId={greenRouteId} setRouteId={setGreenRouteId} />
-      )
-    );
-  }, [line, greenRouteId]);
 
   const predictions = usePredictionData(
     {
@@ -61,6 +53,11 @@ export function PredictionsDetails() {
 
   return (
     <PageWrapper pageTitle={'Predictions'}>
+      {line === 'line-green' && (
+        <HeaderFilter label="Branch">
+          <BranchSelector routeId={greenBranch.routeId} setRouteId={greenBranch.setRouteId} />
+        </HeaderFilter>
+      )}
       <ChartPageDiv>
         {stats && Number.isFinite(stats.overallAccuracy) && (
           <StatCardGrid>
@@ -99,7 +96,6 @@ export function PredictionsDetails() {
           title="Arrival predictions"
           subtitle="Share of predictions that were accurate"
           ready={[predictions]}
-          action={greenBranchToggle}
         >
           <PredictionsGraphWrapper
             data={predictions.data!}
@@ -111,7 +107,6 @@ export function PredictionsDetails() {
           title="Arrival predictions by bin"
           subtitle="Accuracy by how far out the prediction was made"
           ready={[predictions]}
-          action={greenBranchToggle}
         >
           <PredictionsBinsGraphWrapper
             data={predictions.data!}

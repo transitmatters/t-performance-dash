@@ -100,7 +100,7 @@ export const useChartToggle = <K extends string, T extends string>(
         selectedIndex={selectedIndex}
         options={options}
         additionalDivClass="w-auto"
-        additionalButtonClass="px-3"
+        additionalButtonClass="flex-none px-3"
       />
     ),
   };

@@ -107,6 +107,13 @@ export const buttonHighlightFocus: DefaultStyleMap = {
 export const FOCUS_RING_ON_SURFACE =
   'focus-visible:ring-2 focus-visible:ring-stone-900 dark:focus-visible:ring-stone-100 focus-visible:outline-hidden';
 
+/**
+ * The one look for page controls, whether they sit on the line-colored band or the neutral bar:
+ * a light field with dark text, so contrast never depends on the line color behind it.
+ */
+export const CONTROL_SURFACE =
+  'border border-stone-200 bg-white text-stone-900 shadow-xs hover:bg-stone-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:hover:bg-stone-800';
+
 export const lineColorTextHover: DefaultStyleMap = {
   'line-red': `hover:text-mbta-red`,
   'line-orange': `hover:text-mbta-orange`,
