@@ -10,7 +10,7 @@ import globals from 'globals';
 export default typescriptEslint.config(
   // Global ignores
   {
-    // *.mjs alongside *.js: public/maplibre-gl-worker.mjs and its siblings are vendored,
+    // *.mjs alongside *.js: public/maplibre-gl/<version>/*.mjs are vendored,
     // minified copies (scripts/copy-maplibre-worker.js), not source -- and postinstall
     // recreates them before every CI lint run, not just in a local checkout.
     ignores: [
