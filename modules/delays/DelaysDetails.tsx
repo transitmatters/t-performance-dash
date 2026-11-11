@@ -4,8 +4,6 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
-import { BranchSelector } from '../../common/components/inputs/BranchSelector';
-import { HeaderFilter } from '../../common/components/controls/HeaderFilters';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Link } from '../../common/components/general/Link';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
@@ -26,20 +24,8 @@ export function DelaysDetails() {
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const {
-    alertDelays,
-    agg,
-    period,
-    isActual,
-    delayData,
-    series,
-    rangeData,
-    rangeQueries,
-    greenBranch,
-  } = useDelays(startDate, endDate);
-  const greenBranchToggle = line === 'line-green' && (
-    <BranchSelector routeId={greenBranch.routeId} setRouteId={greenBranch.setRouteId} />
-  );
+  const { alertDelays, agg, period, isActual, delayData, series, rangeData, rangeQueries } =
+    useDelays(startDate, endDate);
 
   const { focus, setFocus } = useFocusedReason();
   const { value: stackMode, control: stackModeControl } = useChartToggle(
@@ -54,7 +40,6 @@ export function DelaysDetails() {
 
   return (
     <PageWrapper pageTitle={'Delays'}>
-      {greenBranchToggle && <HeaderFilter label="Branch">{greenBranchToggle}</HeaderFilter>}
       <ChartPageDiv>
         {rangeData && <DelayStats data={rangeData} agg={agg} line={line} />}
         <Widget

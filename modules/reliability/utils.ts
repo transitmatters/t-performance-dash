@@ -147,7 +147,9 @@ export const HEADWAY_BUCKETS: HeadwayBucket[] = [
 export const OFF_SCHEDULE_BUCKETS = HEADWAY_BUCKETS.filter(({ side }) => side !== 'on');
 
 /** "both" for every headway, or a GTFS direction_id. */
-export type HeadwayDirection = 'both' | '0' | '1';
+import type { HeadwayDirection } from '../../common/hooks/usePageFilters';
+
+export type { HeadwayDirection };
 
 /** One period's headway counts, for every headway or just one direction's. */
 export interface HeadwayRow {

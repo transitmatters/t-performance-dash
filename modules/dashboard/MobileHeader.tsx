@@ -1,20 +1,17 @@
 import classNames from 'classnames';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { lineColorBackground } from '../../common/styles/general';
-import { LINE_COLORS } from '../../common/constants/colors';
-import { readableOn } from '../../common/utils/general';
+import { lineColorBackground, textOnLineColor } from '../../common/styles/general';
 import { usePageHeading } from '../../common/hooks/usePageHeading';
 
 export const MobileHeader = () => {
   const { line } = useDelimitatedRoute();
   const { lineName, pageTitle } = usePageHeading();
-  const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
 
   return (
     <div
       className={classNames(
         'sticky top-12 z-10 mb-2 flex flex-row justify-between gap-x-6 rounded-b-sm shadow-md',
-        needsDarkText ? 'text-stone-900' : 'text-white/95',
+        textOnLineColor(line),
         lineColorBackground[line ?? 'DEFAULT']
       )}
     >

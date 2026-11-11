@@ -2,6 +2,15 @@ import type { CSSProperties } from 'react';
 import { LINE_COLORS, LINE_COLORS_DARK } from '../constants/colors';
 import type { Line } from '../types/lines';
 import type { DefaultStyleMap } from '../types/styles';
+import { readableOn } from '../utils/general';
+
+/** Whether text on a solid fill of the line's color has to be dark: bus yellow can't carry white. */
+export const needsDarkTextOn = (line?: Line | null) =>
+  readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
+
+/** The readable text color for a solid fill of the line's color. */
+export const textOnLineColor = (line?: Line | null) =>
+  needsDarkTextOn(line) ? 'text-stone-900' : 'text-white';
 
 /**
  * Tailwind v4 removed the `*-opacity-*` utilities, so a dynamic line color can no longer be paired

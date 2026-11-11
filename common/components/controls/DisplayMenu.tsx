@@ -13,8 +13,7 @@ import {
 
 /** View options that change how charts draw, not what data they show. Remembered per browser. */
 export const DisplayMenu = () => {
-  const showEvents = useMajorEventsStore((state) => state.showEvents);
-  const setShowEvents = useMajorEventsStore((state) => state.setShowEvents);
+  const { showEvents, setShowEvents } = useMajorEventsStore();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
