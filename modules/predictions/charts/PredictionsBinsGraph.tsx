@@ -47,19 +47,12 @@ export const PredictionsBinsGraph = ({
     )
   );
 
-  // Split data by bin
-  const bin0to3 = data
-    .map(({ prediction }) => prediction.find(({ bin }) => bin === '0-3 min'))
-    .filter((p) => p !== undefined);
-  const bin3to6 = data
-    .map(({ prediction }) => prediction.find(({ bin }) => bin === '3-6 min'))
-    .filter((p) => p !== undefined);
-  const bin6to12 = data
-    .map(({ prediction }) => prediction.find(({ bin }) => bin === '6-12 min'))
-    .filter((p) => p !== undefined);
-  const bin12to30 = data
-    .map(({ prediction }) => prediction.find(({ bin }) => bin === '12-30 min'))
-    .filter((p) => p !== undefined);
+  // Split data by bin, one entry per week (undefined where a week has no such bin) so every line
+  // stays aligned with the week labels.
+  const bin0to3 = data.map(({ prediction }) => prediction.find(({ bin }) => bin === '0-3 min'));
+  const bin3to6 = data.map(({ prediction }) => prediction.find(({ bin }) => bin === '3-6 min'));
+  const bin6to12 = data.map(({ prediction }) => prediction.find(({ bin }) => bin === '6-12 min'));
+  const bin12to30 = data.map(({ prediction }) => prediction.find(({ bin }) => bin === '12-30 min'));
 
   return (
     <ChartStack>
@@ -83,10 +76,12 @@ export const PredictionsBinsGraph = ({
                 pointHoverBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][0],
                 pointBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][0],
                 data: bin0to3.map((datapoint) =>
-                  (
-                    (datapoint?.num_accurate_predictions / datapoint?.num_predictions) *
-                    100
-                  ).toFixed(2)
+                  datapoint
+                    ? (
+                        (datapoint.num_accurate_predictions / datapoint.num_predictions) *
+                        100
+                      ).toFixed(2)
+                    : null
                 ),
               },
               {
@@ -100,10 +95,12 @@ export const PredictionsBinsGraph = ({
                 pointHoverBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][1],
                 pointBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][1],
                 data: bin3to6.map((datapoint) =>
-                  (
-                    (datapoint?.num_accurate_predictions / datapoint?.num_predictions) *
-                    100
-                  ).toFixed(2)
+                  datapoint
+                    ? (
+                        (datapoint.num_accurate_predictions / datapoint.num_predictions) *
+                        100
+                      ).toFixed(2)
+                    : null
                 ),
               },
               {
@@ -117,10 +114,12 @@ export const PredictionsBinsGraph = ({
                 pointHoverBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][2],
                 pointBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][2],
                 data: bin6to12.map((datapoint) =>
-                  (
-                    (datapoint?.num_accurate_predictions / datapoint?.num_predictions) *
-                    100
-                  ).toFixed(2)
+                  datapoint
+                    ? (
+                        (datapoint.num_accurate_predictions / datapoint.num_predictions) *
+                        100
+                      ).toFixed(2)
+                    : null
                 ),
               },
               {
@@ -134,10 +133,12 @@ export const PredictionsBinsGraph = ({
                 pointHoverBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][3],
                 pointBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][3],
                 data: bin12to30.map((datapoint) =>
-                  (
-                    (datapoint?.num_accurate_predictions / datapoint?.num_predictions) *
-                    100
-                  ).toFixed(2)
+                  datapoint
+                    ? (
+                        (datapoint.num_accurate_predictions / datapoint.num_predictions) *
+                        100
+                      ).toFixed(2)
+                    : null
                 ),
               },
             ],

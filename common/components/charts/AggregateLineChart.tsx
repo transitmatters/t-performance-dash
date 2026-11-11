@@ -17,6 +17,7 @@ import { getFormattedTimeString } from '../../utils/time';
 import {
   TEMPERATURE_BAND_OPACITY,
   TEMPERATURE_SCALE,
+  alignDailyTemperatureSeries,
   dailyTemperatureOn,
   getDailyTemperatureSeries,
   temperatureColor,
@@ -167,10 +168,11 @@ export const AggregateLineChart = ({
   ];
 
   if (temperatureSeries && temperatureSeries.mean.length > 0) {
+    const aligned = alignDailyTemperatureSeries(temperatureSeries, labels);
     const minIndex = datasets.length;
     datasets.push({
       label: 'Daily low',
-      data: temperatureSeries.min,
+      data: aligned.min,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
       pointRadius: 0,
@@ -180,7 +182,7 @@ export const AggregateLineChart = ({
     });
     datasets.push({
       label: 'Daily high',
-      data: temperatureSeries.max,
+      data: aligned.max,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
       backgroundColor: temperatureGradient(TEMPERATURE_BAND_OPACITY),
@@ -191,7 +193,7 @@ export const AggregateLineChart = ({
     });
     datasets.push({
       label: 'Daily mean',
-      data: temperatureSeries.mean,
+      data: aligned.mean,
       yAxisID: 'yTemp',
       borderColor: temperatureGradient(),
       borderWidth: 2,

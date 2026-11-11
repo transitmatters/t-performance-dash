@@ -54,3 +54,15 @@ describe('getScheduledAndDeliveredRoundTrips', () => {
     ]);
   });
 });
+
+describe('getScheduledAndDeliveredRoundTrips gaps', () => {
+  it('leaves a gap, not zero, for a period with trips but no schedule count', () => {
+    const [point] = getScheduledAndDeliveredRoundTrips(
+      [delivered('2026-10-01', 400)],
+      scheduled([]),
+      'daily'
+    );
+    expect(point.delivered).toBe(400);
+    expect(point.scheduled).toBeNaN();
+  });
+});

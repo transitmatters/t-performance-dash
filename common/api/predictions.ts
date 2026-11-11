@@ -8,8 +8,8 @@ export const fetchPredictions = async (
 ): Promise<TimePredictionWeek[]> => {
   if (!params.route_id) return [];
   const url = new URL(`${APP_DATA_BASE_PATH}/api/time_predictions`, window.location.origin);
-  Object.keys(params).forEach((paramKey) => {
-    url.searchParams.append(paramKey, params[paramKey]);
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) url.searchParams.append(key, value);
   });
   const response = await fetchOrThrow(
     url.toString(),

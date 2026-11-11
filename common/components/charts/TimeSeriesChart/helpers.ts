@@ -47,7 +47,12 @@ export const getGranularityForAgg = (agg: AggType): Granularity => {
 
 export const getLabelsForData = <Data extends Dataset[]>(data: Data) => {
   const allPoints = data
-    .map((dataset) => dataset.data.map((point) => ('date' in point ? point.date : point.time)))
+    // Gaps (null values) aren't data, so they don't move the "no data since" mark.
+    .map((dataset) =>
+      dataset.data
+        .filter((point) => point.value != null)
+        .map((point) => ('date' in point ? point.date : point.time))
+    )
     .flat();
   const uniqueAndSortedPoints = [...new Set(allPoints)].sort();
   return uniqueAndSortedPoints;

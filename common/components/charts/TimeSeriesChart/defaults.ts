@@ -11,7 +11,7 @@ export const defaultStyle: DisplayStyle<DataPoint> = {
   stepped: false,
   tension: 0,
   tooltipLabel: (point, context) => {
-    return `${context.dataset.label}: ${point.value.toString()}`;
+    return `${context.dataset.label}: ${point.value ?? '—'}`;
   },
 };
 

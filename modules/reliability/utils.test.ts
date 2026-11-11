@@ -8,6 +8,7 @@ import {
   ON_TIME,
   toCsvRows,
   toHeadwayRows,
+  toPoints,
 } from './utils';
 
 const counts = (under50: number, c50: number, c75: number, c125: number, over150: number) => ({
@@ -70,5 +71,20 @@ describe('toCsvRows', () => {
       date: '2026-10-05',
       ...counts(10, 20, 40, 10, 20),
     });
+  });
+});
+
+describe('toPoints', () => {
+  it('keeps a null point for a period with nothing measured, so series stay aligned', () => {
+    const data = [
+      { date: '2026-03-01', onTime: 80 },
+      { date: '2026-03-08' },
+      { date: '2026-03-15', onTime: 90 },
+    ] as unknown as ReliabilityEntry[];
+    expect(toPoints(data, (e) => e.onTime)).toEqual([
+      { date: '2026-03-01', value: 80 },
+      { date: '2026-03-08', value: null },
+      { date: '2026-03-15', value: 90 },
+    ]);
   });
 });

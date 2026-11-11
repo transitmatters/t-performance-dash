@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData, useStationRidershipData } from '../../common/api/hooks/ridership';
 import { useRidershipBaseline } from '../../common/api/hooks/baselines';
@@ -11,6 +12,7 @@ import {
   type StatSentiment,
 } from '../../common/components/widgets/StatCard';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
+import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
 import { getRidershipLineId } from '../../common/utils/ridership';
 import { getStationById } from '../../common/utils/stations';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -98,7 +100,10 @@ export function RidershipDetails() {
             />
             <StatCard
               label={
-                stats.peakDate ? `Peak day · ${config.getWidgetTitle(stats.peakDate)}` : 'Peak day'
+                // Each point is a week's average weekday ridership, so the peak is a week, not a day.
+                stats.peakDate
+                  ? `Peak week · ${dayjs(stats.peakDate).format(PRETTY_DATE_FORMAT)}`
+                  : 'Peak week'
               }
               value={
                 stats.peakCount != null
