@@ -124,6 +124,7 @@ export const BusTripGraphs = ({
               data={traveltimes.data}
               metricField={MetricFieldKeys.travelTimeSec}
               benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
+              date={query.date}
               subject={busRouteLabel}
               line={line}
             />
