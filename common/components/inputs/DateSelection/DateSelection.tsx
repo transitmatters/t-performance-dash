@@ -10,7 +10,7 @@ import {
 } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
-import { RANGE_PRESETS, SINGLE_PRESETS } from '../../../constants/dates';
+import { getRangePresets, SINGLE_PRESETS } from '../../../constants/dates';
 import { useDatePresetStore } from '../../../state/datePresetStore';
 import { checkForPreset, useSelectedPreset } from '../../../state/utils/datePresetUtils';
 import { ALL_PAGES } from '../../../constants/pages';
@@ -31,7 +31,7 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
   const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const datePreset = useSelectedPreset();
   const updateQueryParams = useUpdateQuery();
-  const presets = range ? RANGE_PRESETS[tab] : SINGLE_PRESETS[tab];
+  const presets = range ? getRangePresets(tab, page) : SINGLE_PRESETS[tab];
   const presetDateArray = Object.values(presets);
 
   const handleSelection = (datePresetKey: DatePresetKey) => {
