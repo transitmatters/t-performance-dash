@@ -2,6 +2,9 @@ import type { ReactNode } from 'react';
 import { Link } from '../components/general/Link';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '../components/ui/sidebar';
 import { AppSidebar } from '../../modules/navigation/AppSidebar';
+import { CommandPalette } from '../../modules/commandPalette/CommandPalette';
+import { HeaderCommandTrigger } from '../../modules/commandPalette/CommandPaletteTrigger';
+import { useCommandPaletteShortcut } from '../../modules/commandPalette/useCommandPaletteShortcut';
 import { useDelimitatedRoute } from '../utils/router';
 
 interface NavLayoutProps {
@@ -11,6 +14,7 @@ interface NavLayoutProps {
 export const NavLayout = ({ children }: NavLayoutProps) => {
   // "The Living Map": the active line themes the whole shell (see [data-line] in globals.css).
   const { line } = useDelimitatedRoute();
+  useCommandPaletteShortcut();
   return (
     <SidebarProvider data-line={line ?? undefined}>
       <AppSidebar />
@@ -27,8 +31,10 @@ export const NavLayout = ({ children }: NavLayoutProps) => {
           <Link href="/" className="flex items-center">
             <img src="/TMLogo.svg" alt="TransitMatters" width={208} height={19.5} />
           </Link>
+          <HeaderCommandTrigger />
         </header>
         {children}
+        <CommandPalette />
       </SidebarInset>
     </SidebarProvider>
   );
