@@ -6,6 +6,7 @@ import {
   dailyTemperatureOn,
   temperatureAt,
   temperatureColor,
+  alignDailyTemperatureSeries,
 } from './temperatureDataset';
 
 const at = (time: string) => dayjs(time).valueOf();
@@ -64,5 +65,23 @@ describe('temperatureColor', () => {
   it.each(TEMPERATURE_COLOR_STOPS)('holds 3:1 on light and dark cards at %i °F', (_, color) => {
     expect(contrastRatio(color, '#ffffff')).toBeGreaterThanOrEqual(3);
     expect(contrastRatio(color, '#171717')).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe('alignDailyTemperatureSeries', () => {
+  it("puts one point on each of the chart's dates, so index N is the same day everywhere", () => {
+    const point = (x: string, y: number) => ({ x, y });
+    const series = {
+      min: [point('2026-11-06', 40), point('2026-11-07', 41), point('2026-11-09', 43)],
+      max: [point('2026-11-06', 50), point('2026-11-07', 51), point('2026-11-09', 53)],
+      mean: [point('2026-11-06', 45), point('2026-11-07', 46), point('2026-11-09', 48)],
+    };
+    // Weekdays only: Friday, then Monday and Tuesday (which has no reading)
+    const aligned = alignDailyTemperatureSeries(series, ['2026-11-06', '2026-11-09', '2026-11-10']);
+    expect(aligned.mean).toEqual([
+      { x: '2026-11-06', y: 45 },
+      { x: '2026-11-09', y: 48 },
+      { x: '2026-11-10', y: null },
+    ]);
   });
 });

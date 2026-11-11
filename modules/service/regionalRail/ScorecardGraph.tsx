@@ -38,7 +38,8 @@ export const ScorecardGraph = ({
       style={{
         pointRadius: agg === 'daily' ? 0 : 2,
         pointHitRadius: 8,
-        tooltipLabel: (point, context) => `${context.dataset.label}: ${format(point.value)}`,
+        tooltipLabel: (point, context) =>
+          `${context.dataset.label}: ${point.value == null ? '—' : format(point.value)}`,
       }}
       blocks={getNoDataSinceLatestBlock(getLabelsForData(data))}
       legend={data.length > 1 ? { visible: true, align: 'end', position: 'top' } : undefined}

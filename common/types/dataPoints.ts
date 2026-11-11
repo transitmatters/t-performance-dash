@@ -255,10 +255,11 @@ export interface TimePredictionWeek {
 export type DayKind = 'weekday' | 'saturday' | 'sunday';
 
 export type ServiceLevels = {
+  /** Null when the range has no day of this kind. */
   [key in DayKind]: {
     date: string;
     service_levels: number[] | undefined;
-  };
+  } | null;
 };
 
 export type ScheduledService = {

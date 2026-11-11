@@ -22,7 +22,9 @@ export const getRidershipStats = (ridership: RidershipCount[], peakRidership: nu
     (max, datapoint) => (datapoint.count > max.count ? datapoint : max),
     ridership[0]
   );
-  const percentage = ridership[ridership.length - 1]?.count / peakRidership;
+  // The newest week can have no count yet; the chart leaves it out, so this does too.
+  const latest = counts[counts.length - 1];
+  const percentage = latest / peakRidership;
   return {
     average: mean(counts),
     averageDelta: mean(c2) - mean(c1),

@@ -152,7 +152,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         label: benchmark.label,
         backgroundColor: 'transparent',
         borderColor: color,
-        data: null as unknown as { x: string; y: number }[],
+        data: null as unknown as { x: string; y: number | null }[],
       };
     });
     return { datasets: [...datasets, ...benchmarkDummyDatasets] };
