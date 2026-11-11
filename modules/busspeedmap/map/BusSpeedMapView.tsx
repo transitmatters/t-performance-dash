@@ -95,6 +95,7 @@ const HITBOX_LAYER_ID = 'bus-speed-hitbox';
 const CASING_LAYER_ID = 'bus-speed-casing';
 const STOPS_SOURCE_ID = 'bus-speed-stops';
 const STATIONS_LAYER_ID = 'bus-speed-stations';
+const BUS_STOPS_LAYER_ID = 'bus-speed-bus-stops';
 const STATION_HITBOX_LAYER_ID = 'bus-speed-station-hitbox';
 const BUS_STOP_HITBOX_LAYER_ID = 'bus-speed-bus-stop-hitbox';
 
@@ -675,14 +676,16 @@ export const BusSpeedMapView = ({
       <NavigationControl position="top-right" showCompass={false} />
       <ResetViewControl onReset={resetView} />
       <Source id={SOURCE_ID} type="vector" url={`pmtiles://${pmtilesUrl}`}>
-        {/* Sits beneath the casing and line below, so it reads as a glow around the hovered
-            segment rather than covering it. */}
+        {/* A glow around the hovered segment, beneath the stop dots and every segment layer so
+            it doesn't cover them. It mounts on hover, after the rest, so it needs a beforeId to
+            land there; the stops are below the casing once their archive has loaded. */}
         {hoveredFilter && (
           <Layer
             id="bus-speed-hover-halo"
             type="line"
             source-layer={PMTILES_SOURCE_LAYER}
             filter={hoveredFilter}
+            beforeId={stopsUrl ? BUS_STOPS_LAYER_ID : CASING_LAYER_ID}
             layout={{ 'line-cap': 'round', 'line-join': 'round' }}
             paint={{ 'line-color': HOVER_HALO_COLOR, 'line-width': hoverHaloWidth }}
           />
@@ -761,7 +764,7 @@ export const BusSpeedMapView = ({
             }}
           />
           <Layer
-            id="bus-speed-bus-stops"
+            id={BUS_STOPS_LAYER_ID}
             type="circle"
             source-layer={BUS_STOPS_SOURCE_LAYER}
             beforeId={STATIONS_LAYER_ID}
