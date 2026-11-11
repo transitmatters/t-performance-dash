@@ -1,9 +1,7 @@
 import classNames from 'classnames';
 import { Link } from '../general/Link';
 import { TRIP_PAGES } from '../../constants/pages';
-import { LINE_COLORS } from '../../constants/colors';
-import { FOCUS_RING_ON_SURFACE, lineColorVar } from '../../styles/general';
-import { readableOn } from '../../utils/general';
+import { FOCUS_RING_ON_SURFACE, lineColorVar, textOnLineColor } from '../../styles/general';
 import { useDelimitatedRoute, useGenerateHref, useHandleConfigStore } from '../../utils/router';
 
 /** Labelled for where they sit — beside the date control, which is what they change. */
@@ -23,8 +21,6 @@ export const TripModeToggle = () => {
   const handlePageConfig = useHandleConfigStore();
 
   if (!line) return null;
-
-  const selectedText = readableOn(LINE_COLORS[line]) === 'dark' ? 'text-stone-900' : 'text-white';
 
   return (
     <div
@@ -50,7 +46,9 @@ export const TripModeToggle = () => {
             )}
           >
             {/* The global `a { color: inherit }` outranks text utilities on the link itself. */}
-            <span className={selected ? selectedText : 'text-stone-700 dark:text-stone-300'}>
+            <span
+              className={selected ? textOnLineColor(line) : 'text-stone-700 dark:text-stone-300'}
+            >
               {MODE_LABELS[tripPage.key] ?? tripPage.name}
             </span>
           </Link>

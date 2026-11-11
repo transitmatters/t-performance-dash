@@ -83,25 +83,32 @@ export const ToggleControl = <K extends string>({
 };
 
 /**
- * An unrecognised param value (a hand-edited or stale link) falls back to the default rather than
- * putting the page into a state its control cannot display.
+ * One of a fixed set of options. With a paramKey it lives in the URL, writing only a non-default
+ * value; without one it is local state. An unrecognised param value (a hand-edited or stale link)
+ * falls back to the default rather than putting the page into a state its control can't display.
  */
-const parseOption = <K extends string>(raw: unknown, initial: K, options: [K, string][]) =>
-  (options.some(([key]) => key === raw) ? raw : initial) as K;
-
-/** One of a fixed set of options, kept in the URL; only a non-default value is written. */
-export const useOptionParam = <K extends string>(
-  paramKey: keyof QueryParams,
+export const useOption = <K extends string, T extends string = string>(
   initial: K,
-  options: [K, string][]
+  options: [K, T][],
+  paramKey?: keyof QueryParams
 ) => {
   const { query } = useDelimitatedRoute();
   const setQueryParam = useSetQueryParam();
-  const value = parseOption(query[paramKey], initial, options);
+  const [localValue, setLocalValue] = useState<K>(initial);
+
+  const fromQuery = paramKey ? query[paramKey] : undefined;
+  const value = paramKey
+    ? ((options.some(([key]) => key === fromQuery) ? fromQuery : initial) as K)
+    : localValue;
+
   const setValue = useCallback(
-    (next: K) => setQueryParam(paramKey, next === initial ? undefined : next),
+    (next: K) => {
+      if (paramKey) setQueryParam(paramKey, next === initial ? undefined : next);
+      else setLocalValue(next);
+    },
     [paramKey, setQueryParam, initial]
   );
+
   return { value, setValue, options };
 };
 
@@ -114,23 +121,7 @@ export const useChartToggle = <K extends string, T extends string>(
   options: [K, T][],
   { variant, paramKey }: UseChartToggleOptions = {}
 ): { value: K; control: ReactNode } => {
-  const { query } = useDelimitatedRoute();
-  const setQueryParam = useSetQueryParam();
-  const [localValue, setLocalValue] = useState<K>(initial);
-
-  const value = paramKey ? parseOption(query[paramKey], initial, options) : localValue;
-
-  const setValue = useCallback(
-    (next: K) => {
-      if (paramKey) {
-        setQueryParam(paramKey, next === initial ? undefined : next);
-      } else {
-        setLocalValue(next);
-      }
-    },
-    [paramKey, setQueryParam, initial]
-  );
-
+  const { value, setValue } = useOption(initial, options, paramKey);
   return {
     value,
     control: (

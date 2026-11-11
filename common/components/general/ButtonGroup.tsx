@@ -2,10 +2,8 @@ import classNames from 'classnames';
 import type { SetStateAction, Dispatch, ReactElement } from 'react';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
-import { lineColorVar } from '../../styles/general';
+import { lineColorVar, needsDarkTextOn } from '../../styles/general';
 import type { Line } from '../../types/lines';
-import { LINE_COLORS } from '../../constants/colors';
-import { readableOn } from '../../utils/general';
 
 // Sized to the active item rather than the wrapper, so a margin or height that callers put on the
 // group through additionalDivClass can't stretch the pill past the buttons.
@@ -53,7 +51,7 @@ export const ButtonGroup: <T extends string, K extends string>(
   }
 
   const selected = options[internalIndex]?.[0];
-  const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
+  const needsDarkText = needsDarkTextOn(line);
 
   // The active pill slides between items instead of each item's background snapping on/off —
   // measured via DOM query since the underlying Radix items aren't ref-forwarding components.

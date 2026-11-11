@@ -1,15 +1,13 @@
 import classNames from 'classnames';
 import { useState } from 'react';
-import type { ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders } from '@fortawesome/free-solid-svg-icons';
-import { LINE_COLORS } from '../../constants/colors';
-import type { Line } from '../../types/lines';
+import { usePageControls } from '../../hooks/usePageControls';
 import { usePageHeading } from '../../hooks/usePageHeading';
 import { useMajorEventsStore } from '../../state/majorEventsStore';
-import { FOCUS_RING_ON_SURFACE, lineColorBackground } from '../../styles/general';
-import { readableOn } from '../../utils/general';
+import { FOCUS_RING_ON_SURFACE, lineColorBackground, textOnLineColor } from '../../styles/general';
 import { ToggleSwitch } from '../inputs/ToggleSwitch';
+import { DateSelection } from '../inputs/DateSelection/DateSelection';
 import { useDateSummary } from '../inputs/DateSelection/useDateSummary';
 import type { StationSelectorWidgetProps } from '../widgets/StationSelectorWidget';
 import { StationSelectorWidget, useTripStations } from '../widgets/StationSelectorWidget';
@@ -23,36 +21,19 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '../ui/sheet';
-import type { ControlPanelProps } from './ControlPanel';
-import {
-  queryTypeFor,
-  shouldShowDateControl,
-  shouldShowDisplayMenu,
-  shouldShowTripControls,
-} from './ControlPanel';
-import { DateControl } from './DateControl';
+import { LabeledControl } from './LabeledControl';
 import { PageFilters } from './PageFilters';
 import { RouteSelector } from './RouteSelector';
 import { TripModeToggle } from './TripModeToggle';
 
-/** The modes whose pages are per route, so the sheet offers RouteSelector. */
-const ROUTED_LINES: Line[] = ['line-bus', 'line-commuter-rail', 'line-ferry'];
-
-const Section = ({ label, children }: { label: string; children: ReactNode }) => (
-  <div className="flex flex-col gap-1.5">
-    <span className="text-xs font-semibold tracking-wide text-stone-600 uppercase dark:text-stone-400">
-      {label}
-    </span>
-    {children}
-  </div>
-);
+const DETAIL_TEXT = 'truncate text-xs text-stone-600 dark:text-stone-400';
 
 /** The trip's two ends by name. Also fills in default stations while the picker sits closed. */
-const TripStops = ({ line, busRoute, crRoute, ferryRoute }: StationSelectorWidgetProps) => {
-  const { fromStation, toStation } = useTripStations({ line, busRoute, crRoute, ferryRoute });
+const TripStops = (props: StationSelectorWidgetProps) => {
+  const { fromStation, toStation } = useTripStations(props);
   if (!fromStation || !toStation) return null;
   return (
-    <span className="truncate text-xs text-stone-600 dark:text-stone-400">
+    <span className={DETAIL_TEXT}>
       {fromStation.stop_name} → {toStation.stop_name}
     </span>
   );
@@ -62,47 +43,47 @@ const TripStops = ({ line, busRoute, crRoute, ferryRoute }: StationSelectorWidge
  * On phones the controls collapse to a one-line summary at the bottom of the screen; Edit opens
  * them all in a sheet.
  */
-export const MobileControlPanel = ({
-  dateStoreSection,
-  line,
-  busRoute,
-  crRoute,
-  ferryRoute,
-  hasStationStore,
-  hasRouteSelector = true,
-}: ControlPanelProps) => {
+export const MobileControlPanel = () => {
   const [open, setOpen] = useState(false);
-  const queryType = queryTypeFor(dateStoreSection);
+  const {
+    line,
+    busRoute,
+    crRoute,
+    ferryRoute,
+    queryType,
+    showRouteSelector,
+    showTripControls,
+    showDateControl,
+    showDisplayMenu,
+  } = usePageControls();
   const { presetName, dates } = useDateSummary(queryType);
   const { lineName, pageTitle } = usePageHeading();
   const { showEvents, setShowEvents } = useMajorEventsStore();
-  const showTripControls = shouldShowTripControls(dateStoreSection, line, hasStationStore);
-  const showDateControl = shouldShowDateControl(dateStoreSection, line);
-  const editNeedsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
+  const stationProps =
+    showTripControls && line ? { line, busRoute, crRoute, ferryRoute } : undefined;
 
   const headline = showDateControl ? (presetName ?? dates) : pageTitle;
   const detail = showDateControl && presetName ? dates : undefined;
+  const lineButton = classNames(
+    'rounded-lg text-sm font-semibold focus-visible:ring-offset-2',
+    FOCUS_RING_ON_SURFACE,
+    lineColorBackground[line ?? 'DEFAULT'],
+    textOnLineColor(line)
+  );
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <div className="fixed bottom-0 z-20 flex w-full flex-row items-center gap-3 border-t border-stone-200 bg-white px-3 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-stone-900 shadow-[0_-2px_8px_rgba(0,0,0,0.06)] dark:border-stone-800 dark:bg-stone-900 dark:text-stone-100">
         <div className="flex min-w-0 flex-1 flex-col leading-tight">
           <span className="truncate text-sm font-semibold">{headline}</span>
-          {showTripControls && line ? (
-            <TripStops line={line} busRoute={busRoute} crRoute={crRoute} ferryRoute={ferryRoute} />
+          {stationProps ? (
+            <TripStops {...stationProps} />
           ) : (
-            detail && (
-              <span className="truncate text-xs text-stone-600 dark:text-stone-400">{detail}</span>
-            )
+            detail && <span className={DETAIL_TEXT}>{detail}</span>
           )}
         </div>
         <SheetTrigger
-          className={classNames(
-            'flex h-10 shrink-0 items-center gap-x-2 rounded-lg px-4 text-sm font-semibold focus-visible:ring-offset-2',
-            FOCUS_RING_ON_SURFACE,
-            lineColorBackground[line ?? 'DEFAULT'],
-            editNeedsDarkText ? 'text-stone-900' : 'text-white'
-          )}
+          className={classNames('flex h-10 shrink-0 items-center gap-x-2 px-4', lineButton)}
         >
           <FontAwesomeIcon icon={faSliders} className="size-3.5" aria-hidden />
           Edit
@@ -116,35 +97,30 @@ export const MobileControlPanel = ({
           <SheetDescription className="sr-only">Change what this page shows.</SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 px-4">
-          {hasRouteSelector && line && ROUTED_LINES.includes(line) && (
-            <Section label="Route">
+          {showRouteSelector && (
+            <LabeledControl label="Route">
               <RouteSelector />
-            </Section>
+            </LabeledControl>
           )}
-          {showTripControls && line && (
-            <Section label="Stations">
-              <StationSelectorWidget
-                line={line}
-                busRoute={busRoute}
-                crRoute={crRoute}
-                ferryRoute={ferryRoute}
-              />
-            </Section>
-          )}
-          {showTripControls && (
-            <Section label="Trip view">
-              <TripModeToggle />
-            </Section>
+          {stationProps && (
+            <>
+              <LabeledControl label="Stations">
+                <StationSelectorWidget {...stationProps} />
+              </LabeledControl>
+              <LabeledControl label="Trip view">
+                <TripModeToggle />
+              </LabeledControl>
+            </>
           )}
           {showDateControl && (
-            <Section label="Dates">
-              <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
-            </Section>
+            <LabeledControl label="Dates">
+              <DateSelection type={queryType} />
+            </LabeledControl>
           )}
           <div className="flex flex-col gap-4 empty:hidden">
             <PageFilters />
           </div>
-          {shouldShowDisplayMenu(dateStoreSection) && (
+          {showDisplayMenu && (
             <ToggleSwitch
               enabled={showEvents}
               setEnabled={setShowEvents}
@@ -153,16 +129,7 @@ export const MobileControlPanel = ({
           )}
         </div>
         <SheetFooter>
-          <SheetClose
-            className={classNames(
-              'h-11 rounded-lg text-sm font-semibold focus-visible:ring-offset-2',
-              FOCUS_RING_ON_SURFACE,
-              lineColorBackground[line ?? 'DEFAULT'],
-              editNeedsDarkText ? 'text-stone-900' : 'text-white'
-            )}
-          >
-            Done
-          </SheetClose>
+          <SheetClose className={classNames('h-11', lineButton)}>Done</SheetClose>
         </SheetFooter>
       </SheetContent>
     </Sheet>

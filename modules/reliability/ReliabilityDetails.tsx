@@ -10,7 +10,7 @@ import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Notice } from '../../common/components/notices/Notice';
 import { FREQUENT_BUS_ROUTE_IDS, getBusRouteIds } from '../../common/constants/lines';
-import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
+import { COMMUTER_RAIL_LINE_NAMES, SUBWAY_LINES } from '../../common/types/lines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { TheRideReliability } from './TheRideReliability';
 import { CommuterRailReliability } from './CommuterRailReliability';
@@ -26,7 +26,7 @@ export function ReliabilityDetails() {
   } = useDelimitatedRoute();
   const isRide = line === 'line-RIDE';
   const isBus = line === 'line-bus';
-  const isSubway = line !== undefined && !isBus && !isRide && line !== 'line-commuter-rail';
+  const isSubway = line !== undefined && SUBWAY_LINES.includes(line);
   // Grouped labels (e.g. 114/116/117) are summed server-side across their route_ids
   const busRouteIds = isBus && busRoute ? getBusRouteIds(busRoute) : [];
   const routeId = isRide

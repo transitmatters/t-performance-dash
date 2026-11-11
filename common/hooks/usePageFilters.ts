@@ -4,7 +4,7 @@ import type { DayKind } from '../types/dataPoints';
 import type { LineShort } from '../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES } from '../types/lines';
 import { useDelimitatedRoute } from '../utils/router';
-import { useOptionParam } from './useChartToggle';
+import { useOption } from './useChartToggle';
 
 // Page-wide filters. The header renders their controls (see PageFilters) and the pages read their
 // values, so each one is a hook over its URL param that both sides call.
@@ -20,27 +20,39 @@ const directionName = (lineShort: LineShort, directionId: '0' | '1') => {
 /** Reliability: which direction's headways to count. */
 export const useReliabilityDirection = () => {
   const { lineShort } = useDelimitatedRoute();
-  return useOptionParam<HeadwayDirection>('relDir', 'both', [
-    ['both', 'Both'],
-    ['0', directionName(lineShort, '0')],
-    ['1', directionName(lineShort, '1')],
-  ]);
+  return useOption<HeadwayDirection>(
+    'both',
+    [
+      ['both', 'Both'],
+      ['0', directionName(lineShort, '0')],
+      ['1', directionName(lineShort, '1')],
+    ],
+    'relDir'
+  );
 };
 
 /** Commuter Rail service: the selected line, or every line together. */
 export const useCrServiceScope = () =>
-  useOptionParam<'route' | 'all'>('serviceScope', 'route', [
-    ['route', 'This line'],
-    ['all', 'All lines'],
-  ]);
+  useOption<'route' | 'all'>(
+    'route',
+    [
+      ['route', 'This line'],
+      ['all', 'All lines'],
+    ],
+    'serviceScope'
+  );
 
 /** Commuter Rail service: which day's schedule. */
 export const useServiceDay = () =>
-  useOptionParam<DayKind>('day', 'weekday', [
-    ['weekday', 'Weekday'],
-    ['saturday', 'Saturday'],
-    ['sunday', 'Sunday'],
-  ]);
+  useOption<DayKind>(
+    'weekday',
+    [
+      ['weekday', 'Weekday'],
+      ['saturday', 'Saturday'],
+      ['sunday', 'Sunday'],
+    ],
+    'day'
+  );
 
 /** Fleet: the selected bus route or Commuter Rail line, or all of them. */
 export const useFleetScope = () => {
@@ -54,9 +66,13 @@ export const useFleetScope = () => {
     : `Route ${busRoute}`;
   // Commuter Rail calls its routes lines, as on the Reliability page.
   const allLabel = isCommuterRail ? 'All lines' : 'All routes';
-  const scope = useOptionParam<'route' | 'all'>('fleetScope', 'route', [
-    ['route', routeLabel],
-    ['all', allLabel],
-  ]);
+  const scope = useOption<'route' | 'all'>(
+    'route',
+    [
+      ['route', routeLabel],
+      ['all', allLabel],
+    ],
+    'fleetScope'
+  );
   return { ...scope, routeLabel, allLabel };
 };
