@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { LINE_COLORS } from '../constants/colors';
+import { LINE_OBJECTS } from '../constants/lines';
+import type { Line } from '../types/lines';
 import { getMetaTagEntries, getMetaTags, getOgCard, ogImageSlug } from './metaTags';
 
 describe('getMetaTags', () => {
@@ -79,5 +82,12 @@ describe('og cards', () => {
       subheading: 'MBTA subway, bus and commuter rail performance',
     });
     expect(getOgCard('/opensource/')).toMatchObject({ heading: 'Open Source', subheading: null });
+  });
+
+  it("paints each line's card in that line's color", () => {
+    for (const [key, line] of Object.entries(LINE_OBJECTS)) {
+      expect(line.color, key).toBe(LINE_COLORS[key as Line]);
+    }
+    expect(getOgCard('/the-ride/reliability/').color).toBe('#FFC72C');
   });
 });
