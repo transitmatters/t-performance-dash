@@ -1,6 +1,8 @@
 import type { Diagram, SegmentLocation } from '@transitmatters/stripmap';
 
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { DATE_FORMAT } from '../../../common/constants/dates';
 import type {
   SlowZoneAllSlowResponse,
   SlowZoneResponse,
@@ -9,6 +11,8 @@ import type {
 import type { LineShort } from '../../../common/types/lines';
 import type { Station } from '../../../common/types/stations';
 import { getParentStationForStopId, getStationById } from '../../../common/utils/stations';
+
+dayjs.extend(utc);
 
 export const DIRECTIONS = ['1', '0'] as const;
 
@@ -28,7 +32,8 @@ type SegmentationResult = {
 };
 
 type SegmentSlowZonesOptions = {
-  date: Date;
+  /** The calendar date to show, as YYYY-MM-DD. */
+  date: string;
   diagram: Diagram;
   speedRestrictions: SpeedRestriction[];
   slowZones: SlowZoneAllSlowResponse;
@@ -42,14 +47,17 @@ type WithSegmentLocation<T> = {
 };
 
 /**
- * Get the latest date that we have data on slow zones for
+ * The day to show zones for, as local midnight: the requested date, or the last day of slow zone
+ * data if that's earlier. Zone dates have no offset, so `new Date()` reads them as local midnight
+ * too. Don't parse the requested date with `new Date('YYYY-MM-DD')`, which is UTC midnight and so
+ * the day before west of UTC.
  */
-const getEffectiveDate = (desiredDate: Date, slowZones: SlowZoneAllSlowResponse) => {
-  const maxEndDate = dayjs(new Date(slowZones.updated_on)).startOf('day').toDate();
-  if (dayjs(desiredDate).isAfter(maxEndDate)) {
-    return maxEndDate;
-  }
-  return dayjs(desiredDate).startOf('day').toDate();
+const getEffectiveDate = (desiredDate: string, slowZones: SlowZoneAllSlowResponse) => {
+  // The pipeline covers service through the day before its run, which `updated_on` timestamps.
+  const runDate = dayjs.utc(slowZones.updated_on).format(DATE_FORMAT);
+  const lastDataDate = dayjs(runDate).subtract(1, 'day');
+  const desired = dayjs(desiredDate);
+  return (desired.isAfter(lastDataDate) ? lastDataDate : desired).toDate();
 };
 
 const filterActiveElements = <T extends Record<string, unknown>>(
@@ -141,8 +149,9 @@ export const segmentSlowZones = (options: SegmentSlowZonesOptions): Segmentation
       (sz) => [new Date(sz.start), new Date(sz.end)],
       (sz) => sz.color
     ),
-    (sz) => getParentStationForStopId(sz.fr_id),
-    (sz) => getParentStationForStopId(sz.to_id)
+    // Pass the line: Red and Mattapan share Ashmont's stop ids, but not its station order.
+    (sz) => getParentStationForStopId(sz.fr_id, sz.color),
+    (sz) => getParentStationForStopId(sz.to_id, sz.color)
   );
   const activeSpeedRestrictions = locateIntoSegments(
     filterActiveElements(
