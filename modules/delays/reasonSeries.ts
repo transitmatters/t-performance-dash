@@ -90,9 +90,14 @@ const statedByCause = (row: LineDelays) =>
  * routes with alert history. Commuter Rail alerts state how far behind schedule a train is, which
  * already is its delay, so those rows keep the stated delay. Rows missing the actual delay (e.g.
  * today, before alert history is in) are dropped rather than mixing in the stated number.
+ *
+ * Pass `isActual` to convert extra rows the same way as the main ones: a day or two of daily rows
+ * may have no actual delay yet even though the line has it.
  */
-export const toActualDelays = (data: LineDelays[]) => {
-  const isActual = data.some((row) => row.delay_alert_minutes != null);
+export const toActualDelays = (
+  data: LineDelays[],
+  isActual = data.some((row) => row.delay_alert_minutes != null)
+) => {
   const rows: DelayRow[] = data.flatMap((row) => {
     if (!isActual) {
       return [
