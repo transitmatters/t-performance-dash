@@ -1,7 +1,16 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { describe, expect, it } from 'vitest';
 import type { LineShort } from '../types/lines';
 import type { SlowZoneResponse } from '../types/dataPoints';
-import { getStationPairName, getTripSlowZoneSummary, isZoneOnTrip } from './slowZoneUtils';
+import {
+  filterAllSlow,
+  formatSegments,
+  getStationPairName,
+  getTripSlowZoneSummary,
+  getWorstSlowZoneSegment,
+  isZoneOnTrip,
+} from './slowZoneUtils';
 import { getParentStationForStopId } from './stations';
 
 const zone = (
@@ -24,6 +33,8 @@ const zone = (
   latest_delay: delay,
   previous_delay: delay,
 });
+
+dayjs.extend(utc);
 
 const station = (stopId: string, line: LineShort) => getParentStationForStopId(stopId, line);
 
@@ -140,5 +151,64 @@ describe('getStationPairName', () => {
     expect(getStationPairName(andrew, braintreeJfk)).toBe(
       `${andrew.stop_name}-${braintreeJfk.stop_name}`
     );
+  });
+});
+
+describe('filterAllSlow', () => {
+  const start = dayjs.utc('2025-01-01');
+  const end = dayjs.utc('2025-01-31');
+
+  it('keeps zones that start on the end date or end on the start date', () => {
+    const startsOnEnd = zone('Red', '70061', '70063', '2025-01-31', '2025-02-10', 10);
+    const endsOnStart = zone('Red', '70061', '70063', '2024-12-20', '2025-01-01', 10);
+    expect(filterAllSlow([startsOnEnd, endsOnStart], start, end, 'Red')).toEqual([
+      startsOnEnd,
+      endsOnStart,
+    ]);
+  });
+
+  it('drops zones entirely outside the dates', () => {
+    const before = zone('Red', '70061', '70063', '2024-12-01', '2024-12-31', 10);
+    const after = zone('Red', '70061', '70063', '2025-02-01', '2025-02-10', 10);
+    expect(filterAllSlow([before, after], start, end, 'Red')).toEqual([]);
+  });
+});
+
+describe('getWorstSlowZoneSegment', () => {
+  const start = dayjs.utc('2025-01-01');
+  const end = dayjs.utc('2025-03-31');
+
+  it('skips zones that cleared before the end date, though their latest delay is set', () => {
+    const cleared = zone('Red', '70061', '70063', '2025-01-01', '2025-01-10', 300);
+    const active = zone('Red', '70083', '70095', '2025-01-05', '2025-03-31', 40);
+    expect(cleared.latest_delay).not.toBeNull();
+    const worst = getWorstSlowZoneSegment([cleared, active], start, end, 'Red');
+    expect(worst).toMatchObject({ delay: 40, from: { station: 'place-andrw' } });
+  });
+
+  it('returns null when no zone is active at the end date', () => {
+    const cleared = zone('Red', '70061', '70063', '2025-01-01', '2025-01-10', 300);
+    expect(getWorstSlowZoneSegment([cleared], start, end, 'Red')).toBeNull();
+  });
+});
+
+describe('formatSegments', () => {
+  const start = dayjs.utc('2025-01-01');
+
+  // Mattapan's Ashmont shares these stop ids, but sits at the start of its line, not the end.
+  it("places Red Line zones at Ashmont on Red's Ashmont", () => {
+    const shawmutToAshmont = zone('Red', '70091', '70093', '2025-01-01', '2025-01-31', 10);
+    const ashmontToShawmut = zone('Red', '70094', '70092', '2025-01-01', '2025-01-31', 10);
+    const data = [shawmutToAshmont, ashmontToShawmut];
+
+    const southbound = formatSegments(data, start, 'southbound');
+    expect(southbound).toHaveLength(1);
+    expect(southbound[0]).toMatchObject({
+      from: { station: 'place-smmnl' },
+      to: { station: 'place-asmnl', order: station('70093', 'Red').order },
+    });
+    expect(formatSegments(data, start, 'northbound')).toMatchObject([
+      { from: { station: 'place-asmnl' }, to: { station: 'place-smmnl' } },
+    ]);
   });
 });

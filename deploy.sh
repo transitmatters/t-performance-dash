@@ -74,8 +74,8 @@ CF_STACK_NAME=datadashboard$ENV_SUFFIX
 configurationArray=("$CHALICE_STAGE" "$BACKEND_BUCKET" "$FRONTEND_HOSTNAME" "$CF_STACK_NAME" "$FRONTEND_CERT_ARN" "$BACKEND_CERT_ARN")
 for i in ${!configurationArray[@]}; do
     if [ -z "${configurationArray[$i]}" ]; then
-        echo "Failed: index [$i] in configuration array is null or empty";
-        exit;
+        echo "Failed: index [$i] in configuration array is null or empty" 1>&2
+        exit 1
     fi
 done
 
@@ -139,10 +139,14 @@ popd > /dev/null
 echo "Cleaning up copied constants directory..."
 rm -rf server/chalicelib/common
 
-# Every route has its own index.html, and each one must revalidate so a deploy reaches browsers
-aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*.html" \
+# Only the files Vite builds into assets/ have a content hash in their names, so only they can be
+# cached forever. Everything else keeps its name from one deploy to the next: each route's
+# index.html, and everything copied from public/ (manifest.json, the data under static/, the
+# maplibre worker). Browsers must revalidate those, because a CloudFront invalidation doesn't
+# reach their caches. Hashed assets go up first so new HTML never points at files not yet uploaded.
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*" --include "assets/*" \
   --cache-control "public, max-age=31536000, immutable"
-aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*" --include "*.html" \
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "assets/*" \
   --cache-control "no-cache, must-revalidate"
 
 # Band-aid the fact that v3 doesn't have trailing slashes on its path, but v4 does,

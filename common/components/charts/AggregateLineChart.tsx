@@ -395,6 +395,7 @@ export const AggregateLineChart = ({
                   location={location}
                   includeBothStopsForLocation={includeBothStopsForLocation}
                   startDate={startDate}
+                  endDate={endDate}
                 />
                 {embedChart && (
                   <TripEmbedButton page="multi" chart={embedChart} trendline={isTrendlineVisible} />

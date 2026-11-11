@@ -1,28 +1,44 @@
-import type { LineDelays } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
 import type { DelayAgg } from './format';
+import type { RangeRow } from './range';
 import { causeRows } from './reasonSeries';
 
-const mean = (values: number[]) =>
-  values.length ? values.reduce((sum, v) => sum + v, 0) / values.length : NaN;
+// A month is an average month here, so the figure doesn't depend on which months the range covers.
+const PERIOD_DAYS: Record<DelayAgg, number> = { daily: 1, weekly: 7, monthly: 365.25 / 12 };
 
-const halves = <T>(values: T[]): [T[], T[]] => {
-  const mid = Math.floor(values.length / 2);
-  return [values.slice(0, mid), values.slice(mid)];
+const sum = (values: number[]) => values.reduce((total, v) => total + v, 0);
+
+/**
+ * Minutes delayed per period, from the days the rows cover. A week with only two days of data so
+ * far counts as two days, not a quiet week.
+ */
+const perPeriod = (rows: RangeRow[], periodDays: number) =>
+  (sum(rows.map((row) => row.total_delay_time)) / sum(rows.map((row) => row.days))) * periodDays;
+
+/** The rows before and after the point where half the days have gone by. */
+const halves = (rows: RangeRow[]): [RangeRow[], RangeRow[]] => {
+  const half = sum(rows.map((row) => row.days)) / 2;
+  let days = 0;
+  let mid = 0;
+  while (mid < rows.length && days + rows[mid].days <= half) {
+    days += rows[mid].days;
+    mid++;
+  }
+  return [rows.slice(0, mid), rows.slice(mid)];
 };
 
-export const getDelayStats = (data: LineDelays[], agg: DelayAgg, line?: Line) => {
-  const totals = data.map((point) => point.total_delay_time);
-  const totalDelay = totals.reduce((sum, v) => sum + v, 0);
-  const [leading, trailing] = halves(totals);
+/** Stats for rows that cover exactly the selected dates (see `coverRange`). */
+export const getDelayStats = (data: RangeRow[], agg: DelayAgg, line?: Line) => {
+  const periodDays = PERIOD_DAYS[agg];
+  const [leading, trailing] = halves(data);
 
   // Same ranking and share as the cause chart, so the two always agree
   const [topReason] = causeRows(data, line);
 
   return {
-    totalDelay, // total minutes delayed across the window
-    avgDelay: mean(totals), // minutes delayed per period (day, week or month)
-    avgDelayDelta: mean(trailing) - mean(leading), // minutes, trailing minus leading half
+    totalDelay: sum(data.map((row) => row.total_delay_time)), // total minutes delayed across the window
+    avgDelay: perPeriod(data, periodDays), // minutes delayed per period (day, week or month)
+    avgDelayDelta: perPeriod(trailing, periodDays) - perPeriod(leading, periodDays), // minutes, trailing minus leading half
     agg,
     topReasonLabel: topReason?.label ?? null,
     topReasonShare: topReason?.share ?? null,

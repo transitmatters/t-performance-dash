@@ -77,8 +77,6 @@ export const hasReliableCommuterRailBenchmarks = (date: string | undefined) =>
 
 export const RIDE_RELIABILITY_MIN_DATE = '2014-07-01';
 export const COMMUTER_RAIL_RELIABILITY_MIN_DATE = '2016-01-01';
-export const RIDE_MAX_DATE = '2025-08-31';
-export const RIDE_MAX_DAY = dayjs(RIDE_MAX_DATE);
 export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
 };
@@ -109,7 +107,7 @@ export const getDatePickerBounds = (
   }
 
   // Reliability comes from the MBTA open data portal, which goes back further than our other
-  // commuter rail and RIDE data (and past RIDE_MAX_DATE, which bounds RIDE ridership).
+  // commuter rail and RIDE data.
   if (page === 'reliability' && (tab === 'Commuter Rail' || tab === 'The RIDE')) {
     return {
       minDate: tab === 'The RIDE' ? RIDE_RELIABILITY_MIN_DATE : COMMUTER_RAIL_RELIABILITY_MIN_DATE,
@@ -140,7 +138,7 @@ const DATE_BOUNDS: { [key in Tab]: { minDate: string; maxDate: string } } = {
   System: { minDate: TRAIN_MIN_DATE, maxDate: TODAY_STRING },
   'Commuter Rail': { minDate: COMMUTER_RAIL_DATA_MIN_DATE, maxDate: TODAY_STRING },
   Ferry: { minDate: FERRY_MIN_DATE, maxDate: TODAY_STRING },
-  'The RIDE': { minDate: RIDE_MIN_DATE, maxDate: RIDE_MAX_DATE },
+  'The RIDE': { minDate: RIDE_MIN_DATE, maxDate: TODAY_STRING },
 };
 
 const SINGLE_RAPID_PRESETS: {
@@ -206,37 +204,6 @@ const SINGLE_BUS_PRESETS: {
   },
 };
 
-const SINGLE_RIDE_PRESETS: {
-  [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams>;
-} = {
-  mostRecent: {
-    key: 'mostRecent',
-    name: `${RIDE_MAX_DAY.format(PRETTY_DATE_FORMAT)}`,
-    input: { date: BUS_MAX_DATE },
-  },
-  firstOfMonth: {
-    key: 'firstOfMonth',
-    name: `${RIDE_MAX_DAY.startOf('month').format(PRETTY_DATE_FORMAT)}`,
-    input: {
-      date: RIDE_MAX_DAY.startOf('month').format(DATE_FORMAT),
-    },
-  },
-  firstOfYear: {
-    key: 'firstOfYear',
-    name: `First of ${RIDE_MAX_DAY.startOf('year').format('YYYY')}`,
-    input: {
-      date: RIDE_MAX_DAY.startOf('month').format(DATE_FORMAT),
-    },
-  },
-  firstOfPrevYear: {
-    key: 'firstOfPrevYear',
-    name: `First of ${RIDE_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY')}`,
-    input: {
-      date: RIDE_MAX_DAY.subtract(1, 'year').startOf('year').format(DATE_FORMAT),
-    },
-  },
-};
-
 export const SINGLE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
 } = {
@@ -245,7 +212,7 @@ export const SINGLE_PRESETS: {
   System: SINGLE_RAPID_PRESETS,
   'Commuter Rail': SINGLE_RAPID_PRESETS,
   Ferry: SINGLE_RAPID_PRESETS,
-  'The RIDE': SINGLE_RIDE_PRESETS,
+  'The RIDE': SINGLE_RAPID_PRESETS,
 };
 
 const RANGE_RAPID_PRESETS: {
@@ -362,49 +329,17 @@ const RANGE_BUS_PRESETS: {
   },
 };
 
-const RANGE_RIDE_PRESETS: {
-  [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams>;
-} = {
-  thisMonth: {
-    key: 'thisMonth',
-    name: RIDE_MAX_DAY.format('MMMM YYYY'),
-    input: {
-      startDate: RIDE_MAX_DAY.startOf('month').format(DATE_FORMAT),
-      endDate: RIDE_MAX_DATE,
-    },
-  },
-  lastMonth: {
-    key: 'lastMonth',
-    name: RIDE_MAX_DAY.subtract(1, 'month').format('MMMM YYYY'),
-    input: {
-      startDate: RIDE_MAX_DAY.subtract(1, 'month').startOf('month').format(DATE_FORMAT),
-      endDate: RIDE_MAX_DAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
-    },
-  },
-  thisYear: {
-    key: 'thisYear',
-    name: RIDE_MAX_DAY.format('YYYY'),
-    input: {
-      startDate: RIDE_MAX_DAY.startOf('year').format(DATE_FORMAT),
-      endDate: RIDE_MAX_DATE,
-    },
-  },
-  lastYear: {
-    key: 'lastYear',
-    name: RIDE_MAX_DAY.subtract(1, 'year').format('YYYY'),
-    input: {
-      startDate: RIDE_MAX_DAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
-      endDate: RIDE_MAX_DAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
-    },
-  },
-  all: {
-    key: 'all',
-    name: 'All time',
-    input: {
-      startDate: dayjs(RIDE_MIN_DATE).format(DATE_FORMAT),
-      endDate: RIDE_MAX_DATE,
-    },
-  },
+/** The RIDE's "All time" starts with the page's data: reliability goes back further than ridership. */
+const rideAllTime = (startDate: string): DateSelectionDefaultOptions<DateParams> => ({
+  key: 'all',
+  name: 'All time',
+  input: { startDate, endDate: TODAY_STRING },
+});
+
+const RANGE_RIDE_PRESETS = { ...RANGE_RAPID_PRESETS, all: rideAllTime(RIDE_MIN_DATE) };
+const RANGE_RIDE_RELIABILITY_PRESETS = {
+  ...RANGE_RAPID_PRESETS,
+  all: rideAllTime(RIDE_RELIABILITY_MIN_DATE),
 };
 
 export const RANGE_PRESETS: {
@@ -417,6 +352,12 @@ export const RANGE_PRESETS: {
   Ferry: RANGE_RAPID_PRESETS,
   'The RIDE': RANGE_RIDE_PRESETS,
 };
+
+/** The presets a range date picker offers on a tab's page. */
+export const getRangePresets = (tab: Tab, page?: Page) =>
+  tab === 'The RIDE' && page === 'reliability'
+    ? RANGE_RIDE_RELIABILITY_PRESETS
+    : RANGE_PRESETS[tab];
 
 export type DatePresetKey =
   | OverviewDatePresetKey
@@ -466,14 +407,20 @@ export enum OverviewRangeTypes {
 }
 
 export const RANGE_DATE_KEYS = Object.fromEntries(
-  [...Object.values(RANGE_RAPID_PRESETS), ...Object.values(RANGE_RIDE_PRESETS)].map(
-    (rangePreset) => [`${rangePreset.input.startDate}${rangePreset.input.endDate}`, rangePreset.key]
-  )
+  [
+    ...Object.values(RANGE_RAPID_PRESETS),
+    ...Object.values(RANGE_RIDE_PRESETS),
+    ...Object.values(RANGE_RIDE_RELIABILITY_PRESETS),
+  ].map((rangePreset) => [
+    `${rangePreset.input.startDate}${rangePreset.input.endDate}`,
+    rangePreset.key,
+  ])
 );
 export const SINGLE_DATE_KEYS = Object.fromEntries(
-  [...Object.values(SINGLE_RAPID_PRESETS), ...Object.values(SINGLE_RIDE_PRESETS)].map(
-    (singlePreset) => [singlePreset.input.date, singlePreset.key]
-  )
+  Object.values(SINGLE_RAPID_PRESETS).map((singlePreset) => [
+    singlePreset.input.date,
+    singlePreset.key,
+  ])
 );
 
 export const todayOrDate = (date: dayjs.Dayjs) => {

@@ -24,7 +24,8 @@ export const DelaysChartEmbed = ({ chart }: { chart: DelaysEmbedChart }) => {
   };
   const startDate = dates.startDate as string;
   const endDate = dates.endDate as string;
-  const { alertDelays, agg, period, isActual, delayData, series } = useDelays(startDate, endDate);
+  const { alertDelays, agg, period, isActual, delayData, series, rangeData, rangeQueries } =
+    useDelays(startDate, endDate);
   const { focus } = useFocusedReason();
   const mode = query.dlView === 'share' ? 'share' : 'minutes';
 
@@ -35,7 +36,11 @@ export const DelaysChartEmbed = ({ chart }: { chart: DelaysEmbedChart }) => {
       case 'total':
         return <DelayTotalBars agg={agg} focus={focus} {...props} />;
       case 'causes':
-        return <DelayCauseBars focus={focus} {...props} />;
+        // Totals for exactly these dates, so this waits for the days at either end too
+        if (!rangeData) {
+          return <ChartPlaceHolder query={rangeQueries.find((query) => !query.data)} />;
+        }
+        return <DelayCauseBars focus={focus} {...props} data={rangeData} />;
       case 'breakdown':
         return (
           <DelayBreakdownGraph
