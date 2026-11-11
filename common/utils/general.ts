@@ -1,6 +1,8 @@
+/** Appends an alpha (0 to 1) to a 6-digit hex color. A missing (NaN) alpha draws it opaque. */
 export const hexWithAlpha = (hexColor: string, alpha: number) => {
-  const opacity = Math.round(Math.min(Math.max(alpha || 1, 0), 1) * 255);
-  return hexColor + opacity.toString(16).toUpperCase();
+  const clamped = Number.isNaN(alpha) ? 1 : Math.min(Math.max(alpha, 0), 1);
+  const opacity = Math.round(clamped * 255);
+  return hexColor + opacity.toString(16).padStart(2, '0').toUpperCase();
 };
 
 const relativeLuminance = (hexColor: string): number => {
