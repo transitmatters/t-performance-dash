@@ -111,10 +111,13 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
         key: 'delays',
         label: 'Delays',
         subtitle: 'Minutes a delay alert was up, daily average',
-        points: delays.data.map((point) => ({
-          date: point.date,
-          value: point.delay_alert_minutes ?? 0,
-        })),
+        // Today has no alert minutes until LAMP fills it in tomorrow. Leave it out rather than
+        // count a 0-minute day, as the Delays page does.
+        points: delays.data.flatMap((point) =>
+          point.delay_alert_minutes == null
+            ? []
+            : [{ date: point.date, value: point.delay_alert_minutes }]
+        ),
         reducer: 'avg',
         unit: 'min/day',
         formatValue: (v) => Math.round(v).toString(),
