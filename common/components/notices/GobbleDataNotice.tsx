@@ -34,15 +34,15 @@ export const GobbleDataNotice = () => {
 
   return (
     <p>
-      Today&apos;s data is collected via the{' '}
+      Today's data is collected via the{' '}
       <Link
         href="https://www.mbta.com/developers/v3-api/streaming"
         rel="noopener noreferrer"
         target="_blank"
       >
-        MBTA&apos;s V3 API
+        MBTA's V3 API
       </Link>{' '}
-      and isn&apos;t cleaned or filtered — expect reduced accuracy. Official MBTA data is shown once
+      and isn't cleaned or filtered — expect reduced accuracy. Official MBTA data is shown once
       available.
     </p>
   );
