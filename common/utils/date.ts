@@ -38,3 +38,12 @@ export const withWeekStart = <T extends { start_date?: string; agg?: string }>(o
   options.agg === 'weekly' && options.start_date
     ? { ...options, start_date: getWeekStart(options.start_date) }
     : options;
+
+/**
+ * Reads an Eastern timestamp with an offset as Eastern wall-clock time. Dropping the offset keeps
+ * it on the dashboard's Eastern axis and day boundaries in any viewer's timezone.
+ */
+export const wallClock = (iso: string) => dayjs(iso.slice(0, 19));
+
+/** The current Eastern time, on the same wall-clock footing as `wallClock`. */
+export const easternNow = () => wallClock(dayjs().tz('America/New_York').format());

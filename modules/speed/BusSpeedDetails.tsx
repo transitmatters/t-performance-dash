@@ -71,6 +71,9 @@ export function BusSpeedDetails() {
   const bandsShown = visible.some((key) => key !== 'all_day');
   // Days with an all-day figure but no breakdown: the band lines are blank there while All day isn't.
   const hasUnbandedDays = Boolean(speeds.data?.some((row) => row.miles_covered && !row.time_bands));
+  // day_type is recorded from the same date as the bands, so a weekday or weekend filter can't
+  // include anything earlier.
+  const dayTypeCutsRange = Boolean(dayType && startDate && startDate < BAND_DATA_START);
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
@@ -100,6 +103,12 @@ export function BusSpeedDetails() {
                 <p className="text-xs text-muted-foreground">
                   Time-of-day lines start on {dayjs(BAND_DATA_START).format('MMMM D, YYYY')}, when
                   the per-band breakdown begins. Before that, only All day is available.
+                </p>
+              )}
+              {dayTypeCutsRange && (
+                <p className="text-xs text-muted-foreground">
+                  The weekday and weekend split starts on{' '}
+                  {dayjs(BAND_DATA_START).format('MMMM D, YYYY')}. Earlier days aren&apos;t shown.
                 </p>
               )}
             </>

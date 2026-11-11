@@ -14,33 +14,37 @@ interface Props {
   fill?: boolean;
 }
 
+const DAY_KIND_NAMES: Record<DayKind, string> = {
+  weekday: 'weekday',
+  saturday: 'Saturday',
+  sunday: 'Sunday',
+};
+
 export const DailyServiceHistogram = (props: Props) => {
   const { scheduledService, dayKind, fill = false } = props;
   const { color } = useDelimitatedRoute();
 
   const data = useMemo(() => {
-    const {
-      start_date_service_levels: {
-        [dayKind]: { date: startDate, service_levels: startServiceLevels },
-      },
-      end_date_service_levels: {
-        [dayKind]: { date: endDate, service_levels: endServiceLevels },
-      },
-    } = scheduledService;
+    const start = scheduledService.start_date_service_levels?.[dayKind];
+    const end = scheduledService.end_date_service_levels?.[dayKind];
+    // The range has no day of this kind, e.g. Saturday on a Monday–Thursday range.
+    if (!start?.service_levels || !end?.service_levels) return null;
+    const { date: startDate, service_levels: startServiceLevels } = start;
+    const { date: endDate, service_levels: endServiceLevels } = end;
     return [
       {
         label: prettyDate(startDate),
-        data: startServiceLevels!.map((value) => value / 2),
+        data: startServiceLevels.map((value) => value / 2),
         style: { opacity: 0.5 },
       },
       {
         label: prettyDate(endDate),
-        data: endServiceLevels!.map((value) => value / 2),
+        data: endServiceLevels.map((value) => value / 2),
       },
     ];
   }, [scheduledService, dayKind]);
 
-  const histogram = (
+  const histogram = data ? (
     <ByHourHistogram
       data={data}
       style={{ color }}
@@ -49,6 +53,10 @@ export const DailyServiceHistogram = (props: Props) => {
       compareDatasets
       fill={fill}
     />
+  ) : (
+    <p className="flex h-40 items-center justify-center text-sm text-muted-foreground">
+      No {DAY_KIND_NAMES[dayKind]} service in these dates.
+    </p>
   );
   if (fill) return <ChartStack className="h-full">{histogram}</ChartStack>;
   return (

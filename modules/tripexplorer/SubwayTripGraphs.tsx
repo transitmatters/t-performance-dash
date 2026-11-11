@@ -2,6 +2,7 @@ import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
@@ -75,7 +76,9 @@ export const SubwayTripGraphs = ({
     parameters,
     // @ts-expect-error The overloading doesn't seem to handle this const
     aggregate,
-    enabled
+    enabled,
+    undefined,
+    fromStation?.terminus ? [QueryNameKeys.dwells] : []
   );
   const location = getLocationDetails(fromStation, toStation);
 

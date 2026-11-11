@@ -10,6 +10,7 @@ import { Line } from '@chartjs-components';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
+import { SUBWAY_LINES } from '../../../common/types/lines';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { getTimeUnitSlowzones } from '../../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
@@ -19,6 +20,7 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import type { SlowZonesEmbedLine } from '../embed';
 import { TotalSlowTimeActions } from '../TotalSlowTimeActions';
+import { getMajorEventAnnotations, useMajorEvents } from '../../../common/utils/majorEvents';
 
 dayjs.extend(utc);
 dayjs.extend(duration);
@@ -52,6 +54,11 @@ export const TotalSlowTime = ({
   const labels = data.map((item) => dayjs.utc(item.date).format('YYYY-MM-DD'));
   const unit = getTimeUnitSlowzones(startDateUTC, endDateUTC);
   const isLinePage = line !== undefined && lineShort !== undefined;
+  const events = useMajorEvents(
+    isLinePage ? line : SUBWAY_LINES,
+    startDateUTC?.format('YYYY-MM-DD'),
+    endDateUTC?.format('YYYY-MM-DD')
+  );
 
   const datasets = isLinePage
     ? [
@@ -192,6 +199,9 @@ export const TotalSlowTime = ({
               },
               legend: {
                 display: false,
+              },
+              annotation: {
+                annotations: getMajorEventAnnotations(events),
               },
             },
           }}

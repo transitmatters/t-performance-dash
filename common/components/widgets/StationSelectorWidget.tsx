@@ -71,8 +71,14 @@ export const StationSelectorWidget = ({
           newStation.branches &&
           !newStation?.branches?.some((branch) => toStation?.branches?.includes(branch))
         ) {
-          // If `from` station is on a separate branch, set the `to` station to gov center for GL and Park for RL.
-          const newToStation = getStationForInvalidFromSelection(line, busRoute);
+          // The new `from` is on a branch the current `to` isn't: end the trip where the branches meet.
+          const newToStation = getStationForInvalidFromSelection(
+            line,
+            newStation,
+            stations,
+            ferryRoute
+          );
+          if (!newToStation) break;
           const stationIds = stopIdsForStations(newStation, newToStation);
           updateQueryParams(
             {
@@ -102,6 +108,9 @@ export const StationSelectorWidget = ({
   if (!fromStation || !toStation) {
     return null;
   }
+  // Some stops are only served one way, so the reverse trip can have no stop to end at.
+  const reversed = stopIdsForStations(toStation, fromStation);
+  const canSwap = Boolean(reversed.fromStopIds?.length && reversed.toStopIds?.length);
   return (
     <div
       className={classNames(
@@ -126,9 +135,14 @@ export const StationSelectorWidget = ({
       />
       <Button
         onClick={() => updateStations('swap')}
-        title={`Swap ${stopNoun(lineShort)}s`}
+        disabled={!canSwap}
+        title={
+          canSwap
+            ? `Swap ${stopNoun(lineShort)}s`
+            : `No trips run from ${toStation.stop_name} to ${fromStation.stop_name}`
+        }
         aria-label={`Swap direction: show ${toStation.stop_name} to ${fromStation.stop_name}`}
-        additionalClasses={'shrink-0 w-fit'}
+        additionalClasses={'shrink-0 w-fit disabled:cursor-not-allowed disabled:opacity-50'}
       >
         <FontAwesomeIcon icon={faRightLeft} className={'h-4 w-4'} aria-hidden />
       </Button>

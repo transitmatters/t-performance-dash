@@ -6,6 +6,7 @@ import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
 import type { LineShort } from '../../../common/types/lines';
 import { useSubwayScorecardRows } from './scorecardRows';
 import { useBusScorecardRows, BusMetricChart } from './busOverview';
+import { hasBusReliability } from './busReliability';
 import { useCrScorecardRows, CrMetricChart } from './crOverview';
 import { MetricsScorecard } from './MetricsScorecard';
 import { MetricChartCard } from './MetricChartCard';
@@ -72,15 +73,19 @@ const BusOverview = () => {
   const busRoute = query.busRoute ?? '1';
   const { rows, isLoading } = useBusScorecardRows(busRoute);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('speed');
+  const showsReliability = hasBusReliability(busRoute);
+  // The page stays mounted when switching routes, so a route without the Reliability row falls back
+  // to Speed rather than charting nothing.
+  const metric = selectedMetric === 'reliability' && !showsReliability ? 'speed' : selectedMetric;
 
   return (
     <OverviewLayout
       rows={rows}
       isLoading={isLoading}
-      skeletonRows={4}
-      selectedMetric={selectedMetric}
+      skeletonRows={showsReliability ? 5 : 4}
+      selectedMetric={metric}
       onSelectMetric={setSelectedMetric}
-      chart={<BusMetricChart metric={selectedMetric} busRoute={busRoute} />}
+      chart={<BusMetricChart metric={metric} busRoute={busRoute} />}
       chartCopy={BUS_CHART_COPY}
       cards={<ServiceAlertsCard lineShort="Bus" busRoute={busRoute} label={`Route ${busRoute}`} />}
     />

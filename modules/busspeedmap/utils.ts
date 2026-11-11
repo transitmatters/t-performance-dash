@@ -4,6 +4,9 @@ import { FREQUENT_BUS_ROUTE_IDS, getBusRouteDisplayName } from '../../common/con
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { getFormattedTimeString } from '../../common/utils/time';
+import type { HeadwayField } from '../reliability/utils';
+import { HEADWAY_FIELDS } from '../reliability/utils';
+import { DWELL_SUMMARY_SIZE, MIN_DWELL_STOPS_PER_DAY } from './constants';
 import type {
   BusSpeedSegmentLeaderboardByBand,
   BusSpeedSegmentLeaderboardByDayType,
@@ -11,6 +14,7 @@ import type {
   BusSpeedSegmentLeaderboardResponse,
   BusSpeedSegmentProperties,
   DayType,
+  LeaderboardMetricConfig,
   Period,
   TimeBand,
 } from './types';
@@ -175,41 +179,147 @@ export const stopDwellsByRoute = (
 };
 
 export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntry {
+  total_dwell: number;
+  n_dwell_stops: number;
+  /** Days any raw route_id behind this label had speed data: the most of any one of them. */
+  n_days: number;
   /** Whether any raw route_id behind this curated label is a Frequent Bus Route. */
   isFrequentRoute: boolean;
 }
 
 const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
 
+const sumOf = <T>(items: T[], pick: (item: T) => number): number =>
+  items.reduce((total, item) => total + pick(item), 0);
+
+/**
+ * The battery share of several routes' trips together, each weighted by the trips it sampled,
+ * the same way the API pools the days of one route (_rollup_fleet_fields). Empty if none of them
+ * has fleet data.
+ */
+const poolBatteryShare = (
+  entries: BusSpeedLeaderboardEntry[]
+): Pick<BusSpeedLeaderboardEntry, 'fleet_trips' | 'pct_battery_trips'> => {
+  const sampled = entries.filter((entry) => entry.fleet_trips && entry.pct_battery_trips != null);
+  if (sampled.length === 0) return {};
+  const fleetTrips = sumOf(sampled, (entry) => entry.fleet_trips ?? 0);
+  const batteryShare =
+    sumOf(sampled, (entry) => (entry.pct_battery_trips ?? 0) * (entry.fleet_trips ?? 0)) /
+    fleetTrips;
+  return { fleet_trips: fleetTrips, pct_battery_trips: batteryShare };
+};
+
+/**
+ * Each headway count summed over the Frequent Bus Routes among `entries` that have it (116 of
+ * 114/116/117), as on the route overview, so a timetabled route's longer headways don't count toward
+ * a frequent one. Left off when none has it, so a label with no frequent routes, or a range before the
+ * counts start, has no headway share to rank by.
+ */
+const poolFrequentHeadways = (
+  entries: BusSpeedLeaderboardEntry[]
+): Partial<Record<HeadwayField, number>> => {
+  const frequent = entries.filter((entry) => FREQUENT_BUS_ROUTES.has(entry.route));
+  return Object.fromEntries(
+    HEADWAY_FIELDS.flatMap((field) => {
+      const counted = frequent.filter((entry) => entry[field] != null);
+      return counted.length ? [[field, sumOf(counted, (entry) => entry[field] ?? 0)]] : [];
+    })
+  );
+};
+
 /**
  * The API ranks raw GTFS route_ids, but the rest of the dashboard shows curated BusRoute labels
  * (SL4/SL5, 114/116/117, ...), so the leaderboard would otherwise list 751 and 749 as separate
  * "SL4" and "SL5" rows. Summing miles_covered/total_time per label keeps the speed a true
- * weighted average, same as the per-route speed page does for composites, then re-ranks
- * slowest first. `date` picks which labels were in service (see getBusRouteGroup).
+ * weighted average, same as the per-route speed page does for composites, and the battery share
+ * is pooled by trips the same way. Dwell is summed too, so its averages stay weighted by stops.
+ * Headway counts are pooled from the label's Frequent Bus Routes only (see poolFrequentHeadways).
+ * Routes under one label run on the same days, so the label's days of service are the most of any
+ * one route's, not their sum. `date` picks which labels were in service (see getBusRouteGroup).
+ * Unordered: rankLeaderboard sorts by whichever metric is picked.
  */
 export const groupLeaderboardByBusRoute = (
   entries: BusSpeedLeaderboardEntry[],
   date: string
 ): GroupedBusSpeedLeaderboardEntry[] => {
-  const groups = new Map<string, GroupedBusSpeedLeaderboardEntry>();
+  const groups = new Map<string, BusSpeedLeaderboardEntry[]>();
   for (const entry of entries) {
     const route = getBusRouteGroup(entry.route, date);
-    const group = groups.get(route) ?? {
-      route,
-      miles_covered: 0,
-      total_time: 0,
-      count: 0,
-      n_traversals: 0,
-      isFrequentRoute: false,
-    };
-    group.miles_covered += entry.miles_covered;
-    group.total_time += entry.total_time;
-    group.count += entry.count;
-    group.n_traversals += entry.n_traversals;
-    group.isFrequentRoute ||= FREQUENT_BUS_ROUTES.has(entry.route);
-    groups.set(route, group);
+    groups.set(route, [...(groups.get(route) ?? []), entry]);
   }
-  const mph = (entry: BusSpeedLeaderboardEntry) => entry.miles_covered / (entry.total_time / 3600);
-  return [...groups.values()].sort((a, b) => mph(a) - mph(b));
+  return [...groups].map(([route, members]) => ({
+    route,
+    miles_covered: sumOf(members, (entry) => entry.miles_covered),
+    total_time: sumOf(members, (entry) => entry.total_time),
+    count: sumOf(members, (entry) => entry.count),
+    n_traversals: sumOf(members, (entry) => entry.n_traversals),
+    total_dwell: sumOf(members, (entry) => entry.total_dwell ?? 0),
+    n_dwell_stops: sumOf(members, (entry) => entry.n_dwell_stops ?? 0),
+    n_days: Math.max(0, ...members.map((entry) => entry.n_days ?? 0)),
+    ...poolBatteryShare(members),
+    ...poolFrequentHeadways(members),
+    isFrequentRoute: members.some((entry) => FREQUENT_BUS_ROUTES.has(entry.route)),
+  }));
 };
+
+export interface BusDwellSummary {
+  /** Seconds per stop and share of route time, pooled over every route given that has dwell. */
+  overall: { averageDwell: number; dwellShare: number } | undefined;
+  /** Longest average dwell per stop first, among routes serving enough stops. */
+  byAverageDwell: GroupedBusSpeedLeaderboardEntry[];
+  /** Largest share of route time spent at stops first, among routes serving enough stops. */
+  byDwellShare: GroupedBusSpeedLeaderboardEntry[];
+}
+
+/** Seconds spent around each stop, on average. */
+export const averageDwell = (entry: GroupedBusSpeedLeaderboardEntry): number =>
+  entry.total_dwell / entry.n_dwell_stops;
+
+/** The share of time spent around stops, as total_time runs arrival to arrival. */
+export const dwellShare = (entry: GroupedBusSpeedLeaderboardEntry): number =>
+  entry.total_dwell / entry.total_time;
+
+/**
+ * The leaderboard's dwell summary: the routes with the longest average dwell per stop, and with
+ * the largest share of their time spent at stops. Routes serving fewer than
+ * MIN_DWELL_STOPS_PER_DAY stops per day of service are left out of both lists, which also drops
+ * leaderboards computed before the dwell fields existed (no stops, no days).
+ */
+export const summarizeDwell = (entries: GroupedBusSpeedLeaderboardEntry[]): BusDwellSummary => {
+  const withDwell = entries.filter((entry) => entry.n_dwell_stops > 0);
+  const totalDwell = withDwell.reduce((sum, entry) => sum + entry.total_dwell, 0);
+  const totalStops = withDwell.reduce((sum, entry) => sum + entry.n_dwell_stops, 0);
+  const totalTime = withDwell.reduce((sum, entry) => sum + entry.total_time, 0);
+  const ranked = withDwell.filter(
+    (entry) => entry.n_days > 0 && entry.n_dwell_stops >= MIN_DWELL_STOPS_PER_DAY * entry.n_days
+  );
+  const top = (value: (entry: GroupedBusSpeedLeaderboardEntry) => number) =>
+    [...ranked].sort((a, b) => value(b) - value(a)).slice(0, DWELL_SUMMARY_SIZE);
+  return {
+    overall: withDwell.length
+      ? { averageDwell: totalDwell / totalStops, dwellShare: totalDwell / totalTime }
+      : undefined,
+    byAverageDwell: top(averageDwell),
+    byDwellShare: top(dwellShare),
+  };
+};
+
+export interface RankedBusRoute {
+  route: string;
+  value: number;
+  isFrequentRoute: boolean;
+}
+
+/** The routes `metric` has a figure for, in its order (see LeaderboardMetricConfig). */
+export const rankLeaderboard = (
+  entries: GroupedBusSpeedLeaderboardEntry[],
+  metric: LeaderboardMetricConfig
+): RankedBusRoute[] =>
+  entries
+    .flatMap((entry) => {
+      const value = metric.value(entry);
+      return value === undefined
+        ? []
+        : [{ route: entry.route, value, isFrequentRoute: entry.isFrequentRoute }];
+    })
+    .sort((a, b) => (metric.order === 'ascending' ? a.value - b.value : b.value - a.value));

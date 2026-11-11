@@ -7,6 +7,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
+import { DwellsTerminusNotice } from './DwellsTerminusNotice';
 
 interface DwellsSingleWrapperProps {
   query: UseQueryResult<SingleDayDataPoint[]>;
@@ -19,6 +20,8 @@ export const DwellsSingleWrapper = ({
   toStation,
   fromStation,
 }: DwellsSingleWrapperProps) => {
+  if (fromStation?.terminus) return <DwellsTerminusNotice />;
+
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" metric="dwells" />;

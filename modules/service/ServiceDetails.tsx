@@ -30,6 +30,9 @@ import {
 
 dayjs.extend(utc);
 
+// The chart's points are days, weeks or months depending on the range, and so is its peak.
+const PERIOD_NOUNS = { daily: 'day', weekly: 'week', monthly: 'month' } as const;
+
 export function ServiceDetails() {
   const {
     line,
@@ -61,7 +64,7 @@ export function ServiceDetails() {
 
   const showServiceHours = line === 'line-red' || line === 'line-orange' || line === 'line-blue';
 
-  const scheduledData = useScheduledService(
+  const scheduledService = useScheduledService(
     {
       start_date: startDate,
       end_date: endDate,
@@ -69,7 +72,8 @@ export function ServiceDetails() {
       agg: config.agg,
     },
     enabled
-  ).data;
+  );
+  const scheduledData = scheduledService.data;
 
   const serviceHoursData = useServiceHours(
     {
@@ -129,13 +133,13 @@ export function ServiceDetails() {
               })}
             />
             <StatCard
-              label="Peak day"
+              label={`Peak ${PERIOD_NOUNS[config.agg]}`}
               value={stats.peakCount != null ? `${Math.round(stats.peakCount)}` : '—'}
               unit="round trips"
             />
           </StatCardGrid>
         )}
-        <Widget title="Daily round trips" ready={[tripsData, scheduledData]}>
+        <Widget title="Daily round trips" ready={[tripsData, scheduledService]}>
           <ServiceGraphWrapper
             data={tripsData.data!}
             predictedData={scheduledData!}
@@ -147,7 +151,7 @@ export function ServiceDetails() {
         <Widget
           title="Service delivered"
           subtitle={`Compared to ${SERVICE_COMPARISON_LABELS[comparison]}`}
-          ready={[tripsData, scheduledData]}
+          ready={[tripsData, scheduledService]}
           action={comparisonControl}
         >
           <PercentageServiceGraphWrapper
@@ -172,7 +176,7 @@ export function ServiceDetails() {
         <Widget
           title="Scheduled service by hour"
           subtitle="Round trips"
-          ready={[scheduledData]}
+          ready={[scheduledService]}
           action={dayKindControl}
         >
           <DailyServiceHistogram scheduledService={scheduledData!} dayKind={dayKind} />

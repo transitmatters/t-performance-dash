@@ -12,14 +12,17 @@ type Point = DataPoint & { date: string };
 export const percent = (numerator?: number, denominator?: number) =>
   numerator != null && denominator ? (100 * numerator) / denominator : undefined;
 
-/** Map each period to a point, dropping periods without a value. */
+/**
+ * Map each period to a point, with a null value (a gap) where nothing was measured. Every series
+ * keeps one point per period, so a hover card reads the same period from each.
+ */
 export const toPoints = (
   data: ReliabilityEntry[],
   value: (entry: ReliabilityEntry) => number | undefined
 ): Point[] =>
-  data.flatMap((entry) => {
+  data.map((entry) => {
     const v = value(entry);
-    return v == null || !Number.isFinite(v) ? [] : [{ date: entry.date, value: v }];
+    return { date: entry.date, value: v == null || !Number.isFinite(v) ? null : v };
   });
 
 /** Average per service day, so partial weeks/months don't read as dips. */
@@ -67,9 +70,9 @@ export const formatPercent = (value?: number) =>
 export const formatCount = (value?: number) =>
   value == null || !Number.isFinite(value) ? '—' : Math.round(value).toLocaleString('en-us');
 
-type HeadwayField = keyof HeadwayCounts;
+export type HeadwayField = keyof HeadwayCounts;
 
-const HEADWAY_FIELDS: HeadwayField[] = [
+export const HEADWAY_FIELDS: HeadwayField[] = [
   'headways_under_50',
   'headways_50_75',
   'headways_75_125',
@@ -78,6 +81,7 @@ const HEADWAY_FIELDS: HeadwayField[] = [
 ];
 
 export const ON_TIME: HeadwayField[] = ['headways_75_125'];
+export const BUNCHED: HeadwayField[] = ['headways_under_50'];
 
 const sumFields = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
   fields.reduce((total, field) => total + (counts?.[field] ?? 0), 0);

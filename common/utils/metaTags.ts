@@ -31,7 +31,7 @@ const PAGE_DISPLAY_NAMES: Record<string, string> = {
   ridership: 'Ridership',
   reliability: 'Reliability',
   fleet: 'Fleet',
-  leaderboard: 'Leaderboard',
+  leaderboard: 'Rankings',
   speedmap: 'Speed Map',
   opensource: 'Open Source',
 };

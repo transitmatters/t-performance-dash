@@ -8,6 +8,7 @@ import {
 import {
   alertSegments,
   clipAlert,
+  formatAlertRange,
   formatTimeRange,
   packLanes,
   singleDayAxisBounds,
@@ -90,6 +91,34 @@ describe('clipAlert', () => {
       valid_to: '2026-11-06T03:00:00',
     };
     expect(clipAlert(alert, '2026-11-05')).toBeNull();
+  });
+
+  it('runs an alert with no end through the service day', () => {
+    const alert = { text: 'Delays', valid_from: '2026-11-05T08:05:00-05:00', valid_to: null };
+    expect(clipAlert(alert, '2026-11-05')).toEqual({
+      from: '2026-11-05T08:05:00',
+      to: '2026-11-06T01:15:00',
+    });
+  });
+
+  it('keeps Eastern wall-clock times from an offset timestamp', () => {
+    const alert = {
+      text: 'Delays',
+      valid_from: '2026-11-05T08:05:00-05:00',
+      valid_to: '2026-11-05T10:40:00-05:00',
+    };
+    expect(clipAlert(alert, '2026-11-05')).toEqual({
+      from: '2026-11-05T08:05:00',
+      to: '2026-11-05T10:40:00',
+    });
+  });
+});
+
+describe('formatAlertRange', () => {
+  it('reads an open-ended alert as starting at a time', () => {
+    expect(
+      formatAlertRange({ text: 'Delays', valid_from: '2026-11-05T08:05:00-05:00', valid_to: null })
+    ).toBe('Since Nov 5, 8:05 AM');
   });
 });
 

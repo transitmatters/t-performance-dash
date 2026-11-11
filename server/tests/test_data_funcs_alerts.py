@@ -3,6 +3,8 @@
 from datetime import date
 from unittest import mock
 
+import pytest
+
 from botocore.exceptions import ClientError
 
 from chalicelib import data_funcs
@@ -50,12 +52,17 @@ class TestAlertsDispatch:
     def test_lamp_range_reraises_non_missing_key_errors(self):
         other_error = ClientError({"Error": {"Code": "AccessDenied", "Message": "nope"}}, "GetObject")
         with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", side_effect=other_error):
-            # alerts() wraps everything in a bare except and returns None -- so the
-            # important thing is that it does NOT silently fall back to v3.
             with mock.patch("chalicelib.data_funcs.s3_alerts.get_v3_alerts") as mock_v3:
-                result = data_funcs.alerts(date.today(), {})
+                # Raised, so the route fails uncached rather than caching a day with no alerts.
+                with pytest.raises(ClientError):
+                    data_funcs.alerts(date.today(), {})
         mock_v3.assert_not_called()
-        assert result is None
+
+    def test_missing_file_in_every_source_is_no_alerts(self):
+        missing = ClientError({"Error": {"Code": "NoSuchKey", "Message": "missing"}}, "GetObject")
+        with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", side_effect=missing):
+            with mock.patch("chalicelib.data_funcs.s3_alerts.get_v3_alerts", side_effect=missing):
+                assert data_funcs.alerts(date.today(), {}) is None
 
     def test_v2_lamp_boundary_is_half_open(self):
         # 2019-09-14 is v2's last day; 2019-09-15 is LAMP's first. Neither source

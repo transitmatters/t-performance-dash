@@ -173,6 +173,8 @@ export type FetchSpeedRestrictionsOptions = {
 
 export type FetchPredictionsParams = {
   route_id: LineRouteId;
+  start_date?: string;
+  end_date?: string;
 };
 
 export type FetchSpeedRestrictionsResponse = {

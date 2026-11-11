@@ -41,3 +41,10 @@ class TestMonthlyResample:
         result = resample_and_aggregate(_daily(date(2026, 1, 15), 45), "monthly", "median")
 
         assert list(result) == ["2026-02-28"]
+
+
+class TestEmptyResample:
+    def test_empty_values_return_empty_at_every_agg(self):
+        # A range with no rows yet (e.g. schedules not loaded) used to raise on min() of nothing.
+        for agg in ("daily", "weekly", "monthly"):
+            assert resample_and_aggregate({}, agg, "mean") == {}

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
 import type { WidgetComparison } from '../MiniWidgetCreator';
-import { formatComparisonDelta, isNegligible } from './comparison';
+import { formatComparisonDelta, isImprovement, isNegligible } from './comparison';
 
 type SmallDataProps = {
   analysis: ReactNode;
@@ -33,9 +33,9 @@ export const SmallData = ({ analysis, widgetValue, comparison }: SmallDataProps)
               'ml-0.5 cursor-default text-xs',
               negligible
                 ? 'text-gray-400'
-                : comparison.delta > 0
-                  ? 'text-red-500'
-                  : 'text-green-600'
+                : isImprovement(comparison)
+                  ? 'text-green-600'
+                  : 'text-red-500'
             )}
           >
             <FontAwesomeIcon

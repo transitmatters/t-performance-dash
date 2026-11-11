@@ -17,6 +17,7 @@ import { getFormattedTimeString } from '../../utils/time';
 import {
   TEMPERATURE_BAND_OPACITY,
   TEMPERATURE_SCALE,
+  alignDailyTemperatureSeries,
   dailyTemperatureOn,
   getDailyTemperatureSeries,
   temperatureColor,
@@ -24,6 +25,8 @@ import {
   temperaturePointColor,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
+import { getMajorEventAnnotations, useMajorEvents } from '../../utils/majorEvents';
+import { useDelimitatedRoute } from '../../utils/router';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartDiv } from './ChartDiv';
@@ -111,6 +114,10 @@ export const AggregateLineChart = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
+  const { line } = useDelimitatedRoute();
+  // Charts by time of day span many dates at every point, so there's no day to mark.
+  const lineEvents = useMajorEvents(line, startDate, endDate);
+  const events = hourly || byTime ? [] : lineEvents;
 
   const trendlineData = useMemo(() => {
     if (!isTrendlineVisible) return [];
@@ -161,10 +168,11 @@ export const AggregateLineChart = ({
   ];
 
   if (temperatureSeries && temperatureSeries.mean.length > 0) {
+    const aligned = alignDailyTemperatureSeries(temperatureSeries, labels);
     const minIndex = datasets.length;
     datasets.push({
       label: 'Daily low',
-      data: temperatureSeries.min,
+      data: aligned.min,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
       pointRadius: 0,
@@ -174,7 +182,7 @@ export const AggregateLineChart = ({
     });
     datasets.push({
       label: 'Daily high',
-      data: temperatureSeries.max,
+      data: aligned.max,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
       backgroundColor: temperatureGradient(TEMPERATURE_BAND_OPACITY),
@@ -185,7 +193,7 @@ export const AggregateLineChart = ({
     });
     datasets.push({
       label: 'Daily mean',
-      data: temperatureSeries.mean,
+      data: aligned.mean,
       yAxisID: 'yTemp',
       borderColor: temperatureGradient(),
       borderWidth: 2,
@@ -282,7 +290,7 @@ export const AggregateLineChart = ({
             watermark: watermarkLayout(isMobile),
             plugins: {
               annotation: {
-                annotations: weatherBlocks,
+                annotations: [...weatherBlocks, ...getMajorEventAnnotations(events)],
               },
               legend: {
                 display: false,

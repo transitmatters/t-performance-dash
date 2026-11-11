@@ -30,12 +30,11 @@ def resample_and_aggregate(
     Returns:
         Dictionary mapping date strings to resampled values.
     """
+    if agg == "daily" or not values:
+        return values
     # parse start_date and end_date to pandas datetime64
     start_date = pd.to_datetime(min(values.keys()))
     end_date = pd.to_datetime(max(values.keys()))
-
-    if agg == "daily":
-        return values
     df = pd.DataFrame(list(values.items()), columns=["date", "value"])
     df["date"] = pd.to_datetime(df["date"])
 

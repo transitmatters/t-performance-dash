@@ -4,7 +4,7 @@ import type { Block } from '../../../common/components/charts/TimeSeriesChart';
 import { annotationTooltip } from '../../../common/components/charts/annotationTooltip';
 import { CHART_COLORS } from '../../../common/constants/colors';
 import { DATE_FORMAT } from '../../../common/constants/dates';
-import { prettyDate } from '../../../common/utils/date';
+import { prettyDate, wallClock } from '../../../common/utils/date';
 import { crStations, rtStations } from '../../../common/constants/stations';
 import type { CommuterRailRoute, LineShort } from '../../../common/types/lines';
 import type { Shutdown, ShutdownEffect } from '../../../common/types/shutdowns';
@@ -94,10 +94,6 @@ export const shutdownLabel = (effect: ShutdownEffect, stations: Station[]): stri
   }
   return `${prefix}: ${stationName(stations[0])}–${stationName(stations[stations.length - 1])}`;
 };
-
-// Periods are Eastern times with an offset. Dropping the offset keeps them on the charts'
-// Eastern wall-clock axis in any viewer's timezone.
-const wallClock = (iso: string) => dayjs(iso.slice(0, 19));
 
 // Set by hour rather than adding hours, so the window keeps its wall-clock times across DST.
 const serviceWindow = (day: dayjs.Dayjs) => ({

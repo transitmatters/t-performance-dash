@@ -29,6 +29,8 @@ import type { HoverCardContent } from '../hoverCard/types';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 
 import { watermarkLayout } from '../../../constants/charts';
+import type { MajorEvent } from '../../../constants/majorEvents';
+import { getMajorEventAnnotations } from '../../../utils/majorEvents';
 import type {
   AppliedDisplayStyle,
   Benchmark,
@@ -70,6 +72,7 @@ interface Props<Data extends Dataset[]> {
   data: Data;
   benchmarks?: Benchmark[];
   blocks?: Block[];
+  events?: MajorEvent[];
   legend?: LegendOptions;
   grid?: GridOptions;
   style?: Partial<DisplayStyle<Data[number]['data'][number]>>;
@@ -90,6 +93,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     valueAxis,
     benchmarks = [],
     blocks = [],
+    events = [],
     grid = { zIndex: 0 },
     legend = { visible: true },
     height,
@@ -148,7 +152,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         label: benchmark.label,
         backgroundColor: 'transparent',
         borderColor: color,
-        data: null as unknown as { x: string; y: number }[],
+        data: null as unknown as { x: string; y: number | null }[],
       };
     });
     return { datasets: [...datasets, ...benchmarkDummyDatasets] };
@@ -319,7 +323,12 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
           },
         },
         annotation: {
-          annotations: [...targetZoneAnnotations, ...benchmarkAnnotations, ...blockAnnotations],
+          annotations: [
+            ...targetZoneAnnotations,
+            ...benchmarkAnnotations,
+            ...blockAnnotations,
+            ...getMajorEventAnnotations(events),
+          ],
         },
       },
     };
@@ -328,6 +337,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     data,
     benchmarks,
     blocks,
+    events,
     timeAxis.granularity,
     legend.align,
     legend.position,

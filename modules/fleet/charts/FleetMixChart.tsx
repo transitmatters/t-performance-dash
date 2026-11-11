@@ -22,6 +22,11 @@ import {
   getNoDataSinceLatestAnnotation,
   getShuttlingBlockAnnotations,
 } from '../../service/utils/graphUtils';
+import {
+  getMajorEventAnnotations,
+  hideGapsExplainedByEvents,
+  useMajorEvents,
+} from '../../../common/utils/majorEvents';
 import type { ParamsType } from '../../speed/constants/speeds';
 import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import type { FleetType } from '../constants/fleetTypes';
@@ -54,14 +59,18 @@ export const FleetMixChart = ({
   const labels = data.map((point) => point.date);
   const lineColor = LINE_COLORS[line ?? 'default'];
   const shutdowns = usePageShutdowns('line', startDate, endDate);
+  const events = useMajorEvents(line, startDate, endDate);
   const shuttlingBlocks = showShuttling
-    ? explainGaps(
-        getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMix(datapoint, types)),
-        shutdowns,
-        {
-          startDate,
-          endDate,
-        }
+    ? hideGapsExplainedByEvents(
+        explainGaps(
+          getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMix(datapoint, types)),
+          shutdowns,
+          {
+            startDate,
+            endDate,
+          }
+        ),
+        events
       )
     : [];
 
@@ -131,7 +140,11 @@ export const FleetMixChart = ({
                 text: '',
               },
               annotation: {
-                annotations: [...shuttlingBlocks, ...getNoDataSinceLatestAnnotation(labels)],
+                annotations: [
+                  ...shuttlingBlocks,
+                  ...getNoDataSinceLatestAnnotation(labels),
+                  ...getMajorEventAnnotations(events),
+                ],
               },
             },
             scales: {
