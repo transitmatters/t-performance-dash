@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
-import { LEADERBOARD_METRICS } from './constants';
+import { LEADERBOARD_METRICS, MIN_SCHEDULED_TRIPS } from './constants';
 import type { BusSpeedSegmentLeaderboardEntry, BusSpeedSegmentProperties } from './types';
 import {
   averageDwell,
@@ -9,6 +9,7 @@ import {
   groupLeaderboardByBusRoute,
   isPooledSegment,
   periodSuffix,
+  rankAndSetAside,
   rankLeaderboard,
   segmentDistanceAndTime,
   segmentDwell,
@@ -290,7 +291,7 @@ describe('summarizeDwell', () => {
 });
 
 const DATE = '2026-10-31';
-const [SPEED, BATTERY, BUNCHED, RELIABILITY] = LEADERBOARD_METRICS;
+const [SPEED, BATTERY, BUNCHED, RELIABILITY, DROPPED] = LEADERBOARD_METRICS;
 
 const route = (
   id: string,
@@ -446,5 +447,99 @@ describe('headway rankings', () => {
       '57',
       '39',
     ]);
+  });
+});
+
+describe('dropped-trip rankings', () => {
+  const route = (
+    id: string,
+    trips?: [scheduled: number, dropped: number, waived: number]
+  ): BusSpeedLeaderboardEntry => ({
+    route: id,
+    miles_covered: 10,
+    total_time: 3600,
+    count: 1,
+    n_traversals: 1,
+    ...(trips && {
+      scheduled_trips: trips[0],
+      unobserved_trips: trips[1],
+      unobserved_waived_trips: trips[2],
+    }),
+  });
+
+  const DATE = '2026-10-31';
+
+  it('pools trip counts across the routes behind a label', () => {
+    const [group] = groupLeaderboardByBusRoute(
+      [route('749', [3000, 30, 20]), route('751', [5000, 10, 10])],
+      DATE
+    );
+
+    expect(group.route).toBe('SL4/SL5');
+    expect([group.scheduled_trips, group.unobserved_trips, group.unobserved_waived_trips]).toEqual([
+      8000, 40, 30,
+    ]);
+    // 40 of 8,000 trips, not the 0.6% mean of the two routes' rates.
+    expect(DROPPED.value(group)).toBe(0.5);
+  });
+
+  it('has no trip counts when no route in a label has them', () => {
+    const [group] = groupLeaderboardByBusRoute([route('1')], DATE);
+    expect(group).not.toHaveProperty('scheduled_trips');
+    expect(DROPPED.value(group)).toBeUndefined();
+  });
+
+  const grouped = () =>
+    groupLeaderboardByBusRoute(
+      [
+        route('1', [6000, 60, 50]), // 1.0%
+        route('28', [6000, 120, 100]), // 2.0%
+        route('39', [6000, 0, 0]), // none dropped
+        route('217', [MIN_SCHEDULED_TRIPS - 1, 4, 2]), // 0.8%, on too few trips
+        route('713', [1900, 300, 0]), // 15.8%, none waived; shown as 712/713
+        route('57'), // no trip counts
+      ],
+      DATE
+    );
+
+  it('ranks the most dropped first, leaving out routes with too few trips or none counted', () => {
+    expect(rankLeaderboard(grouped(), DROPPED).map((row) => row.route)).toEqual([
+      '712/713',
+      '28',
+      '1',
+      '39',
+    ]);
+  });
+
+  it('sets aside routes whose dropped trips may be tracking gaps', () => {
+    const { ranked, setAside } = rankAndSetAside(grouped(), DROPPED);
+
+    expect(ranked.map((row) => row.route)).toEqual(['28', '1', '39']);
+    expect(setAside.map((row) => [row.route, DROPPED.format(row.value), row.detail])).toEqual([
+      ['712/713', '15.8%', '300 of 1,900 trips'],
+    ]);
+  });
+
+  it('sets nothing aside for a metric without a set-aside', () => {
+    const { ranked, setAside } = rankAndSetAside(grouped(), SPEED);
+    expect(ranked).toHaveLength(6);
+    expect(setAside).toEqual([]);
+  });
+
+  it('shows the trips behind each rate', () => {
+    const [first] = rankLeaderboard(grouped(), DROPPED);
+    expect(first.detail).toBe('300 of 1,900 trips');
+    expect(rankLeaderboard(grouped(), SPEED)[0].detail).toBeUndefined();
+  });
+
+  it("doesn't round a few dropped trips down to 0%", () => {
+    expect(DROPPED.format(0.03)).toBe('<0.1%');
+    expect(DROPPED.format(0)).toBe('0.0%');
+    expect(DROPPED.format(2.29)).toBe('2.3%');
+  });
+
+  it('ranks whole months only', () => {
+    expect(DROPPED.monthlyOnly).toBe(true);
+    expect(LEADERBOARD_METRICS.filter((metric) => metric.monthlyOnly)).toEqual([DROPPED]);
   });
 });

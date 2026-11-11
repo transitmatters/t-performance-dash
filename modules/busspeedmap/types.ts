@@ -168,7 +168,7 @@ export type LeaderboardViewMode = 'route' | 'segment';
 /**
  * What the route leaderboard ranks by. Only speed has a segment view; the rest are per route.
  */
-export type LeaderboardMetric = 'speed' | 'battery' | 'bunched' | 'reliability';
+export type LeaderboardMetric = 'speed' | 'battery' | 'bunched' | 'reliability' | 'dropped';
 
 export interface LeaderboardMetricConfig {
   key: LeaderboardMetric;
@@ -181,13 +181,28 @@ export interface LeaderboardMetricConfig {
   /** The route's figure, or undefined to leave the route off the list. */
   value: (entry: BusSpeedLeaderboardEntry) => number | undefined;
   format: (value: number) => string;
-  /** Which end of the list comes first: the slowest, most bunched or least reliable, but the highest battery share. */
+  /** What the figure comes from, shown beside it, such as "12 of 1,400 trips". */
+  detail?: (entry: BusSpeedLeaderboardEntry) => string;
+  /** Which end of the list comes first: the slowest, most bunched, least reliable or most dropped, but the highest battery share. */
   order: 'ascending' | 'descending';
   /** Shown when the data has routes but this metric lists none of them. */
   emptyMessage: string;
+  /** Said under the list: how the figure is counted, and which routes it leaves out. */
+  note?: string;
   /**
    * Ranks Frequent Bus Routes only, so the Frequent toggle is hidden. Headways suit routes riders turn
    * up for without a schedule.
    */
   frequentOnly?: boolean;
+  /** Ranks whole months only, so the period control is hidden. */
+  monthlyOnly?: boolean;
+  /**
+   * Routes whose figure is in doubt. They're listed below the ranking, under `title`, rather than
+   * ranked against the rest.
+   */
+  setAside?: {
+    test: (entry: BusSpeedLeaderboardEntry) => boolean;
+    title: string;
+    description: string;
+  };
 }
