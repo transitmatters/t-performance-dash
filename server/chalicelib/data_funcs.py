@@ -2,7 +2,6 @@
 
 import datetime
 import pytz
-import traceback
 from datetime import date, timedelta
 from typing import Dict, Any, Callable, List, Union
 from botocore.exceptions import ClientError
@@ -198,10 +197,14 @@ def alerts(day: date, params):
       params: Dict optionally containing "route" key with route ID(s). Omitting it returns all alerts.
 
     Returns:
-      list[dict] | None: Flattened alert entries, or None if no data is available.
+      list[dict] | None: Flattened alert entries, or None if no source has a file for the day.
+
+    Raises:
+      ClientError: For any S3 error other than a missing file, such as throttling or a 5xx.
+        The route turns it into an uncached 500 rather than caching an empty day.
     """
+    routes = params.get("route")
     try:
-        routes = params.get("route")
         if day >= WE_HAVE_V2_ALERTS_SINCE and day < WE_HAVE_LAMP_ALERTS_SINCE:
             # This is stupid because we're emulating MBTA-performance ick
             alert_items = s3_alerts.get_v2_alerts(day, routes)
@@ -219,37 +222,40 @@ def alerts(day: date, params):
                     alert_items = s3_alerts.get_v2_alerts(day, routes)
         else:
             return None
-
-        # get data
-        flat_alerts = []
-        for alert_item in alert_items:
-            if "alert_versions" in alert_item:
-                try:
-                    for alert_version in alert_item["alert_versions"]:
-                        flat_alerts.append(
-                            {
-                                "valid_from": stamp_to_dt(int(alert_version["valid_from"])),
-                                "valid_to": stamp_to_dt(int(alert_version["valid_to"])),
-                                "text": alert_version["header_text"],
-                            }
-                        )
-                except KeyError as e:
-                    print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
-            elif "attributes" in alert_item and any(
-                alert_item["attributes"]["effect"] == x for x in ["DETOUR", "DELAY", "STOP_CLOSURE", "SERVICE_CHANGE"]
-            ):
-                try:
-                    for alert_version in alert_item["attributes"]["active_period"]:
-                        flat_alerts.append(
-                            {
-                                "valid_from": alert_version["start"],
-                                "valid_to": alert_version["end"],
-                                "text": alert_item["attributes"]["header"] or alert_item["attributes"]["short_header"],
-                            }
-                        )
-                except KeyError as e:
-                    print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
-        return flat_alerts
-    except Exception:
-        traceback.print_exc()
+    except ClientError as e:
+        if e.response["Error"]["Code"] != "NoSuchKey":
+            raise
         return None
+
+    flat_alerts = []
+    for alert_item in alert_items:
+        if "alert_versions" in alert_item:
+            try:
+                for alert_version in alert_item["alert_versions"]:
+                    flat_alerts.append(
+                        {
+                            "valid_from": stamp_to_dt(int(alert_version["valid_from"])),
+                            "valid_to": stamp_to_dt(int(alert_version["valid_to"])),
+                            "text": alert_version["header_text"],
+                        }
+                    )
+            except KeyError as e:
+                print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
+        elif "attributes" in alert_item and alert_item["attributes"].get("effect") in [
+            "DETOUR",
+            "DELAY",
+            "STOP_CLOSURE",
+            "SERVICE_CHANGE",
+        ]:
+            try:
+                for alert_version in alert_item["attributes"]["active_period"]:
+                    flat_alerts.append(
+                        {
+                            "valid_from": alert_version["start"],
+                            "valid_to": alert_version["end"],
+                            "text": alert_item["attributes"]["header"] or alert_item["attributes"]["short_header"],
+                        }
+                    )
+            except KeyError as e:
+                print(f"Handled KeyError: Couldn't access {e} from alert {alert_item}")
+    return flat_alerts

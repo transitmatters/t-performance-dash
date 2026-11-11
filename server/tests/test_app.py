@@ -4,6 +4,7 @@ import json
 from datetime import date
 
 import pytest
+from botocore.exceptions import ClientError
 from chalice import BadRequestError
 from chalice.test import Client
 
@@ -343,3 +344,35 @@ class TestHappyPaths:
         result = client.http.get("/api/stops/made-up-route")
         body = json.loads(result.body)
         assert "made-up-route" in body["error"]
+
+
+# ---------------------------------------------------------------------------
+# Failed S3 reads must not be cached at the edge or in browsers
+# ---------------------------------------------------------------------------
+
+
+class TestAlertsS3Errors:
+    @pytest.fixture(autouse=True)
+    def aws_backend(self, monkeypatch):
+        monkeypatch.setattr(chalice_app.config, "BACKEND_SOURCE", "aws")
+
+    def test_s3_error_returns_uncached_500(self, client, monkeypatch):
+        throttled = ClientError({"Error": {"Code": "SlowDown", "Message": "slow down"}}, "GetObject")
+
+        def get_lamp_alerts(day, routes):
+            raise throttled
+
+        monkeypatch.setattr(chalice_app.data_funcs.s3_alerts, "get_lamp_alerts", get_lamp_alerts)
+        result = client.http.get("/api/alerts/2023-01-04?route=Red")
+        assert result.status_code == 500
+        assert "Cache-Control" not in result.headers
+
+    def test_missing_day_returns_cacheable_null(self, client, monkeypatch):
+        def get_v2_alerts(day, routes):
+            raise ClientError({"Error": {"Code": "NoSuchKey", "Message": "not found"}}, "GetObject")
+
+        monkeypatch.setattr(chalice_app.data_funcs.s3_alerts, "get_v2_alerts", get_v2_alerts)
+        result = client.http.get("/api/alerts/2018-06-01?route=Red")
+        assert result.status_code == 200
+        assert json.loads(result.body) is None
+        assert result.headers["Cache-Control"].startswith("public, max-age=")

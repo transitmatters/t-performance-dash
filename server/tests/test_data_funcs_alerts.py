@@ -3,6 +3,7 @@
 from datetime import date
 from unittest import mock
 
+import pytest
 from botocore.exceptions import ClientError
 
 from chalicelib import data_funcs
@@ -48,14 +49,36 @@ class TestAlertsDispatch:
         mock_v3.assert_not_called()
 
     def test_lamp_range_reraises_non_missing_key_errors(self):
-        other_error = ClientError({"Error": {"Code": "AccessDenied", "Message": "nope"}}, "GetObject")
-        with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", side_effect=other_error):
-            # alerts() wraps everything in a bare except and returns None -- so the
-            # important thing is that it does NOT silently fall back to v3.
+        # A transient S3 failure must not be returned as an empty day, which the
+        # route would cache, or fall back to v3.
+        throttled = ClientError({"Error": {"Code": "SlowDown", "Message": "slow down"}}, "GetObject")
+        with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", side_effect=throttled):
             with mock.patch("chalicelib.data_funcs.s3_alerts.get_v3_alerts") as mock_v3:
-                result = data_funcs.alerts(date.today(), {})
+                with pytest.raises(ClientError):
+                    data_funcs.alerts(date.today(), {})
         mock_v3.assert_not_called()
-        assert result is None
+
+    def test_v2_range_reraises_non_missing_key_errors(self):
+        server_error = ClientError({"Error": {"Code": "InternalError", "Message": "oops"}}, "GetObject")
+        with mock.patch("chalicelib.data_funcs.s3_alerts.get_v2_alerts", side_effect=server_error):
+            with pytest.raises(ClientError):
+                data_funcs.alerts(date(2018, 6, 1), {})
+
+    def test_fallback_errors_are_reraised(self):
+        server_error = ClientError({"Error": {"Code": "InternalError", "Message": "oops"}}, "GetObject")
+        with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", side_effect=_no_such_key_error()):
+            with mock.patch("chalicelib.data_funcs.s3_alerts.get_v3_alerts", side_effect=server_error):
+                with pytest.raises(ClientError):
+                    data_funcs.alerts(date.today(), {})
+
+    def test_day_missing_from_every_source_returns_none(self):
+        with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", side_effect=_no_such_key_error()):
+            with mock.patch("chalicelib.data_funcs.s3_alerts.get_v3_alerts", side_effect=_no_such_key_error()):
+                assert data_funcs.alerts(date.today(), {}) is None
+
+    def test_v2_day_missing_returns_none(self):
+        with mock.patch("chalicelib.data_funcs.s3_alerts.get_v2_alerts", side_effect=_no_such_key_error()):
+            assert data_funcs.alerts(date(2018, 6, 1), {}) is None
 
     def test_v2_lamp_boundary_is_half_open(self):
         # 2019-09-14 is v2's last day; 2019-09-15 is LAMP's first. Neither source
@@ -100,6 +123,12 @@ class TestAlertsFlattening:
                 "active_period": [{"start": "2026-01-01T00:00:00-05:00", "end": None}],
             },
         }
+        with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", return_value=[alert]):
+            result = data_funcs.alerts(date(2026, 1, 1), {})
+        assert result == []
+
+    def test_alert_without_effect_is_skipped(self):
+        alert = {"id": "1", "attributes": {"header": "No effect", "active_period": []}}
         with mock.patch("chalicelib.data_funcs.s3_alerts.get_lamp_alerts", return_value=[alert]):
             result = data_funcs.alerts(date(2026, 1, 1), {})
         assert result == []

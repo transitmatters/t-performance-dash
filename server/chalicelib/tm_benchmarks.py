@@ -41,7 +41,12 @@ def _load_color(color: str) -> dict[str, int]:
     try:
         obj = s3.s3.get_object(Bucket=s3.BUCKET, Key=key)
     except ClientError as e:
-        logger.info(f"No TM benchmarks for {color} at s3://{s3.BUCKET}/{key}: {e.response['Error'].get('Code')}")
+        # Only a missing file means "no benchmarks". Anything else (throttling, a 5xx)
+        # is raised so it isn't cached for the container and baked into
+        # edge-cached travel-time responses as a null benchmark.
+        if e.response["Error"]["Code"] != "NoSuchKey":
+            raise
+        logger.info(f"No TM benchmarks for {color} at s3://{s3.BUCKET}/{key}")
         return {}
     try:
         payload = json.loads(obj["Body"].read().decode("utf-8"))
