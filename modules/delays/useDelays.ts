@@ -82,6 +82,5 @@ export const useDelays = (startDate: string | undefined, endDate: string | undef
     rangeData,
     /** Everything rangeData waits on, for a widget's `ready`. */
     rangeQueries: [alertDelays, ...edgeDelays],
-    greenBranch,
   } as const;
 };

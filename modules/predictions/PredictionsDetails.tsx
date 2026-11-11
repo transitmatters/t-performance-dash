@@ -16,8 +16,6 @@ import {
   statDelta,
 } from '../../common/utils/statDelta';
 import { DataNotes } from '../../common/components/notices/DataNotes';
-import { BranchSelector } from '../../common/components/inputs/BranchSelector';
-import { HeaderFilter } from '../../common/components/controls/HeaderFilters';
 import { useGreenBranch } from '../../common/hooks/useGreenBranch';
 import { prettyDate } from '../../common/utils/date';
 import { getPredictionStats, lineToDefaultRouteId } from './utils/utils';
@@ -53,11 +51,6 @@ export function PredictionsDetails() {
 
   return (
     <PageWrapper pageTitle={'Predictions'}>
-      {line === 'line-green' && (
-        <HeaderFilter label="Branch">
-          <BranchSelector routeId={greenBranch.routeId} setRouteId={greenBranch.setRouteId} />
-        </HeaderFilter>
-      )}
       <ChartPageDiv>
         {stats && Number.isFinite(stats.overallAccuracy) && (
           <StatCardGrid>

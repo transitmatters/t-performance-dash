@@ -22,7 +22,6 @@ const ALL_COMMUTER_RAIL = 'commuter-rail';
 export function ReliabilityDetails() {
   const {
     line,
-    lineShort,
     query: { startDate, endDate, crRoute, busRoute },
   } = useDelimitatedRoute();
   const isRide = line === 'line-RIDE';
@@ -68,7 +67,7 @@ export function ReliabilityDetails() {
           </Notice>
         )}
         {isSubway || isBus ? (
-          <HeadwayReliability line={line} lineShort={lineShort} {...props} />
+          <HeadwayReliability line={line} {...props} />
         ) : isRide ? (
           <TheRideReliability {...props} />
         ) : (

@@ -3,7 +3,7 @@ import type { DateStoreSection } from '../../constants/pages';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DateControl } from './DateControl';
 import { DisplayMenu } from './DisplayMenu';
-import { HeaderFilterSlot } from './HeaderFilters';
+import { PageFilters } from './PageFilters';
 import { RouteSelector } from './RouteSelector';
 import { TripModeToggle } from './TripModeToggle';
 
@@ -20,7 +20,7 @@ export interface ControlPanelProps {
 const isTripsSection = (dateStoreSection: DateStoreSection) =>
   dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips';
 
-export const hasControls = (dateStoreSection: DateStoreSection) =>
+export const pageHasControls = (dateStoreSection: DateStoreSection) =>
   isTripsSection(dateStoreSection) ||
   dateStoreSection === 'line' ||
   dateStoreSection === 'overview' ||
@@ -28,17 +28,18 @@ export const hasControls = (dateStoreSection: DateStoreSection) =>
 
 /** The toggle switches between the two trips pages, so pages that merely borrow the singleTrips
  * section for date storage (like the bus speed map) don't show it. */
-export const showsTripControls = (
+export const shouldShowTripControls = (
   dateStoreSection: DateStoreSection,
   line: Line | undefined,
   hasStationStore: boolean | undefined
 ) => isTripsSection(dateStoreSection) && Boolean(line) && Boolean(hasStationStore);
 
-export const showsDates = (dateStoreSection: DateStoreSection, line: Line | undefined) =>
+/** Line pages and System pages have a date control. */
+export const shouldShowDateControl = (dateStoreSection: DateStoreSection, line: Line | undefined) =>
   Boolean(line) || dateStoreSection === 'system';
 
 /** Events mark dates on a range; a single day has none to mark. */
-export const showsDisplayMenu = (dateStoreSection: DateStoreSection) =>
+export const shouldShowDisplayMenu = (dateStoreSection: DateStoreSection) =>
   dateStoreSection !== 'singleTrips';
 
 export const queryTypeFor = (dateStoreSection: DateStoreSection) =>
@@ -54,11 +55,11 @@ export const BandControls = ({
   hasStationStore,
   hasRouteSelector = true,
 }: ControlPanelProps) => {
-  if (!hasControls(dateStoreSection)) return null;
+  if (!pageHasControls(dateStoreSection)) return null;
   return (
     <div className="flex min-w-0 flex-row flex-wrap items-center justify-end gap-2">
       {hasRouteSelector && <RouteSelector />}
-      {showsTripControls(dateStoreSection, line, hasStationStore) && line && (
+      {shouldShowTripControls(dateStoreSection, line, hasStationStore) && line && (
         <StationSelectorWidget
           line={line}
           busRoute={busRoute}
@@ -76,11 +77,11 @@ export const BarControls = ({
   line,
   hasStationStore,
 }: Pick<ControlPanelProps, 'dateStoreSection' | 'line' | 'hasStationStore'>) => {
-  if (!hasControls(dateStoreSection)) return null;
+  if (!pageHasControls(dateStoreSection)) return null;
   return (
     <div className="flex flex-row flex-wrap items-center gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-5 py-2 text-stone-900 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-100">
-      {showsTripControls(dateStoreSection, line, hasStationStore) && <TripModeToggle />}
-      {showsDates(dateStoreSection, line) && (
+      {shouldShowTripControls(dateStoreSection, line, hasStationStore) && <TripModeToggle />}
+      {shouldShowDateControl(dateStoreSection, line) && (
         <DateControl
           dateStoreSection={dateStoreSection}
           queryType={queryTypeFor(dateStoreSection)}
@@ -88,8 +89,10 @@ export const BarControls = ({
       )}
       {/* Filters and Display wrap as one, so Display is never left alone on a second row. */}
       <div className="flex min-w-fit flex-1 flex-row items-center gap-x-3">
-        <HeaderFilterSlot className="flex flex-row flex-wrap items-center gap-x-5 gap-y-2 empty:hidden" />
-        {showsDisplayMenu(dateStoreSection) && (
+        <div className="flex flex-row flex-wrap items-center gap-x-5 gap-y-2 empty:hidden">
+          <PageFilters />
+        </div>
+        {shouldShowDisplayMenu(dateStoreSection) && (
           <div className="ml-auto">
             <DisplayMenu />
           </div>

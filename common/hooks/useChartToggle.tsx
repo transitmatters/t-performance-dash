@@ -12,6 +12,8 @@ import { lineColorVar } from '../styles/general';
 import type { QueryParams } from '../types/router';
 import { useDelimitatedRoute, useSetQueryParam } from '../utils/router';
 
+type ToggleVariant = 'toggle' | 'select';
+
 interface UseChartToggleOptions {
   /**
    * 'toggle' is a segmented control, 'select' is a dropdown. Left unset, a binary choice (a view
@@ -19,7 +21,7 @@ interface UseChartToggleOptions {
    * — several of these controls can share a card header, and pill buttons stop fitting well before
    * a dropdown does.
    */
-  variant?: 'toggle' | 'select';
+  variant?: ToggleVariant;
   /**
    * Query-string key to keep this control's value in. Supply one and the control becomes part of
    * the shareable URL; leave it off and the value stays local component state. Only the non-default
@@ -28,26 +30,95 @@ interface UseChartToggleOptions {
   paramKey?: keyof QueryParams;
 }
 
+interface ToggleControlProps<K extends string> {
+  value: K;
+  options: [K, string][];
+  onChange: (value: K) => void;
+  variant?: ToggleVariant;
+}
+
+/** A segmented control or dropdown over a fixed set of options. */
+export const ToggleControl = <K extends string>({
+  value,
+  options,
+  onChange,
+  variant,
+}: ToggleControlProps<K>) => {
+  const { line } = useDelimitatedRoute();
+
+  if ((variant ?? (options.length > 2 ? 'select' : 'toggle')) === 'select') {
+    return (
+      <Select value={value} onValueChange={(next) => onChange(next as K)}>
+        <SelectTrigger
+          size="sm"
+          style={lineColorVar(line)}
+          className="border-(--line-color)/40 data-[state=open]:border-(--line-color)"
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent align="end">
+          {options.map(([key, label]) => (
+            <SelectItem key={key} value={key}>
+              {label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    );
+  }
+
+  return (
+    <ButtonGroup
+      line={line}
+      pressFunction={onChange}
+      selectedIndex={Math.max(
+        options.findIndex(([key]) => key === value),
+        0
+      )}
+      options={options}
+      additionalDivClass="w-auto"
+      additionalButtonClass="flex-none px-3"
+    />
+  );
+};
+
+/**
+ * An unrecognised param value (a hand-edited or stale link) falls back to the default rather than
+ * putting the page into a state its control cannot display.
+ */
+const parseOption = <K extends string>(raw: unknown, initial: K, options: [K, string][]) =>
+  (options.some(([key]) => key === raw) ? raw : initial) as K;
+
+/** One of a fixed set of options, kept in the URL; only a non-default value is written. */
+export const useOptionParam = <K extends string>(
+  paramKey: keyof QueryParams,
+  initial: K,
+  options: [K, string][]
+) => {
+  const { query } = useDelimitatedRoute();
+  const setQueryParam = useSetQueryParam();
+  const value = parseOption(query[paramKey], initial, options);
+  const setValue = useCallback(
+    (next: K) => setQueryParam(paramKey, next === initial ? undefined : next),
+    [paramKey, setQueryParam, initial]
+  );
+  return { value, setValue, options };
+};
+
 /**
  * Pairs a chart's view/filter state with the control that changes it, so a parent can render the
- * control in its card header while the chart itself stays a child. Without this, every parent would
- * repeat the same useState and control wiring.
+ * control in its card header while the chart itself stays a child.
  */
 export const useChartToggle = <K extends string, T extends string>(
   initial: K,
   options: [K, T][],
   { variant, paramKey }: UseChartToggleOptions = {}
 ): { value: K; control: ReactNode } => {
-  const { line, query } = useDelimitatedRoute();
+  const { query } = useDelimitatedRoute();
   const setQueryParam = useSetQueryParam();
   const [localValue, setLocalValue] = useState<K>(initial);
 
-  // An unrecognised param value (a hand-edited or stale link) falls back to the default rather
-  // than putting the chart into a state its control cannot display.
-  const fromQuery = paramKey ? query[paramKey] : undefined;
-  const value = paramKey
-    ? ((options.some(([key]) => key === fromQuery) ? fromQuery : initial) as K)
-    : localValue;
+  const value = paramKey ? parseOption(query[paramKey], initial, options) : localValue;
 
   const setValue = useCallback(
     (next: K) => {
@@ -60,48 +131,10 @@ export const useChartToggle = <K extends string, T extends string>(
     [paramKey, setQueryParam, initial]
   );
 
-  const resolvedVariant = variant ?? (options.length > 2 ? 'select' : 'toggle');
-
-  if (resolvedVariant === 'select') {
-    return {
-      value,
-      control: (
-        <Select value={value} onValueChange={(next) => setValue(next as K)}>
-          <SelectTrigger
-            size="sm"
-            style={lineColorVar(line)}
-            className="border-(--line-color)/40 data-[state=open]:border-(--line-color)"
-          >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent align="end">
-            {options.map(([key, label]) => (
-              <SelectItem key={key} value={key}>
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      ),
-    };
-  }
-
-  const selectedIndex = Math.max(
-    options.findIndex(([key]) => key === value),
-    0
-  );
-
   return {
     value,
     control: (
-      <ButtonGroup
-        line={line}
-        pressFunction={setValue}
-        selectedIndex={selectedIndex}
-        options={options}
-        additionalDivClass="w-auto"
-        additionalButtonClass="flex-none px-3"
-      />
+      <ToggleControl value={value} options={options} onChange={setValue} variant={variant} />
     ),
   };
 };

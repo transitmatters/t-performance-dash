@@ -24,9 +24,14 @@ import {
   SheetTrigger,
 } from '../ui/sheet';
 import type { ControlPanelProps } from './ControlPanel';
-import { queryTypeFor, showsDates, showsDisplayMenu, showsTripControls } from './ControlPanel';
+import {
+  queryTypeFor,
+  shouldShowDateControl,
+  shouldShowDisplayMenu,
+  shouldShowTripControls,
+} from './ControlPanel';
 import { DateControl } from './DateControl';
-import { HeaderFilterSlot } from './HeaderFilters';
+import { PageFilters } from './PageFilters';
 import { RouteSelector } from './RouteSelector';
 import { TripModeToggle } from './TripModeToggle';
 
@@ -70,21 +75,20 @@ export const MobileControlPanel = ({
   const queryType = queryTypeFor(dateStoreSection);
   const { presetName, dates } = useDateSummary(queryType);
   const { lineName, pageTitle } = usePageHeading();
-  const showEvents = useMajorEventsStore((state) => state.showEvents);
-  const setShowEvents = useMajorEventsStore((state) => state.setShowEvents);
-  const trips = showsTripControls(dateStoreSection, line, hasStationStore);
-  const hasDates = showsDates(dateStoreSection, line);
+  const { showEvents, setShowEvents } = useMajorEventsStore();
+  const showTripControls = shouldShowTripControls(dateStoreSection, line, hasStationStore);
+  const showDateControl = shouldShowDateControl(dateStoreSection, line);
   const editNeedsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
 
-  const headline = hasDates ? (presetName ?? dates) : pageTitle;
-  const detail = hasDates && presetName ? dates : undefined;
+  const headline = showDateControl ? (presetName ?? dates) : pageTitle;
+  const detail = showDateControl && presetName ? dates : undefined;
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <div className="fixed bottom-0 z-20 flex w-full flex-row items-center gap-3 border-t border-stone-200 bg-white px-3 pt-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom))] text-stone-900 shadow-[0_-2px_8px_rgba(0,0,0,0.06)] dark:border-stone-800 dark:bg-stone-900 dark:text-stone-100">
         <div className="flex min-w-0 flex-1 flex-col leading-tight">
           <span className="truncate text-sm font-semibold">{headline}</span>
-          {trips && line ? (
+          {showTripControls && line ? (
             <TripStops line={line} busRoute={busRoute} crRoute={crRoute} ferryRoute={ferryRoute} />
           ) : (
             detail && (
@@ -117,7 +121,7 @@ export const MobileControlPanel = ({
               <RouteSelector />
             </Section>
           )}
-          {trips && line && (
+          {showTripControls && line && (
             <Section label="Stations">
               <StationSelectorWidget
                 line={line}
@@ -127,18 +131,20 @@ export const MobileControlPanel = ({
               />
             </Section>
           )}
-          {trips && (
+          {showTripControls && (
             <Section label="Trip view">
               <TripModeToggle />
             </Section>
           )}
-          {hasDates && (
+          {showDateControl && (
             <Section label="Dates">
               <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
             </Section>
           )}
-          <HeaderFilterSlot className="flex flex-col gap-4 empty:hidden" />
-          {showsDisplayMenu(dateStoreSection) && (
+          <div className="flex flex-col gap-4 empty:hidden">
+            <PageFilters />
+          </div>
+          {shouldShowDisplayMenu(dateStoreSection) && (
             <ToggleSwitch
               enabled={showEvents}
               setEnabled={setShowEvents}
