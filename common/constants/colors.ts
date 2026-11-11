@@ -73,7 +73,7 @@ export const LINE_COLORS: { [key in Line | 'default']: string } = {
   'line-mattapan': COLORS.mbta.mattapan,
   'line-commuter-rail': COLORS.mbta.commuterRail,
   'line-ferry': COLORS.mbta.ferry,
-  'line-RIDE': COLORS.mbta.bus,
+  'line-RIDE': COLORS.mbta.theRide,
   default: '#303030',
 };
 

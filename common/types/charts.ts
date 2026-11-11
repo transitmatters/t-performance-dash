@@ -176,8 +176,3 @@ export interface HeadwaysChartProps {
   /** Fill the parent's height and leave out the buttons under the chart, as an embed does. */
   fill?: boolean;
 }
-
-// additional data for rendering headway tooltip
-export interface HeadwayTooltipData {
-  pct_trains: number;
-}
