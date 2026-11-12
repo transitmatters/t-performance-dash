@@ -2,7 +2,11 @@
 
 import { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useBusDwellsUrl, useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
+import {
+  useBusDwellsUrl,
+  useBusSpeedSegmentsHasFreeFlow,
+  useBusSpeedSegmentsUrl,
+} from '../../common/api/hooks/busSpeedSegments';
 import { BusSpeedDataUnavailableError } from '../../common/api/busSpeedSegments';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -20,13 +24,14 @@ import { BusSpeedMapViewLazy as BusSpeedMapView } from './map/BusSpeedMapViewLaz
 import {
   ALL_ROUTES,
   DAY_TYPES,
+  DEFAULT_COLOR_BY,
   DEFAULT_DAY_TYPE,
   DEFAULT_DIRECTION,
   DEFAULT_SPEED_MAP_PERIOD,
   DEFAULT_TIME_BAND,
   TIME_BANDS,
 } from './constants';
-import type { DayType, DirectionFilter, Period, TimeBand } from './types';
+import type { DayType, DirectionFilter, Period, SegmentColorBy, TimeBand } from './types';
 import { isPeriodInProgress, periodLabel } from './utils';
 
 export function BusSpeedMapDetails() {
@@ -38,6 +43,7 @@ export function BusSpeedMapDetails() {
   const [dayType, setDayType] = useState<DayType>(DEFAULT_DAY_TYPE);
   const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
   const [direction, setDirection] = useState<DirectionFilter>(DEFAULT_DIRECTION);
+  const [colorBy, setColorBy] = useState<SegmentColorBy>(DEFAULT_COLOR_BY);
 
   // One route_id out of a composite like SL4/SL5, or ALL_ROUTES. Back to all of them whenever
   // the sidebar picks another route, rather than carrying a member over that isn't in it.
@@ -54,6 +60,11 @@ export function BusSpeedMapDetails() {
   // Null for an archive from before dwell had a layer of its own. Read as running speeds until
   // that's known, as every archive from here on is.
   const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand }, Boolean(date));
+  // Delay needs free-flow times, which archives from before mbta-performance#166 don't have. For
+  // those the control is hidden and the map stays on speed, keeping the choice for the next date
+  // that has them.
+  const { data: hasFreeFlow } = useBusSpeedSegmentsHasFreeFlow(pmtilesUrl);
+  const shownColorBy: SegmentColorBy = hasFreeFlow ? colorBy : 'speed';
 
   const bandLabel = TIME_BANDS.find((band) => band.key === timeBand);
   const dayTypeLabel = period !== 'daily' ? DAY_TYPES.find((dt) => dt.key === dayType) : undefined;
@@ -88,6 +99,7 @@ export function BusSpeedMapDetails() {
             // Driven by the sidebar route picker / URL, narrowed by the in-page route control
             // for a composite.
             routeFilter={routeId === ALL_ROUTES ? busRoute : routeId}
+            colorBy={shownColorBy}
           />
         </ErrorBoundary>
       </div>
@@ -113,6 +125,8 @@ export function BusSpeedMapDetails() {
               routeIds={routeIds}
               routeId={routeId}
               setRouteId={setRouteId}
+              colorBy={hasFreeFlow ? colorBy : undefined}
+              setColorBy={hasFreeFlow ? setColorBy : undefined}
             />
             {isPeriodInProgress(date, period) && (
               <p className="text-xs text-stone-500">
@@ -121,7 +135,7 @@ export function BusSpeedMapDetails() {
               </p>
             )}
             {renderBody()}
-            <BusSpeedLegend hasDwells={dwellsUrl !== null} />
+            <BusSpeedLegend hasDwells={dwellsUrl !== null} colorBy={shownColorBy} />
           </div>
         </WidgetDiv>
       </ChartPageDiv>

@@ -7,6 +7,7 @@ import type {
   LeaderboardMetric,
   LeaderboardMetricConfig,
   Period,
+  SegmentColorBy,
   TerminalSection,
   TimeBand,
 } from './types';
@@ -98,6 +99,32 @@ export const SPEED_COLOR_STOPS: [number, string][] = [
 
 /** A segment with no speed to draw: too short to time (see MIN_RUNNING_SPEED_SEGMENT_M). */
 export const NO_SPEED_COLOR = '#a8a29e';
+
+export const COLOR_BY_OPTIONS: { key: SegmentColorBy; label: string }[] = [
+  { key: 'speed', label: 'Speed' },
+  { key: 'delay', label: 'Delay' },
+];
+
+export const DEFAULT_COLOR_BY: SegmentColorBy = 'speed';
+
+/** When a segment's free-flow running time is taken from: mbta-performance's FREE_FLOW_WINDOWS. */
+export const FREE_FLOW_HOURS = 'before 6am and after 10pm';
+
+/**
+ * Running time over free-flow running time, as in light traffic (1) to three times as long. The
+ * speed ramp's colours in reverse, so red means slow in either view.
+ *
+ * Spread to fit the PM peak, the worst band. On weekdays in October 2026, its segments' median was
+ * 1.22, with a quarter of them over 1.5, one in ten over 2, and one in thirty over 2.85. The AM
+ * peak's median was 1.13 and midday's 1.12.
+ */
+export const DELAY_COLOR_STOPS: [number, string][] = [
+  [1, '#313695'],
+  [1.25, '#74add1'],
+  [1.5, '#fee090'],
+  [2, '#f46d43'],
+  [3, '#a50026'],
+];
 
 /**
  * mbta-performance's MIN_RUNNING_SPEED_SEGMENT_M: segments shorter than this have no running

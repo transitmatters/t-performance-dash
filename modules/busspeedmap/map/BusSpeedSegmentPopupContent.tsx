@@ -3,6 +3,7 @@ import { TERMINAL_SECTION_NOTES } from '../constants';
 import type { BusSpeedSegmentProperties, Period } from '../types';
 import {
   compareRouteNames,
+  formatSegmentDelay,
   formatSegmentSpeed,
   isPooledSegment,
   noSpeedReason,
@@ -38,6 +39,7 @@ const SegmentStats = ({
   // Only in archives from before dwell had a layer of its own, whose speeds count it.
   const dwell = segmentDwell(segment);
   const speedRange = segmentSpeedRange(segment);
+  const delay = formatSegmentDelay(segment);
   return (
     <div className="mt-1">
       <p className="text-sm font-semibold">
@@ -45,6 +47,7 @@ const SegmentStats = ({
         {formatSegmentSpeed(segment)}
       </p>
       {segmentSpeed(segment) == null && <p className="text-stone-600">{noSpeedReason(segment)}</p>}
+      {delay && <p className="text-stone-600">{delay}</p>}
       {distanceAndTime && <p className="text-stone-600">{distanceAndTime}</p>}
       {dwell && (
         <p className="text-stone-600">
