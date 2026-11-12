@@ -40,13 +40,13 @@ export const TotalDelayGraph = ({
   showTitle = false,
   agg = 'weekly',
 }: TotalDelayGraphProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line, colorKey, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const events = useMajorEvents(line, startDate, endDate);
 
-  const lineColor = LINE_COLORS[line ?? 'default'];
+  const lineColor = LINE_COLORS[colorKey ?? 'default'];
 
   const remainingBlocks = getRemainingBlockAnnotation(
     dayjs(max(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT) ??

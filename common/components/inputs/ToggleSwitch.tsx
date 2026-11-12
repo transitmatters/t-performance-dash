@@ -11,7 +11,7 @@ interface ToggleSwitchProps {
 }
 
 export const ToggleSwitch = ({ enabled, setEnabled, label }: ToggleSwitchProps) => {
-  const { line } = useDelimitatedRoute();
+  const { colorKey } = useDelimitatedRoute();
   const id = useId();
 
   return (
@@ -20,7 +20,7 @@ export const ToggleSwitch = ({ enabled, setEnabled, label }: ToggleSwitchProps) 
         id={id}
         checked={enabled}
         onCheckedChange={setEnabled}
-        style={lineColorVar(line)}
+        style={lineColorVar(colorKey)}
         className="data-[state=checked]:bg-(--line-color)"
       />
       <Label

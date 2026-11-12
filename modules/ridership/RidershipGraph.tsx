@@ -48,6 +48,7 @@ export const RidershipGraph = ({
 }: RidershipGraphProps) => {
   const {
     line,
+    colorKey,
     linePath,
     query: { busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
@@ -60,7 +61,7 @@ export const RidershipGraph = ({
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
-    const lineColor = LINE_COLORS[line ?? 'default'];
+    const lineColor = LINE_COLORS[colorKey ?? 'default'];
 
     return (
       <ChartStack>
@@ -265,7 +266,7 @@ export const RidershipGraph = ({
   }, [
     peak,
     stationName,
-    line,
+    colorKey,
     data,
     isMobile,
     linePath,

@@ -4,15 +4,15 @@ import { lineColorBackground, textOnLineColor } from '../../common/styles/genera
 import { usePageHeading } from '../../common/hooks/usePageHeading';
 
 export const MobileHeader = () => {
-  const { line } = useDelimitatedRoute();
+  const { colorKey } = useDelimitatedRoute();
   const { lineName, pageTitle } = usePageHeading();
 
   return (
     <div
       className={classNames(
         'sticky top-12 z-10 mb-2 flex flex-row justify-between gap-x-6 rounded-b-sm shadow-md',
-        textOnLineColor(line),
-        lineColorBackground[line ?? 'DEFAULT']
+        textOnLineColor(colorKey),
+        lineColorBackground[colorKey ?? 'DEFAULT']
       )}
     >
       <div className={'flex shrink-0 flex-col pt-2'}>

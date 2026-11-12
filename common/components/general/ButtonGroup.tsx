@@ -4,6 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import { lineColorVar, needsDarkTextOn } from '../../styles/general';
 import type { Line } from '../../types/lines';
+import { useLineColorKey } from '../../utils/router';
 
 // Sized to the active item rather than the wrapper, so a margin or height that callers put on the
 // group through additionalDivClass can't stretch the pill past the buttons.
@@ -51,7 +52,8 @@ export const ButtonGroup: <T extends string, K extends string>(
   }
 
   const selected = options[internalIndex]?.[0];
-  const needsDarkText = needsDarkTextOn(line);
+  const colorKey = useLineColorKey(line);
+  const needsDarkText = needsDarkTextOn(colorKey);
 
   // The active pill slides between items instead of each item's background snapping on/off —
   // measured via DOM query since the underlying Radix items aren't ref-forwarding components.
@@ -94,7 +96,7 @@ export const ButtonGroup: <T extends string, K extends string>(
   }, [movePill]);
 
   return (
-    <div ref={containerRef} className="relative isolate" style={lineColorVar(line)}>
+    <div ref={containerRef} className="relative isolate" style={lineColorVar(colorKey)}>
       <span
         ref={pillRef}
         aria-hidden="true"

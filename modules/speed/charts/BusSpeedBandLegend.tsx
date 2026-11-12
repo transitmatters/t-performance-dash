@@ -3,33 +3,35 @@ import { useMemo } from 'react';
 import { LINE_COLORS } from '../../../common/constants/colors';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { hexWithAlpha } from '../../../common/utils/general';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 import { TIME_BANDS } from '../../busspeedmap/constants';
 import type { TimeBand } from '../../busspeedmap/types';
 import { BAND_COLORS } from '../utils/busSpeedBands';
-
-const BUS_YELLOW = LINE_COLORS['line-bus'];
 
 /**
  * All day's fill: the solid look the graph has always had when it's the only line, and a faint
  * backdrop once band lines are drawn over it.
  */
-export const ALL_DAY_FILL = {
-  solo: hexWithAlpha(BUS_YELLOW, 0.8),
-  backdrop: hexWithAlpha(BUS_YELLOW, 0.22),
-};
+export const allDayFill = (color: string, backdrop: boolean) =>
+  hexWithAlpha(color, backdrop ? 0.22 : 0.8);
 
-/** Each line's color for the current theme: bus yellow for All day, the band palette otherwise. */
+/**
+ * Each line's color for the current theme: the route's own color for All day (bus yellow, or silver
+ * on a Silver Line route), the band palette otherwise.
+ */
 export const useBandColors = (): Record<TimeBand, string> => {
   const isDark = useThemeStore((state) => state.theme) === 'dark';
+  const { colorKey } = useDelimitatedRoute();
+  const allDay = LINE_COLORS[colorKey ?? 'line-bus'];
   return useMemo(
     () =>
       Object.fromEntries(
         TIME_BANDS.map(({ key }) => [
           key,
-          key === 'all_day' ? BUS_YELLOW : BAND_COLORS[key][isDark ? 'dark' : 'light'],
+          key === 'all_day' ? allDay : BAND_COLORS[key][isDark ? 'dark' : 'light'],
         ])
       ) as Record<TimeBand, string>,
-    [isDark]
+    [isDark, allDay]
   );
 };
 

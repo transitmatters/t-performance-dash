@@ -6,7 +6,12 @@ import { Link } from '../general/Link';
 import type { Href } from '../general/Link';
 import type { Location } from '../../types/charts';
 import type { Line } from '../../types/lines';
-import { useDelimitatedRoute, useGenerateHref, useHandleConfigStore } from '../../utils/router';
+import {
+  useDelimitatedRoute,
+  useGenerateHref,
+  useHandleConfigStore,
+  useLineColorKey,
+} from '../../utils/router';
 import { LINE_COLORS } from '../../constants/colors';
 import type { Page } from '../../constants/pages';
 import { ALL_PAGES } from '../../constants/pages';
@@ -42,6 +47,7 @@ export const WidgetTitle = ({
   titleHref,
 }: WidgetTitle) => {
   const { page, query, linePath } = useDelimitatedRoute();
+  const colorKey = useLineColorKey(line);
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
 
@@ -60,14 +66,17 @@ export const WidgetTitle = ({
     >
       <CardTitle
         as="h2"
-        className={classNames(titleClassName, line ? mbtaTextConfig[line] : 'text-card-foreground')}
+        className={classNames(
+          titleClassName,
+          colorKey ? mbtaTextConfig[colorKey] : 'text-card-foreground'
+        )}
       >
         {title}
       </CardTitle>
       <FontAwesomeIcon
         icon={faChevronRight}
-        style={line ? { color: LINE_COLORS[line] } : undefined}
-        className={classNames('h-4 w-auto pl-2', !line && 'text-card-foreground')}
+        style={colorKey ? { color: LINE_COLORS[colorKey] } : undefined}
+        className={classNames('h-4 w-auto pl-2', !colorKey && 'text-card-foreground')}
       />
     </Link>
   ) : (
@@ -94,7 +103,7 @@ export const WidgetTitle = ({
             {action}
           </div>
         )}
-        {location && <LocationTitle location={location} both={both} line={line} />}
+        {location && <LocationTitle location={location} both={both} line={colorKey} />}
       </div>
     </CardHeader>
   );

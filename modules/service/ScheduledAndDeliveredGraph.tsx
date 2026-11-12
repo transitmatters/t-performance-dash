@@ -35,8 +35,8 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
     fill,
   } = props;
   const data = useMemo(() => [scheduled, delivered], [scheduled, delivered]);
-  const { line } = useDelimitatedRoute();
-  const color = LINE_COLORS[line ?? 'default'];
+  const { line, colorKey } = useDelimitatedRoute();
+  const color = LINE_COLORS[colorKey ?? 'default'];
   const events = useMajorEvents(line, startDate, endDate);
 
   return (

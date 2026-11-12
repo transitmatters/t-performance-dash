@@ -15,7 +15,7 @@ import { TripEmbedButton } from '../../tripexplorer/TripEmbedButton';
 import { getHeadwayBuckets } from './utils';
 
 export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps) => {
-  const { line, linePath, lineShort } = useDelimitatedRoute();
+  const { colorKey, linePath, lineShort } = useDelimitatedRoute();
 
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -39,7 +39,7 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
             data={{
               datasets: [
                 {
-                  backgroundColor: LINE_COLORS[line ?? 'default'],
+                  backgroundColor: LINE_COLORS[colorKey ?? 'default'],
                   borderRadius: 4,
                   label:
                     lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
@@ -104,12 +104,12 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
                         hero: {
                           value: count.toLocaleString(),
                           unit: count === 1 ? vehicle : vehicles,
-                          color: LINE_COLORS[line ?? 'default'],
+                          color: LINE_COLORS[colorKey ?? 'default'],
                         },
                         meter: {
                           fraction: pctTrips / 100,
                           label: `${pctTrips}% of ${vehicles}`,
-                          color: LINE_COLORS[line ?? 'default'],
+                          color: LINE_COLORS[colorKey ?? 'default'],
                         },
                         rows: benchmark
                           ? [
@@ -147,6 +147,6 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
         )}
       </ChartStack>
     );
-  }, [fill, dataObject, isMobile, line, linePath, lineShort, buckets, chartTheme]);
+  }, [fill, dataObject, isMobile, colorKey, linePath, lineShort, buckets, chartTheme]);
   return histogram;
 };

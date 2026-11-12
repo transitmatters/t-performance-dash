@@ -28,8 +28,8 @@ interface ServiceGraphProps {
 
 export const ServiceGraph = (props: ServiceGraphProps) => {
   const { data, predictedData, startDate, endDate, config, fill = false } = props;
-  const { line } = useDelimitatedRoute();
-  const lineColor = LINE_COLORS[line ?? 'default'];
+  const { line, colorKey } = useDelimitatedRoute();
+  const lineColor = LINE_COLORS[colorKey ?? 'default'];
 
   const peak = useScheduledServiceBaseline(line);
 

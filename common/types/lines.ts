@@ -9,6 +9,12 @@ export type Line =
   | 'line-ferry'
   | 'line-RIDE';
 
+/**
+ * The color a line is drawn in. The Silver Line runs as bus routes under `line-bus` but has its own
+ * MBTA brand silver, so its pages are colored `line-silver`.
+ */
+export type LineColorKey = Line | 'line-silver';
+
 export type LineShort =
   | 'Red'
   | 'Orange'

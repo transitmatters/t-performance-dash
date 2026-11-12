@@ -30,7 +30,7 @@ export const AlertModal = ({
   Icon,
   type,
 }: AlertModalProps) => {
-  const { line } = useDelimitatedRoute();
+  const { colorKey } = useDelimitatedRoute();
   return (
     <Dialog open={showModal} onOpenChange={setShowModal}>
       <DialogContent className="sm:max-w-sm">
@@ -38,7 +38,7 @@ export const AlertModal = ({
           <div
             className={classNames(
               'mx-auto flex h-16 w-16 items-center justify-center rounded-full',
-              lineColorBackground[line ?? 'DEFAULT']
+              lineColorBackground[colorKey ?? 'DEFAULT']
             )}
           >
             <Icon className="h-10 w-10" aria-hidden="true" />
@@ -52,7 +52,7 @@ export const AlertModal = ({
         <DialogFooter>
           <Button
             type="button"
-            style={lineColorVar(line)}
+            style={lineColorVar(colorKey)}
             className="w-full bg-(--line-color) text-white hover:bg-(--line-color)/90"
             onClick={() => setShowModal(false)}
           >

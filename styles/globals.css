@@ -199,6 +199,19 @@
   --sidebar-ring: #008eaa;
   --chart-1: #008eaa;
 }
+/* Silver Line routes, which are bus routes drawn in their own color. Near-black text reads better
+   on the silver (4.8:1) than white does (3.7:1). */
+[data-line='line-silver'] {
+  --primary: #7c878e;
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: #7c878e;
+  --accent: color-mix(in oklch, #7c878e 18%, var(--background));
+  --accent-foreground: var(--foreground);
+  --sidebar-primary: #7c878e;
+  --sidebar-primary-foreground: oklch(0.205 0 0);
+  --sidebar-ring: #7c878e;
+  --chart-1: #7c878e;
+}
 
 html,
 body {

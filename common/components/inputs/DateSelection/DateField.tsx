@@ -6,6 +6,7 @@ import { Calendar } from '../../ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { lineColorVar, needsDarkTextOn } from '../../../styles/general';
 import type { Line } from '../../../types/lines';
+import { useLineColorKey } from '../../../utils/router';
 
 interface DateFieldProps {
   /** YYYY-MM-DD, matching the query-string format everywhere else in the date state. */
@@ -35,7 +36,8 @@ export const DateField = ({
   // { before, after } together is DateInterval (disables the days *between* them), not what we
   // want here — an array ORs the two matchers, disabling before min or after max independently.
   const disabledMatchers = [...(min ? [{ before: min }] : []), ...(max ? [{ after: max }] : [])];
-  const needsDarkText = needsDarkTextOn(line);
+  const colorKey = useLineColorKey(line);
+  const needsDarkText = needsDarkTextOn(colorKey);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -49,7 +51,7 @@ export const DateField = ({
         className="w-auto p-0"
         style={
           {
-            ...lineColorVar(line),
+            ...lineColorVar(colorKey),
             // The calendar's selected-day styling is themed via --primary; point it at the line
             // color rather than adding a separate override for every possible line.
             '--primary': 'var(--line-color)',

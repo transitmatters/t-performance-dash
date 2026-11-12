@@ -48,7 +48,7 @@ export const SpeedGraph = ({
   showTitle = false,
   peakLineDashed = false,
 }: SpeedGraphProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line, colorKey, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const peak = useSpeedBaseline(line);
   const ref = useRef(null);
@@ -76,16 +76,16 @@ export const SpeedGraph = ({
               {
                 label: `MPH`,
                 fill: true,
-                backgroundColor: hexWithAlpha(LINE_COLORS[line ?? 'default'], 0.8),
-                borderColor: LINE_COLORS[line ?? 'default'],
+                backgroundColor: hexWithAlpha(LINE_COLORS[colorKey ?? 'default'], 0.8),
+                borderColor: LINE_COLORS[colorKey ?? 'default'],
                 borderWidth: HERO_LINE_WIDTH,
                 pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,
                 pointHoverRadius: 6,
                 spanGaps: false,
-                pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-                pointBackgroundColor: LINE_COLORS[line ?? 'default'],
+                pointHoverBackgroundColor: LINE_COLORS[colorKey ?? 'default'],
+                pointBackgroundColor: LINE_COLORS[colorKey ?? 'default'],
                 // Days with no trips are left out rather than plotted as 0 mph under the gap's band
                 data: data.map((datapoint) =>
                   datapoint.miles_covered
@@ -129,7 +129,7 @@ export const SpeedGraph = ({
                   hoverCard: (items) => {
                     const mph = items.find((item) => item.datasetIndex === 0)?.parsed.y;
                     if (!mph) return null;
-                    const color = LINE_COLORS[line ?? 'default'];
+                    const color = LINE_COLORS[colorKey ?? 'default'];
                     return {
                       hero: { value: `${mph}`, unit: 'mph', color },
                       meter:

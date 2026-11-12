@@ -22,10 +22,10 @@ interface NavPageItemsProps {
  * rendered as disabled rather than hidden, so the metrics stay in the same place per line.
  */
 export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
-  const { line, page, query, linePath } = useDelimitatedRoute();
+  const { line, colorKey, page, query, linePath } = useDelimitatedRoute();
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
-  const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
+  const needsDarkText = readableOn(LINE_COLORS[colorKey ?? 'default']) === 'dark';
 
   return (
     <>
@@ -52,7 +52,7 @@ export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
           <SidebarMenuSubItem key={tab.key}>
             <SidebarMenuSubButton
               asChild
-              style={lineColorVar(line)}
+              style={lineColorVar(colorKey)}
               className={classNames(
                 selected &&
                   classNames(

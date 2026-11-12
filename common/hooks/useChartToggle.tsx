@@ -44,14 +44,14 @@ export const ToggleControl = <K extends string>({
   onChange,
   variant,
 }: ToggleControlProps<K>) => {
-  const { line } = useDelimitatedRoute();
+  const { line, colorKey } = useDelimitatedRoute();
 
   if ((variant ?? (options.length > 2 ? 'select' : 'toggle')) === 'select') {
     return (
       <Select value={value} onValueChange={(next) => onChange(next as K)}>
         <SelectTrigger
           size="sm"
-          style={lineColorVar(line)}
+          style={lineColorVar(colorKey)}
           className="border-(--line-color)/40 data-[state=open]:border-(--line-color)"
         >
           <SelectValue />

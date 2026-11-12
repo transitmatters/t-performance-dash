@@ -12,6 +12,7 @@ import { SaveChartImageButton } from '../../../common/components/buttons/SaveCha
 import type { Location } from '../../../common/types/charts';
 import type { Line } from '../../../common/types/lines';
 import { hexWithAlpha } from '../../../common/utils/general';
+import { useLineColorKey } from '../../../common/utils/router';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import type { FleetType } from '../../fleet/constants/fleetTypes';
 import type { VehicleTravelTime } from '../utils/byVehicle';
@@ -70,7 +71,8 @@ export const TravelTimesByVehicleChart = ({
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
-  const lineColor = LINE_COLORS[line ?? 'default'];
+  const colorKey = useLineColorKey(line);
+  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   // Bus stops have no stored distances, so buses are compared by travel time instead.
   const showSpeed = data.every((vehicle) => vehicle.median_speed_mph !== null);
   const groups = useMemo(

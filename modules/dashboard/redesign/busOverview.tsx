@@ -6,7 +6,7 @@ import { useBusTripMetrics } from '../../../common/api/hooks/busTripMetrics';
 import { useAlertDelays } from '../../../common/api/hooks/delays';
 import { useRidershipData } from '../../../common/api/hooks/ridership';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { getLineColorKey, LINE_COLORS } from '../../../common/constants/colors';
 import { TODAY_STRING } from '../../../common/constants/dates';
 import { getBusRouteIds } from '../../../common/constants/lines';
 import type {
@@ -75,10 +75,10 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
   const peak = baselines.isPending ? undefined : ridershipPeak;
   const dailyTripMetrics = useBusTripMetrics(dailyTripMetricsOptions(busRoute));
   const delays = useAlertDelays(delaysOptions(busRoute));
-  const reliability = useBusReliabilityRow(busRoute, LINE_COLORS['line-bus']);
+  const color = LINE_COLORS[getLineColorKey('line-bus', busRoute)];
+  const reliability = useBusReliabilityRow(busRoute, color);
 
   const rows = useMemo(() => {
-    const color = LINE_COLORS['line-bus'];
     const built: ScorecardRow[] = [];
 
     const speedRow =
@@ -128,7 +128,15 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
     if (delaysRow) built.push(delaysRow);
 
     return built;
-  }, [tripMetrics.data, dailyTripMetrics.data, reliability.row, ridership.data, peak, delays.data]);
+  }, [
+    tripMetrics.data,
+    dailyTripMetrics.data,
+    reliability.row,
+    ridership.data,
+    peak,
+    delays.data,
+    color,
+  ]);
 
   return {
     rows,
@@ -170,7 +178,12 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
   }
   if (metric === 'service') {
     if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
-    return <BusServiceChart daily={tripMetrics.data} color={LINE_COLORS['line-bus']} />;
+    return (
+      <BusServiceChart
+        daily={tripMetrics.data}
+        color={LINE_COLORS[getLineColorKey('line-bus', busRoute)]}
+      />
+    );
   }
   if (metric === 'delays') {
     if (!delays.data) return <ChartPlaceHolder query={delays} />;

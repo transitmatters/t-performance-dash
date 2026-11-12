@@ -107,6 +107,7 @@ describe('getLineSelectionItemHref', () => {
       page: 'singleTrips',
       tab: 'Ferry',
       query: { ferryRoute: 'Boat-F1', date: '2025-01-01', from: 'a', to: 'b' },
+      colorKey: 'line-ferry',
       color: '',
     };
     expect(getLineSelectionItemHref('line-orange', ferryRoute)).toBe(
@@ -123,6 +124,7 @@ describe('getLineSelectionItemHref', () => {
       page: 'singleTrips',
       tab: 'Ferry',
       query,
+      colorKey: 'line-ferry',
       color: '',
     };
     expect(() => getLineSelectionItemHref('line-orange', route)).not.toThrow();
