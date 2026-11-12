@@ -159,6 +159,12 @@ SAMPLES = [
         200,
     ),
     (
+        "excess_trip_time/red_weekly",
+        "/api/excess_trip_time",
+        {"start_date": "2026-09-01", "end_date": "2026-09-30", "line": "line-red", "agg": "weekly"},
+        200,
+    ),
+    (
         "crscorecard/route_monthly",
         "/api/crscorecard",
         {**QUARTER, "route_id": "CR-Worcester", "agg": "monthly", "day_kind": "weekday"},

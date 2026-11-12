@@ -259,6 +259,22 @@ def get_reliability(query_params: dict):
     return data or []
 
 
+def get_excess_trip_time(query_params: dict):
+    """Get excess trip time data from static cache.
+
+    Args:
+        query_params: Dict of query parameters. Recognized keys:
+            ``line`` (default ``"line-red"``) and ``agg`` (default ``"weekly"``).
+
+    Returns:
+        A list of excess trip time records, or an empty list if no data is found.
+    """
+    line = query_params.get("line", "line-red")
+    agg = query_params.get("agg", "weekly")
+    data = _load_static_json(f"excess_trip_time/{line}_{agg}.json")
+    return data or []
+
+
 # Service hours static data
 def get_service_hours(query_params: dict):
     """Get service hours from static cache.

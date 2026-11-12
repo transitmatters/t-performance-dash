@@ -15,6 +15,8 @@ import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { TheRideReliability } from './TheRideReliability';
 import { CommuterRailReliability } from './CommuterRailReliability';
 import { HeadwayReliability } from './HeadwayReliability';
+import { ExcessTripTime } from './ExcessTripTime';
+import { hasExcessTripTime } from './excessTripTime';
 
 // "commuter-rail" asks the API for every commuter rail route combined
 const ALL_COMMUTER_RAIL = 'commuter-rail';
@@ -73,6 +75,9 @@ export function ReliabilityDetails() {
         ) : (
           <CommuterRailReliability {...props} />
         )}
+        {line && hasExcessTripTime(line) && (
+          <ExcessTripTime line={line} agg={agg} startDate={startDate} endDate={endDate} />
+        )}
         <DataNotes>
           {isSubway ? (
             <>
@@ -94,6 +99,18 @@ export function ReliabilityDetails() {
                 Before 2025, the MBTA&apos;s monthly archives compare Green Line trunk stations with
                 a single branch&apos;s schedule, so those weeks show more bunching than riders saw.
               </p>
+              {hasExcessTripTime(line) && (
+                <p>
+                  Excess trip time is published by the MBTA on its open data portal, from January
+                  2022, as the standard its Service Delivery Policy holds the Red, Orange and Blue
+                  Lines to. The MBTA estimates each rider&apos;s origin, destination and train from
+                  fare taps. A rider&apos;s wait is half the gap between the trains they arrived
+                  between, and their time on board is the average for that part of the day. Both are
+                  compared with a baseline: the fastest monthly median run time since 2021 and the
+                  wait the best schedule for the fleet would give. Some days are missing, and the
+                  MBTA may revise recent weeks.
+                </p>
+              )}
             </>
           ) : isBus ? (
             <>

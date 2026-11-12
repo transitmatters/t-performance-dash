@@ -130,3 +130,41 @@ def test_bus_route_ids_only_match_raw_gtfs_ids():
     assert reliability.bus_route_ids("34E") == ["34E"]
     for not_bus in ("RIDE", "CR-Worcester", "commuter-rail", "line-red", "", "28,line-red"):
         assert reliability.bus_route_ids(not_bus) is None
+
+
+def ett_sums(riders, wait, travel, baseline, within_five):
+    return {"riders": riders, "waitTime": wait, "travelTime": travel, "baselineTripTime": baseline,
+            "baselineWaitTime": baseline / 4, "baselineTravelTime": baseline * 3 / 4, "withinFiveMin": within_five,
+            "withinTwentyMin": riders, "withinTwentyPct": within_five, "withinThirtyPct": riders}  # fmt: skip
+
+
+def ett_scope(*args):
+    sums = ett_sums(*args)
+    zero = ett_sums(0.0, 0.0, 0.0, 0.0, 0.0)
+    return {**sums, "byPeriod": {"amPeak": sums, "pmPeak": zero, "offPeak": zero}}
+
+
+def ett(day, riders, wait, travel, baseline, within_five):
+    half = ett_scope(riders / 2, wait / 2, travel / 2, baseline / 2, within_five / 2)
+    return {"routeId": "line-red", "mode": "subway", "date": day, "timestamp": 0,
+            **ett_scope(riders, wait, travel, baseline, within_five), "byDirection": {"0": half, "1": half}}  # fmt: skip
+
+
+def test_excess_trip_time_sums_nested_counts_and_rounds(monkeypatch):
+    from datetime import date
+
+    queried = []
+    items = [ett("2026-09-28", 100.1, 400.2, 900.3, 1200.0, 90.1), ett("2026-09-29", 50.2, 200.1, 450.2, 600.0, 40.2)]
+    monkeypatch.setattr(reliability, "query_reliability", lambda r, s, e: queried.append(r) or items)
+    monkeypatch.setattr(reliability, "query_headway_reliability", lambda *args: pytest.fail("wrong table"))
+
+    [entry] = reliability.get_excess_trip_time("line-red", date(2026, 9, 28), date(2026, 10, 4), "weekly")
+    assert queried == ["line-red"]
+    assert (entry["date"], entry["days"]) == ("2026-09-28", 2)
+    # 100.1 + 50.2 is 150.29999999999998 in floating point
+    assert (entry["riders"], entry["waitTime"], entry["travelTime"]) == (150.3, 600.3, 1350.5)
+    assert entry["byDirection"]["1"]["riders"] == 75.2
+    assert entry["byPeriod"]["amPeak"]["withinFiveMin"] == 130.3
+    assert entry["byPeriod"]["pmPeak"]["riders"] == 0.0
+    assert entry["byDirection"]["0"]["byPeriod"]["amPeak"]["riders"] == 75.2
+    assert "routeId" not in entry and "mode" not in entry and "timestamp" not in entry
