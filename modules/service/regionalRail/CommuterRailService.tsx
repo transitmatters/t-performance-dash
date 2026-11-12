@@ -9,7 +9,6 @@ import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
 import { ByHourHistogram } from '../../../common/components/charts/ByHourHistogram';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { DataNotes } from '../../../common/components/notices/DataNotes';
-import { Link } from '../../../common/components/general/Link';
 import { Widget } from '../../../common/components/widgets';
 import {
   StatCard,
@@ -17,6 +16,10 @@ import {
   type StatSentiment,
 } from '../../../common/components/widgets/StatCard';
 import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import {
+  REGIONAL_RAIL_EXPLORER_URL,
+  REGIONAL_RAIL_REPORTS_URL,
+} from '../../../common/constants/regionalRail';
 import { useCrServiceScope, useServiceDay } from '../../../common/hooks/usePageFilters';
 import type { DayKind } from '../../../common/types/dataPoints';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
@@ -38,8 +41,6 @@ import {
   waitTone,
 } from './utils';
 import type { Tone } from './utils';
-
-const REGIONAL_RAIL_URL = 'https://transitmatters.org/regional-rail';
 
 // "commuter-rail" asks the API for one summary per line
 const ALL_COMMUTER_RAIL = 'commuter-rail';
@@ -281,9 +282,13 @@ export function CommuterRailService() {
             Built from the MBTA&apos;s published schedules, not trains actually run.
             TransitMatters&apos; Regional Rail vision calls for a train at least every 30 minutes in
             both directions, from 5am to 1am, on a repeating hourly pattern riders can memorize.{' '}
-            <Link href={REGIONAL_RAIL_URL} rel="noopener noreferrer" target="_blank">
+            <a href={REGIONAL_RAIL_REPORTS_URL} rel="noopener" target="_blank">
               Read our Regional Rail reports
-            </Link>
+            </a>
+            , or{' '}
+            <a href={REGIONAL_RAIL_EXPLORER_URL} rel="noopener" target="_blank">
+              plan a trip on the Regional Rail Explorer
+            </a>
             .
           </p>
           <p>
