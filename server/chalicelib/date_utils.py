@@ -12,6 +12,11 @@ from zoneinfo import ZoneInfo
 DATE_FORMAT_OUT = "%Y-%m-%dT%H:%M:%S"
 EASTERN_TIME = ZoneInfo("America/New_York")
 
+# Service days run from 3 AM to 3 AM Eastern, the same cutoff as gobble, data-ingestion and mbta-performance,
+# which write and summarize the events this backend reads. Routes 15 and 28 leave as early as 3:20 AM, so a
+# later cutoff would file those trips under the day before.
+SERVICE_DAY_START = timedelta(hours=3)
+
 # The most recent date for which we have monthly data
 MAX_MONTH_DATA_DATE = "2026-06-30"
 MAX_FERRY_MONTH_DATA_DATE = "2026-03-31"
@@ -50,7 +55,7 @@ def get_max_ferry_monthly_data_date():
 
 
 def current_service_date(now: datetime | None = None) -> date:
-    """Return today's service date in Boston. Service days run 3:30am to 3:30am.
+    """Return today's service date in Boston. Service days start at ``SERVICE_DAY_START``.
 
     Args:
         now: The moment to check, for tests. Defaults to the current time.
@@ -59,9 +64,8 @@ def current_service_date(now: datetime | None = None) -> date:
         ``datetime.date`` of the current service day.
     """
     now = (now or datetime.now(EASTERN_TIME)).astimezone(EASTERN_TIME)
-    if now.time() < time(3, 30):
-        return now.date() - timedelta(days=1)
-    return now.date()
+    # Aware datetime arithmetic moves the wall clock, so this holds across DST changes
+    return (now - SERVICE_DAY_START).date()
 
 
 def parse_event_date(date_str: str):
