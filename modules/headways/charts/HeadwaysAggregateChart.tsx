@@ -37,7 +37,6 @@ interface HeadwaysAggregateChartProps {
   headways: AggregateDataResponse;
   toStation: Station;
   fromStation: Station;
-  showLegend?: boolean;
   dayFilter?: DayFilter;
   /** Defaults to the page's dates; an embed passes its own. */
   startDate?: string;
