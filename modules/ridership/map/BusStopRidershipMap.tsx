@@ -8,6 +8,7 @@ import '@transitmatters/stripmap/dist/style.css';
 import type { BusStopRidershipStop } from '../../../common/types/dataPoints';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { getStripMapWatermark } from '../../../common/utils/stripmap';
+import { WATERMARK, watermarkSize } from '../../../common/constants/charts';
 import { RidershipMapTooltip } from './StationRidershipTooltip';
 import { formatStationRidership } from './utils';
 import { abbreviateBusStopName } from './busStopUtils';
@@ -104,18 +105,27 @@ export const BusStopRidershipMap = ({
     );
   };
 
+  // Boardings run along one side of the line and stop names along the other, so no corner of the
+  // map is clear on every route. The wordmark gets a band of its own above the map instead.
+  const watermarkHeight = watermarkSize(!isHorizontal).height;
+  const watermarkGap = 4;
+
   return (
-    <StraightLineMap
-      stations={stations}
-      color={color}
-      pxPerStation={pxPerStation}
-      direction={direction}
-      getStationLabel={abbreviateBusStopName}
-      getStations={getStations}
-      stationTooltip={{ render: renderStationTooltip }}
-      // Stop names hang below and to the left of a horizontal map, so the top-left corner is the
-      // one that's always clear
-      watermark={{ ...getStripMapWatermark(isHorizontal, isDark), position: 'top-left' }}
-    />
+    <div style={{ paddingTop: watermarkHeight + 2 * watermarkGap }}>
+      <StraightLineMap
+        stations={stations}
+        color={color}
+        pxPerStation={pxPerStation}
+        direction={direction}
+        getStationLabel={abbreviateBusStopName}
+        getStations={getStations}
+        stationTooltip={{ render: renderStationTooltip }}
+        watermark={{
+          ...getStripMapWatermark(isHorizontal, isDark),
+          position: 'top-right',
+          offset: { x: WATERMARK.inset, y: -(watermarkHeight + watermarkGap) },
+        }}
+      />
+    </div>
   );
 };
