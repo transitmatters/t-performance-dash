@@ -106,7 +106,6 @@ export const CommuterRailTripGraphs = ({
               dayFilter={headwaysDayFilter}
             />
           </WidgetDiv>
-          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
           <WidgetDiv>
             <WidgetTitle
               title="Dwells"
@@ -140,6 +139,7 @@ export const CommuterRailTripGraphs = ({
               peakTime={peakTime === 'weekday'}
             />
           </WidgetDiv>
+          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
         </>
       ) : (
         <>
@@ -171,7 +171,6 @@ export const CommuterRailTripGraphs = ({
               fromStation={fromStation}
             />
           </WidgetDiv>
-          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
           <WidgetDiv>
             <WidgetTitle
               title="Dwells"
@@ -181,6 +180,7 @@ export const CommuterRailTripGraphs = ({
             />
             <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
           </WidgetDiv>
+          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
         </>
       )}
     </>
