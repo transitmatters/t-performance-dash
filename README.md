@@ -33,20 +33,23 @@ This is the repository for the [TransitMatters Data Dashboard](https://dashboard
 
 The backend supports three data source modes, controlled by the `TM_BACKEND_SOURCE` environment variable:
 
-| Mode     | Description                                                                                       |
-| -------- | ------------------------------------------------------------------------------------------------- |
-| `aws`    | Use local AWS credentials to query DynamoDB/S3 directly (default if AWS credentials are detected) |
-| `prod`   | Proxy requests to the production API (live data, no AWS credentials needed)                       |
-| `static` | Use cached sample data (offline development, default if no AWS credentials)                       |
+| Mode     | Description                                                                          |
+| -------- | ------------------------------------------------------------------------------------ |
+| `prod`   | Proxy requests to the production API (default; live data, no AWS credentials needed) |
+| `aws`    | Query DynamoDB/S3 directly with TransitMatters AWS credentials                       |
+| `static` | Use cached sample data (offline development)                                         |
+
+When `TM_BACKEND_SOURCE` isn't set, the backend uses `prod`, or `aws` if `AWS_PROFILE=transitmatters` is set. Other AWS credentials don't switch it to `aws`, because they may belong to a different AWS account.
 
 **For external contributors (no AWS access):**
-No configuration needed! The backend auto-detects missing AWS credentials and falls back to cached sample data. For live data without AWS credentials:
+No configuration needed. You'll get live data through the production API. To work offline with cached sample data:
 
 ```bash
-export TM_BACKEND_SOURCE=prod
+export TM_BACKEND_SOURCE=static
 ```
 
 **For TransitMatters members (with AWS access):**
+To run backend data code against real data (`prod` and `static` modes don't run it), set:
 
 ```bash
 export TM_BACKEND_SOURCE=aws
