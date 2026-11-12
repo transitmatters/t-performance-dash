@@ -78,18 +78,20 @@ const LineBadge = ({ line, text }: { line?: Line; text: string }) => {
 
 interface CommandRowProps {
   command: Command;
+  /** cmdk tracks the highlighted row by value, so a command listed in two sections needs two. */
+  value: string;
   hideBadge?: boolean;
   onSelect: () => void;
 }
 
-const CommandRow = ({ command, hideBadge, onSelect }: CommandRowProps) => {
+const CommandRow = ({ command, value, hideBadge, onSelect }: CommandRowProps) => {
   const theme = useThemeStore((state) => state.theme);
   const label =
     command.id === 'action:theme'
       ? `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`
       : command.label;
   return (
-    <CommandItem value={command.id} onSelect={onSelect} className="gap-2.5 py-2">
+    <CommandItem value={value} onSelect={onSelect} className="gap-2.5 py-2">
       <FontAwesomeIcon icon={command.icon} className="size-3.5! text-muted-foreground" />
       <span className="min-w-0 truncate">{label}</span>
       {command.badge && !hideBadge && <LineBadge line={command.line} text={command.badge} />}
@@ -154,6 +156,7 @@ export const CommandPalette = () => {
                 <CommandRow
                   key={command.id}
                   command={command}
+                  value={`${section.heading}:${command.id}`}
                   hideBadge={section.hideBadges}
                   onSelect={() => runCommand(command)}
                 />
