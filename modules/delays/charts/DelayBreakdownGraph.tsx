@@ -11,9 +11,8 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { DelaysEmbedButton } from '../DelaysEmbedButton';
 import type { LineDelays } from '../../../common/types/delays';
 import {
@@ -215,29 +214,14 @@ export const DelayBreakdownGraph = ({
           ]}
         />
       </ChartDiv>
-      {!fill && (
-        <div className="flex flex-row items-end justify-end gap-4">
-          {startDate && (
-            <>
-              <SaveChartImageButton
-                chartRef={ref}
-                datasetName="delays-by-reason"
-                includeBothStopsForLocation={false}
-                startDate={startDate}
-                endDate={endDate}
-              />
-              <DownloadButton
-                data={data}
-                datasetName="delays-by-reason"
-                includeBothStopsForLocation={false}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </>
-          )}
-          <DelaysEmbedButton chart="breakdown" />
-        </div>
-      )}
+      <ChartActions
+        datasetName="delays-by-reason"
+        chartRef={ref}
+        csv={data}
+        startDate={startDate}
+        endDate={endDate}
+        embed={<DelaysEmbedButton chart="breakdown" />}
+      />
     </ChartStack>
   );
 };

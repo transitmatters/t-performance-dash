@@ -8,12 +8,21 @@ import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
+import { getLocationDetails } from '../../../common/utils/stations';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { TripEmbedButton } from '../../tripexplorer/TripEmbedButton';
 import { getHeadwayBuckets } from './utils';
 
-export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps) => {
-  const { line, linePath, lineShort } = useDelimitatedRoute();
+export const HeadwaysHistogram = ({
+  headways,
+  fromStation,
+  toStation,
+  date: dateProp,
+  fill = false,
+}: HeadwaysChartProps) => {
+  const { line, linePath, lineShort, query } = useDelimitatedRoute();
+  const date = dateProp ?? query.date;
 
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -135,13 +144,27 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
             }}
           />
         </ChartDiv>
-        {!fill && (
-          <div className="-mr-2.5 flex flex-row justify-end">
-            <TripEmbedButton page="single" chart="headway-distribution" />
-          </div>
-        )}
+        <ChartActions
+          datasetName="headway-distribution"
+          chartRef={ref}
+          location={getLocationDetails(fromStation, toStation)}
+          startDate={date}
+          embed={<TripEmbedButton page="single" chart="headway-distribution" />}
+        />
       </ChartStack>
     );
-  }, [fill, dataObject, isMobile, line, linePath, lineShort, buckets, chartTheme]);
+  }, [
+    fill,
+    dataObject,
+    isMobile,
+    line,
+    linePath,
+    lineShort,
+    buckets,
+    chartTheme,
+    fromStation,
+    toStation,
+    date,
+  ]);
   return histogram;
 };

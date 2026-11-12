@@ -6,8 +6,6 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import { useCrScorecard } from '../../../common/api/hooks/crScorecard';
 import { PageWrapper } from '../../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
-import { ByHourHistogram } from '../../../common/components/charts/ByHourHistogram';
-import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { DataNotes } from '../../../common/components/notices/DataNotes';
 import { Link } from '../../../common/components/general/Link';
 import { Widget } from '../../../common/components/widgets';
@@ -21,7 +19,7 @@ import { useCrServiceScope, useServiceDay } from '../../../common/hooks/usePageF
 import type { DayKind } from '../../../common/types/dataPoints';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
-import { ScorecardGraph } from './ScorecardGraph';
+import { ScorecardByHour, ScorecardGraph } from './ScorecardGraph';
 import { ScorecardTable } from './ScorecardTable';
 import {
   DIRECTIONS,
@@ -201,6 +199,7 @@ export function CommuterRailService() {
             >
               <ScorecardGraph
                 {...graphProps}
+                datasetName="cr-hours-at-target"
                 data={directionLines('hoursAtTarget')}
                 valueAxisLabel="Hours"
                 format={(v) => `${v.toFixed(1)} of ${SPAN_HOURS} hours`}
@@ -219,6 +218,7 @@ export function CommuterRailService() {
             >
               <ScorecardGraph
                 {...graphProps}
+                datasetName="cr-midday-wait"
                 data={directionLines('maxGapMidday')}
                 valueAxisLabel="Minutes"
                 format={formatMinutes}
@@ -232,6 +232,7 @@ export function CommuterRailService() {
             >
               <ScorecardGraph
                 {...graphProps}
+                datasetName="cr-evening-wait"
                 data={directionLines('maxGapEvening')}
                 valueAxisLabel="Minutes"
                 format={formatMinutes}
@@ -245,6 +246,7 @@ export function CommuterRailService() {
             >
               <ScorecardGraph
                 {...graphProps}
+                datasetName="cr-trains-per-day"
                 data={[
                   ...directionLines('trips', tripsData, bars),
                   {
@@ -262,9 +264,12 @@ export function CommuterRailService() {
               subtitle={`Average ${day} in this range · Regional Rail runs at least 2 an hour`}
               ready={ready}
             >
-              <ChartStack>
-                <ByHourHistogram data={hourly} valueAxis={HOURLY_AXIS} />
-              </ChartStack>
+              <ScorecardByHour
+                data={hourly}
+                valueAxis={HOURLY_AXIS}
+                startDate={startDate}
+                endDate={endDate}
+              />
             </Widget>
           </>
         ) : (
