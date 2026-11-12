@@ -34,7 +34,8 @@ interface BarGroup {
 
 /**
  * One bar group per car type seen, tinted by age like the fleet mix chart, so a type keeps its
- * colour across pages. Trains of more than one type, and cars outside every known range, are grey.
+ * colour across pages, and is named even when it is the only one. Trains of more than one type,
+ * and cars outside every known range, are grey.
  */
 const getBarGroups = (
   data: VehicleTravelTime[],
@@ -54,8 +55,8 @@ const getBarGroups = (
     { key: null, label: 'Unknown', color: CHART_COLORS.BLOCKS_SOLID },
   ].filter((group) => seen.has(group.key));
   const groups = [...typeGroups, ...otherGroups];
-  // A single group needs no legend, and takes the line colour.
-  return groups.length > 1 ? groups : [{ key: null, label: 'All', color: lineColor }];
+  // With no known car type, there is nothing to label: one group in the line colour.
+  return typeGroups.length > 0 ? groups : [{ key: null, label: 'All', color: lineColor }];
 };
 
 export const TravelTimesByVehicleChart = ({
@@ -76,7 +77,7 @@ export const TravelTimesByVehicleChart = ({
     () => getBarGroups(data, carTypes, lineColor),
     [data, carTypes, lineColor]
   );
-  const showLegend = groups.length > 1;
+  const showLegend = groups.some((group) => group.key !== null);
   const noun = vehicleNoun.toLowerCase();
 
   const getValue = (vehicle: VehicleTravelTime) =>
@@ -180,12 +181,8 @@ export const TravelTimesByVehicleChart = ({
           plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
-      <div className="flex flex-row flex-wrap items-end justify-between gap-x-6 gap-y-2">
-        <p className="text-xs text-muted-foreground">
-          Each bar is the median of that {noun}&apos;s trips this day. Ones that ran mostly outside
-          rush hour tend to look faster.
-        </p>
-        <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
+      <div className="flex flex-row justify-end">
+        <div className="-mr-2.5 flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
           <SaveChartImageButton
             chartRef={ref}
             datasetName="traveltimes-by-vehicle"

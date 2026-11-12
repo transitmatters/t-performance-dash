@@ -40,6 +40,7 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
               datasets: [
                 {
                   backgroundColor: LINE_COLORS[line ?? 'default'],
+                  borderRadius: 4,
                   label:
                     lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
                   data: dataObject,

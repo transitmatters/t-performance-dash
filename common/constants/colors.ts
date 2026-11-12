@@ -77,6 +77,23 @@ export const LINE_COLORS: { [key in Line | 'default']: string } = {
   default: '#303030',
 };
 
+/**
+ * Line colours for small text, such as station names: each brand colour with its OKLCH lightness
+ * capped at 0.56 on light cards and raised to at least 0.72 on dark ones, so every line reads at
+ * 4.5:1 or better while keeping its hue.
+ */
+export const LINE_TEXT_COLORS: Record<Line, { light: string; dark: string }> = {
+  'line-red': { light: '#d52216', dark: '#ff7360' },
+  'line-mattapan': { light: '#d52216', dark: '#ff7360' },
+  'line-orange': { light: '#a76101', dark: '#ed8b00' },
+  'line-blue': { light: '#003da5', dark: '#70a3fe' },
+  'line-green': { light: '#00843d', dark: '#55be73' },
+  'line-bus': { light: '#916f04', dark: '#ffc72c' },
+  'line-RIDE': { light: '#916f04', dark: '#ffc72c' },
+  'line-commuter-rail': { light: '#80276c', dark: '#de7ec4' },
+  'line-ferry': { light: '#07829b', dark: '#45b5d1' },
+};
+
 // Darker line shades, mirroring the `mbta.dark*` colors in tailwind.config.js.
 export const LINE_COLORS_DARK: { [key in Line | 'default']: string } = {
   'line-red': '#bc2020',

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import type { SingleDayDataPoint } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
+import { TitleWithInfo } from '../../common/components/general/InfoTooltip';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -17,6 +18,14 @@ interface TravelTimesByVehicleWrapperProps {
   fromStation: Station;
   vehicleNoun: 'Train' | 'Bus';
 }
+
+/** The card title, with a note on how to read the bars. */
+export const ByVehicleTitle = ({ vehicleNoun }: { vehicleNoun: 'Train' | 'Bus' }) => (
+  <TitleWithInfo
+    title={`By ${vehicleNoun.toLowerCase()}`}
+    info={`Each bar is the median of that ${vehicleNoun.toLowerCase()}'s trips this day. Ones that ran mostly outside rush hour tend to look faster.`}
+  />
+);
 
 export const TravelTimesByVehicleWrapper = ({
   query,
