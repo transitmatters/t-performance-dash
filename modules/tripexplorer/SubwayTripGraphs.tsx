@@ -22,7 +22,10 @@ import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWr
 import { SpeedBetweenStationsSingleWrapper } from '../speed/SpeedBetweenStationsGraphWrapper';
 import { SpeedBetweenStationsAggregateWrapper } from '../speed/SpeedBetweenStationsAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
-import { TravelTimesByVehicleWrapper } from '../traveltimes/TravelTimesByVehicleWrapper';
+import {
+  ByVehicleTitle,
+  TravelTimesByVehicleWrapper,
+} from '../traveltimes/TravelTimesByVehicleWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -216,22 +219,6 @@ export const SubwayTripGraphs = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
-              title="By train"
-              subtitle="Median speed of each train, by car type"
-              location={location}
-              line={line}
-              both
-            />
-            <TravelTimesByVehicleWrapper
-              query={traveltimes}
-              toStation={toStation}
-              fromStation={fromStation}
-              vehicleNoun="Train"
-            />
-          </WidgetDiv>
-
-          <WidgetDiv>
-            <WidgetTitle
               title="Headways"
               subtitle="Time between trains"
               location={location}
@@ -251,6 +238,21 @@ export const SubwayTripGraphs = ({
               line={line}
             />
             <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title={<ByVehicleTitle vehicleNoun="Train" />}
+              subtitle="Median speed of each train, by car type"
+              location={location}
+              line={line}
+              both
+            />
+            <TravelTimesByVehicleWrapper
+              query={traveltimes}
+              toStation={toStation}
+              fromStation={fromStation}
+              vehicleNoun="Train"
+            />
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
 import { Widget } from '../../common/components/widgets';
-import { InfoTooltip } from '../../common/components/general/InfoTooltip';
+import { TitleWithInfo } from '../../common/components/general/InfoTooltip';
 import { useReliabilityDirection } from '../../common/hooks/usePageFilters';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
@@ -19,13 +19,6 @@ interface HeadwayReliabilityProps {
   startDate?: string;
   endDate?: string;
 }
-
-const TitleWithInfo = ({ title, info }: { title: string; info: string }) => (
-  <span className="inline-flex items-center gap-2">
-    {title}
-    <InfoTooltip info={info} className="leading-none text-muted-foreground" />
-  </span>
-);
 
 /** Headway reliability for a subway line or bus route. Only subway counts are split by direction. */
 export const HeadwayReliability = ({
