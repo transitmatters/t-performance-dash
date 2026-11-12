@@ -6,6 +6,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import unusedImports from 'eslint-plugin-unused-imports';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import globals from 'globals';
+import reactPackage from 'react/package.json' with { type: 'json' };
 
 export default typescriptEslint.config(
   // Global ignores
@@ -59,7 +60,11 @@ export default typescriptEslint.config(
     },
     settings: {
       react: {
-        version: 'detect',
+        // Not 'detect': eslint-plugin-react 7.37.5's detection calls context.getFilename(), which
+        // ESLint 10 removed, so every react/* rule crashes. Reading the installed version directly
+        // gives the same result. Switch back to 'detect' once a release adds ESLint 10 to its peer
+        // range (jsx-eslint/eslint-plugin-react#3977); until then .npmrc's legacy-peer-deps lets it install.
+        version: reactPackage.version,
       },
       'import-x/resolver': {
         typescript: true,

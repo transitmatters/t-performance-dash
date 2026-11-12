@@ -92,7 +92,7 @@
   },
   "devDependencies": {
     "@babel/core": "^8.0.9",
-    "@eslint/js": "^9.39.5",
+    "@eslint/js": "^10.0.1",
     "@rolldown/plugin-babel": "^0.2.4",
     "@storybook/addon-docs": "^10.6.2",
     "@storybook/addon-links": "^10.6.2",
@@ -111,7 +111,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "baseline-browser-mapping": "^2.11.29",
     "concurrently": "^10.0.6",
-    "eslint": "^9.39.5",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-import-x": "^4.17.1",
