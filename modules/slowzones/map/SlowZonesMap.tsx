@@ -11,6 +11,7 @@ import type { SlowZonesLineName } from '../types';
 
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
+import { SvgChart } from '../../../common/components/charts/SvgChart';
 import { TODAY_STRING } from '../../../common/constants/dates';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { abbreviateStationName, getStripMapWatermark } from '../../../common/utils/stripmap';
@@ -166,14 +167,16 @@ export const SlowZonesMap = ({
   };
 
   return (
-    <LineMap
-      diagram={diagram}
-      strokeOptions={{ stroke: line.color }}
-      direction={direction}
-      getSegments={getSegmentsForSlowZones}
-      getStationLabel={abbreviateStationName}
-      tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
-      watermark={getStripMapWatermark(isHorizontal, isDark)}
-    />
+    <SvgChart datasetName="slowzone-map" startDate={endDate || TODAY_STRING}>
+      <LineMap
+        diagram={diagram}
+        strokeOptions={{ stroke: line.color }}
+        direction={direction}
+        getSegments={getSegmentsForSlowZones}
+        getStationLabel={abbreviateStationName}
+        tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
+        watermark={getStripMapWatermark(isHorizontal, isDark)}
+      />
+    </SvgChart>
   );
 };

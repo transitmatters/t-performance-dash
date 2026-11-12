@@ -8,6 +8,7 @@ import '@transitmatters/stripmap/dist/style.css';
 import type { BusStopRidershipStop } from '../../../common/types/dataPoints';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { getStripMapWatermark } from '../../../common/utils/stripmap';
+import { SvgChart } from '../../../common/components/charts/SvgChart';
 import { RidershipMapTooltip } from './StationRidershipTooltip';
 import { formatStationRidership } from './utils';
 import { abbreviateBusStopName } from './busStopUtils';
@@ -22,6 +23,8 @@ interface BusStopRidershipMapProps extends Pick<
   color: string;
   /** Extra lines for a stop's tooltip, below its boardings and alightings */
   getStopDetails?: (stopId: string) => ReactNode;
+  /** The season the counts are from, shown in the map's PNG in place of dates */
+  period?: string;
 }
 
 export const BusStopRidershipMap = ({
@@ -30,6 +33,7 @@ export const BusStopRidershipMap = ({
   color,
   direction,
   getStopDetails,
+  period,
 }: BusStopRidershipMapProps) => {
   const stations = useMemo(
     () =>
@@ -105,17 +109,19 @@ export const BusStopRidershipMap = ({
   };
 
   return (
-    <StraightLineMap
-      stations={stations}
-      color={color}
-      pxPerStation={pxPerStation}
-      direction={direction}
-      getStationLabel={abbreviateBusStopName}
-      getStations={getStations}
-      stationTooltip={{ render: renderStationTooltip }}
-      // Stop names hang below and to the left of a horizontal map, so the top-left corner is the
-      // one that's always clear
-      watermark={{ ...getStripMapWatermark(isHorizontal, isDark), position: 'top-left' }}
-    />
+    <SvgChart datasetName="bus-stop-ridership-map" period={period}>
+      <StraightLineMap
+        stations={stations}
+        color={color}
+        pxPerStation={pxPerStation}
+        direction={direction}
+        getStationLabel={abbreviateBusStopName}
+        getStations={getStations}
+        stationTooltip={{ render: renderStationTooltip }}
+        // Stop names hang below and to the left of a horizontal map, so the top-left corner is the
+        // one that's always clear
+        watermark={{ ...getStripMapWatermark(isHorizontal, isDark), position: 'top-left' }}
+      />
+    </SvgChart>
   );
 };
