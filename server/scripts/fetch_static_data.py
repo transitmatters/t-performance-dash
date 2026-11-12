@@ -3,18 +3,18 @@ Fetch static data from production API for local development without AWS.
 This script downloads sample data for all major endpoints and caches it locally.
 
 Skips downloading if:
-- TM_BACKEND_SOURCE is set to 'aws' or 'prod' (cache not needed)
+- The backend source isn't 'static', so the cache isn't needed ('prod' is the default, see chalicelib/config.py)
 - Cache was already downloaded today (to avoid repeated downloads)
 """
 
 import json
-import os
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
 import requests
 
-PRODUCTION_API = "https://dashboard-api.labs.transitmatters.org"
+from chalicelib.config import PRODUCTION_API, get_backend_source
+
 OUTPUT_DIR = Path(__file__).parent.parent.parent / "public" / "static" / "api-cache"
 CACHE_MARKER_FILE = OUTPUT_DIR / ".last_fetched"
 
@@ -216,10 +216,10 @@ def should_skip_fetch():
     Determine if we should skip fetching static data.
     Returns (should_skip, reason) tuple.
     """
-    # Check if TM_BACKEND_SOURCE is set to aws or prod
-    backend_source = os.environ.get("TM_BACKEND_SOURCE", "").lower()
-    if backend_source in ("aws", "prod"):
-        return True, f"TM_BACKEND_SOURCE is '{backend_source}' (static cache not needed)"
+    # Only static mode reads the cache
+    backend_source = get_backend_source()
+    if backend_source != "static":
+        return True, f"backend source is '{backend_source}' (static cache not needed)"
 
     # Check if cache was already fetched today
     if CACHE_MARKER_FILE.exists():

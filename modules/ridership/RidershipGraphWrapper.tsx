@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import type { RidershipCount } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../../common/types/lines';
+import type { BusRoute, CommuterRailRoute } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getMinMaxDatesForRoute } from '../../common/utils/stations';
@@ -12,10 +12,8 @@ import { getOutOfServiceMessage } from './utils/utils';
 
 interface RidershipGraphWrapperProps {
   data: RidershipCount[];
-  line?: Line;
   busRoute?: BusRoute | undefined;
   crRoute?: CommuterRailRoute | undefined;
-  ferryRoute?: FerryRoute | undefined;
   config: ParamsType;
   startDate: string;
   endDate: string;

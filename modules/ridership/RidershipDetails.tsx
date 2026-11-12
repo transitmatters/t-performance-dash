@@ -135,10 +135,8 @@ export function RidershipDetails() {
             config={config}
             startDate={startDate!}
             endDate={endDate!}
-            line={line}
             busRoute={busRoute}
             crRoute={crRoute}
-            ferryRoute={ferryRoute}
           />
         </Widget>
         {hasStationMap && (
