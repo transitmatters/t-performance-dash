@@ -9,7 +9,7 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getStationInOptions, optionsStation } from '../../common/utils/stations';
 import { TripDataNotes } from '../../common/components/notices/TripDataNotes';
-import { CrBetaAccuracyNotice } from '../../common/components/notices/CrBetaAccuracyNotice';
+import { BetaAccuracyNotice } from '../../common/components/notices/BetaAccuracyNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
 import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
 import { useAlertStore } from './AlertStore';
@@ -63,7 +63,7 @@ export const TripExplorer = () => {
             <BnrdBanner busRoute={busRoute} />
             {/* Urgent, per-view accuracy warnings stay visible with the charts. */}
             <div className="flex flex-col gap-2 empty:hidden">
-              <CrBetaAccuracyNotice />
+              <BetaAccuracyNotice />
               <SameDayNotice />
               <CoverageGapNotice />
               <TerminusNotice toStation={toStation} fromStation={fromStation} />

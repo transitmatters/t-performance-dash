@@ -1,6 +1,6 @@
 import { Link } from '../general/Link';
 import { useDelimitatedRoute } from '../../utils/router';
-import { TODAY_STRING } from '../../constants/dates';
+import { FERRY_ARCHIVE_MAX_DATE, TODAY_STRING } from '../../constants/dates';
 
 /**
  * Whether a bus page's dates include today. Today is the only bus day served from Gobble: the
@@ -15,9 +15,16 @@ export const includesGobbleOnlyBusDay = (
 ) => start !== undefined && start <= today && (end ?? start) >= today;
 
 /**
+ * Whether a ferry page's dates reach past the MBTA's monthly ferry archive. Every later day comes
+ * from Gobble (or falls in the gap before it started). A single date counts as a one-day range.
+ */
+export const includesGobbleFerryDay = (start: string | undefined, end: string | undefined) =>
+  start !== undefined && (end ?? start) > FERRY_ARCHIVE_MAX_DATE;
+
+/**
  * Provenance note for bus data that comes straight from the MBTA's real-time feed rather than
  * cleaned MBTA data. Renders as plain prose for the "About this data" accordion (see
- * TripDataNotes). Commuter Rail attribution is owned by BetaDataNotice.
+ * TripDataNotes). Commuter Rail and ferry attribution is owned by BetaDataNotice.
  */
 export const GobbleDataNotice = () => {
   const {
