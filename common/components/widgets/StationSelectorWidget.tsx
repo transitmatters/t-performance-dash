@@ -93,12 +93,7 @@ export const StationSelectorWidget = ({
           !newStation?.branches?.some((branch) => toStation?.branches?.includes(branch))
         ) {
           // The new `from` is on a branch the current `to` isn't: end the trip where the branches meet.
-          const newToStation = getStationForInvalidFromSelection(
-            line,
-            newStation,
-            stations,
-            ferryRoute
-          );
+          const newToStation = getStationForInvalidFromSelection(line, newStation, stations);
           if (!newToStation) break;
           const stationIds = stopIdsForStations(newStation, newToStation);
           updateQueryParams(

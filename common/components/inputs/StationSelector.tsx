@@ -95,9 +95,9 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
                           branchLabelWidth[line ?? 'DEFAULT'] ?? ''
                         )}
                       >
-                        {option.branches?.map((branch) => (
-                          <p key={branch}>{branch}</p>
-                        ))}
+                        {/* Ferry branches only keep alternate terminals apart; riders don't see them. */}
+                        {lineShort !== 'Ferry' &&
+                          option.branches?.map((branch) => <p key={branch}>{branch}</p>)}
                       </div>
                       <span className="truncate">{option.stop_name}</span>
                     </div>

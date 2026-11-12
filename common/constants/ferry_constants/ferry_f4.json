@@ -9,7 +9,7 @@
       {
         "stop_name": "Long Wharf (South)",
         "station": "Boat-Long-South",
-        "branches": null,
+        "branches": ["Long Wharf"],
         "order": 2,
         "stops": {
           "0": ["Boat-F4|0|Boat-Long-South"],
@@ -20,7 +20,7 @@
       {
         "stop_name": "Central Wharf (South)",
         "station": "Boat-Aquarium",
-        "branches": null,
+        "branches": ["Central Wharf"],
         "order": 2,
         "stops": {
           "0": ["Boat-F4|0|Boat-Aquarium"],
@@ -31,7 +31,7 @@
       {
         "stop_name": "Charlestown Navy Yard",
         "station": "Boat-Charlestown",
-        "branches": null,
+        "branches": ["Long Wharf", "Central Wharf"],
         "order": 1,
         "stops": {
           "0": ["Boat-F4|0|Boat-Charlestown"],
