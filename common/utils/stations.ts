@@ -210,16 +210,10 @@ const getTrunkStationFor = (from: Station, stations: Station[] | undefined) =>
 export const getStationForInvalidFromSelection = (
   line: Line,
   from: Station,
-  stations: Station[] | undefined,
-  ferryRoute?: FerryRoute
+  stations: Station[] | undefined
 ): Station | undefined => {
   if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
-  if (line === 'line-ferry' && ferryRoute) {
-    // Return the first ferry station for the route
-    const { stations } = ferryStations[ferryRoute];
-    return stations[0];
-  }
   return getTrunkStationFor(from, stations);
 };
 

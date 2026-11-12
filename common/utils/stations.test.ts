@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import type { Station } from '../types/stations';
+import { getFerryRoutes } from '../constants/stations';
 import {
   findValidDefaultStations,
   getLocationDetails,
@@ -9,6 +10,7 @@ import {
   getStationInOptions,
   optionsStation,
   stopIdsForStations,
+  optionsForField,
   stopNoun,
 } from './stations';
 
@@ -120,5 +122,41 @@ describe('getLocationDetails direction', () => {
     expect(
       directionOf('Ferry', 'Central Wharf (South)', 'Charlestown Navy Yard', { ferry: 'Boat-F4' })
     ).toBe('outbound');
+  });
+});
+
+const ferryStops = (route: FerryRoute) => optionsStation('Ferry', undefined, undefined, route)!;
+
+describe('ferry routes', () => {
+  it.each(getFerryRoutes())('lists each %s stop once', (route) => {
+    const ids = ferryStops(route as FerryRoute).map((station) => station.station);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  // Every loop trip runs as GTFS direction 1, whichever way around it goes.
+  it.each(['Boat-F6', 'Boat-F7'] as FerryRoute[])(
+    'asks for direction 1 stops between any two %s stops',
+    (route) => {
+      const stops = ferryStops(route);
+      stops.forEach((from) =>
+        stops
+          .filter((to) => to !== from)
+          .forEach((to) => {
+            const { fromStopIds, toStopIds } = stopIdsForStations(from, to);
+            expect([...fromStopIds!, ...toStopIds!].every((id) => id.includes('|1|'))).toBe(true);
+            expect(getLocationDetails(from, to).direction).toBe('loop');
+          })
+      );
+    }
+  );
+
+  it("doesn't pair Charlestown's two Boston terminals", () => {
+    const stops = ferryStops('Boat-F4');
+    const centralWharf = stops.find((station) => station.station === 'Boat-Aquarium')!;
+    const toOptions = optionsForField('to', 'Ferry', centralWharf, undefined, undefined, 'Boat-F4');
+    expect(toOptions?.map((station) => station.station)).not.toContain('Boat-Long-South');
+    expect(getStationForInvalidFromSelection('line-ferry', centralWharf, stops)?.station).toBe(
+      'Boat-Charlestown'
+    );
   });
 });
