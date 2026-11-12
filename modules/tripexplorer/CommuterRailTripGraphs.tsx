@@ -19,6 +19,7 @@ import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
 import { WidgetTitle } from '../../common/components/widgets';
+import { RegionalRailPreview } from './regionalRail/RegionalRailPreview';
 
 interface CommuterRailTripGraphsProps {
   fromStation: Station;
@@ -105,6 +106,7 @@ export const CommuterRailTripGraphs = ({
               dayFilter={headwaysDayFilter}
             />
           </WidgetDiv>
+          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
           <WidgetDiv>
             <WidgetTitle
               title="Dwells"
@@ -169,6 +171,7 @@ export const CommuterRailTripGraphs = ({
               fromStation={fromStation}
             />
           </WidgetDiv>
+          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
           <WidgetDiv>
             <WidgetTitle
               title="Dwells"
