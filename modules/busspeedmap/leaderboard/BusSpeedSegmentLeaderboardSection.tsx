@@ -101,9 +101,18 @@ export const BusSpeedSegmentLeaderboardSection = ({
 
     const hasMore = entries.length > LEADERBOARD_PREVIEW_SIZE;
     const visible = showAll ? entries : entries.slice(0, LEADERBOARD_PREVIEW_SIZE);
+    // Files from before the running-speed change rank arrival to arrival, every section included.
+    const isRunningSpeed = entries.some((entry) => entry.p50_running_speed_mph != null);
 
     return (
       <>
+        {isRunningSpeed && (
+          <p className="text-xs text-stone-500">
+            Ranked by running speed, from pulling away to pulling in, so time at stops isn’t
+            counted. Sections too short to time aren’t ranked, and nor are the first and last
+            sections of most trips, whose running speeds are the least certain.
+          </p>
+        )}
         <BusSpeedSegmentLeaderboard data={visible} onSelectSegment={setSelectedSegment} />
         {hasMore && (
           <Button
