@@ -60,7 +60,6 @@ export const SummaryCard = (props: Props) => {
       </div>
       <ServiceRidershipChart
         color={colorsBySelection[selection] ?? DEFAULT_COLOR}
-        lineTitle="Total"
         lineId="total"
         serviceHistory={serviceHistory}
         ridershipHistory={ridershipHistory}
