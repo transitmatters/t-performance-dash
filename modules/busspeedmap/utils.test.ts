@@ -2,27 +2,17 @@ import { describe, expect, it } from 'vitest';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { LEADERBOARD_METRICS, MIN_SCHEDULED_TRIPS } from './constants';
-import type {
-  BusDwellProperties,
-  BusSpeedSegmentLeaderboardEntry,
-  BusSpeedSegmentProperties,
-  StopDwell,
-} from './types';
+import type { BusSpeedSegmentLeaderboardEntry, BusSpeedSegmentProperties } from './types';
 import {
   averageDwell,
-  dwellFromPoint,
-  dwellFromSegment,
   dwellShare,
-  formatSegmentSpeed,
   groupLeaderboardByBusRoute,
   isPooledSegment,
-  noSpeedReason,
   periodSuffix,
   rankAndSetAside,
   rankLeaderboard,
   segmentDistanceAndTime,
   segmentDwell,
-  segmentSpeed,
   segmentSpeedRange,
   sharedRouteKeys,
   stopDwellsByRoute,
@@ -36,70 +26,29 @@ const entry = (
   direction_id: 1,
   from_stop_name: 'A',
   to_stop_name: 'B',
-  p50_running_speed_mph: 4.0,
+  p50_speed_mph: 4.0,
   n_traversals: 40,
   n_interpolated: 0,
   ...overrides,
 });
 
 describe('segmentDistanceAndTime', () => {
-  it('formats the running length and time', () => {
-    expect(
-      segmentDistanceAndTime(
-        entry({ segment_length_m: 402, running_length_m: 312, p50_running_time_seconds: 112 })
-      )
-    ).toBe('0.19 mi · 1m 52s');
-  });
-
-  it('keeps short times in seconds', () => {
-    expect(
-      segmentDistanceAndTime(entry({ running_length_m: 161, p50_running_time_seconds: 45 }))
-    ).toBe('0.10 mi · 45s');
-  });
-
-  it('falls back to the whole segment and its arrival-to-arrival time in older files', () => {
+  it('formats miles and minutes', () => {
     expect(
       segmentDistanceAndTime(entry({ segment_length_m: 402, p50_total_time_seconds: 112 }))
     ).toBe('0.25 mi · 1m 52s');
   });
 
-  it('is undefined for a segment too short to time, and files published without the fields', () => {
-    expect(segmentDistanceAndTime(entry({ segment_length_m: 100 }))).toBeUndefined();
+  it('keeps short times in seconds', () => {
+    expect(
+      segmentDistanceAndTime(entry({ segment_length_m: 161, p50_total_time_seconds: 45 }))
+    ).toBe('0.10 mi · 45s');
+  });
+
+  it('is undefined for files published without the fields', () => {
     expect(segmentDistanceAndTime(entry())).toBeUndefined();
+    expect(segmentDistanceAndTime(entry({ segment_length_m: 402 }))).toBeUndefined();
     expect(segmentDistanceAndTime(entry({ p50_total_time_seconds: 112 }))).toBeUndefined();
-  });
-});
-
-describe('segmentSpeed', () => {
-  it('takes the running speed', () => {
-    expect(segmentSpeed({ p50_running_speed_mph: 16.7 })).toBe(16.7);
-  });
-
-  it('falls back to arrival to arrival in older archives', () => {
-    expect(segmentSpeed({ p50_speed_mph: 11.2 })).toBe(11.2);
-  });
-
-  it('is undefined for a segment too short to time', () => {
-    expect(segmentSpeed({})).toBeUndefined();
-    expect(formatSegmentSpeed({})).toBe('No speed');
-  });
-
-  it('formats to a tenth', () => {
-    expect(formatSegmentSpeed({ p50_running_speed_mph: 16 })).toBe('16.0 mph');
-  });
-});
-
-describe('noSpeedReason', () => {
-  it('says the stops are too close together when they are', () => {
-    expect(noSpeedReason({ segment_length_m: 98 })).toBe(
-      'Stops 0.06 mi apart, too close together to time.'
-    );
-  });
-
-  it('says there were too few usable trips otherwise', () => {
-    expect(noSpeedReason({ segment_length_m: 400 })).toBe(
-      'Too few trips with usable times to give a speed.'
-    );
   });
 });
 
@@ -160,16 +109,8 @@ describe('sharedRouteKeys', () => {
 
 describe('segmentSpeedRange', () => {
   it('runs slowest to fastest, to a tenth under 10 mph and whole above it', () => {
-    expect(segmentSpeedRange({ p90_running_speed_mph: 2.1, p10_running_speed_mph: 9 })).toBe(
-      '2.1–9.0 mph'
-    );
-    expect(segmentSpeedRange({ p90_running_speed_mph: 8.4, p10_running_speed_mph: 21 })).toBe(
-      '8.4–21 mph'
-    );
-  });
-
-  it('falls back to arrival to arrival in older archives', () => {
     expect(segmentSpeedRange({ p90_speed_mph: 2.1, p10_speed_mph: 9 })).toBe('2.1–9.0 mph');
+    expect(segmentSpeedRange({ p90_speed_mph: 8.4, p10_speed_mph: 21 })).toBe('8.4–21 mph');
   });
 
   it('is undefined for tiles published without it', () => {
@@ -177,33 +118,35 @@ describe('segmentSpeedRange', () => {
   });
 
   it('is undefined for a segment with too few trips to say', () => {
-    expect(segmentSpeedRange({ p90_running_speed_mph: 8.4 })).toBeUndefined();
+    expect(segmentSpeedRange({ p90_speed_mph: 8.4 })).toBeUndefined();
   });
 });
 
 describe('stopDwellsByRoute', () => {
-  const point = (
+  const segment = (
     route_id: string,
-    median_dwell_seconds: number,
-    n_dwells = 40
-  ): BusDwellProperties => ({
+    median_dwell_seconds: number | undefined,
+    n_traversals = 40,
+    shared_routes?: string
+  ): BusSpeedSegmentProperties => ({
     route_id,
     direction_id: 1,
-    stop_id: '12345',
-    stop_name: 'A',
+    from_stop_id: '12345',
+    from_stop_name: 'A',
+    to_stop_name: 'B',
     time_band: 'am_peak',
-    n_dwells,
+    p50_speed_mph: 4.0,
+    n_traversals,
+    n_interpolated: 0,
     median_dwell_seconds,
-    p90_dwell_seconds: median_dwell_seconds * 3,
+    shared_routes,
   });
-  const routes = (dwells: StopDwell[]) =>
-    dwells.map(({ route_id, median_dwell_seconds }) => [route_id, median_dwell_seconds]);
+  const routes = (segments: BusSpeedSegmentProperties[]) =>
+    segments.map(({ route_id, median_dwell_seconds }) => [route_id, median_dwell_seconds]);
 
   it('lists routes in the order a rider would, by their names', () => {
     expect(
-      routes(
-        stopDwellsByRoute([point('751', 12), point('749', 14), point('10', 8)].map(dwellFromPoint))
-      )
+      routes(stopDwellsByRoute([segment('751', 12), segment('749', 14), segment('10', 8)]))
     ).toEqual([
       ['10', 8],
       ['751', 12],
@@ -211,73 +154,33 @@ describe('stopDwellsByRoute', () => {
     ]);
   });
 
-  it('takes the busier of two features for one route', () => {
+  it('takes the busiest branch of a route that splits at the stop', () => {
+    expect(routes(stopDwellsByRoute([segment('1', 30, 5), segment('1', 12, 80)]))).toEqual([
+      ['1', 12],
+    ]);
+  });
+
+  it('lists a segment split across tiles once', () => {
+    expect(routes(stopDwellsByRoute([segment('1', 12), segment('1', 12)]))).toEqual([['1', 12]]);
+  });
+
+  it('leaves out pooled features, whose routes are listed anyway', () => {
     expect(
-      routes(stopDwellsByRoute([point('1', 30, 5), point('1', 12, 80)].map(dwellFromPoint)))
-    ).toEqual([['1', 12]]);
-  });
-
-  it('lists a point repeated across tiles once', () => {
-    expect(routes(stopDwellsByRoute([point('1', 12), point('1', 12)].map(dwellFromPoint)))).toEqual(
-      [['1', 12]]
-    );
-  });
-
-  it('keeps a dwell point of zero, as layover is already left out of them', () => {
-    expect(routes(stopDwellsByRoute([point('1', 0)].map(dwellFromPoint)))).toEqual([['1', 0]]);
-  });
-
-  it('carries the slowest tenth and the dwells counted', () => {
-    expect(dwellFromPoint(point('1', 10, 25))).toEqual({
-      route_id: '1',
-      median_dwell_seconds: 10,
-      p90_dwell_seconds: 30,
-      n_trips: 25,
-    });
-  });
-
-  describe("off an older archive's segments", () => {
-    const segment = (
-      route_id: string,
-      median_dwell_seconds: number | undefined,
-      n_traversals = 40,
-      shared_routes?: string
-    ): BusSpeedSegmentProperties => ({
-      route_id,
-      direction_id: 1,
-      from_stop_id: '12345',
-      from_stop_name: 'A',
-      to_stop_name: 'B',
-      time_band: 'am_peak',
-      p50_speed_mph: 4.0,
-      n_traversals,
-      n_interpolated: 0,
-      median_dwell_seconds,
-      shared_routes,
-    });
-    const fromSegments = (segments: BusSpeedSegmentProperties[]) =>
-      routes(stopDwellsByRoute(segments.map(dwellFromSegment)));
-
-    it('takes the busiest branch of a route that splits at the stop', () => {
-      expect(fromSegments([segment('1', 30, 5), segment('1', 12, 80)])).toEqual([['1', 12]]);
-    });
-
-    it('leaves out pooled features, whose routes are listed anyway', () => {
-      expect(
-        fromSegments([
+      routes(
+        stopDwellsByRoute([
           segment('749,751', 13, 80, '749,751'),
           segment('749', 14, 40, '749,751'),
           segment('751', 12, 40, '749,751'),
         ])
-      ).toEqual([
-        ['751', 12],
-        ['749', 14],
-      ]);
-    });
+      )
+    ).toEqual([
+      ['751', 12],
+      ['749', 14],
+    ]);
+  });
 
-    it('leaves out routes with nothing to show, zero included', () => {
-      expect(fromSegments([segment('1', 0), segment('47', undefined)])).toEqual([]);
-    });
+  it('leaves out routes with nothing to show', () => {
+    expect(routes(stopDwellsByRoute([segment('1', 0), segment('47', undefined)]))).toEqual([]);
   });
 });
 

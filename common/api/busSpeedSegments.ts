@@ -60,13 +60,6 @@ export const busSpeedSegmentsFile = (timeBand: TimeBand): string =>
 export const busSpeedSegmentsPath = (date: string, period: Period, timeBand: TimeBand): string =>
   `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/${busSpeedSegmentsFile(timeBand)}`;
 
-/** The dwell points sit beside each segments archive, split by band and all_day the same way. */
-export const busDwellsFile = (timeBand: TimeBand): string =>
-  timeBand === 'all_day' ? 'dwells_all_day.pmtiles' : 'dwells.pmtiles';
-
-export const busDwellsPath = (date: string, period: Period, timeBand: TimeBand): string =>
-  `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/${busDwellsFile(timeBand)}`;
-
 export const busSpeedSegmentLeaderboardPath = (date: string, period: Period): string =>
   `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/leaderboard.json`;
 
@@ -94,27 +87,6 @@ export const fetchBusSpeedSegmentsUrl = async ({
   if (!response.ok) {
     throw new Error(`Failed to load bus speed segments for ${date}.`);
   }
-
-  return url.toString();
-};
-
-/**
- * Like fetchBusSpeedSegmentsUrl, for the dwell points beside the segments. Resolves to null
- * rather than throwing when there's no file: archives published before the pipeline split dwell
- * out of the segments have none, and their segments still carry it (see ArrivalToArrivalSpeeds).
- */
-export const fetchBusDwellsUrl = async ({
-  date,
-  period,
-  timeBand,
-}: FetchBusSpeedSegmentsUrlOptions): Promise<string | null> => {
-  if (!date) throw new Error('A service date is required to load bus dwells.');
-
-  const url = new URL(busDwellsPath(date, period, timeBand), window.location.origin);
-  const response = await fetch(url.toString(), { method: 'HEAD' });
-
-  if (response.status === 403 || response.status === 404) return null;
-  if (!response.ok) throw new Error(`Failed to load bus dwells for ${date}.`);
 
   return url.toString();
 };

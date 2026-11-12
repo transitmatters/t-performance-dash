@@ -3,13 +3,10 @@ import { TERMINAL_SECTION_NOTES } from '../constants';
 import type { BusSpeedSegmentProperties, Period } from '../types';
 import {
   compareRouteNames,
-  formatSegmentSpeed,
   isPooledSegment,
-  noSpeedReason,
   periodSuffix,
   segmentDistanceAndTime,
   segmentDwell,
-  segmentSpeed,
   segmentSpeedRange,
 } from '../utils';
 
@@ -35,16 +32,14 @@ const SegmentStats = ({
   period: Period;
 }) => {
   const distanceAndTime = segmentDistanceAndTime(segment);
-  // Only in archives from before dwell had a layer of its own, whose speeds count it.
   const dwell = segmentDwell(segment);
   const speedRange = segmentSpeedRange(segment);
   return (
     <div className="mt-1">
       <p className="text-sm font-semibold">
         {label && `${label} · `}
-        {formatSegmentSpeed(segment)}
+        {segment.p50_speed_mph.toFixed(1)} mph
       </p>
-      {segmentSpeed(segment) == null && <p className="text-stone-600">{noSpeedReason(segment)}</p>}
       {distanceAndTime && <p className="text-stone-600">{distanceAndTime}</p>}
       {dwell && (
         <p className="text-stone-600">
@@ -52,7 +47,7 @@ const SegmentStats = ({
         </p>
       )}
       <p className="text-stone-600">
-        {segmentSpeed(segment) == null ? trips : `Median of ${trips}`}
+        Median of {trips}
         {periodSuffix(period)}
         {segment.n_interpolated > 0 && `, ${segment.n_interpolated} with an interpolated stop time`}
       </p>
@@ -96,7 +91,7 @@ export const SegmentPopupContent = ({ segments, period }: SegmentPopupContentPro
           <ul className="mt-1 border-t border-stone-200 pt-1 text-stone-600">
             {routes.map((route) => (
               <li key={route.route_id}>
-                {getBusRouteDisplayName(route.route_id)} · {formatSegmentSpeed(route)} ·{' '}
+                {getBusRouteDisplayName(route.route_id)} · {route.p50_speed_mph.toFixed(1)} mph ·{' '}
                 {route.n_traversals} trips
               </li>
             ))}

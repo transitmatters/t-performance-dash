@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { useBusDwellsUrl, useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
+import { useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
 import { BusSpeedDataUnavailableError } from '../../common/api/busSpeedSegments';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
@@ -51,9 +51,6 @@ export function BusSpeedMapDetails() {
 
   const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, Boolean(date));
   const { data: pmtilesUrl } = segments;
-  // Null for an archive from before dwell had a layer of its own. Read as running speeds until
-  // that's known, as every archive from here on is.
-  const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand }, Boolean(date));
 
   const bandLabel = TIME_BANDS.find((band) => band.key === timeBand);
   const dayTypeLabel = period !== 'daily' ? DAY_TYPES.find((dt) => dt.key === dayType) : undefined;
@@ -80,7 +77,6 @@ export function BusSpeedMapDetails() {
         <ErrorBoundary fallbackRender={() => <ErrorNotice />}>
           <BusSpeedMapView
             pmtilesUrl={pmtilesUrl}
-            dwellsUrl={dwellsUrl ?? undefined}
             period={period}
             dayType={dayType}
             timeBand={timeBand}
@@ -121,7 +117,7 @@ export function BusSpeedMapDetails() {
               </p>
             )}
             {renderBody()}
-            <BusSpeedLegend hasDwells={dwellsUrl !== null} />
+            <BusSpeedLegend />
           </div>
         </WidgetDiv>
       </ChartPageDiv>

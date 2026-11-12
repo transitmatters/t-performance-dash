@@ -31,39 +31,28 @@ export type Period = 'daily' | 'weekly' | 'monthly';
 export type DayType = 'business_day' | 'weekend_or_holiday';
 
 /**
- * What archives published before dwell moved to a layer of its own (mbta-performance#154) carry
- * in place of the running speeds. All arrival to arrival, so they count the time buses stood at
- * the from-stop: `median_dwell_seconds`, at `from_stop_id`. Each is missing from archives older
- * still, published before the pipeline started writing it. Read through segmentSpeed and its
- * siblings in utils.ts, which take the running speed where there is one.
- */
-export interface ArrivalToArrivalSpeeds {
-  p50_speed_mph?: number;
-  p10_speed_mph?: number;
-  p90_speed_mph?: number;
-  p50_total_time_seconds?: number;
-  median_dwell_seconds?: number;
-  from_stop_id?: string;
-}
-
-/**
  * Properties read off a rendered vector-tile feature. Deliberately a small subset of the
- * GeoParquet schema (mbta-performance's pmtiles.TILE_PROPERTIES).
- *
- * The speeds are running speeds: from leaving the from-stop to reaching the to-stop, so the time
- * buses spend at stops is left out and drawn as a layer of its own (BusDwellProperties). LAMP's
- * stop times aren't taken at the stop itself, so that clock covers the segment less about 90m
- * around its stops (`running_length_m`), and `p50_running_speed_mph` is `running_length_m` over
- * `p50_running_time_seconds`. A segment under 125m (MIN_RUNNING_SPEED_SEGMENT_M) has none of the
- * three, and is drawn as no data. `segment_length_m` is the whole segment, stop to stop.
+ * GeoParquet schema: `p50_speed_mph` is arrival-to-arrival and includes dwell at the
+ * from-stop, which is what a rider actually experiences. The moving-speed columns should never
+ * be baked into the tileset, so they cannot end up on the map by accident: LAMP's stop times cut
+ * the moving clock short enough that a 150m segment reads over 40 mph.
  *
  * `day_type` only exists on weekly/monthly features, where it's the true median across every
  * traversal of that (segment, day_type, time_band) in the whole period -- not an average of
  * daily numbers, so it reads as "typical", not "on this one day".
  *
- * `p10_running_speed_mph` and `p90_running_speed_mph` are the speeds of the fastest and slowest
- * tenth of trips, to show the range around the median. Only on features with at least 10 trips,
- * as "1 in 10" means nothing with fewer.
+ * `segment_length_m` and `p50_total_time_seconds` (whole metres and seconds) are the two numbers
+ * `p50_speed_mph` comes from, same as on a leaderboard entry. Both are missing from tiles
+ * published before the pipeline started writing them.
+ *
+ * `median_dwell_seconds` (whole seconds) is how long buses stood at the from-stop, which
+ * `p50_speed_mph` already counts, and `from_stop_id` is that stop, matching a stop pole's
+ * `stop_id`: a name won't do, since one can cover both sides of a street, or stops miles apart.
+ * Both are missing from tiles published before the pipeline started writing them.
+ *
+ * `p10_speed_mph` and `p90_speed_mph` are the speeds of the fastest and slowest tenth of trips,
+ * timed the same way as `p50_speed_mph`, to show the range around it. Only on features with at
+ * least 10 trips, as "1 in 10" means nothing with fewer, and missing from older tiles.
  *
  * `terminal_section` marks a segment most of whose trips start ("first") or end ("last") on it.
  * Those two read differently from the rest of a route: a trip's first segment leaves out its
@@ -76,58 +65,24 @@ export interface ArrivalToArrivalSpeeds {
  * of them is selected. Missing everywhere else, and from tiles published before the pipeline
  * pooled them.
  */
-export interface BusSpeedSegmentProperties extends ArrivalToArrivalSpeeds {
+export interface BusSpeedSegmentProperties {
   route_id: string;
   direction_id: number;
+  from_stop_id?: string;
   from_stop_name: string;
   to_stop_name: string;
   time_band: TimeBand;
   day_type?: DayType;
+  p50_speed_mph: number;
   n_traversals: number;
   n_interpolated: number;
   segment_length_m?: number;
-  p50_running_speed_mph?: number;
-  p10_running_speed_mph?: number;
-  p90_running_speed_mph?: number;
-  running_length_m?: number;
-  p50_running_time_seconds?: number;
+  p50_total_time_seconds?: number;
+  median_dwell_seconds?: number;
+  p10_speed_mph?: number;
+  p90_speed_mph?: number;
   terminal_section?: TerminalSection;
   shared_routes?: string;
-}
-
-/**
- * A point from the dwell archive (mbta-performance's dwells.py): how long one route's buses stood
- * at one stop, going one way, in one time band (and, weekly and monthly, one day type). Measured
- * from arrival to departure as LAMP records them, which aren't taken at the stop itself, so it's
- * best read as time around the stop: slowing, standing and pulling out. A trip's first stop is
- * left out (that's layover), as are interpolated stop times.
- *
- * Each point sits where the stop falls on the route's own line rather than at the pole, which can
- * be across the street. `stop_id` matches the pole's in the stops reference archive. Dwell is
- * rounded to 5 seconds, the spacing of the vehicle positions behind LAMP's stop times.
- */
-export interface BusDwellProperties {
-  route_id: string;
-  direction_id: number;
-  stop_id: string;
-  stop_name: string;
-  time_band: TimeBand;
-  day_type?: DayType;
-  n_dwells: number;
-  median_dwell_seconds: number;
-  p90_dwell_seconds: number;
-}
-
-/**
- * One route's time at a stop, for the stop's popup: off the dwell archive, or, for an archive
- * published before there was one, off the segment leaving the stop. `p90_dwell_seconds` is only
- * on the former; `n_trips` is the dwells counted, or the segment's trips.
- */
-export interface StopDwell {
-  route_id: string;
-  median_dwell_seconds: number;
-  p90_dwell_seconds?: number;
-  n_trips: number;
 }
 
 /**
@@ -168,24 +123,20 @@ export interface FetchBusSpeedSegmentsUrlOptions extends FetchBusSpeedSegmentsOp
  * row array up under (see BusSpeedSegmentLeaderboardResponse), same as they're absent from
  * daily pmtiles features. Already sorted slowest-first and capped server-side.
  *
- * Ranked by running speed, the same speed the map draws, so a segment too short to have one is
- * left off. Files published before that rank by the arrival-to-arrival `p50_speed_mph` instead,
- * which is `segment_length_m` over `p50_total_time_seconds` (see ArrivalToArrivalSpeeds).
+ * `p50_speed_mph` is `segment_length_m` over `p50_total_time_seconds`, so the time is the same
+ * arrival-to-arrival measure, dwell at the from-stop included. Both are missing from files
+ * published before the pipeline started writing them.
  */
-export interface BusSpeedSegmentLeaderboardEntry extends Pick<
-  ArrivalToArrivalSpeeds,
-  'p50_speed_mph' | 'p50_total_time_seconds'
-> {
+export interface BusSpeedSegmentLeaderboardEntry {
   route_id: string;
   direction_id: number;
   from_stop_name: string;
   to_stop_name: string;
-  p50_running_speed_mph?: number;
+  p50_speed_mph: number;
   n_traversals: number;
   n_interpolated: number;
   segment_length_m?: number;
-  running_length_m?: number;
-  p50_running_time_seconds?: number;
+  p50_total_time_seconds?: number;
 }
 
 /** A daily leaderboard file, keyed straight by time_band. */

@@ -17,15 +17,9 @@ import {
   BOSTON_CENTER,
   BUS_SPEED_STOPS_PATH,
   BUS_STOPS_SOURCE_LAYER,
-  DWELL_COLOR,
-  DWELL_DOTS_MINIMUM_ZOOM,
-  DWELL_MINIMUM_ZOOM,
-  DWELL_RADIUS_STOPS,
-  DWELLS_SOURCE_LAYER,
   MAP_MAX_BOUNDS,
   MIN_TRAVERSALS,
   NETWORK_BOUNDS,
-  NO_SPEED_COLOR,
   PMTILES_SOURCE_LAYER,
   SPEED_COLOR_STOPS,
   STATION_LINES,
@@ -33,24 +27,15 @@ import {
   STOP_DWELL_MINIMUM_ZOOM,
 } from '../constants';
 import type {
-  BusDwellProperties,
   BusSpeedSegmentProperties,
   BusStopProperties,
   DayType,
   DirectionFilter,
   Period,
   StationProperties,
-  StopDwell,
   TimeBand,
 } from '../types';
-import {
-  compareRouteNames,
-  dwellFromPoint,
-  dwellFromSegment,
-  isPooledSegment,
-  sharedRouteKeys,
-  stopDwellsByRoute,
-} from '../utils';
+import { compareRouteNames, isPooledSegment, sharedRouteKeys, stopDwellsByRoute } from '../utils';
 import { SegmentPopupContent } from './BusSpeedSegmentPopupContent';
 import { BusStopPopupContent, StationPopupContent } from './BusSpeedStopPopupContent';
 import { ResetViewControl } from './ResetViewControl';
@@ -114,21 +99,11 @@ const BUS_STOPS_LAYER_ID = 'bus-speed-bus-stops';
 const STATION_HITBOX_LAYER_ID = 'bus-speed-station-hitbox';
 const BUS_STOP_HITBOX_LAYER_ID = 'bus-speed-bus-stop-hitbox';
 
-const DWELLS_SOURCE_ID = 'bus-dwells';
-const DWELLS_LAYER_ID = 'bus-dwells';
-const DWELLS_HITBOX_LAYER_ID = 'bus-dwells-hitbox';
-
-/**
- * Running speed, or arrival to arrival in an archive from before there was one (see segmentSpeed
- * in utils.ts). A segment with neither is too short to time, and drawn as no data.
- */
 const speedColor: DataDrivenPropertyValueSpecification<string> = [
-  'case',
-  ['has', 'p50_running_speed_mph'],
-  ['interpolate', ['linear'], ['get', 'p50_running_speed_mph'], ...SPEED_COLOR_STOPS.flat()],
-  ['has', 'p50_speed_mph'],
-  ['interpolate', ['linear'], ['get', 'p50_speed_mph'], ...SPEED_COLOR_STOPS.flat()],
-  NO_SPEED_COLOR,
+  'interpolate',
+  ['linear'],
+  ['get', 'p50_speed_mph'],
+  ...SPEED_COLOR_STOPS.flat(),
 ] as unknown as DataDrivenPropertyValueSpecification<string>;
 
 /** The camera that fits the whole network in view, which depends on the map's current size. */
@@ -272,68 +247,22 @@ const hoveredBusStopRadius = zoomRadius(11, 4, 16, 6);
  * basemap alike, and reads as "bus" rather than an arbitrary selection color. */
 const HOVER_HALO_COLOR = '#FFC72C';
 
-/**
- * Dwell dots are sized by median dwell (DWELL_RADIUS_STOPS, at zoom 16) and shrink as the map
- * zooms out.
- */
-const dwellRadiusAt = (scale: number, extra: number) => [
-  'interpolate',
-  ['linear'],
-  ['get', 'median_dwell_seconds'],
-  ...DWELL_RADIUS_STOPS.flatMap(([seconds, radius]) => [seconds, radius * scale + extra]),
-];
-/** The dot's radius, or with `extra`, a few pixels past it to hover by. */
-const dwellRadiusWith = (extra: number) =>
-  [
-    'interpolate',
-    ['linear'],
-    ['zoom'],
-    DWELL_DOTS_MINIMUM_ZOOM,
-    dwellRadiusAt(0.4, extra),
-    14,
-    dwellRadiusAt(0.7, extra),
-    16,
-    dwellRadiusAt(1, extra),
-  ] as unknown as DataDrivenPropertyValueSpecification<number>;
-const dwellRadius = dwellRadiusWith(0);
-const dwellHitRadius = dwellRadiusWith(3);
-
 type Hovered = { longitude: number; latitude: number; anchor: 'top-left' | 'bottom-left' } & (
   | { kind: 'segment'; segments: BusSpeedSegmentProperties[] }
   | { kind: 'station'; properties: StationProperties }
-  | { kind: 'busStop' | 'dwell'; properties: BusStopProperties; dwells?: StopDwell[] }
+  | { kind: 'busStop'; properties: BusStopProperties; dwells?: BusSpeedSegmentProperties[] }
 );
 
 /**
- * What each hoverable layer shows, and its rank when several are under the cursor, lowest
- * first. Stops win over segments: every bus stop sits at a segment's end, inside the segment's
- * fat hitbox, so segment-first would make stops unhoverable.
- *
- * Poles and dwell dots share a rank, and the nearer one wins. A dot sits on the line itself, in
- * the middle of the street, so on a wide one (Massachusetts Ave in Central Square, at zoom 15) the
- * poles on either side are each a few pixels from it. Either fixed order would hand one of them
- * the other's popup.
+ * Stops win over segments when both are under the cursor: every bus stop sits at a segment's
+ * end, inside the segment's fat hitbox, so segment-first would make stops unhoverable.
  */
-const HOVER_LAYERS: Record<string, { kind: Hovered['kind']; rank: number }> = {
-  [STATION_HITBOX_LAYER_ID]: { kind: 'station', rank: 0 },
-  [BUS_STOP_HITBOX_LAYER_ID]: { kind: 'busStop', rank: 1 },
-  [DWELLS_HITBOX_LAYER_ID]: { kind: 'dwell', rank: 1 },
-  [HITBOX_LAYER_ID]: { kind: 'segment', rank: 2 },
-};
-const INTERACTIVE_LAYER_IDS = Object.keys(HOVER_LAYERS);
-
-/** The hovered feature: the lowest rank under the cursor, and of points, the nearest. */
-const topHovered = (event: MapLayerMouseEvent): MapGeoJSONFeature | undefined => {
-  const distance = (feature: MapGeoJSONFeature) => {
-    if (feature.geometry.type !== 'Point') return 0;
-    const point = event.target.project(feature.geometry.coordinates as [number, number]);
-    return Math.hypot(point.x - event.point.x, point.y - event.point.y);
-  };
-  return (event.features ?? [])
-    .filter((feature) => feature.layer.id in HOVER_LAYERS)
-    .map((feature) => ({ feature, rank: HOVER_LAYERS[feature.layer.id].rank }))
-    .sort((a, b) => a.rank - b.rank || distance(a.feature) - distance(b.feature))[0]?.feature;
-};
+const HOVER_PRIORITY: [string, Hovered['kind']][] = [
+  [STATION_HITBOX_LAYER_ID, 'station'],
+  [BUS_STOP_HITBOX_LAYER_ID, 'busStop'],
+  [HITBOX_LAYER_ID, 'segment'],
+];
+const INTERACTIVE_LAYER_IDS = HOVER_PRIORITY.map(([layerId]) => layerId);
 
 /**
  * Every route on the hovered segment, in route order, after the pooled feature standing in for
@@ -375,11 +304,6 @@ interface SegmentStops {
 
 interface BusSpeedMapViewProps {
   pmtilesUrl: string;
-  /**
-   * The dwell archive beside the segments. Missing for archives published before there was one,
-   * whose segments carry their first stop's dwell instead.
-   */
-  dwellsUrl?: string;
   period: Period;
   dayType: DayType;
   timeBand: TimeBand;
@@ -399,7 +323,6 @@ interface BusSpeedMapViewProps {
 
 export const BusSpeedMapView = ({
   pmtilesUrl,
-  dwellsUrl,
   period,
   dayType,
   timeBand,
@@ -485,47 +408,17 @@ export const BusSpeedMapView = ({
     };
   }, [routeIds, routeFilterClause]);
 
-  // The time band and day type on show, for segments and dwell points alike.
-  const bandClauses = useMemo<FilterSpecification[]>(() => {
-    const clauses: FilterSpecification[] = [['==', ['get', 'time_band'], timeBand]];
+  // The slice of the data on show, whichever segments of it are drawn.
+  const sliceClauses = useMemo<FilterSpecification[]>(() => {
+    const clauses: FilterSpecification[] = [
+      ['>=', ['get', 'n_traversals'], MIN_TRAVERSALS],
+      ['==', ['get', 'time_band'], timeBand],
+    ];
     // Daily features carry no `day_type` at all (a single day is already wholly one type),
     // so this clause only applies to weekly/monthly tiles.
     if (period !== 'daily') clauses.push(['==', ['get', 'day_type'], dayType]);
     return clauses;
   }, [timeBand, period, dayType]);
-
-  // The slice of the data on show, whichever segments of it are drawn.
-  const sliceClauses = useMemo<FilterSpecification[]>(
-    () => [['>=', ['get', 'n_traversals'], MIN_TRAVERSALS], ...bandClauses],
-    [bandClauses]
-  );
-
-  // Dwell points have no pooled rows, so a route filter is just their own route_ids.
-  const dwellSliceClauses = useMemo<FilterSpecification[]>(
-    () => [
-      ['>=', ['get', 'n_dwells'], MIN_TRAVERSALS],
-      ...bandClauses,
-      ...(routeIds
-        ? [['in', ['get', 'route_id'], ['literal', routeIds]] as unknown as FilterSpecification]
-        : []),
-    ],
-    [bandClauses, routeIds]
-  );
-
-  // The dots drawn: the direction on show, like the segments, and in segment-focus mode just the
-  // segment's two stops.
-  const dwellFilter = useMemo<FilterSpecification>(
-    () =>
-      [
-        'all',
-        ...dwellSliceClauses,
-        ['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0],
-        ...(segmentStops
-          ? [['in', ['get', 'stop_name'], ['literal', [segmentStops.from, segmentStops.to]]]]
-          : []),
-      ] as unknown as FilterSpecification,
-    [dwellSliceClauses, direction, segmentStops]
-  );
 
   const [filter, hitboxFilter] = useMemo<[FilterSpecification, FilterSpecification]>(() => {
     const clauses = [...sliceClauses];
@@ -555,27 +448,15 @@ export const BusSpeedMapView = ({
     ] as unknown as FilterSpecification;
   }, [hovered]);
 
-  // A stop's dwell, whichever way the direction toggle points: stops are drawn for both
-  // directions, so their popups should be too. Read off the dwell points at the stop, or in an
-  // archive from before there were any, off the segments leaving it. Undefined until the whole
-  // list can be read, below the zoom that holds every stop or while tiles are loading.
-  const stopDwells = (map: MaplibreMap, stopId: string): StopDwell[] | undefined => {
-    const minimumZoom = dwellsUrl ? DWELL_MINIMUM_ZOOM : STOP_DWELL_MINIMUM_ZOOM;
-    if (map.getZoom() < minimumZoom || !map.areTilesLoaded()) return undefined;
-    if (dwellsUrl) {
-      const points = map.querySourceFeatures(DWELLS_SOURCE_ID, {
-        sourceLayer: DWELLS_SOURCE_LAYER,
-        filter: [
-          'all',
-          ...dwellSliceClauses,
-          ['==', ['get', 'stop_id'], stopId],
-        ] as unknown as FilterSpecification,
-      });
-      return stopDwellsByRoute(
-        points.map((f) => dwellFromPoint(f.properties as BusDwellProperties))
-      );
-    }
-    const segments = map.querySourceFeatures(SOURCE_ID, {
+  // A stop's dwell is on the segments leaving it, whichever way the direction toggle points:
+  // stops are drawn for both directions, so their popups should be too. Undefined until the whole
+  // list can be read, below STOP_DWELL_MINIMUM_ZOOM or while tiles are loading.
+  const stopDwells = (
+    map: MaplibreMap,
+    stopId: string
+  ): BusSpeedSegmentProperties[] | undefined => {
+    if (map.getZoom() < STOP_DWELL_MINIMUM_ZOOM || !map.areTilesLoaded()) return undefined;
+    const features = map.querySourceFeatures(SOURCE_ID, {
       sourceLayer: PMTILES_SOURCE_LAYER,
       filter: [
         'all',
@@ -584,68 +465,46 @@ export const BusSpeedMapView = ({
         ...(routeFilterClause ? [routeFilterClause] : []),
       ] as unknown as FilterSpecification,
     });
-    return stopDwellsByRoute(
-      segments.map((f) => dwellFromSegment(f.properties as BusSpeedSegmentProperties))
-    );
-  };
-
-  // The pole a dwell dot belongs to, for its name and routes. Falls back to what the dot itself
-  // knows where the pole isn't loaded, or the stops archive is missing.
-  const busStopFor = (map: MaplibreMap, dwell: BusDwellProperties): BusStopProperties => {
-    const [pole] = stopsUrl
-      ? map.querySourceFeatures(STOPS_SOURCE_ID, {
-          sourceLayer: BUS_STOPS_SOURCE_LAYER,
-          filter: ['==', ['get', 'stop_id'], dwell.stop_id],
-        })
-      : [];
-    return (
-      (pole?.properties as BusStopProperties | undefined) ?? {
-        stop_id: dwell.stop_id,
-        stop_name: dwell.stop_name,
-        routes: dwell.route_id,
-      }
-    );
+    return stopDwellsByRoute(features.map((f) => f.properties as BusSpeedSegmentProperties));
   };
 
   const onMouseMove = (event: MapLayerMouseEvent) => {
-    const feature = topHovered(event);
-    if (!feature) {
-      setHovered(undefined);
+    const features = event.features ?? [];
+    for (const [layerId, kind] of HOVER_PRIORITY) {
+      const feature = features.find((candidate) => candidate.layer.id === layerId);
+      if (!feature) continue;
+      const position = {
+        longitude: event.lngLat.lng,
+        latitude: event.lngLat.lat,
+        // Grows away from the nearer top or bottom edge, so a tall popup (several routes on one
+        // segment, on a short phone-sized map) isn't cut off by it.
+        anchor:
+          event.point.y < event.target.getContainer().clientHeight / 2
+            ? ('top-left' as const)
+            : ('bottom-left' as const),
+      };
+      if (kind === 'segment') {
+        const segments = segmentsSharingStops(
+          features,
+          feature.properties as BusSpeedSegmentProperties
+        );
+        setHovered({ kind, ...position, segments });
+      } else if (kind === 'busStop') {
+        const properties = feature.properties as BusStopProperties;
+        // Kept while the mouse stays on the stop, which it moves on far more often than it leaves:
+        // the lookup takes about 40ms at zoom 12 downtown.
+        const dwells =
+          (hovered?.kind === 'busStop' &&
+            hovered.properties.stop_id === properties.stop_id &&
+            hovered.dwells) ||
+          stopDwells(event.target, properties.stop_id);
+        setHovered({ kind, ...position, properties, dwells });
+      } else {
+        setHovered({ kind, ...position, properties: feature.properties as StationProperties });
+      }
       return;
     }
-    const { kind } = HOVER_LAYERS[feature.layer.id];
-    const position = {
-      longitude: event.lngLat.lng,
-      latitude: event.lngLat.lat,
-      // Grows away from the nearer top or bottom edge, so a tall popup (several routes on one
-      // segment, on a short phone-sized map) isn't cut off by it.
-      anchor:
-        event.point.y < event.target.getContainer().clientHeight / 2
-          ? ('top-left' as const)
-          : ('bottom-left' as const),
-    };
-    if (kind === 'segment') {
-      const segments = segmentsSharingStops(
-        event.features ?? [],
-        feature.properties as BusSpeedSegmentProperties
-      );
-      setHovered({ kind, ...position, segments });
-    } else if (kind === 'busStop' || kind === 'dwell') {
-      const stopId = (feature.properties as BusStopProperties | BusDwellProperties).stop_id;
-      // Kept while the mouse stays on the stop, which it moves on far more often than it leaves:
-      // the lookup takes about 40ms at zoom 12 downtown.
-      const sameStop =
-        hovered?.kind === kind && hovered.properties.stop_id === stopId ? hovered : undefined;
-      const properties =
-        sameStop?.properties ??
-        (kind === 'dwell'
-          ? busStopFor(event.target, feature.properties as BusDwellProperties)
-          : (feature.properties as BusStopProperties));
-      const dwells = sameStop?.dwells ?? stopDwells(event.target, stopId);
-      setHovered({ kind, ...position, properties, dwells });
-    } else {
-      setHovered({ kind, ...position, properties: feature.properties as StationProperties });
-    }
+    setHovered(undefined);
   };
 
   const hoveredStopId =
@@ -887,58 +746,6 @@ export const BusSpeedMapView = ({
         />
       </Source>
 
-      {/* How long buses stood at each stop, as dots on the line: the segments' running speeds
-          leave that time out. Added without a beforeId, so above the segments and their arrows. */}
-      {dwellsUrl && (
-        <Source id={DWELLS_SOURCE_ID} type="vector" url={`pmtiles://${dwellsUrl}`}>
-          <Layer
-            id={DWELLS_LAYER_ID}
-            type="circle"
-            source-layer={DWELLS_SOURCE_LAYER}
-            minzoom={DWELL_DOTS_MINIMUM_ZOOM}
-            filter={dwellFilter}
-            // Longest on top, so a short dwell never hides a long one where routes share a stop.
-            layout={{ 'circle-sort-key': ['get', 'median_dwell_seconds'] }}
-            paint={{
-              'circle-color': DWELL_COLOR,
-              'circle-opacity': 0.85,
-              'circle-radius': dwellRadius,
-              'circle-stroke-color': '#ffffff',
-              'circle-stroke-width': 1,
-            }}
-          />
-          <Layer
-            id={DWELLS_HITBOX_LAYER_ID}
-            type="circle"
-            source-layer={DWELLS_SOURCE_LAYER}
-            minzoom={DWELL_DOTS_MINIMUM_ZOOM}
-            filter={dwellFilter}
-            paint={{ 'circle-opacity': 0, 'circle-radius': dwellHitRadius }}
-          />
-          {hovered?.kind === 'dwell' && (
-            <Layer
-              id="bus-dwells-hovered"
-              type="circle"
-              source-layer={DWELLS_SOURCE_LAYER}
-              minzoom={DWELL_DOTS_MINIMUM_ZOOM}
-              filter={
-                [
-                  'all',
-                  dwellFilter,
-                  ['==', ['get', 'stop_id'], hovered.properties.stop_id],
-                ] as unknown as FilterSpecification
-              }
-              paint={{
-                'circle-color': DWELL_COLOR,
-                'circle-radius': dwellRadius,
-                'circle-stroke-color': HOVER_HALO_COLOR,
-                'circle-stroke-width': 3,
-              }}
-            />
-          )}
-        </Source>
-      )}
-
       {/* Declared after the segments so the casing exists to slot beneath: the archive loads
           on its own schedule, and a layer added without a beforeId would land on top. Stations
           sit above bus stops, both below every segment layer. */}
@@ -1021,7 +828,7 @@ export const BusSpeedMapView = ({
           offset={16}
         >
           {hovered.kind === 'station' && <StationPopupContent station={hovered.properties} />}
-          {(hovered.kind === 'busStop' || hovered.kind === 'dwell') && (
+          {hovered.kind === 'busStop' && (
             <BusStopPopupContent
               busStop={hovered.properties}
               dwells={hovered.dwells}

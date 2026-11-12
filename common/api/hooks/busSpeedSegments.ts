@@ -5,27 +5,11 @@ import type {
 } from '../../../modules/busspeedmap/types';
 import { ONE_DAY } from '../../constants/time';
 import {
-  busDwellsFile,
   busSpeedSegmentsFile,
-  fetchBusDwellsUrl,
   fetchBusSpeedSegmentLeaderboard,
   fetchBusSpeedSegmentsUrl,
   fetchBusSpeedStops,
 } from '../busSpeedSegments';
-
-/**
- * Switching between the band archive and all_day's keeps the other file's URL while this one is
- * checked, so the map stays mounted where the user left it and swaps its Source URL in place. A
- * new date or period still shows the loading placeholder, as it always has.
- */
-const sameDateAndPeriod = <T>(
-  options: FetchBusSpeedSegmentsUrlOptions,
-  previous: T | undefined,
-  previousKey: { date?: string; period?: string } | undefined
-): T | undefined =>
-  previousKey?.date === options.date && previousKey?.period === options.period
-    ? previous
-    : undefined;
 
 export const useBusSpeedSegmentsUrl = (
   options: FetchBusSpeedSegmentsUrlOptions,
@@ -41,24 +25,15 @@ export const useBusSpeedSegmentsUrl = (
     ] as const,
     queryFn: () => fetchBusSpeedSegmentsUrl(options),
     enabled: enabled,
-    placeholderData: (previous, previousQuery) =>
-      sameDateAndPeriod(options, previous, previousQuery?.queryKey[1]),
+    // Switching between the band archive and all_day's keeps the other file's URL while this
+    // one is checked, so the map stays mounted where the user left it and swaps its Source URL
+    // in place. A new date or period still shows the loading placeholder, as it always has.
+    placeholderData: (previous, previousQuery) => {
+      const previousKey = previousQuery?.queryKey[1];
+      return previousKey?.date === date && previousKey?.period === period ? previous : undefined;
+    },
     // A published service date never changes, so a day of both freshness and retention
     // makes flipping back to an already-viewed date instant instead of a re-check.
-    staleTime: ONE_DAY,
-    gcTime: ONE_DAY,
-  });
-};
-
-/** The dwell archive beside the segments, or null for a date published before it existed. */
-export const useBusDwellsUrl = (options: FetchBusSpeedSegmentsUrlOptions, enabled?: boolean) => {
-  const { date, period, timeBand } = options;
-  return useQuery({
-    queryKey: ['busDwellsUrl', { date, period, file: busDwellsFile(timeBand) }] as const,
-    queryFn: () => fetchBusDwellsUrl(options),
-    enabled: enabled,
-    placeholderData: (previous, previousQuery) =>
-      sameDateAndPeriod(options, previous, previousQuery?.queryKey[1]),
     staleTime: ONE_DAY,
     gcTime: ONE_DAY,
   });
