@@ -1,10 +1,10 @@
 import js from '@eslint/js';
 import typescriptEslint from 'typescript-eslint';
 import importX from 'eslint-plugin-import-x';
-import react from 'eslint-plugin-react';
+import reactDom from 'eslint-plugin-react-dom';
 import reactHooks from 'eslint-plugin-react-hooks';
+import reactX from 'eslint-plugin-react-x';
 import unusedImports from 'eslint-plugin-unused-imports';
-import eslintConfigPrettier from 'eslint-config-prettier';
 import globals from 'globals';
 
 export default typescriptEslint.config(
@@ -27,15 +27,15 @@ export default typescriptEslint.config(
   // Base configs
   js.configs.recommended,
   ...typescriptEslint.configs.recommended,
-  eslintConfigPrettier,
 
   // Main config
   {
     files: ['**/*.ts', '**/*.tsx'],
     plugins: {
       'import-x': importX,
-      react,
+      'react-dom': reactDom,
       'react-hooks': reactHooks,
+      'react-x': reactX,
       'unused-imports': unusedImports,
     },
     languageOptions: {
@@ -58,9 +58,6 @@ export default typescriptEslint.config(
       },
     },
     settings: {
-      react: {
-        version: 'detect',
-      },
       'import-x/resolver': {
         typescript: true,
       },
@@ -95,9 +92,10 @@ export default typescriptEslint.config(
           ignoreTypeImports: false,
         },
       ],
-      'react/prop-types': 'warn',
-      'react/jsx-no-target-blank': 'warn',
-      'react/no-unescaped-entities': 'off',
+      'react-dom/no-unsafe-target-blank': 'warn',
+      // Props declared in a component's props type but never read. Uses type information and is
+      // marked experimental upstream, so it may change between eslint-react releases.
+      'react-x/no-unused-props': 'warn',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react-hooks/set-state-in-effect': 'error',
@@ -105,9 +103,6 @@ export default typescriptEslint.config(
       'react-hooks/refs': 'error',
       'react-hooks/static-components': 'error',
       'react-hooks/preserve-manual-memoization': 'error',
-      // JSX compiles with the automatic runtime (tsconfig "jsx": "react-jsx"), so files don't import React for it
-      'react/react-in-jsx-scope': 'off',
-      'react/no-unused-prop-types': 'warn',
       'unused-imports/no-unused-imports': 'error',
       'no-console': 'error',
       'no-empty': 'error',
@@ -180,7 +175,6 @@ export default typescriptEslint.config(
   {
     files: ['common/components/ui/**/*.tsx'],
     rules: {
-      'react/prop-types': 'off',
       'import-x/max-dependencies': 'off',
     },
   }
