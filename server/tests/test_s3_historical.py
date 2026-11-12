@@ -60,6 +60,42 @@ def test_headways_pass_occupancy_through(events):
     ]
 
 
+def _departure(route_id, service_date, event_time, trip_id):
+    # A full timestamp, since a train after midnight belongs to the previous service date
+    return {**_event("DEP", "", trip_id, route_id=route_id, service_date=service_date), "event_time": event_time}
+
+
+def _headways(events, *departures):
+    events += departures
+    headways = s3_historical.headways(["stop"], date(2026, 9, 1), date(2026, 9, 30))
+    return [(h["current_dep_dt"][11:19], h["headway_time_sec"]) for h in headways]
+
+
+def test_commuter_rail_headways_skip_the_overnight_gap(events):
+    # Commuter Rail is exempt from the 120-minute cutoff, so the 7-hour gap used to count as a headway
+    headways = _headways(
+        events,
+        _departure("CR-Fairmount", "2026-09-05", "2026-09-05 22:40:00-04:00", "t1"),
+        _departure("CR-Fairmount", "2026-09-05", "2026-09-06 00:10:00-04:00", "t2"),
+        _departure("CR-Fairmount", "2026-09-06", "2026-09-06 07:10:00-04:00", "t3"),
+        _departure("CR-Fairmount", "2026-09-06", "2026-09-06 08:40:00-04:00", "t4"),
+    )
+
+    assert headways == [("00:10:00", 5400), ("08:40:00", 5400)]
+
+
+def test_bus_headways_skip_an_overnight_gap_under_two_hours(events):
+    # Route 28 runs until about 2 AM and starts again around 3 AM, inside the 120-minute cutoff
+    headways = _headways(
+        events,
+        _departure("28", "2026-09-01", "2026-09-02 01:44:51-04:00", "t1"),
+        _departure("28", "2026-09-02", "2026-09-02 03:02:10-04:00", "t2"),
+        _departure("28", "2026-09-02", "2026-09-02 03:20:10-04:00", "t3"),
+    )
+
+    assert headways == [("03:20:10", 1080)]
+
+
 def test_dwells_use_the_departure_reading(events):
     events += [
         _event(
