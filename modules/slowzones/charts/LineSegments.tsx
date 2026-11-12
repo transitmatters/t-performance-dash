@@ -3,7 +3,6 @@ import { useMemo, useRef } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import minMax from 'dayjs/plugin/minMax';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import type { ChartDataset } from 'chart.js';
 import { Bar } from '@chartjs-components';
@@ -25,7 +24,6 @@ import {
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { stationAxisConfig } from '../constants/chartConfig';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { stopIdsForStations } from '../../../common/utils/stations';
 import { ALL_PAGES } from '../../../common/constants/pages';
 import type { QueryParams } from '../../../common/types/router';
@@ -129,7 +127,6 @@ export const LineSegments = ({
           }
         ),
       }}
-      plugins={[ChartjsPluginWatermark]}
       options={{
         maintainAspectRatio: false,
         responsive: true,
@@ -162,8 +159,6 @@ export const LineSegments = ({
             ? { ...getDateAxisConfig(startDateUTC, endDateUTC), type: 'time' }
             : stationAxisConfig,
         },
-        // @ts-expect-error The watermark plugin doesn't have typescript support
-        watermark: watermarkLayout(isMobile),
         plugins: {
           legend: {
             display: false,

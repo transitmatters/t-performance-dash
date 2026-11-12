@@ -1,8 +1,6 @@
 import { Bar } from '@chartjs-components';
 import { useMemo, useRef } from 'react';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
@@ -106,8 +104,6 @@ export const TravelTimesByVehicleChart = ({
             responsive: true,
             maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               legend: {
                 display: showLegend,
@@ -178,7 +174,6 @@ export const TravelTimesByVehicleChart = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
       <div className="flex flex-row justify-end">

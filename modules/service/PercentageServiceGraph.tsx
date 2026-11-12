@@ -4,7 +4,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { round } from '@lodash-utils';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -103,19 +102,6 @@ export const PercentageServiceGraph = ({
               },
               interaction: {
                 intersect: false,
-              },
-              // @ts-expect-error The watermark plugin doesn't have typescript support
-              watermark: {
-                image: new URL('/Logo_wordmark.png', window.location.origin).toString(),
-                x: 10,
-                y: 10,
-                opacity: 0.2,
-                width: isMobile ? 120 : 160,
-                height: isMobile ? 11.25 : 15,
-                alignToChartArea: true,
-                alignX: 'right',
-                alignY: 'top',
-                position: 'back',
               },
               plugins: {
                 tooltip: {
@@ -229,7 +215,6 @@ export const PercentageServiceGraph = ({
                 },
               },
               Annotation,
-              ChartjsPluginWatermark,
             ]}
           />
         </ChartDiv>

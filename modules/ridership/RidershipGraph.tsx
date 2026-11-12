@@ -5,7 +5,6 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
@@ -14,9 +13,11 @@ import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { HERO_LINE_WIDTH } from '../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
-import { useRidershipBaseline } from '../../common/api/hooks/baselines';
+import {
+  useRidershipBaseline,
+  useSeasonalRidershipMaximums,
+} from '../../common/api/hooks/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../common/constants/charts';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
@@ -56,11 +57,20 @@ export const RidershipGraph = ({
   const ref = useRef(null);
   const linePeak = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
   const peak = stationName ? 0 : linePeak;
+  const seasonal = useSeasonalRidershipMaximums(line, busRoute, crRoute, ferryRoute);
+  const seasonalMaximumFor = stationName ? undefined : seasonal.maximumFor;
+  const seasonalPending = !stationName && seasonal.isPending;
   const events = useMajorEvents(line, startDate, endDate);
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[line ?? 'default'];
+    // Each week against the most riders in the same week of past years, so December and holiday
+    // weeks aren't measured against a fall peak (#938). Without it, the flat all-time maximum.
+    const seasonalPeaks = seasonalMaximumFor
+      ? data.map((point) => seasonalMaximumFor(point.date))
+      : undefined;
+    const showFlatPeak = !seasonalPeaks && !seasonalPending && peak > 0;
 
     return (
       <ChartStack>
@@ -86,7 +96,23 @@ export const RidershipGraph = ({
                   data: data.map((datapoint) => datapoint.count),
                 },
 
-                ...(peak > 0
+                ...(seasonalPeaks
+                  ? [
+                      {
+                        label: 'Historical maximum for the time of year',
+                        borderColor: CHART_COLORS.ANNOTATIONS,
+                        backgroundColor: CHART_COLORS.ANNOTATIONS,
+                        borderWidth: 2,
+                        borderDash: [6, 6],
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        pointBorderWidth: 0,
+                        fill: false,
+                        data: seasonalPeaks.map((max) => max?.value ?? null),
+                      },
+                    ]
+                  : []),
+                ...(showFlatPeak
                   ? [
                       {
                         // This null dataset produces the entry in the legend for the peak annotation.
@@ -109,8 +135,6 @@ export const RidershipGraph = ({
               interaction: {
                 intersect: false,
               },
-              // @ts-expect-error The watermark plugin doesn't have typescript support
-              watermark: watermarkLayout(isMobile),
               plugins: {
                 tooltip: {
                   mode: 'index',
@@ -118,19 +142,27 @@ export const RidershipGraph = ({
                   callbacks: {
                     ...callbacks,
                     hoverCard: (items) => {
-                      const count = items.find((item) => item.datasetIndex === 0)?.parsed.y;
-                      if (!count) return null;
+                      const item = items.find((item) => item.datasetIndex === 0);
+                      const count = item?.parsed.y;
+                      if (!item || !count) return null;
+                      const seasonalPeak = seasonalPeaks?.[item.dataIndex];
+                      const percentOf = (max: number) => ((100 * count) / max).toFixed(1);
                       return {
                         hero: {
                           value: count.toLocaleString('en-us'),
                           unit: 'fare validations',
                           color: lineColor,
                         },
-                        meter:
-                          peak > 0
+                        meter: seasonalPeak
+                          ? {
+                              fraction: count / seasonalPeak.value,
+                              label: `${percentOf(seasonalPeak.value)}% of the maximum for ${seasonalPeak.season} (${Math.round(seasonalPeak.value).toLocaleString('en-us')})`,
+                              color: lineColor,
+                            }
+                          : showFlatPeak
                             ? {
                                 fraction: count / peak,
-                                label: `${((100 * count) / peak).toFixed(1)}% of historical maximum (${peak.toLocaleString('en-us')})`,
+                                label: `${percentOf(peak)}% of historical maximum (${peak.toLocaleString('en-us')})`,
                                 color: lineColor,
                               }
                             : undefined,
@@ -152,7 +184,7 @@ export const RidershipGraph = ({
                 annotation: {
                   // Add your annotations here
                   annotations: [
-                    ...(peak > 0
+                    ...(showFlatPeak
                       ? [
                           {
                             type: 'line' as const,
@@ -236,7 +268,6 @@ export const RidershipGraph = ({
                 },
               },
               Annotation,
-              ChartjsPluginWatermark,
             ]}
           />
         </ChartDiv>
@@ -264,6 +295,8 @@ export const RidershipGraph = ({
     );
   }, [
     peak,
+    seasonalMaximumFor,
+    seasonalPending,
     stationName,
     line,
     data,

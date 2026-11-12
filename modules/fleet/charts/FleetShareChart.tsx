@@ -4,7 +4,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { round } from '@lodash-utils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
@@ -13,7 +12,6 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
@@ -112,8 +110,6 @@ export const FleetShareChart = ({
             interaction: {
               intersect: false,
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -197,7 +193,6 @@ export const FleetShareChart = ({
                 if (showTitle) drawSimpleTitle(metric.title, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>
