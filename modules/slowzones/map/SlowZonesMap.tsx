@@ -8,6 +8,7 @@ import '@transitmatters/stripmap/dist/style.css';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import type { SlowZoneAllSlowResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
+import type { SlowZoneMapLabel } from '../constants/constants';
 
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -22,6 +23,8 @@ interface SlowZonesMapProps extends Pick<ComponentProps<typeof LineMap>, 'direct
   slowZones: SlowZoneAllSlowResponse;
   speedRestrictions: SpeedRestriction[];
   lineName: SlowZonesLineName;
+  /** What each slow segment's label shows. Line shading and bold always follow the delay. */
+  label?: SlowZoneMapLabel;
 }
 
 const getSegmentLabelOverrides = (
@@ -50,6 +53,7 @@ export const SlowZonesMap = ({
   slowZones,
   direction,
   speedRestrictions,
+  label = 'slow',
 }: SlowZonesMapProps) => {
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
@@ -135,6 +139,7 @@ export const SlowZonesMap = ({
                   isHorizontal={isHorizontal}
                   segment={segment}
                   line={line}
+                  label={label}
                   {...size}
                 />
               ),

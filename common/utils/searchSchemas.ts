@@ -90,6 +90,11 @@ const reliabilitySearch = (search: RawSearch) => ({
   relDir: str(search.relDir),
 });
 
+const slowZonesSearch = (search: RawSearch) => ({
+  /** What the line map's segment labels show: `travel` for travel time, left off for slow time. */
+  szLabels: str(search.szLabels),
+});
+
 const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[];
 
 const overviewSearch = (search: RawSearch) => ({
@@ -137,7 +142,17 @@ export const validateReliabilitySearch = (search: RawSearch) => ({
   ...reliabilitySearch(search),
 });
 
+export const validateSlowZonesSearch = (search: RawSearch) => ({
+  ...validateLineSearch(search),
+  ...slowZonesSearch(search),
+});
+
 export const validateSystemSearch = dateSearch;
+
+export const validateSystemSlowZonesSearch = (search: RawSearch) => ({
+  ...dateSearch(search),
+  ...slowZonesSearch(search),
+});
 
 export const validateEmbedSearch = (search: RawSearch) => ({
   ...dateSearch(search),
@@ -190,6 +205,7 @@ export const validateAnySearch = (search: RawSearch) => ({
   ...fleetSearch(search),
   ...delaysSearch(search),
   ...reliabilitySearch(search),
+  ...slowZonesSearch(search),
   ...validateEmbedSearch(search),
   ...trendSearch(search),
 });

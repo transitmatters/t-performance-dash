@@ -6,14 +6,17 @@ import type { LineMetadata } from '../../../common/types/lines';
 import { getClockFormattedTimeString } from '../../../common/utils/time';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { TODAY_STRING } from '../../../common/constants/dates';
+import type { SlowZoneMapLabel } from '../constants/constants';
 import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DIRECTIONS } from './segment';
+import { getSlowZoneLabelSeconds } from './labels';
 
 import styles from './SlowSegmentLabel.module.css';
 
 interface SlowZoneLabelProps {
   direction: SlowZoneDirection;
   slowZone: SlowZoneResponse;
+  label: SlowZoneMapLabel;
   color: string;
   offset: number;
   isHorizontal: boolean;
@@ -30,22 +33,24 @@ const SlowZoneLabel = ({
   containingWidth,
   offset,
   isHorizontal,
-  slowZone: { delay, latest_delay, baseline },
+  slowZone,
+  label,
 }: SlowZoneLabelProps) => {
   const {
     query: { endDate },
   } = useDelimitatedRoute();
   const isToday = endDate === TODAY_STRING;
-  const delayVal = isToday && latest_delay ? latest_delay : delay;
+  const seconds = getSlowZoneLabelSeconds(slowZone, label, isToday);
+  const { delay, baseline } = slowZone;
 
-  const delayString = useMemo(
+  const timeString = useMemo(
     () =>
-      getClockFormattedTimeString(delayVal, {
+      getClockFormattedTimeString(seconds, {
         showHours: false,
         showSeconds: true,
         truncateLeadingZeros: true,
       }),
-    [delayVal]
+    [seconds]
   );
   const indicatorBeforeText = direction === '1';
   const indicatorSolidArrow = indicatorBeforeText
@@ -55,6 +60,7 @@ const SlowZoneLabel = ({
     : isHorizontal
       ? '❯'
       : '▼';
+  // Bold marks a severe zone in either view, so it follows the delay, not the number shown.
   const fractionOverBaseline = -1 + (delay + baseline) / baseline;
   const isBold = fractionOverBaseline >= 0.5;
 
@@ -64,12 +70,12 @@ const SlowZoneLabel = ({
     </tspan>
   );
 
-  const delayText = <tspan fontWeight={isBold ? 'bold' : undefined}>{delayString}</tspan>;
+  const timeText = <tspan fontWeight={isBold ? 'bold' : undefined}>{timeString}</tspan>;
 
   return (
     <text y={offset} x={containingWidth / 2} textAnchor="middle" fontSize={LABEL_HEIGHT}>
       {indicatorBeforeText ? <>{indicator} </> : null}
-      {delayText}
+      {timeText}
       {!indicatorBeforeText ? <> {indicator}</> : null}
     </text>
   );
@@ -78,6 +84,7 @@ const SlowZoneLabel = ({
 interface SlowSegmentLabelProps {
   segment: SlowZonesSegment;
   line: LineMetadata;
+  label: SlowZoneMapLabel;
   isHorizontal: boolean;
   width: number;
   height: number;
@@ -113,6 +120,7 @@ export const SlowSegmentLabel = (props: SlowSegmentLabelProps) => {
     isHorizontal,
     segment: { slowZones },
     line,
+    label,
     width,
     height,
   } = props;
@@ -131,6 +139,7 @@ export const SlowSegmentLabel = (props: SlowSegmentLabelProps) => {
             key={direction}
             direction={direction}
             slowZone={zone}
+            label={label}
             color={line.color}
             isHorizontal={isHorizontal}
             offset={offsets[direction]!}
