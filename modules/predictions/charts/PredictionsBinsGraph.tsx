@@ -4,7 +4,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import dayjs from 'dayjs';
 import { max, min } from 'date-fns';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -12,7 +11,6 @@ import { COLORS, LINE_COLORS_LEVELS } from '../../../common/constants/colors';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
@@ -154,8 +152,6 @@ export const PredictionsBinsGraph = ({
             interaction: {
               intersect: false,
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -246,7 +242,6 @@ export const PredictionsBinsGraph = ({
                 if (showTitle) drawSimpleTitle(`Arrival Predictions`, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>

@@ -5,7 +5,6 @@ import { round } from '@lodash-utils';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
 import type { FleetMetrics } from '../../../common/types/dataPoints';
@@ -13,7 +12,6 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
@@ -113,8 +111,6 @@ export const FleetMixChart = ({
             interaction: {
               intersect: false,
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -202,7 +198,6 @@ export const FleetMixChart = ({
                 if (showTitle) drawSimpleTitle(`Fleet mix`, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>

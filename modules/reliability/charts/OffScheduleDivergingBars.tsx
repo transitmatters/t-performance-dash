@@ -1,11 +1,9 @@
 import { useRef } from 'react';
 import { Bar } from '@chartjs-components';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { SEVERITY_COLORS, useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
@@ -99,8 +97,6 @@ export const OffScheduleDivergingBars = ({
             responsive: true,
             maintainAspectRatio: false,
             interaction: { intersect: false, mode: 'index' },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               legend: {
                 display: true,
@@ -160,7 +156,6 @@ export const OffScheduleDivergingBars = ({
               x: periodTimeScale(agg, startDate, endDate, chartTheme),
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
       <div className="flex flex-row items-end justify-end gap-4">

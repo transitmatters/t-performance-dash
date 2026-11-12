@@ -2,12 +2,11 @@ import { useRef } from 'react';
 import { Chart } from '@chartjs-utils';
 import { Bar } from '@chartjs-components';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
+import { watermarkSize } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { DelaysEmbedButton } from '../DelaysEmbedButton';
@@ -97,14 +96,7 @@ export const DelayCauseBars = ({
   const widestLabel = Math.max(...nearLongest.map((_, index) => labelWidth(valueLabel(index))));
   const labelRoom = Math.ceil(widestLabel) + LABEL_OFFSET + 2;
   // The watermark sits in a strip under the bars, clear of every value label
-  const watermark = {
-    ...watermarkLayout(isMobile),
-    alignToChartArea: false,
-    alignY: 'bottom',
-    x: 0,
-    y: 0,
-  };
-  const watermarkRoom = Math.ceil(watermark.height) + 6;
+  const watermarkRoom = Math.ceil(watermarkSize(isMobile).height) + 6;
 
   const pick = (index: number) => {
     const { key } = rows[index];
@@ -148,9 +140,8 @@ export const DelayCauseBars = ({
             onHover: (_event, elements, chart) => {
               chart.canvas.style.cursor = onFocus && elements.length ? 'pointer' : 'default';
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark,
             plugins: {
+              watermark: { placement: 'below' },
               legend: { display: false },
               tooltip: {
                 callbacks: {
@@ -178,7 +169,6 @@ export const DelayCauseBars = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
         />
       </div>
       {onFocus && (
