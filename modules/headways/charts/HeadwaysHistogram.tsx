@@ -1,12 +1,10 @@
 import { Bar } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { useMemo, useRef } from 'react';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { HeadwaysChartProps } from '../../../common/types/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
@@ -82,8 +80,6 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
                   },
                 },
               },
-              // @ts-expect-error The watermark plugin doesn't have typescript support
-              watermark: watermarkLayout(isMobile),
               plugins: {
                 tooltip: {
                   mode: 'index',
@@ -137,7 +133,6 @@ export const HeadwaysHistogram = ({ headways, fill = false }: HeadwaysChartProps
                 intersect: false,
               },
             }}
-            plugins={[ChartjsPluginWatermark]}
           />
         </ChartDiv>
         {!fill && (
