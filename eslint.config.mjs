@@ -5,7 +5,6 @@ import reactDom from 'eslint-plugin-react-dom';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactX from 'eslint-plugin-react-x';
 import unusedImports from 'eslint-plugin-unused-imports';
-import eslintConfigPrettier from 'eslint-config-prettier';
 import globals from 'globals';
 
 export default typescriptEslint.config(
@@ -28,7 +27,6 @@ export default typescriptEslint.config(
   // Base configs
   js.configs.recommended,
   ...typescriptEslint.configs.recommended,
-  eslintConfigPrettier,
 
   // Main config
   {
