@@ -30,10 +30,15 @@ def test_parse_event_date(date_str, expected):
 @pytest.mark.parametrize(
     "now, expected",
     [
-        (datetime(2026, 10, 25, 3, 29, tzinfo=EASTERN_TIME), date(2026, 10, 24)),
-        (datetime(2026, 10, 25, 3, 30, tzinfo=EASTERN_TIME), date(2026, 10, 25)),
+        (datetime(2026, 10, 25, 2, 59, tzinfo=EASTERN_TIME), date(2026, 10, 24)),
+        (datetime(2026, 10, 25, 3, 0, tzinfo=EASTERN_TIME), date(2026, 10, 25)),
         # 2am Eastern is 6am UTC, which is still the previous service day
         (datetime(2026, 10, 25, 6, 0, tzinfo=timezone.utc), date(2026, 10, 24)),
+        # 7:30am UTC is 3:30am Eastern, a new service day
+        (datetime(2026, 10, 25, 7, 30, tzinfo=timezone.utc), date(2026, 10, 25)),
+        # The night clocks fall back: 1:30am EST comes after 1:30am EDT and is still the day before
+        (datetime(2026, 11, 1, 1, 30, fold=1, tzinfo=EASTERN_TIME), date(2026, 10, 31)),
+        (datetime(2026, 11, 1, 3, 0, tzinfo=EASTERN_TIME), date(2026, 11, 1)),
     ],
 )
 def test_current_service_date(now, expected):

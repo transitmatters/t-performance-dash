@@ -4,7 +4,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { HERO_LINE_WIDTH } from '../../../common/utils/chartTheme';
@@ -12,7 +11,6 @@ import { hexWithAlpha } from '../../../common/utils/general';
 import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { useSpeedBaseline } from '../../../common/api/hooks/baselines';
@@ -118,8 +116,6 @@ export const SpeedGraph = ({
             interaction: {
               intersect: false,
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -241,7 +237,6 @@ export const SpeedGraph = ({
                 if (showTitle) drawSimpleTitle(`Speed`, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>

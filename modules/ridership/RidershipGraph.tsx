@@ -5,7 +5,6 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
@@ -19,7 +18,6 @@ import {
   useSeasonalRidershipMaximums,
 } from '../../common/api/hooks/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../common/constants/charts';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { DownloadButton } from '../../common/components/buttons/DownloadButton';
@@ -137,8 +135,6 @@ export const RidershipGraph = ({
               interaction: {
                 intersect: false,
               },
-              // @ts-expect-error The watermark plugin doesn't have typescript support
-              watermark: watermarkLayout(isMobile),
               plugins: {
                 tooltip: {
                   mode: 'index',
@@ -272,7 +268,6 @@ export const RidershipGraph = ({
                 },
               },
               Annotation,
-              ChartjsPluginWatermark,
             ]}
           />
         </ChartDiv>

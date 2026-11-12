@@ -18,6 +18,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { annotationHoverCardPlugin } from '../components/charts/annotationTooltip';
 import { hoverHighlightPlugin } from '../components/charts/hoverCard/hoverHighlightPlugin';
 import { externalHoverCard, hoverCardCleanupPlugin } from '../components/charts/hoverCard/external';
+import { watermarkPlugin } from '../components/charts/watermarkPlugin';
 
 ChartJS.register(
   BarController,
@@ -36,7 +37,8 @@ ChartJS.register(
   Legend,
   hoverHighlightPlugin,
   annotationHoverCardPlugin,
-  hoverCardCleanupPlugin
+  hoverCardCleanupPlugin,
+  watermarkPlugin
 );
 
 // Hovers render in the shared HTML card (ChartHoverCard) instead of Chart.js's canvas tooltip.

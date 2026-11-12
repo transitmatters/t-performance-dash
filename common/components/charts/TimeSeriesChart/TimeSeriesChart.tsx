@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import type { TooltipItem } from 'chart.js';
 import { Line as LineChart } from '@chartjs-components';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import 'chartjs-adapter-date-fns';
@@ -28,7 +27,6 @@ import { annotationTooltip } from '../annotationTooltip';
 import type { HoverCardContent } from '../hoverCard/types';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 
-import { watermarkLayout } from '../../../constants/charts';
 import type { MajorEvent } from '../../../constants/majorEvents';
 import { getMajorEventAnnotations } from '../../../utils/majorEvents';
 import type {
@@ -286,7 +284,6 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
       interaction: {
         intersect: false,
       },
-      watermark: watermarkLayout(isMobile),
       plugins: {
         datalabels: {
           display: false,
@@ -343,12 +340,11 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     legend.position,
     legend.visible,
     appliedStyles,
-    isMobile,
     hoverCard,
   ]);
 
   const chartJsPlugins = useMemo(() => {
-    return [Annotation, ChartjsPluginWatermark];
+    return [Annotation];
   }, []);
 
   const chart = useMemo(() => {

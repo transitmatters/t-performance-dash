@@ -3,7 +3,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { useMemo, useRef } from 'react';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import type { SingleDayLineProps } from '../../types/charts';
 import {
@@ -19,7 +18,6 @@ import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { watermarkLayout } from '../../constants/charts';
 import {
   BUNCHED_RATIO,
   SEVERITY_COLORS,
@@ -210,8 +208,6 @@ export const SingleDayLineChart = ({
           options={{
             responsive: true,
             maintainAspectRatio: false,
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -382,7 +378,7 @@ export const SingleDayLineChart = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark, geometryPlugin]}
+          plugins={[geometryPlugin]}
         />
       </ChartDiv>
       <ContextTrack layers={layers} chartRef={ref} />

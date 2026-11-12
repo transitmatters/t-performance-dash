@@ -59,6 +59,8 @@ export const TphChart = (props: Props) => {
     return {
       maintainAspectRatio: false,
       plugins: {
+        // Too small for the wordmark, which the service chart beside it already carries
+        watermark: false,
         datalabels: {
           display: false,
         },

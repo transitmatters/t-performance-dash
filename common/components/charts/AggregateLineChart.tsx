@@ -3,7 +3,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { useMemo, useRef, useState } from 'react';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
@@ -11,7 +10,6 @@ import { DownloadButton } from '../buttons/DownloadButton';
 import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { watermarkLayout } from '../../constants/charts';
 import { useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
 import {
@@ -287,7 +285,6 @@ export const AggregateLineChart = ({
               mode: 'index',
               intersect: false,
             },
-            watermark: watermarkLayout(isMobile),
             plugins: {
               annotation: {
                 annotations: [...weatherBlocks, ...getMajorEventAnnotations(events)],
@@ -364,7 +361,7 @@ export const AggregateLineChart = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark, geometryPlugin]}
+          plugins={[geometryPlugin]}
         />
       </ChartDiv>
       {!fill && <ContextTrack layers={layers} chartRef={ref} />}
