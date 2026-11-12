@@ -12,6 +12,7 @@ import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { useSpeedBaseline } from '../../../common/api/hooks/baselines';
 import {
@@ -23,8 +24,6 @@ import {
   hideGapsExplainedByEvents,
   useMajorEvents,
 } from '../../../common/utils/majorEvents';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
 import type { ParamsType } from '../constants/speeds';
 import { explainGaps, usePageShutdowns } from '../../shutdowns';
@@ -240,26 +239,13 @@ export const SpeedGraph = ({
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <>
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName="speed"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-            <DownloadButton
-              data={dataWithMPH}
-              datasetName="speed"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </>
-        )}
-      </div>
+      <ChartActions
+        datasetName="speed"
+        chartRef={ref}
+        csv={dataWithMPH}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

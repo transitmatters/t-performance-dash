@@ -8,7 +8,7 @@ import { hexWithAlpha } from '../../../common/utils/general';
 import { watermarkSize } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { DelaysEmbedButton } from '../DelaysEmbedButton';
 import { formatDelay } from '../format';
 import type { DelayReasonKey } from '../constants/reasons';
@@ -186,19 +186,14 @@ export const DelayCauseBars = ({
           ))}
         </ul>
       )}
-      {!fill && (
-        <div className="flex flex-row items-end justify-end gap-4">
-          <SaveChartImageButton
-            chartRef={ref}
-            datasetName="delay-causes"
-            chartSubtitle="Total for these dates"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
-          <DelaysEmbedButton chart="causes" />
-        </div>
-      )}
+      <ChartActions
+        datasetName="delay-causes"
+        chartRef={ref}
+        startDate={startDate}
+        endDate={endDate}
+        chartSubtitle="Total for these dates"
+        embed={<DelaysEmbedButton chart="causes" />}
+      />
     </ChartStack>
   );
 };

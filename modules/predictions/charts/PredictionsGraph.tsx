@@ -12,11 +12,10 @@ import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addAccuracyPercentageToData } from '../../../common/utils/csv';
 
 interface PredictionsGraphProps {
@@ -199,26 +198,13 @@ export const PredictionsGraph = ({
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <>
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName="predictions"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-            <DownloadButton
-              data={dataWithPercentage}
-              datasetName="predictions"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </>
-        )}
-      </div>
+      <ChartActions
+        datasetName="predictions"
+        chartRef={ref}
+        csv={dataWithPercentage}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

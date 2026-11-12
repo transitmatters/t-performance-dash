@@ -19,9 +19,8 @@ import {
 } from '../../common/api/hooks/baselines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../common/components/charts/ChartStack';
+import { ChartActions } from '../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
-import { DownloadButton } from '../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
 import { getNoDataSinceLatestAnnotation } from '../service/utils/graphUtils';
 import { getMajorEventAnnotations, useMajorEvents } from '../../common/utils/majorEvents';
 
@@ -271,26 +270,13 @@ export const RidershipGraph = ({
             ]}
           />
         </ChartDiv>
-        <div className="flex flex-row items-end justify-end gap-4">
-          {startDate && (
-            <>
-              <SaveChartImageButton
-                chartRef={ref}
-                datasetName="ridership"
-                includeBothStopsForLocation={false}
-                startDate={startDate}
-                endDate={endDate}
-              />
-              <DownloadButton
-                data={data}
-                datasetName="ridership"
-                includeBothStopsForLocation={false}
-                startDate={startDate}
-                endDate={endDate}
-              />
-            </>
-          )}
-        </div>
+        <ChartActions
+          datasetName="ridership"
+          chartRef={ref}
+          csv={data}
+          startDate={startDate}
+          endDate={endDate}
+        />
       </ChartStack>
     );
   }, [

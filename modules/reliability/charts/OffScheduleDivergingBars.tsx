@@ -5,8 +5,8 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import { SEVERITY_COLORS, useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import type { AggType } from '../../speed/constants/speeds';
 import type { HeadwayRow } from '../utils';
@@ -158,15 +158,12 @@ export const OffScheduleDivergingBars = ({
           }}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        <SaveChartImageButton
-          chartRef={ref}
-          datasetName="reliability-off-schedule"
-          includeBothStopsForLocation={false}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      </div>
+      <ChartActions
+        datasetName="reliability-off-schedule"
+        chartRef={ref}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

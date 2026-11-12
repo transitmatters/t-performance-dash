@@ -6,9 +6,6 @@ import { useMemo, useRef, useState } from 'react';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
-import { DownloadButton } from '../buttons/DownloadButton';
-import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
-import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
@@ -27,6 +24,7 @@ import { getMajorEventAnnotations, useMajorEvents } from '../../utils/majorEvent
 import { useDelimitatedRoute } from '../../utils/router';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
+import { ChartActions } from './ChartActions';
 import { ChartDiv } from './ChartDiv';
 import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
@@ -374,31 +372,22 @@ export const AggregateLineChart = ({
                 onToggleTrendline={() => setIsTrendlineVisible(!isTrendlineVisible)}
               />
             )}
-            {startDate && (
-              <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
-                <CopyLinkButton />
-                <SaveChartImageButton
-                  chartRef={ref}
-                  datasetName={fname}
-                  location={location}
-                  includeBothStopsForLocation={includeBothStopsForLocation}
-                  startDate={startDate}
-                  endDate={endDate}
-                  chartTitle={chartTitle}
-                />
-                <DownloadButton
-                  data={data}
-                  datasetName={fname}
-                  location={location}
-                  includeBothStopsForLocation={includeBothStopsForLocation}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-                {embedChart && (
+            <ChartActions
+              datasetName={fname}
+              chartRef={ref}
+              location={location}
+              includeBothStopsForLocation={includeBothStopsForLocation}
+              csv={data}
+              startDate={startDate}
+              endDate={endDate}
+              chartTitle={chartTitle}
+              embed={
+                embedChart && (
                   <TripEmbedButton page="multi" chart={embedChart} trendline={isTrendlineVisible} />
-                )}
-              </div>
-            )}
+                )
+              }
+              className="ml-auto shrink-0 whitespace-nowrap"
+            />
           </div>
         </div>
       )}

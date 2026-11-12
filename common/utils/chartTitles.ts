@@ -1,10 +1,11 @@
 /**
  * Titles for exported chart images. A chart's export normally takes the title and subtitle of the
  * widget card around it; these are the fallback for a chart drawn outside a card, such as an embed.
- * Every dataset name a SaveChartImageButton can take has to be listed here.
+ * Every dataset name a ChartActions row can take has to be listed here.
  */
 const CHART_TITLES = {
   headways: 'Headways',
+  'headway-distribution': 'Headway distribution',
   traveltimes: 'Travel times',
   traveltimesByHour: 'Travel times by hour',
   dwells: 'Dwells',
@@ -12,8 +13,13 @@ const CHART_TITLES = {
   speed: 'Speed',
   ridership: 'Ridership',
   predictions: 'Arrival predictions',
+  'predictions-bins': 'Arrival predictions by bin',
   service: 'Service',
+  'service-hours': 'Hours of service',
+  'service-by-hour': 'Scheduled service by hour',
+  'service-delivered': 'Service delivered',
   slowtime: 'Total slow time',
+  'slowzone-segments': 'Slow zone segments',
   'delay-totals': 'How much delay',
   'delay-causes': 'What caused it',
   'delays-by-reason': 'How the causes changed',
@@ -25,6 +31,15 @@ const CHART_TITLES = {
   'fleet-cab-car-age': 'Average cab car age',
   'reliability-on-time': 'On time over time',
   'reliability-off-schedule': 'Bunching or long gaps',
+  'reliability-on-time-performance': 'On-time performance',
+  'cr-cancelled-trains': 'Cancelled trains per day',
+  'ride-trips': 'Trips per day',
+  'ride-missed-trips': 'Missed trips and no-shows per day',
+  'cr-hours-at-target': 'Hours with a train every 30 minutes',
+  'cr-midday-wait': 'Longest midday wait',
+  'cr-evening-wait': 'Longest evening wait',
+  'cr-trains-per-day': 'Trains per day',
+  'cr-trains-by-hour': 'Trains by hour',
   'traveltimes-by-vehicle': 'By vehicle',
 } as const;
 
