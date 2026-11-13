@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import type { TooltipItem } from 'chart.js';
+import type { RefObject } from 'react';
+import type { Chart, TooltipItem } from 'chart.js';
 import { Line as LineChart } from '@chartjs-components';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import 'chartjs-adapter-date-fns';
@@ -28,7 +28,6 @@ import { annotationTooltip } from '../annotationTooltip';
 import type { HoverCardContent } from '../hoverCard/types';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 
-import { watermarkLayout } from '../../../constants/charts';
 import type { MajorEvent } from '../../../constants/majorEvents';
 import { getMajorEventAnnotations } from '../../../utils/majorEvents';
 import type {
@@ -68,6 +67,9 @@ ChartJS.register(
   Legend
 );
 
+/** The Chart.js chart this draws: a line chart of `{ x: date or time, y: value }` points. */
+type TimeSeriesChartJS = Chart<'line', { x: string; y: number | null }[]>;
+
 interface Props<Data extends Dataset[]> {
   data: Data;
   benchmarks?: Benchmark[];
@@ -83,6 +85,8 @@ interface Props<Data extends Dataset[]> {
   fill?: boolean;
   // Structured hover card content; without it the card is built from each style's tooltipLabel
   hoverCard?: (items: TooltipItem<'line'>[]) => HoverCardContent | null;
+  /** Receives the Chart.js chart, for saving it as a PNG. */
+  chartRef?: RefObject<TimeSeriesChartJS | null>;
 }
 
 export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
@@ -99,6 +103,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     height,
     hoverCard,
     fill = false,
+    chartRef,
   } = props;
 
   const isMobile = !useBreakpoint('md');
@@ -286,7 +291,6 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
       interaction: {
         intersect: false,
       },
-      watermark: watermarkLayout(isMobile),
       plugins: {
         datalabels: {
           display: false,
@@ -343,25 +347,25 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     legend.position,
     legend.visible,
     appliedStyles,
-    isMobile,
     hoverCard,
   ]);
 
   const chartJsPlugins = useMemo(() => {
-    return [Annotation, ChartjsPluginWatermark];
+    return [Annotation];
   }, []);
 
   const chart = useMemo(() => {
     return (
       <LineChart
         redraw
+        ref={chartRef}
         height={height ?? (isMobile ? 200 : 240)}
         data={chartJsData}
         options={chartJsOptions}
         plugins={chartJsPlugins}
       />
     );
-  }, [height, isMobile, chartJsData, chartJsOptions, chartJsPlugins]);
+  }, [height, isMobile, chartJsData, chartJsOptions, chartJsPlugins, chartRef]);
 
   return (
     <ChartDiv isMobile={isMobile} fill={fill}>

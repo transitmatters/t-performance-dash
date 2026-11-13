@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import type { Benchmark, Dataset } from '../../../common/components/charts/TimeSeriesChart';
 import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
 import { getLabelsForData } from '../../../common/components/charts/TimeSeriesChart/helpers';
@@ -5,6 +6,9 @@ import { CHART_COLORS, LINE_COLORS, LINE_COLORS_DARK } from '../../../common/con
 import type { Line, LineColorKey } from '../../../common/types/lines';
 import { useLineColorKey } from '../../../common/utils/router';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
+import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
+import type { ChartDatasetName } from '../../../common/utils/chartTitles';
 import type { AggType } from '../../speed/constants/speeds';
 import { getNoDataSinceLatestBlock } from '../../service/utils/graphUtils';
 
@@ -18,6 +22,8 @@ interface ReliabilityGraphProps {
   kind: 'percent' | 'count';
   valueAxisLabel: string;
   benchmarks?: Benchmark[];
+  /** Names the chart's PNG; without it the chart has no action row, as on an overview. */
+  datasetName?: ChartDatasetName;
 }
 
 // Colors by position, in the line's own shades like the other v5 charts
@@ -36,15 +42,18 @@ export const ReliabilityGraph = ({
   kind,
   valueAxisLabel,
   benchmarks,
+  datasetName,
 }: ReliabilityGraphProps) => {
   const colorKey = useLineColorKey(line) ?? line;
+  const ref = useRef(null);
   if (data.every((dataset) => dataset.data.length === 0)) {
     return <NoDataNotice isLineMetric />;
   }
   const format = (value: number) =>
     kind === 'percent' ? `${value.toFixed(1)}%` : Math.round(value).toLocaleString('en-us');
-  return (
+  const chart = (
     <TimeSeriesChart
+      chartRef={ref}
       data={data.map((dataset, index) => ({
         ...dataset,
         style: { ...seriesStyle(colorKey, index), ...dataset.style },
@@ -66,5 +75,17 @@ export const ReliabilityGraph = ({
       legend={data.length > 1 ? { visible: true, align: 'end', position: 'top' } : undefined}
       benchmarks={benchmarks}
     />
+  );
+  if (!datasetName) return chart;
+  return (
+    <ChartStack>
+      {chart}
+      <ChartActions
+        datasetName={datasetName}
+        chartRef={ref}
+        startDate={startDate}
+        endDate={endDate}
+      />
+    </ChartStack>
   );
 };

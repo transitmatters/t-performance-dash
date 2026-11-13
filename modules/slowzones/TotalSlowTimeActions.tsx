@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import type { RefObject } from 'react';
 import type { Chart } from 'chart.js';
 import { EmbedButton } from '../../common/components/buttons/EmbedButton';
-import { SaveChartImageButton } from '../../common/components/buttons/SaveChartImageButton';
+import { ChartActions } from '../../common/components/charts/ChartActions';
 import type { SlowZonesEmbedLine } from './embed';
 import { getSlowZonesEmbedSnippet, getSlowZonesEmbedTitle } from './embed';
 
@@ -13,7 +13,7 @@ interface TotalSlowTimeActionsProps {
   endDate: string;
 }
 
-/** The PNG and embed buttons under the total slow time chart. */
+/** The action row under the total slow time chart, with its embed snippet for this line. */
 export const TotalSlowTimeActions = ({
   chartRef,
   line,
@@ -25,15 +25,13 @@ export const TotalSlowTimeActions = ({
     [line, startDate, endDate]
   );
   return (
-    <div className="flex flex-row items-end justify-end gap-4">
-      <SaveChartImageButton
-        chartRef={chartRef}
-        datasetName="slowtime"
-        chartTitle={getSlowZonesEmbedTitle(line)}
-        startDate={startDate}
-        endDate={endDate}
-      />
-      <EmbedButton getSnippet={getEmbedSnippet} />
-    </div>
+    <ChartActions
+      datasetName="slowtime"
+      chartRef={chartRef}
+      chartTitle={getSlowZonesEmbedTitle(line)}
+      startDate={startDate}
+      endDate={endDate}
+      embed={<EmbedButton getSnippet={getEmbedSnippet} />}
+    />
   );
 };

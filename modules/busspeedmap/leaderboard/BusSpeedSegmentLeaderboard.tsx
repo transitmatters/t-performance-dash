@@ -1,6 +1,6 @@
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import type { BusSpeedSegmentLeaderboardEntry } from '../types';
-import { segmentDistanceAndTime } from '../utils';
+import { formatSegmentSpeed, segmentDistanceAndTime } from '../utils';
 
 interface BusSpeedSegmentLeaderboardProps {
   data: BusSpeedSegmentLeaderboardEntry[];
@@ -45,9 +45,7 @@ export const BusSpeedSegmentLeaderboard = ({
               </span>
             </span>
             <span className="flex shrink-0 flex-col items-end">
-              <span className="font-semibold text-stone-900">
-                {entry.p50_speed_mph.toFixed(1)} mph
-              </span>
+              <span className="font-semibold text-stone-900">{formatSegmentSpeed(entry)}</span>
               {segmentDistanceAndTime(entry) && (
                 <span className="text-xs text-stone-500">{segmentDistanceAndTime(entry)}</span>
               )}

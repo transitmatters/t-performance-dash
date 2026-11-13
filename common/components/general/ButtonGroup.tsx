@@ -21,7 +21,6 @@ interface ButtonGroupProps<K, T> {
   selectedIndex?: number;
   additionalDivClass?: string;
   additionalButtonClass?: string;
-  isOverview?: boolean;
   line?: Line;
 }
 

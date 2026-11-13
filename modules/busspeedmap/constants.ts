@@ -79,8 +79,11 @@ export const DEFAULT_DAY_TYPE: DayType = 'business_day';
 
 /**
  * Speed ramp in mph, low (slow) to high. Red-yellow-blue rather than red-green so it stays
- * readable for the ~8% of men with red-green colour vision deficiency. The system-wide
- * median is about 13.9mph, so the amber stop sits roughly at "typical".
+ * readable for the ~8% of men with red-green colour vision deficiency.
+ *
+ * Unchanged when the map moved from arrival-to-arrival to running speed, so older archives
+ * (system-wide about 13.3 mph) and newer ones (about 15.8 mph, as dwell is left out) read on the
+ * same scale. On 2026-11-04 every length band of segment from 125m up ran a median 12-17 mph.
  *
  * Consumed by both the MapLibre `interpolate` expression and the legend swatches, so the
  * two can never drift apart.
@@ -92,6 +95,31 @@ export const SPEED_COLOR_STOPS: [number, string][] = [
   [18, '#74add1'],
   [24, '#313695'],
 ];
+
+/** A segment with no speed to draw: too short to time (see MIN_RUNNING_SPEED_SEGMENT_M). */
+export const NO_SPEED_COLOR = '#a8a29e';
+
+/**
+ * mbta-performance's MIN_RUNNING_SPEED_SEGMENT_M: segments shorter than this have no running
+ * speed, as the 90m around their stops that LAMP's times leave out is most of them.
+ */
+export const MIN_RUNNING_SPEED_SEGMENT_M = 125;
+
+/**
+ * Median dwell in seconds, and the dot radius at zoom 16 that stands for it. The dot's area
+ * rather than its radius grows with the dwell, so a 60s stop doesn't look four times a 15s one.
+ * Consumed by both the map and the legend.
+ */
+export const DWELL_RADIUS_STOPS: [number, number][] = [
+  [0, 2],
+  [15, 4.5],
+  [30, 6],
+  [60, 8.5],
+  [120, 12],
+];
+
+/** Dwell dots are dark with a white edge, so they sit apart from the speed ramp under them. */
+export const DWELL_COLOR = '#292524';
 
 /**
  * Served same-origin: CloudFront maps this prefix onto the private performance bucket.
@@ -111,9 +139,24 @@ export const PMTILES_SOURCE_LAYER = 'segments';
 /**
  * From here up every archive holds every segment. Below it a month's band archive keeps about one
  * stop pair in six (the pipeline's --drop-densest-as-needed), so a stop's popup would list some of
- * its routes' dwell and silently miss the rest.
+ * its routes' dwell and silently miss the rest. Only for archives with dwell on the segments; the
+ * dwell archive's own tiles start at DWELL_MINIMUM_ZOOM with every stop in them.
  */
 export const STOP_DWELL_MINIMUM_ZOOM = 12;
+
+/**
+ * The layer tippecanoe writes the dwell points into (mbta-performance's DWELL_LAYER_NAME), in an
+ * archive of their own beside each segments archive (see busDwellsPath).
+ */
+export const DWELLS_SOURCE_LAYER = 'dwells';
+
+/**
+ * The dwell archive's tiles start at zoom 11, where the stops reference archive's bus stops do,
+ * and keep every stop from there up. The dots wait a level longer: at 11, a stop every few hundred
+ * metres on every route is a smear across downtown.
+ */
+export const DWELL_MINIMUM_ZOOM = 11;
+export const DWELL_DOTS_MINIMUM_ZOOM = 12;
 
 /**
  * Subway stations and bus stops, drawn under the segments as context. One fixed archive

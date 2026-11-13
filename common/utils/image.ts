@@ -1,4 +1,3 @@
-import type { Chart } from 'chart.js';
 import dayjs from 'dayjs';
 import type { Location } from '../types/charts';
 import { LINE_COLORS, LINE_COLORS_ON_DARK } from '../constants/colors';
@@ -62,19 +61,24 @@ export interface ChartImageOptions {
   subtitle?: string;
   startDate: string;
   endDate?: string;
+  /** Shown in place of the dates, for a chart of a period rather than a range, like a season. */
+  period?: string;
   location?: Location;
   line?: string;
   includeBothStopsForLocation?: boolean;
 }
 
 /**
- * Export a Chart.js chart as a PNG image with a header matching
- * the on-screen WidgetTitle layout and a URL footer.
+ * Export a chart's canvas (a Chart.js chart's, or one svgToCanvas drew) as a PNG image with a
+ * header matching the on-screen WidgetTitle layout and a URL footer.
  */
-export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, filename: string) {
+export function downloadChartAsImage(
+  canvas: HTMLCanvasElement,
+  options: ChartImageOptions,
+  filename: string
+) {
   const { title, subtitle, startDate, endDate, location, line, includeBothStopsForLocation } =
     options;
-  const { canvas } = chart;
   const { width, height } = canvas;
 
   // Chart.js renders at devicePixelRatio, so canvas dimensions are already
@@ -105,7 +109,7 @@ export function downloadChartAsImage(chart: Chart, options: ChartImageOptions, f
   ctx.fillRect(0, 0, offscreen.width, offscreen.height);
 
   // --- Header: Right side (date) ---
-  const dateStr = formatDateForImage(startDate, endDate);
+  const dateStr = options.period ?? formatDateForImage(startDate, endDate);
   ctx.fillStyle = theme.meta;
   ctx.font = `${dateFontSize}px system-ui, sans-serif`;
   ctx.textAlign = 'right';

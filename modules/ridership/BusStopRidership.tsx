@@ -144,6 +144,7 @@ export const BusStopRidership = ({ busRoute }: { busRoute: string }) => {
             stopNames={view.route.stop_names}
             color={LINE_COLORS[getLineColorKey('line-bus', busRoute)]}
             direction={isDesktop ? 'horizontal' : 'vertical'}
+            period={view.season}
             getStopDetails={(stopId) => (
               <StopComparisons
                 route={view.route}

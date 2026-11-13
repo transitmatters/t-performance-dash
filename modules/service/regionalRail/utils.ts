@@ -51,6 +51,50 @@ export const averageByHour = (data: CrScorecardEntry[], direction: Direction): n
     (_, hour) => weightedMean(data, (entry) => entry[direction].byHour[hour]) ?? 0
   );
 
+// The Regional Rail span, 5am through the hour starting at midnight, as byHour indexes
+export const SPAN_HOUR_INDEXES = [...Array.from({ length: 19 }, (_, i) => i + 5), 0];
+
+/** Trains in each hour for the direction with fewer, since Regional Rail is measured both ways. */
+export const weakerByHour = (entry: CrScorecardEntry): (number | null)[] =>
+  entry.outbound.byHour.map((outbound, hour) => {
+    const inbound = entry.inbound.byHour[hour];
+    return outbound == null || inbound == null ? null : Math.min(outbound, inbound);
+  });
+
+/** Shade for an hour's average trains: 0 (none) to 3 (three or more). */
+export const hourLevel = (trains: number | null | undefined): 0 | 1 | 2 | 3 => {
+  const rounded = Math.round(trains ?? 0);
+  return rounded >= 3 ? 3 : rounded <= 0 ? 0 : (rounded as 1 | 2);
+};
+
+/** "5 AM" for the hour starting at that byHour index. */
+export const formatHour = (hour: number) => {
+  const h = hour % 12 || 12;
+  return `${h} ${hour % 24 < 12 ? 'AM' : 'PM'}`;
+};
+
+/** A time of day in seconds after midnight: "9:05 PM". Trains after midnight wrap around. */
+export const formatClock = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60) % (24 * 60);
+  const hours = Math.floor(minutes / 60);
+  const suffix = hours < 12 ? 'AM' : 'PM';
+  return `${hours % 12 || 12}:${`${minutes % 60}`.padStart(2, '0')} ${suffix}`;
+};
+
+/** Earliest first train and latest last train across both directions, averaged over the range. */
+export const serviceSpan = (data: CrScorecardEntry[]) => {
+  const firsts = DIRECTIONS.map(({ key }) => directionMean(data, key, 'firstTrip')).filter(
+    (v): v is number => v != null
+  );
+  const lasts = DIRECTIONS.map(({ key }) => directionMean(data, key, 'lastTrip')).filter(
+    (v): v is number => v != null
+  );
+  return {
+    first: firsts.length ? Math.min(...firsts) : undefined,
+    last: lasts.length ? Math.max(...lasts) : undefined,
+  };
+};
+
 /** Regional Rail is measured both ways, so a line scores its weaker direction. */
 export const getScorecardStats = (data: CrScorecardEntry[]) => {
   const both = (field: keyof Omit<ScorecardDirection, 'byHour'>) =>
