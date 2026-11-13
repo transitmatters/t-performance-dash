@@ -9,6 +9,7 @@ import type { BusStopRidershipStop } from '../../../common/types/dataPoints';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { getStripMapWatermark } from '../../../common/utils/stripmap';
 import { WATERMARK, watermarkSize } from '../../../common/constants/charts';
+import { SvgChart } from '../../../common/components/charts/SvgChart';
 import { RidershipMapTooltip } from './StationRidershipTooltip';
 import { formatStationRidership } from './utils';
 import { abbreviateBusStopName } from './busStopUtils';
@@ -23,6 +24,8 @@ interface BusStopRidershipMapProps extends Pick<
   color: string;
   /** Extra lines for a stop's tooltip, below its boardings and alightings */
   getStopDetails?: (stopId: string) => ReactNode;
+  /** The season the counts are from, shown in the map's PNG in place of dates */
+  period?: string;
 }
 
 export const BusStopRidershipMap = ({
@@ -31,6 +34,7 @@ export const BusStopRidershipMap = ({
   color,
   direction,
   getStopDetails,
+  period,
 }: BusStopRidershipMapProps) => {
   const stations = useMemo(
     () =>
@@ -111,21 +115,23 @@ export const BusStopRidershipMap = ({
   const watermarkGap = 4;
 
   return (
-    <div style={{ paddingTop: watermarkHeight + 2 * watermarkGap }}>
-      <StraightLineMap
-        stations={stations}
-        color={color}
-        pxPerStation={pxPerStation}
-        direction={direction}
-        getStationLabel={abbreviateBusStopName}
-        getStations={getStations}
-        stationTooltip={{ render: renderStationTooltip }}
-        watermark={{
-          ...getStripMapWatermark(isHorizontal, isDark),
-          position: 'top-right',
-          offset: { x: WATERMARK.inset, y: -(watermarkHeight + watermarkGap) },
-        }}
-      />
-    </div>
+    <SvgChart datasetName="bus-stop-ridership-map" period={period}>
+      <div style={{ paddingTop: watermarkHeight + 2 * watermarkGap }}>
+        <StraightLineMap
+          stations={stations}
+          color={color}
+          pxPerStation={pxPerStation}
+          direction={direction}
+          getStationLabel={abbreviateBusStopName}
+          getStations={getStations}
+          stationTooltip={{ render: renderStationTooltip }}
+          watermark={{
+            ...getStripMapWatermark(isHorizontal, isDark),
+            position: 'top-right',
+            offset: { x: WATERMARK.inset, y: -(watermarkHeight + watermarkGap) },
+          }}
+        />
+      </div>
+    </SvgChart>
   );
 };

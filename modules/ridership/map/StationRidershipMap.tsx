@@ -8,6 +8,8 @@ import '@transitmatters/stripmap/dist/style.css';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { abbreviateStationName, getStripMapWatermark } from '../../../common/utils/stripmap';
+import { useDelimitatedRoute } from '../../../common/utils/router';
+import { SvgChart } from '../../../common/components/charts/SvgChart';
 import { StationRidershipTooltip } from './StationRidershipTooltip';
 import { formatStationRidership, getOtherLinesAtStation } from './utils';
 import type { StationRidershipLineName } from './utils';
@@ -27,6 +29,7 @@ export const StationRidershipMap = ({
   selectedStationId,
   onSelectStation,
 }: StationRidershipMapProps) => {
+  const { startDate, endDate } = useDelimitatedRoute().query;
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
     [lineName]
@@ -100,19 +103,21 @@ export const StationRidershipMap = ({
   );
 
   return (
-    <LineMap
-      diagram={diagram}
-      strokeOptions={{ stroke: line.color }}
-      direction={direction}
-      getStationLabel={abbreviateStationName}
-      getStations={getStations}
-      stationTooltip={{ render: renderStationTooltip }}
-      onStationClick={(stationId) => {
-        if (stationId in averages) {
-          onSelectStation(stationId === selectedStationId ? null : stationId);
-        }
-      }}
-      watermark={getStripMapWatermark(isHorizontal, isDark)}
-    />
+    <SvgChart datasetName="station-ridership-map" startDate={startDate} endDate={endDate}>
+      <LineMap
+        diagram={diagram}
+        strokeOptions={{ stroke: line.color }}
+        direction={direction}
+        getStationLabel={abbreviateStationName}
+        getStations={getStations}
+        stationTooltip={{ render: renderStationTooltip }}
+        onStationClick={(stationId) => {
+          if (stationId in averages) {
+            onSelectStation(stationId === selectedStationId ? null : stationId);
+          }
+        }}
+        watermark={getStripMapWatermark(isHorizontal, isDark)}
+      />
+    </SvgChart>
   );
 };
