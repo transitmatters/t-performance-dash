@@ -267,7 +267,8 @@ export type CommuterRailRoute =
   | 'CR-NewBedford'
   | 'CR-Needham'
   | 'CR-Newburyport'
-  | 'CR-Providence';
+  | 'CR-Providence'
+  | 'CR-CapeFlyer';
 
 export type LineMetadata = {
   name: string;
@@ -473,6 +474,7 @@ export const COMMUTER_RAIL_ROUTES: CommuterRailRoute[] = [
   'CR-Needham',
   'CR-Newburyport',
   'CR-Providence',
+  'CR-CapeFlyer',
 ];
 
 export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } = {
@@ -489,6 +491,7 @@ export const COMMUTER_RAIL_LINE_NAMES: { [line in CommuterRailRoute]: string } =
   'CR-Needham': 'Needham Line',
   'CR-Newburyport': 'Newburyport/Rockport Line',
   'CR-Providence': 'Providence/Stoughton Line',
+  'CR-CapeFlyer': 'CapeFlyer',
 };
 
 export const FERRY_LINE_NAMES: { [line in FerryRoute]: string } = {
