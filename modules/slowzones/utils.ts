@@ -4,12 +4,12 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import type { DayDelayTotals, SlowZoneResponse } from '../../common/types/dataPoints';
 import type { LineShort } from '../../common/types/lines';
-import { TODAY_MIDNIGHT } from '../../common/constants/dates';
 import {
   filterAllSlow,
   getSlowZoneDelayDelta,
   getStationPairName,
   getWorstSlowZoneSegment,
+  isSlowZoneActiveAsOf,
 } from '../../common/utils/slowZoneUtils';
 
 dayjs.extend(utc);
@@ -45,15 +45,7 @@ export const getSlowZoneStats = (
 
   // Active-zone counts mirror useSlowZoneQuantityDelta, but line-wide (both directions).
   const zones = filterAllSlow(allSlow, startDateUTC, endDateUTC, lineShort);
-  const isActiveAsOfEnd = (sz: SlowZoneResponse) => {
-    const zoneEnd = dayjs.utc(sz.end);
-    // Our latest SZ data is always 1 day behind, so when the window ends today, use yesterday.
-    if (endDateUTC.isSame(TODAY_MIDNIGHT, 'day')) {
-      return zoneEnd.isSameOrAfter(endDateUTC.subtract(1, 'day'));
-    }
-    return zoneEnd.isSameOrAfter(endDateUTC);
-  };
-  const activeZones = zones.filter(isActiveAsOfEnd).length;
+  const activeZones = zones.filter((sz) => isSlowZoneActiveAsOf(sz, endDateUTC)).length;
   const startZones = zones.filter((sz) => dayjs.utc(sz.start).isSameOrBefore(startDateUTC)).length;
   const zonesDelta = activeZones - startZones;
 

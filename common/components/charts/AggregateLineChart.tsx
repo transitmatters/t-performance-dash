@@ -3,21 +3,17 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { useMemo, useRef, useState } from 'react';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
-import { DownloadButton } from '../buttons/DownloadButton';
-import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
-import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { watermarkLayout } from '../../constants/charts';
 import { useChartTheme } from '../../utils/chartTheme';
 import { getFormattedTimeString } from '../../utils/time';
 import { alignComparisonSeries, comparisonDateFor } from '../../utils/comparison';
 import {
   TEMPERATURE_BAND_OPACITY,
   TEMPERATURE_SCALE,
+  alignDailyTemperatureSeries,
   dailyTemperatureOn,
   getDailyTemperatureSeries,
   temperatureColor,
@@ -25,8 +21,11 @@ import {
   temperaturePointColor,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
+import { getMajorEventAnnotations, useMajorEvents } from '../../utils/majorEvents';
+import { useDelimitatedRoute } from '../../utils/router';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
+import { ChartActions } from './ChartActions';
 import { ChartDiv } from './ChartDiv';
 import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
@@ -112,6 +111,10 @@ export const AggregateLineChart = ({
   const isMobile = !useBreakpoint('md');
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
+  const { line } = useDelimitatedRoute();
+  // Charts by time of day span many dates at every point, so there's no day to mark.
+  const lineEvents = useMajorEvents(line, startDate, endDate);
+  const events = hourly || byTime ? [] : lineEvents;
 
   // With a comparison, both series share one set of labels so the index tooltip pairs them, and
   // `points` stands in for `data` wherever a dataIndex is looked up.
@@ -206,10 +209,11 @@ export const AggregateLineChart = ({
   }
 
   if (temperatureSeries && temperatureSeries.mean.length > 0) {
+    const aligned = alignDailyTemperatureSeries(temperatureSeries, labels);
     const minIndex = datasets.length;
     datasets.push({
       label: 'Daily low',
-      data: temperatureSeries.min,
+      data: aligned.min,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
       pointRadius: 0,
@@ -219,7 +223,7 @@ export const AggregateLineChart = ({
     });
     datasets.push({
       label: 'Daily high',
-      data: temperatureSeries.max,
+      data: aligned.max,
       yAxisID: 'yTemp',
       borderColor: 'transparent',
       backgroundColor: temperatureGradient(TEMPERATURE_BAND_OPACITY),
@@ -230,7 +234,7 @@ export const AggregateLineChart = ({
     });
     datasets.push({
       label: 'Daily mean',
-      data: temperatureSeries.mean,
+      data: aligned.mean,
       yAxisID: 'yTemp',
       borderColor: temperatureGradient(),
       borderWidth: 2,
@@ -324,10 +328,9 @@ export const AggregateLineChart = ({
               mode: 'index',
               intersect: false,
             },
-            watermark: watermarkLayout(isMobile),
             plugins: {
               annotation: {
-                annotations: weatherBlocks,
+                annotations: [...weatherBlocks, ...getMajorEventAnnotations(events)],
               },
               legend: {
                 display: false,
@@ -414,7 +417,7 @@ export const AggregateLineChart = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark, geometryPlugin]}
+          plugins={[geometryPlugin]}
         />
       </ChartDiv>
       {!fill && <ContextTrack layers={layers} chartRef={ref} />}
@@ -428,30 +431,22 @@ export const AggregateLineChart = ({
                 comparison={comparison}
               />
             )}
-            {startDate && (
-              <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
-                <CopyLinkButton />
-                <SaveChartImageButton
-                  chartRef={ref}
-                  datasetName={fname}
-                  location={location}
-                  includeBothStopsForLocation={includeBothStopsForLocation}
-                  startDate={startDate}
-                  endDate={endDate}
-                  chartTitle={chartTitle}
-                />
-                <DownloadButton
-                  data={data}
-                  datasetName={fname}
-                  location={location}
-                  includeBothStopsForLocation={includeBothStopsForLocation}
-                  startDate={startDate}
-                />
-                {embedChart && (
+            <ChartActions
+              datasetName={fname}
+              chartRef={ref}
+              location={location}
+              includeBothStopsForLocation={includeBothStopsForLocation}
+              csv={data}
+              startDate={startDate}
+              endDate={endDate}
+              chartTitle={chartTitle}
+              embed={
+                embedChart && (
                   <TripEmbedButton page="multi" chart={embedChart} trendline={isTrendlineVisible} />
-                )}
-              </div>
-            )}
+                )
+              }
+              className="ml-auto shrink-0 whitespace-nowrap"
+            />
           </div>
         </div>
       )}

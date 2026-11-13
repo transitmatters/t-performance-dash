@@ -38,7 +38,7 @@ export interface AggregateDataPoint {
   max: number;
   mean: number;
   min: number;
-  std: number;
+  std?: number;
   service_date?: string;
   dep_time_from_epoch?: string;
   is_peak_day?: boolean;
@@ -78,7 +78,14 @@ export type TravelTimesUnit = 'by_date' | 'by_time';
 
 export type DayFilter = 'all' | 'weekday' | 'weekend';
 
-type Direction = 'northbound' | 'southbound' | 'eastbound' | 'westbound' | 'inbound' | 'outbound';
+type Direction =
+  | 'northbound'
+  | 'southbound'
+  | 'eastbound'
+  | 'westbound'
+  | 'inbound'
+  | 'outbound'
+  | 'loop';
 
 export enum PointFieldKeys {
   depDt = 'dep_dt',
@@ -178,9 +185,4 @@ export interface HeadwaysChartProps {
   date?: string;
   /** Fill the parent's height and leave out the buttons under the chart, as an embed does. */
   fill?: boolean;
-}
-
-// additional data for rendering headway tooltip
-export interface HeadwayTooltipData {
-  pct_trains: number;
 }

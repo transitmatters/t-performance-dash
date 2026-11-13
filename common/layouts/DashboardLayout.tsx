@@ -3,8 +3,7 @@ import { useBreakpoint } from '../hooks/useBreakpoint';
 import { WidgetPage } from '../components/widgets/WidgetPage';
 import { MobileHeader } from '../../modules/dashboard/MobileHeader';
 import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
-import { useDelimitatedRoute } from '../utils/router';
-import { ALL_PAGES } from '../constants/pages';
+import { usePageControls } from '../hooks/usePageControls';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
 import { CIPBanner } from '../components/CIPBanner';
 
@@ -14,11 +13,7 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const isMobile = !useBreakpoint('md');
-  const { line, page, query, tab } = useDelimitatedRoute();
-  const { busRoute, crRoute, ferryRoute } = query;
-  const dateStoreSection = page ? ALL_PAGES[page]?.dateStoreSection : undefined;
-  const showControlParams =
-    dateStoreSection && (line || tab === 'System') && dateStoreSection !== 'today';
+  const { visible: showControls } = usePageControls();
 
   return (
     <div className="flex flex-1 flex-col pb-24 md:pb-0">
@@ -31,17 +26,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
         </div>
       </div>
-      {isMobile && showControlParams && (
-        <MobileControlPanel
-          dateStoreSection={dateStoreSection}
-          line={line}
-          busRoute={busRoute}
-          crRoute={crRoute}
-          ferryRoute={ferryRoute}
-          hasStationStore={ALL_PAGES[page]?.hasStationStore}
-          hasRouteSelector={ALL_PAGES[page]?.hasRouteSelector}
-        />
-      )}
+      {isMobile && showControls && <MobileControlPanel />}
     </div>
   );
 };

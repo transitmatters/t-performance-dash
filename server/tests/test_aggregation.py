@@ -58,3 +58,22 @@ def test_travel_times_keep_low_frequency_ferry_days(monkeypatch):
 
     assert [r["count"] for r in result["by_date"] if r["peak"] == "all"] == [3]
     assert result["by_time"]
+
+
+def test_service_day_starts_at_3am(monkeypatch):
+    # Route 15's first trip leaves at 3:26 AM; a 2:50 AM departure is the previous night's last trip
+    records = [
+        {"dep_dt": f"2025-07-15T{hhmm}:00", "travel_time_sec": 1200, "route_id": "15"}
+        for hhmm in ["02:50", "03:26", "03:40", "08:00"]
+    ]
+    monkeypatch.setattr(data_funcs, "travel_times", lambda *_args: records)
+    monkeypatch.setattr(aggregation, "min_count_for_stops", lambda _stops: 1)
+
+    result = aggregation.travel_times_all(DAY, DAY, ["15-0-1"], ["15-0-2"])
+
+    by_date = {r["service_date"]: r["count"] for r in result["by_date"] if r["peak"] == "all"}
+    assert by_date == {DAY - datetime.timedelta(days=1): 1, DAY: 3}
+    buckets = {r["dep_time_from_epoch"]: r["count"] for r in result["by_time"]}
+    assert buckets["1970-01-02T02:30:00"] == 1
+    assert buckets["1970-01-01T03:00:00"] == 1
+    assert buckets["1970-01-01T03:30:00"] == 1

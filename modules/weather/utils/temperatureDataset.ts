@@ -114,6 +114,22 @@ export const getDailyTemperatureSeries = (hours: WeatherHourly[]): DailyTemperat
 };
 
 /**
+ * The daily series laid on the chart's own dates, null where there's no reading. Charts whose data
+ * skips days (e.g. weekdays only) would otherwise pair point N of the data with a different day's
+ * temperature when hovered.
+ */
+export const alignDailyTemperatureSeries = (
+  series: DailyTemperatureSeries,
+  labels: string[]
+): Record<keyof DailyTemperatureSeries, { x: string; y: number | null }[]> => {
+  const onLabels = (points: DailyTempPoint[]) => {
+    const byDay = new Map(points.map(({ x, y }) => [x.slice(0, 10), y]));
+    return labels.map((label) => ({ x: label, y: byDay.get(String(label).slice(0, 10)) ?? null }));
+  };
+  return { min: onLabels(series.min), max: onLabels(series.max), mean: onLabels(series.mean) };
+};
+
+/**
  * The temperature at `time` (epoch ms), read off the hourly series between the readings either
  * side of it. Undefined outside the series or across a gap in the readings.
  */

@@ -16,6 +16,6 @@ export const isNegligible = (comparison: WidgetComparison) => {
   return abs <= 1;
 };
 
-/** A longer trip or wait is worse; a higher speed or on-time share is better. */
-export const isWorse = (comparison: WidgetComparison) =>
-  comparison.higherIsBetter ? comparison.delta < 0 : comparison.delta > 0;
+/** A shorter trip or wait is better; so is a higher speed or on-time share. */
+export const isImprovement = (comparison: WidgetComparison) =>
+  comparison.higherIsBetter ? comparison.delta > 0 : comparison.delta < 0;

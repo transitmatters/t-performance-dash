@@ -4,10 +4,8 @@ import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { Calendar } from '../../ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
-import { lineColorVar } from '../../../styles/general';
-import { LINE_COLORS } from '../../../constants/colors';
+import { lineColorVar, needsDarkTextOn } from '../../../styles/general';
 import type { Line } from '../../../types/lines';
-import { readableOn } from '../../../utils/general';
 
 interface DateFieldProps {
   /** YYYY-MM-DD, matching the query-string format everywhere else in the date state. */
@@ -37,8 +35,7 @@ export const DateField = ({
   // { before, after } together is DateInterval (disables the days *between* them), not what we
   // want here — an array ORs the two matchers, disabling before min or after max independently.
   const disabledMatchers = [...(min ? [{ before: min }] : []), ...(max ? [{ after: max }] : [])];
-  // Bus yellow and the other light line colors can't carry white selected-day text.
-  const needsDarkText = readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
+  const needsDarkText = needsDarkTextOn(line);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

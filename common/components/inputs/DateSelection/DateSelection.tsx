@@ -1,16 +1,11 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarDay, faCalendarWeek } from '@fortawesome/free-solid-svg-icons';
-import {
-  buttonHighlightFocus,
-  lineColorDarkBackground,
-  lineColorLightBorder,
-  lineColorVar,
-} from '../../../styles/general';
+import { faCalendarDay, faCalendarWeek, faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
-import { RANGE_PRESETS, SINGLE_PRESETS } from '../../../constants/dates';
+import { getRangePresets, SINGLE_PRESETS } from '../../../constants/dates';
 import { useDatePresetStore } from '../../../state/datePresetStore';
 import { checkForPreset, useSelectedPreset } from '../../../state/utils/datePresetUtils';
 import { ALL_PAGES } from '../../../constants/pages';
@@ -24,14 +19,14 @@ interface DateSelectionProps {
 }
 
 export const DateSelection = ({ type }: DateSelectionProps) => {
-  const { line, page, tab, query } = useDelimitatedRoute();
+  const { page, tab, query } = useDelimitatedRoute();
   const range = type === 'range';
   const [open, setOpen] = useState<boolean>(false);
   const { dateStoreSection } = ALL_PAGES[page];
   const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const datePreset = useSelectedPreset();
   const updateQueryParams = useUpdateQuery();
-  const presets = range ? RANGE_PRESETS[tab] : SINGLE_PRESETS[tab];
+  const presets = range ? getRangePresets(tab, page) : SINGLE_PRESETS[tab];
   const presetDateArray = Object.values(presets);
 
   const handleSelection = (datePresetKey: DatePresetKey) => {
@@ -51,37 +46,32 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
   }, [datePreset, dateStoreSection, query, range, setDatePreset]);
 
   return (
-    <div
-      className={classNames(
-        'flex w-full flex-row overflow-visible rounded-md border md:max-w-sm lg:w-auto',
-        lineColorLightBorder[line ?? 'DEFAULT']
-      )}
-    >
+    <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
-          style={lineColorVar(line)}
           className={classNames(
-            'flex h-10 w-full items-center justify-center self-stretch rounded-l-[calc(var(--radius-md)-1px)] px-3 py-1 text-white/95 hover:bg-(--line-color-dark)/70 focus-visible:bg-(--line-color-dark)/70 focus-visible:ring-2 focus-visible:outline-hidden md:h-7',
-            line && buttonHighlightFocus[line],
-            lineColorDarkBackground[line ?? 'DEFAULT']
+            'flex h-10 w-full items-center justify-between gap-x-2 rounded-md px-3 text-sm whitespace-nowrap focus-visible:ring-offset-1 md:h-8 md:w-auto',
+            CONTROL_SURFACE,
+            FOCUS_RING_ON_SURFACE
           )}
         >
+          <span className="flex min-w-0 items-center gap-x-2">
+            <FontAwesomeIcon
+              icon={range ? faCalendarWeek : faCalendarDay}
+              className="size-3.5 shrink-0 text-stone-500 dark:text-stone-400"
+              aria-hidden
+            />
+            <span className="truncate font-medium">
+              {datePreset && presets[datePreset] ? presets[datePreset].name : 'Custom'}
+            </span>
+          </span>
           <FontAwesomeIcon
-            icon={range ? faCalendarWeek : faCalendarDay}
-            widthAuto
-            className="pr-1 text-white"
+            icon={faChevronDown}
+            className="size-3 shrink-0 text-stone-500 dark:text-stone-400"
+            aria-hidden
           />
-          <p className="truncate">
-            {datePreset && presets[datePreset] ? presets[datePreset].name : 'Custom'}
-          </p>
         </PopoverTrigger>
-
-        <PopoverContent
-          align="start"
-          // Wide enough to fully clear a card's own header controls when this opens over them —
-          // a narrower box left a few px of the row peeking past its right edge (odd notch).
-          className="w-56 overflow-hidden p-0"
-        >
+        <PopoverContent align="start" className="w-56 overflow-hidden p-0">
           <div className="flex flex-col overflow-hidden leading-6">
             <DatePickerPresets
               preset={datePreset}

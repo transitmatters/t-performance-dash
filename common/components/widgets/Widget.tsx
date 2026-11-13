@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ReactNode } from 'react';
 import type { UseQueryResult } from '@tanstack/react-query';
+import { useLocation } from '@tanstack/react-router';
 import { ErrorBoundary } from 'react-error-boundary';
 import type { Href } from '../general/Link';
 
@@ -71,7 +72,10 @@ export const Widget = (props: Props) => {
     children,
     ready: readyDependencies,
   } = props;
-  const [hasError, setHasError] = useState<boolean>();
+  // A chart that threw stays on its error only until the line, route, dates or a filter change.
+  const { href } = useLocation();
+  const [errorHref, setErrorHref] = useState<string>();
+  const hasError = errorHref === href;
 
   const readyState = hasError
     ? 'error'
@@ -97,7 +101,11 @@ export const Widget = (props: Props) => {
       />
       {details}
       {readyState === 'ready' ? (
-        <ErrorBoundary onError={() => setHasError(true)} fallbackRender={() => null}>
+        <ErrorBoundary
+          onError={() => setErrorHref(href)}
+          resetKeys={[href]}
+          fallbackRender={() => null}
+        >
           {children}
         </ErrorBoundary>
       ) : (

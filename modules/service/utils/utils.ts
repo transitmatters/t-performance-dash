@@ -28,7 +28,8 @@ export const getScheduledAndDeliveredRoundTrips = (
     if (!anyDelivered) return { date, scheduled: Number.NaN, delivered: Number.NaN };
     return {
       date,
-      scheduled: scheduledCount ? Math.round(scheduledCount) / 2 : 0,
+      // No schedule count for the period is a gap too, not zero scheduled trips
+      scheduled: scheduledCount ? Math.round(scheduledCount) / 2 : Number.NaN,
       delivered: Math.round(delivered.count),
     };
   });

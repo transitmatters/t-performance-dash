@@ -4,6 +4,7 @@ import type { SingleDayDataPoint, BenchmarkFieldKeys, MetricFieldKeys } from '..
 import { PointFieldKeys } from '../../types/charts';
 import { lineColorVar } from '../../styles/general';
 import type { Line } from '../../types/lines';
+import { PRETTY_DATE_FORMAT, TODAY_STRING, YESTERDAY_STRING } from '../../constants/dates';
 
 /** Matches the chart legend's "25%+ off" band, so the callout and the plot agree. */
 const BEHIND_SCHEDULE_RATIO = 1.25;
@@ -19,10 +20,20 @@ const TIME_WINDOWS = [
 const windowFor = (hour: number) =>
   TIME_WINDOWS.find((window) => hour >= window.start && hour < window.end)?.label;
 
+/** " today", " yesterday" or " on Mar 4, 2026", so the sentence names the day being shown. */
+const dayPhrase = (date: string | undefined) => {
+  if (!date) return '';
+  if (date === TODAY_STRING) return ' today';
+  if (date === YESTERDAY_STRING) return ' yesterday';
+  return ` on ${dayjs(date).format(PRETTY_DATE_FORMAT)}`;
+};
+
 interface DelayInsightProps {
   data: SingleDayDataPoint[];
   metricField: MetricFieldKeys;
   benchmarkField: BenchmarkFieldKeys;
+  /** The day the data is from (YYYY-MM-DD). */
+  date?: string;
   /** What the reader is looking at, e.g. "Route 10". */
   subject?: string;
   line?: Line;
@@ -36,6 +47,7 @@ export const DelayInsight = ({
   data,
   metricField,
   benchmarkField,
+  date,
   subject,
   line,
 }: DelayInsightProps) => {
@@ -75,7 +87,7 @@ export const DelayInsight = ({
         <b className="font-semibold">
           {insight.count} {trips}
         </b>{' '}
-        more than 25% behind schedule today
+        more than 25% behind schedule{dayPhrase(date)}
         {insight.concentrated ? `, mostly during ${insight.concentrated}` : ''}.
       </span>
     </div>

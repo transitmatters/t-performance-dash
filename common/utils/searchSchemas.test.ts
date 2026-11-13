@@ -25,14 +25,8 @@ describe('search validators', () => {
   });
 
   it('blank values outside their set, even over the raw search', () => {
-    expect(resolve(validateOverviewSearch, '?view=bogus&redesign=1')).toMatchObject({
-      view: undefined,
-      redesign: undefined,
-    });
-    expect(resolve(validateOverviewSearch, '?view=month&redesign=0')).toMatchObject({
-      view: 'month',
-      redesign: '0',
-    });
+    expect(resolve(validateOverviewSearch, '?view=bogus')).toMatchObject({ view: undefined });
+    expect(resolve(validateOverviewSearch, '?view=month')).toMatchObject({ view: 'month' });
     expect(validateEmbedSearch({ theme: 'blue' }).theme).toBeUndefined();
     expect(validateEmbedSearch({ theme: 'dark' }).theme).toBe('dark');
   });

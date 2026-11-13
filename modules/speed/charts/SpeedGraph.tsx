@@ -4,7 +4,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { HERO_LINE_WIDTH } from '../../../common/utils/chartTheme';
@@ -12,16 +11,19 @@ import { hexWithAlpha } from '../../../common/utils/general';
 import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { useSpeedBaseline } from '../../../common/api/hooks/baselines';
 import {
   getNoDataSinceLatestAnnotation,
   getShuttlingBlockAnnotations,
 } from '../../service/utils/graphUtils';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
+import {
+  getMajorEventAnnotations,
+  hideGapsExplainedByEvents,
+  useMajorEvents,
+} from '../../../common/utils/majorEvents';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
 import type { ParamsType } from '../constants/speeds';
 import { explainGaps, usePageShutdowns } from '../../shutdowns';
@@ -50,10 +52,11 @@ export const SpeedGraph = ({
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const shutdowns = usePageShutdowns('line', startDate, endDate);
-  const shuttlingBlocks = explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
-    startDate,
-    endDate,
-  });
+  const events = useMajorEvents(line, startDate, endDate);
+  const shuttlingBlocks = hideGapsExplainedByEvents(
+    explainGaps(getShuttlingBlockAnnotations(data), shutdowns, { startDate, endDate }),
+    events
+  );
   const dataWithMPH = addMPHToSpeedData(data);
 
   return (
@@ -112,8 +115,6 @@ export const SpeedGraph = ({
             interaction: {
               intersect: false,
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -170,6 +171,7 @@ export const SpeedGraph = ({
                     : []),
                   ...shuttlingBlocks,
                   ...getNoDataSinceLatestAnnotation(labels),
+                  ...getMajorEventAnnotations(events),
                 ],
               },
             },
@@ -234,30 +236,16 @@ export const SpeedGraph = ({
                 if (showTitle) drawSimpleTitle(`Speed`, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <>
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName="speed"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-            <DownloadButton
-              data={dataWithMPH}
-              datasetName="speed"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </>
-        )}
-      </div>
+      <ChartActions
+        datasetName="speed"
+        chartRef={ref}
+        csv={dataWithMPH}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

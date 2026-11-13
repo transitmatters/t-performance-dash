@@ -1,15 +1,7 @@
 import classNames from 'classnames';
 import { forwardRef } from 'react';
 import type { ButtonHTMLAttributes, DetailedHTMLProps, ReactNode } from 'react';
-import { LINE_COLORS_DARK } from '../../constants/colors';
-import {
-  buttonHighlightFocus,
-  lineColorDarkBackground,
-  lineColorLightBorder,
-  lineColorVar,
-} from '../../styles/general';
-import { readableOn } from '../../utils/general';
-import { useDelimitatedRoute } from '../../utils/router';
+import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../styles/general';
 
 interface ButtonProps extends DetailedHTMLProps<
   ButtonHTMLAttributes<HTMLButtonElement>,
@@ -23,23 +15,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   { children, additionalClasses, ...props },
   ref
 ) {
-  const { line } = useDelimitatedRoute();
-  // The button's background is the line's dark shade, not its base color, so contrast has to be
-  // checked against that: white text fails badly on orange/bus, whose "dark" shades are only a
-  // touch darker than the base color.
-  const needsDarkText = readableOn(LINE_COLORS_DARK[line ?? 'default']) === 'dark';
-
   return (
     <button
       ref={ref}
       type="button"
-      style={lineColorVar(line)}
       className={classNames(
-        'flex items-center self-stretch rounded-md border px-3 py-1 text-sm font-medium shadow-xs hover:bg-(--line-color-dark)/70 focus-visible:ring-2 focus-visible:outline-hidden',
-        needsDarkText ? 'text-stone-900' : 'text-white/90',
-        line && buttonHighlightFocus[line],
-        line && lineColorDarkBackground[line],
-        line && lineColorLightBorder[line],
+        'flex items-center self-stretch rounded-md px-3 py-1 text-sm font-medium focus-visible:ring-offset-1',
+        CONTROL_SURFACE,
+        FOCUS_RING_ON_SURFACE,
         additionalClasses
       )}
       {...props}

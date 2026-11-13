@@ -27,7 +27,6 @@ export const RidershipWidget = () => {
       <WidgetTitle title="Weekday ridership" tab="ridership" line={line} />
       {ridership.data && serviceReady ? (
         <RidershipGraphWrapper
-          line={line}
           busRoute={query.busRoute}
           crRoute={query.crRoute}
           data={ridership.data}

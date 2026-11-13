@@ -1,27 +1,20 @@
 import type { LabelOptions } from 'chartjs-plugin-datalabels/types/options';
 
-export const watermarkLayout = (isMobile: boolean) => {
-  // The charcoal wordmark vanishes against a dark plot surface, so pick the white one to match the
-  // theme. Read from the `dark` class rather than the store: this runs inside Chart.js options,
-  // outside React's render.
-  const isDark =
-    typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
-  return {
-    image: new URL(
-      isDark ? '/Logo_wordmark_white.png' : '/Logo_wordmark.png',
-      window.location.origin
-    ).toString(),
-    x: 10,
-    y: 10,
-    opacity: 0.2,
-    width: isMobile ? 120 : 160,
-    height: isMobile ? 11.25 : 15,
-    alignToChartArea: true,
-    alignX: 'right',
-    alignY: 'top',
-    position: 'back',
-  };
-};
+/**
+ * The faint TransitMatters wordmark on every chart and line map. Chart.js charts get it from
+ * watermarkPlugin; stripmap maps from getStripMapWatermark.
+ */
+export const WATERMARK = {
+  // The charcoal wordmark vanishes against a dark surface, so the dark theme gets the white one.
+  src: { light: '/Logo_wordmark.png', dark: '/Logo_wordmark_white.png' },
+  opacity: 0.2,
+  /** Gap between the wordmark and the corner of the plot, in CSS pixels. */
+  inset: 10,
+} as const;
+
+/** The wordmark's drawn size in CSS pixels: smaller on phones. */
+export const watermarkSize = (isMobile: boolean) =>
+  isMobile ? { width: 120, height: 11.25 } : { width: 160, height: 15 };
 
 export const DATA_LABELS_LANDING: LabelOptions = {
   align: 'right',

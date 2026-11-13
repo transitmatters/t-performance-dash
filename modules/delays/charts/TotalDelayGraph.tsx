@@ -6,18 +6,17 @@ import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { max, min } from 'date-fns';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import type { DisplayedDelays } from '../../../common/types/delays';
 import { getFormattedTimeString } from '../../../common/utils/time';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
+import { getMajorEventAnnotations, useMajorEvents } from '../../../common/utils/majorEvents';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
 
@@ -43,6 +42,7 @@ export const TotalDelayGraph = ({
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
+  const events = useMajorEvents(line, startDate, endDate);
 
   const lineColor = LINE_COLORS[line ?? 'default'];
 
@@ -107,8 +107,6 @@ export const TotalDelayGraph = ({
             interaction: {
               intersect: false,
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -140,7 +138,11 @@ export const TotalDelayGraph = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: [...earlierBlocks, ...remainingBlocks],
+                annotations: [
+                  ...earlierBlocks,
+                  ...remainingBlocks,
+                  ...getMajorEventAnnotations(events),
+                ],
               },
             },
             scales: {
@@ -205,7 +207,6 @@ export const TotalDelayGraph = ({
                 if (showTitle) drawSimpleTitle(`Speed`, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>

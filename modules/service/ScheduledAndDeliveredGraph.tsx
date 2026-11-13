@@ -5,6 +5,7 @@ import type { Benchmark, Block, Dataset } from '../../common/components/charts/T
 import { TimeSeriesChart } from '../../common/components/charts/TimeSeriesChart';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { LINE_COLORS } from '../../common/constants/colors';
+import { useMajorEvents } from '../../common/utils/majorEvents';
 import type { AggType } from '../speed/constants/speeds';
 
 interface ScheduledAndDeliveredGraphProps {
@@ -18,6 +19,7 @@ interface ScheduledAndDeliveredGraphProps {
   blocks?: Block[];
   hoverCard?: ComponentProps<typeof TimeSeriesChart>['hoverCard'];
   fill?: boolean;
+  chartRef?: ComponentProps<typeof TimeSeriesChart>['chartRef'];
 }
 
 export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProps) => {
@@ -32,10 +34,12 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
     blocks,
     hoverCard,
     fill,
+    chartRef,
   } = props;
   const data = useMemo(() => [scheduled, delivered], [scheduled, delivered]);
   const { line } = useDelimitatedRoute();
   const color = LINE_COLORS[line ?? 'default'];
+  const events = useMajorEvents(line, startDate, endDate);
 
   return (
     <TimeSeriesChart
@@ -47,6 +51,8 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
       blocks={blocks}
       hoverCard={hoverCard}
       fill={fill}
+      events={events}
+      chartRef={chartRef}
     />
   );
 };

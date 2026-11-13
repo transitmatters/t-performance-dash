@@ -1,12 +1,7 @@
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import { STATION_LINES } from '../constants';
-import type {
-  BusSpeedSegmentProperties,
-  BusStopProperties,
-  Period,
-  StationProperties,
-} from '../types';
-import { periodSuffix, segmentDwell } from '../utils';
+import type { BusStopProperties, Period, StationProperties, StopDwell } from '../types';
+import { formatDwell, periodSuffix } from '../utils';
 
 const splitList = (value: string): string[] => (value ? value.split(',') : []);
 
@@ -44,8 +39,8 @@ export const StationPopupContent = ({ station }: { station: StationProperties })
 
 interface BusStopPopupContentProps {
   busStop: BusStopProperties;
-  /** One segment per route leaving the stop, read for its dwell (see stopDwellsByRoute). */
-  dwells?: BusSpeedSegmentProperties[];
+  /** One per route stopping here, in route order (see stopDwellsByRoute). */
+  dwells?: StopDwell[];
   period: Period;
 }
 
@@ -63,10 +58,16 @@ export const BusStopPopupContent = ({ busStop, dwells = [], period }: BusStopPop
         <div className="mt-1 border-t border-stone-200 pt-1 text-stone-600">
           <p>Median time at this stop{periodSuffix(period)}</p>
           <ul>
-            {dwells.map((segment) => (
-              <li key={segment.route_id}>
-                {getBusRouteDisplayName(segment.route_id)} · {segmentDwell(segment)} ·{' '}
-                {segment.n_traversals} trips
+            {dwells.map((dwell) => (
+              <li key={dwell.route_id}>
+                {getBusRouteDisplayName(dwell.route_id)} ·{' '}
+                <span className="font-semibold text-stone-900">
+                  {formatDwell(dwell.median_dwell_seconds)}
+                </span>
+                {dwell.p90_dwell_seconds != null &&
+                  dwell.p90_dwell_seconds > dwell.median_dwell_seconds &&
+                  `, 1 in 10 over ${formatDwell(dwell.p90_dwell_seconds)}`}{' '}
+                · {dwell.n_trips} trips
               </li>
             ))}
           </ul>

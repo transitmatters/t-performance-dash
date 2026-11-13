@@ -1,31 +1,37 @@
+import type { CSSProperties } from 'react';
 import type { Location } from '../../common/types/charts';
+import type { Line } from '../../common/types/lines';
+import { LINE_TEXT_COLORS } from '../../common/constants/colors';
 
 interface LocationTitleProps {
   location: Location;
   both: boolean;
+  line?: Line;
 }
 
 /**
- * Station names use the TransitMatters red rather than the line color: several line colors (bus
- * yellow especially) fall well short of readable contrast on a white card. The TM red is itself
- * darkened for a light card, so it needs a lighter counterpart once the card goes dark.
+ * Station names take the line's colour, toned for contrast against the card, or the TransitMatters
+ * red when there's no line.
  */
-export const LocationTitle = ({ location, both }: LocationTitleProps) => {
-  if (both) {
-    return (
-      <p className="flex w-full gap-1 overflow-hidden text-[13px] font-semibold md:justify-end">
-        <b className="truncate text-tm-red dark:text-red-400">{location['from']}</b>
-        <span className="font-normal text-stone-500 dark:text-stone-400">to</span>
-        <b className="truncate text-tm-red dark:text-red-400">{location['to']}</b>
-      </p>
-    );
-  }
+export const LocationTitle = ({ location, both, line }: LocationTitleProps) => {
+  const textColor = line ? LINE_TEXT_COLORS[line] : undefined;
+  const style = textColor
+    ? ({ '--station-light': textColor.light, '--station-dark': textColor.dark } as CSSProperties)
+    : undefined;
+  const stationClass = textColor
+    ? 'truncate text-(--station-light) dark:text-(--station-dark)'
+    : 'truncate text-tm-red dark:text-red-400';
+
   return (
-    <p className="flex w-full gap-1 overflow-hidden text-[13px] font-semibold md:justify-end">
-      <b className="truncate text-tm-red dark:text-red-400">{location['from']}</b>
+    <p
+      className="flex w-full gap-1 overflow-hidden text-[13px] font-semibold md:justify-end"
+      style={style}
+    >
+      <b className={stationClass}>{location['from']}</b>
       <span className="font-normal text-stone-500 dark:text-stone-400">
-        {location['direction']}
+        {both ? 'to' : location['direction']}
       </span>
+      {both && <b className={stationClass}>{location['to']}</b>}
     </p>
   );
 };

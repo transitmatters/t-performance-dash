@@ -9,14 +9,22 @@
 // The fix is to serve fixed copies ourselves and point maplibre at them with
 // `setWorkerUrl()` (see BusSpeedMapView.tsx). This script vends those copies into public/ so
 // they're never bundled or transformed, matching how the worker expects to load itself.
-import { copyFileSync, existsSync, mkdirSync } from 'fs';
+//
+// They go in a directory named for the maplibre-gl version (public/maplibre-gl/<version>/) because
+// their file names never change: an upgrade then gets a new URL, so no browser can pair a cached
+// old worker with the new main bundle.
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const SOURCE_DIR = join(__dirname, '..', 'node_modules', 'maplibre-gl', 'dist');
-const DEST_DIR = join(__dirname, '..', 'public');
+const PACKAGE_DIR = join(__dirname, '..', 'node_modules', 'maplibre-gl');
+const SOURCE_DIR = join(PACKAGE_DIR, 'dist');
+const { version } = JSON.parse(readFileSync(join(PACKAGE_DIR, 'package.json'), 'utf8'));
+// Must match the path BusSpeedMapView.tsx passes to setWorkerUrl().
+const PUBLIC_DIR = join(__dirname, '..', 'public', 'maplibre-gl');
+const DEST_DIR = join(PUBLIC_DIR, version);
 
 const FILES = [
   'maplibre-gl-worker.mjs',
@@ -25,6 +33,8 @@ const FILES = [
   'maplibre-gl-shared-dev.mjs',
 ];
 
+// Drop copies from earlier versions so a deploy from a local checkout doesn't upload them too.
+rmSync(PUBLIC_DIR, { recursive: true, force: true });
 mkdirSync(DEST_DIR, { recursive: true });
 
 for (const file of FILES) {

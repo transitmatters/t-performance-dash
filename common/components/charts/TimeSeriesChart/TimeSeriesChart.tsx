@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import type { TooltipItem } from 'chart.js';
+import type { RefObject } from 'react';
+import type { Chart, TooltipItem } from 'chart.js';
 import { Line as LineChart } from '@chartjs-components';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import Annotation from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import 'chartjs-adapter-date-fns';
@@ -28,7 +28,8 @@ import { annotationTooltip } from '../annotationTooltip';
 import type { HoverCardContent } from '../hoverCard/types';
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 
-import { watermarkLayout } from '../../../constants/charts';
+import type { MajorEvent } from '../../../constants/majorEvents';
+import { getMajorEventAnnotations } from '../../../utils/majorEvents';
 import type {
   AppliedDisplayStyle,
   Benchmark,
@@ -66,10 +67,14 @@ ChartJS.register(
   Legend
 );
 
+/** The Chart.js chart this draws: a line chart of `{ x: date or time, y: value }` points. */
+type TimeSeriesChartJS = Chart<'line', { x: string; y: number | null }[]>;
+
 interface Props<Data extends Dataset[]> {
   data: Data;
   benchmarks?: Benchmark[];
   blocks?: Block[];
+  events?: MajorEvent[];
   legend?: LegendOptions;
   grid?: GridOptions;
   style?: Partial<DisplayStyle<Data[number]['data'][number]>>;
@@ -80,6 +85,8 @@ interface Props<Data extends Dataset[]> {
   fill?: boolean;
   // Structured hover card content; without it the card is built from each style's tooltipLabel
   hoverCard?: (items: TooltipItem<'line'>[]) => HoverCardContent | null;
+  /** Receives the Chart.js chart, for saving it as a PNG. */
+  chartRef?: RefObject<TimeSeriesChartJS | null>;
 }
 
 export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
@@ -90,11 +97,13 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     valueAxis,
     benchmarks = [],
     blocks = [],
+    events = [],
     grid = { zIndex: 0 },
     legend = { visible: true },
     height,
     hoverCard,
     fill = false,
+    chartRef,
   } = props;
 
   const isMobile = !useBreakpoint('md');
@@ -148,7 +157,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         label: benchmark.label,
         backgroundColor: 'transparent',
         borderColor: color,
-        data: null as unknown as { x: string; y: number }[],
+        data: null as unknown as { x: string; y: number | null }[],
       };
     });
     return { datasets: [...datasets, ...benchmarkDummyDatasets] };
@@ -282,7 +291,6 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
       interaction: {
         intersect: false,
       },
-      watermark: watermarkLayout(isMobile),
       plugins: {
         datalabels: {
           display: false,
@@ -319,7 +327,12 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
           },
         },
         annotation: {
-          annotations: [...targetZoneAnnotations, ...benchmarkAnnotations, ...blockAnnotations],
+          annotations: [
+            ...targetZoneAnnotations,
+            ...benchmarkAnnotations,
+            ...blockAnnotations,
+            ...getMajorEventAnnotations(events),
+          ],
         },
       },
     };
@@ -328,30 +341,31 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
     data,
     benchmarks,
     blocks,
+    events,
     timeAxis.granularity,
     legend.align,
     legend.position,
     legend.visible,
     appliedStyles,
-    isMobile,
     hoverCard,
   ]);
 
   const chartJsPlugins = useMemo(() => {
-    return [Annotation, ChartjsPluginWatermark];
+    return [Annotation];
   }, []);
 
   const chart = useMemo(() => {
     return (
       <LineChart
         redraw
+        ref={chartRef}
         height={height ?? (isMobile ? 200 : 240)}
         data={chartJsData}
         options={chartJsOptions}
         plugins={chartJsPlugins}
       />
     );
-  }, [height, isMobile, chartJsData, chartJsOptions, chartJsPlugins]);
+  }, [height, isMobile, chartJsData, chartJsOptions, chartJsPlugins, chartRef]);
 
   return (
     <ChartDiv isMobile={isMobile} fill={fill}>

@@ -89,6 +89,22 @@ export const fetchAccessibilityAlertsForLine = async (
   });
 };
 
+const GREEN_LINE_ROUTE_IDS = ['Green-B', 'Green-C', 'Green-D', 'Green-E'];
+
+/** The route IDs historical alerts are tagged with, which never include "Green" or a combined bus label. */
+export const getHistoricalAlertRoutes = (
+  line: LineShort,
+  busRoute?: BusRoute,
+  crRoute?: CommuterRailRoute,
+  ferryRoute?: FerryRoute
+): string[] => {
+  if (line === 'Bus' && busRoute) return getBusRouteIds(busRoute);
+  if (line === 'Commuter Rail' && crRoute) return [crRoute];
+  if (line === 'Ferry' && ferryRoute) return [ferryRoute];
+  if (line === 'Green') return GREEN_LINE_ROUTE_IDS;
+  return [line];
+};
+
 export const fetchHistoricalAlerts = async (
   date: string | undefined,
   line: LineShort,
@@ -96,20 +112,9 @@ export const fetchHistoricalAlerts = async (
   crRoute?: CommuterRailRoute,
   ferryRoute?: FerryRoute
 ): Promise<OldAlert[]> => {
-  const options = { route: '' };
-  if (line === 'Bus' && busRoute) {
-    options['route'] = busRoute;
-  } else if (line === 'Commuter Rail' && crRoute) {
-    options['route'] = crRoute;
-  } else if (line === 'Ferry' && ferryRoute) {
-    options['route'] = ferryRoute;
-  } else {
-    options['route'] = line;
-  }
-
   return await apiFetch({
     path: `/api/alerts/${date}`,
-    options,
+    options: { route: getHistoricalAlertRoutes(line, busRoute, crRoute, ferryRoute) },
     errorMessage: 'Failed to fetch historical alerts',
   });
 };

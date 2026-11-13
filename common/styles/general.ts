@@ -2,6 +2,15 @@ import type { CSSProperties } from 'react';
 import { LINE_COLORS, LINE_COLORS_DARK } from '../constants/colors';
 import type { Line } from '../types/lines';
 import type { DefaultStyleMap } from '../types/styles';
+import { readableOn } from '../utils/general';
+
+/** Whether text on a solid fill of the line's color has to be dark: bus yellow can't carry white. */
+export const needsDarkTextOn = (line?: Line | null) =>
+  readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
+
+/** The readable text color for a solid fill of the line's color. */
+export const textOnLineColor = (line?: Line | null) =>
+  needsDarkTextOn(line) ? 'text-stone-900' : 'text-white';
 
 /**
  * Tailwind v4 removed the `*-opacity-*` utilities, so a dynamic line color can no longer be paired
@@ -106,6 +115,13 @@ export const buttonHighlightFocus: DefaultStyleMap = {
  */
 export const FOCUS_RING_ON_SURFACE =
   'focus-visible:ring-2 focus-visible:ring-stone-900 dark:focus-visible:ring-stone-100 focus-visible:outline-hidden';
+
+/**
+ * The one look for page controls, whether they sit on the line-colored band or the neutral bar:
+ * a light field with dark text, so contrast never depends on the line color behind it.
+ */
+export const CONTROL_SURFACE =
+  'border border-stone-200 bg-white text-stone-900 shadow-xs hover:bg-stone-50 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100 dark:hover:bg-stone-800';
 
 export const lineColorTextHover: DefaultStyleMap = {
   'line-red': `hover:text-mbta-red`,

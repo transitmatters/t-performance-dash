@@ -148,3 +148,35 @@ describe('comparison direction', () => {
     expect(bunched?.comparison).toMatchObject({ higherIsBetter: false });
   });
 });
+
+describe('Median stat', () => {
+  const median = (values: number[]) =>
+    getAggDataWidgets(
+      values.map((value) => day({ '50%': value })),
+      'times'
+    ).find((widget) => widget.text === 'Median')?.widgetValue.value;
+
+  it('takes the middle value of an odd count', () => {
+    expect(median([300])).toBe(300);
+    expect(median([500, 300, 400])).toBe(400);
+  });
+
+  it('averages the two middle values of an even count', () => {
+    expect(median([300, 400])).toBe(350);
+    expect(median([100, 400, 300, 200])).toBe(250);
+  });
+});
+
+describe('On time comparison', () => {
+  it('marks a higher on-time share as the better direction', () => {
+    const widgets = getAggHeadwayDataWidgets(
+      [day({ count: 100, scheduled: 100, bunched: 5, on_time: 80 })],
+      'times',
+      { data: [day({ count: 100, scheduled: 100, bunched: 5, on_time: 70 })], label: 'weekends' }
+    );
+    const onTime = widgets.find((widget) => widget.text.startsWith('On time'));
+    const bunched = widgets.find((widget) => widget.text.startsWith('Bunched'));
+    expect(onTime?.comparison?.higherIsBetter).toBe(true);
+    expect(bunched?.comparison?.higherIsBetter).toBeFalsy();
+  });
+});

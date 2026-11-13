@@ -14,7 +14,6 @@ type Props = {
   color: string;
   startDate: undefined | string;
   endDate: undefined | string;
-  lineTitle: string;
   lineId: string;
   baselineMode?: BaselineMode;
 };

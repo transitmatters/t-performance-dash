@@ -4,17 +4,14 @@ import { Bar } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import type { DelayRow } from '../reasonSeries';
 import {
   type DelayAgg,
@@ -92,8 +89,6 @@ export const DelayTotalBars = ({
             responsive: true,
             maintainAspectRatio: false,
             interaction: { intersect: false, mode: 'index' },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               // The page names a highlighted cause in the cause list; an embed needs the legend.
               legend: {
@@ -173,28 +168,16 @@ export const DelayTotalBars = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
-      {!fill && (
-        <div className="flex flex-row items-end justify-end gap-4">
-          <SaveChartImageButton
-            chartRef={ref}
-            datasetName="delay-totals"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
-          <DownloadButton
-            data={data}
-            datasetName="delay-totals"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
-          <DelaysEmbedButton chart="total" />
-        </div>
-      )}
+      <ChartActions
+        datasetName="delay-totals"
+        chartRef={ref}
+        csv={data}
+        startDate={startDate}
+        endDate={endDate}
+        embed={<DelaysEmbedButton chart="total" />}
+      />
     </ChartStack>
   );
 };

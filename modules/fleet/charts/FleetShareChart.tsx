@@ -4,7 +4,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { round } from '@lodash-utils';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { LINE_COLORS } from '../../../common/constants/colors';
@@ -13,15 +12,18 @@ import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import {
   getNoDataSinceLatestAnnotation,
   getShuttlingBlockAnnotations,
 } from '../../service/utils/graphUtils';
+import {
+  getMajorEventAnnotations,
+  hideGapsExplainedByEvents,
+  useMajorEvents,
+} from '../../../common/utils/majorEvents';
 import type { ParamsType } from '../../speed/constants/speeds';
 import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import { hasFleetMetric, type FleetModeMetrics } from '../constants/fleetTypes';
@@ -56,14 +58,17 @@ export const FleetShareChart = ({
   // service metrics while cars still ran (and were sampled) on the remaining branches.
   // Checked against null rather than truthiness -- 0% is a real value.
   const shutdowns = usePageShutdowns('line', startDate, endDate);
+  const events = useMajorEvents(line, startDate, endDate);
   const shuttlingBlocks = showShuttling
-    ? explainGaps(
-        getShuttlingBlockAnnotations(data, (datapoint) => hasFleetMetric(datapoint, metric.field)),
-        shutdowns,
-        {
-          startDate,
-          endDate,
-        }
+    ? hideGapsExplainedByEvents(
+        explainGaps(
+          getShuttlingBlockAnnotations(data, (datapoint) =>
+            hasFleetMetric(datapoint, metric.field)
+          ),
+          shutdowns,
+          { startDate, endDate }
+        ),
+        events
       )
     : [];
 
@@ -104,8 +109,6 @@ export const FleetShareChart = ({
             interaction: {
               intersect: false,
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -128,7 +131,11 @@ export const FleetShareChart = ({
                 text: '',
               },
               annotation: {
-                annotations: [...shuttlingBlocks, ...getNoDataSinceLatestAnnotation(labels)],
+                annotations: [
+                  ...shuttlingBlocks,
+                  ...getNoDataSinceLatestAnnotation(labels),
+                  ...getMajorEventAnnotations(events),
+                ],
               },
             },
             scales: {
@@ -185,30 +192,16 @@ export const FleetShareChart = ({
                 if (showTitle) drawSimpleTitle(metric.title, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <>
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName={metric.datasetName}
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-            <DownloadButton
-              data={data}
-              datasetName={metric.datasetName}
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </>
-        )}
-      </div>
+      <ChartActions
+        datasetName={metric.datasetName}
+        chartRef={ref}
+        csv={data}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

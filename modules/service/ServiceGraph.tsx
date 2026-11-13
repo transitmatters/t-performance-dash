@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import type { TooltipItem } from 'chart.js';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -6,11 +6,12 @@ import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import { DownloadButton } from '../../common/components/buttons/DownloadButton';
+import { ChartActions } from '../../common/components/charts/ChartActions';
 import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { HoverCardContent } from '../../common/components/charts/hoverCard/types';
+import { hideBlocksExplainedByEvents, useMajorEvents } from '../../common/utils/majorEvents';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
 import { getScheduledAndDeliveredRoundTrips } from './utils/utils';
@@ -28,6 +29,7 @@ interface ServiceGraphProps {
 export const ServiceGraph = (props: ServiceGraphProps) => {
   const { data, predictedData, startDate, endDate, config, fill = false } = props;
   const { line } = useDelimitatedRoute();
+  const ref = useRef(null);
   const lineColor = LINE_COLORS[line ?? 'default'];
 
   const peak = useScheduledServiceBaseline(line);
@@ -75,16 +77,21 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
     [peak, lineColor]
   );
 
+  const events = useMajorEvents(line, startDate, endDate);
+
   const blocks = useMemo(() => {
     const shuttlingBlocks = getShuttlingBlockAnnotations(data).map((block) => ({
       from: block.xMin as string,
       to: block.xMax as string,
     }));
     return [
-      ...explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate }),
+      ...hideBlocksExplainedByEvents(
+        explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate }),
+        events
+      ),
       ...getNoDataSinceLatestBlock(data.map((point) => point.date)),
     ];
-  }, [data, shutdowns, startDate, endDate]);
+  }, [data, shutdowns, startDate, endDate, events]);
 
   const roundTrips = useMemo(
     () => getScheduledAndDeliveredRoundTrips(data, predictedData, config.agg),
@@ -131,22 +138,17 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
         endDate={endDate}
         agg={config.agg}
         fill={fill}
+        chartRef={ref}
       />
 
-      {!fill && (
-        <div className="flex flex-row items-end justify-end gap-4">
-          {startDate && (
-            <DownloadButton
-              data={data}
-              datasetName="service"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          )}
-          <ServiceEmbedButton chart="round-trips" />
-        </div>
-      )}
+      <ChartActions
+        datasetName="service"
+        chartRef={ref}
+        csv={data}
+        startDate={startDate}
+        endDate={endDate}
+        embed={<ServiceEmbedButton chart="round-trips" />}
+      />
     </ChartStack>
   );
 };

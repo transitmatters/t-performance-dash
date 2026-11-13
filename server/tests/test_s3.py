@@ -221,6 +221,37 @@ def test_range_after_cutoff_reads_lamp_then_gobble_per_day(fake_s3):
     assert [r["trip_id"] for r in rows] == ["t0", "t1"]
 
 
+DST_EVE_MONTHLY_KEY = "Events/monthly-data/70068/Year=2022/Month=3/events.csv.gz"
+
+
+def test_monthly_predicted_events_before_dst_change_are_corrected(fake_s3):
+    """Issue #188: the archive's predicted events on 2022-03-12 are an hour late."""
+    files, _ = fake_s3
+    files[DST_EVE_MONTHLY_KEY] = _csv(
+        "2022-03-12,Red,t1,1,70068,PRA,2022-03-12 08:33:38,1838",
+        "2022-03-12,Red,t2,1,70068,ARR,2022-03-12 08:40:00,1852",
+        "2022-03-13,Red,t3,1,70068,PRA,2022-03-13 08:33:38,1838",
+    )
+
+    rows = s3.download_events(date(2022, 3, 12), date(2022, 3, 13), ["70068"])
+
+    assert [(r["trip_id"], r["event_time"]) for r in rows] == [
+        ("t1", "2022-03-12 07:33:38"),
+        ("t2", "2022-03-12 08:40:00"),
+        ("t3", "2022-03-13 08:33:38"),
+    ]
+
+
+def test_lamp_events_are_not_dst_corrected(fake_s3):
+    files, _ = fake_s3
+    lamp_key = "Events-lamp/daily-data/70068/Year=2022/Month=3/Day=12/events.csv"
+    files[lamp_key] = _csv("2022-03-12,Red,t1,1,70068,PRA,2022-03-12 08:33:38,1838")
+
+    rows = s3.download_events(date(2022, 3, 12), date(2022, 3, 12), ["70068"])
+
+    assert rows[0]["event_time"] == "2022-03-12 08:33:38"
+
+
 CR_STOP = "CR-Fairmount_0_DB-2205-01"
 
 

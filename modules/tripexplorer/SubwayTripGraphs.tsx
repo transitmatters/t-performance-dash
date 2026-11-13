@@ -3,6 +3,7 @@ import { useTripPageComparisons } from '../../common/api/hooks/comparison';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
@@ -22,6 +23,10 @@ import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWr
 import { SpeedBetweenStationsSingleWrapper } from '../speed/SpeedBetweenStationsGraphWrapper';
 import { SpeedBetweenStationsAggregateWrapper } from '../speed/SpeedBetweenStationsAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
+import {
+  ByVehicleTitle,
+  TravelTimesByVehicleWrapper,
+} from '../traveltimes/TravelTimesByVehicleWrapper';
 
 interface SubwayTripGraphsProps {
   fromStation: Station;
@@ -75,7 +80,9 @@ export const SubwayTripGraphs = ({
     parameters,
     // @ts-expect-error The overloading doesn't seem to handle this const
     aggregate,
-    enabled
+    enabled,
+    undefined,
+    fromStation?.terminus ? [QueryNameKeys.dwells] : []
   );
   const comparisons = useTripPageComparisons('subway', parameters, aggregate, enabled);
   const location = getLocationDetails(fromStation, toStation);
@@ -217,7 +224,6 @@ export const SubwayTripGraphs = ({
               </>
             )}
           </WidgetDiv>
-
           <WidgetDiv>
             <WidgetTitle
               title="Headways"
@@ -239,6 +245,21 @@ export const SubwayTripGraphs = ({
               line={line}
             />
             <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
+              title={<ByVehicleTitle vehicleNoun="Train" />}
+              subtitle="Median speed of each train, by car type"
+              location={location}
+              line={line}
+              both
+            />
+            <TravelTimesByVehicleWrapper
+              query={traveltimes}
+              toStation={toStation}
+              fromStation={fromStation}
+              vehicleNoun="Train"
+            />
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle

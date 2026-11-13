@@ -1,8 +1,7 @@
 import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '../types/lines';
 import { BUS_ROUTES } from '../types/lines';
-import { type Station } from '../types/stations';
+import type { LineMap, Station } from '../types/stations';
 import type { Location } from '../types/charts';
-import type { Direction } from '../types/dataPoints';
 import {
   stations,
   rtStations,
@@ -137,8 +136,24 @@ const createParentStationIndex = () => {
   return index;
 };
 
+/** What each stop's line calls its two directions: westbound on the Green Line, inbound on a bus. */
+const createDirectionNamesIndex = () => {
+  const index: Record<string, LineMap['direction']> = {};
+  Object.values({ ...rtStations, ...busStations, ...crStations, ...ferryStations }).forEach(
+    (line) => {
+      line.stations.forEach((station) => {
+        [...station.stops['0'], ...station.stops['1']].forEach((stopId) => {
+          index[stopId] = line.direction;
+        });
+      });
+    }
+  );
+  return index;
+};
+
 const stationIndex = createStationIndex();
 const parentStationIndex = createParentStationIndex();
+const directionNamesIndex = createDirectionNamesIndex();
 
 export const getStationById = (stationStopId: string) => {
   return stationIndex[stationStopId];
@@ -170,58 +185,36 @@ export const getStationInOptions = (stopId: string | undefined, options: Station
       )
     : undefined;
 
+const sharesBranch = (a: Station, b: Station) =>
+  !a.branches || !b.branches || a.branches.some((branch) => b.branches?.includes(branch));
+
+/** Whether a trip from `from` to `to` exists in the direction their order implies. */
+const connects = (from: Station, to: Station) => {
+  const { fromStopIds, toStopIds } = stopIdsForStations(from, to);
+  return Boolean(fromStopIds?.length && toStopIds?.length) && sharesBranch(from, to);
+};
+
+/**
+ * Where the trip should end when the new `from` station is on a branch the current `to` isn't:
+ * the station on the most branches it shares a trip with (the trunk), nearest first.
+ */
+const getTrunkStationFor = (from: Station, stations: Station[] | undefined) =>
+  stations
+    ?.filter((station) => station.station !== from.station && connects(from, station))
+    .sort(
+      (a, b) =>
+        (b.branches?.length ?? 0) - (a.branches?.length ?? 0) ||
+        Math.abs(a.order - from.order) - Math.abs(b.order - from.order)
+    )[0];
+
 export const getStationForInvalidFromSelection = (
   line: Line,
-  busRoute?: BusRoute,
-  ferryRoute?: FerryRoute
-): Station => {
+  from: Station,
+  stations: Station[] | undefined
+): Station | undefined => {
   if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
-  if (line === 'line-bus') {
-    if (busRoute === '17/19') return getParentStationForStopId('17-1-323');
-    if (busRoute === '34') return getParentStationForStopId('34-1-10642'); // Forest Hills
-    if (busRoute === '24/27/33') return getParentStationForStopId('24-1-185'); // Mattapan Station
-    if (busRoute === '40/50') return getParentStationForStopId('40-1-36466'); // Cleary Square
-    // 52/59 have no overlaps
-    if (busRoute === '60/65-legacy') return getParentStationForStopId('65-1-1555'); // Brookline Village
-    if (busRoute === '61/70/170') return getParentStationForStopId('70-1-86944'); // Moody & Carter Streets (Central Square, Waltham)
-    if (busRoute === '62/76') return getParentStationForStopId('76-1-8629'); // Five Forks
-    // 67/79 79 does not appear in manifest
-    if (busRoute === '72/74/75') return getParentStationForStopId('75-1-2137'); // Belmont Center Station
-    // 78/84 84 does not appear in manifest
-    if (busRoute === '104/109') return getParentStationForStopId('109-1-5488'); // Glendale Square
-    if (busRoute === '114/116/117') return getParentStationForStopId('116-1-5740'); // Maverick Square (East Boston)
-    if (busRoute === '120/121') return getParentStationForStopId('121-1-5666'); // Wood Island Station
-    if (busRoute === '131/132') return getParentStationForStopId('131-1-9328'); // Oak Grove Station
-    // 136/137 137 does not appear in manifest
-    if (busRoute === '201/202') return getParentStationForStopId('201-1-3078'); // Adams & Gallivan Boulevard
-    if (busRoute === '210/211/212') return getParentStationForStopId('210-1-32005'); //Quincy Center
-    // 214/216 216 does not appear in manifest
-    if (busRoute === '217/245') return getParentStationForStopId('217-1-32005'); // Quincy Center
-    if (busRoute === '220/221/222') return getParentStationForStopId('221-1-3616'); // Bicknell Square
-    if (busRoute === '220/221/222-legacy') return getParentStationForStopId('221-1-3616'); // Bicknell Square
-    if (busRoute === '225/226') return getParentStationForStopId('226-1-3824'); // Weymouth Landing
-    if (busRoute === '350/351') return getParentStationForStopId('350-1-49848'); // Third Avenue (Burlington)
-    if (busRoute === '411/430') return getParentStationForStopId('411-1-8336'); // Kennedy Dr (Granada)
-    if (busRoute === '426/428') return getParentStationForStopId('426-1-7394'); // East Saugus
-    if (busRoute === '434/435/436') return getParentStationForStopId('424-1-14748'); // Central Square, Lynn (Busway)
-    if (busRoute === '434/435/436-legacy') return getParentStationForStopId('424-1-14748'); // Central Square, Lynn (Busway)
-    if (busRoute === '439/441/442') return getParentStationForStopId('439-1-14748'); // Central Square, Lynn (Busway)
-    // 501/503 503 does not appear in manifest
-    // 502/504 502 does not appear in manifest
-    if (busRoute === '505/553/554') return getParentStationForStopId('505-1-903'); // Newton Corner
-    if (busRoute === '556/558') return getParentStationForStopId('556-1-903'); // Newton Corner
-    if (busRoute === '712/713') return getParentStationForStopId('712-1-109853'); //Point Shirley
-    if (busRoute === 'CT3/171') return getParentStationForStopId('CT3-1-13'); //Andrew
-    if (busRoute === 'SL1/SL2/SL3/SLW') return getParentStationForStopId('SL1-1-74617'); // South Station (Silver Line)
-    if (busRoute === 'SL4/SL5') return getParentStationForStopId('SL4-1-64'); // Nubian Station
-  }
-  if (line === 'line-ferry' && ferryRoute) {
-    // Return the first ferry station for the route
-    const { stations } = ferryStations[ferryRoute];
-    return stations[0];
-  }
-  throw new Error('There should be no other lines with invalid from station selections.');
+  return getTrunkStationFor(from, stations);
 };
 
 export const stopIdsForStations = (from: Station | undefined, to: Station | undefined) => {
@@ -237,8 +230,16 @@ export const stopIdsForStations = (from: Station | undefined, to: Station | unde
   };
 };
 
-const travelDirection = (from: Station, to: Station): Direction => {
-  return from.order < to.order ? 'southbound' : 'northbound';
+/**
+ * Names the direction the way the trip's own line does. Station order runs the way of the stops
+ * keyed "1" (see stopIdsForStations), and each line names that key itself: southbound on Red,
+ * westbound on Green, inbound on buses, Commuter Rail and ferries.
+ */
+const travelDirection = (from: Station, to: Station): Location['direction'] => {
+  const key = from.order < to.order ? '1' : '0';
+  const [stopId] = [...from.stops[key], ...from.stops[key === '1' ? '0' : '1']];
+  const name = stopId ? directionNamesIndex[stopId]?.[key] : undefined;
+  return (name as Location['direction'] | undefined) ?? (key === '1' ? 'southbound' : 'northbound');
 };
 
 export const getLocationDetails = (
@@ -285,13 +286,19 @@ export const findValidDefaultStations = (stations: Station[] | undefined) => {
     }
   }
 
+  // The second stop to the next one along that a trip runs between. On a combined route the next
+  // stop in order can be on another branch, so it has to share one.
   for (const dir of ['1', '0']) {
     const validStations = stations.filter((s) => s.stops[dir]?.length > 0);
-    if (validStations.length >= 2) {
-      const [defaultFrom, defaultTo] = validStations.slice(1, 3);
-      if (defaultFrom && defaultTo && defaultFrom.station !== defaultTo.station) {
-        return { defaultFrom, defaultTo };
-      }
+    const ordered = dir === '1' ? validStations : [...validStations].reverse();
+    for (const defaultFrom of [ordered[1], ordered[0]]) {
+      if (!defaultFrom) continue;
+      const defaultTo = ordered.find(
+        (s) =>
+          (dir === '1' ? s.order > defaultFrom.order : s.order < defaultFrom.order) &&
+          connects(defaultFrom, s)
+      );
+      if (defaultTo) return { defaultFrom, defaultTo };
     }
   }
   return { defaultFrom: undefined, defaultTo: undefined };

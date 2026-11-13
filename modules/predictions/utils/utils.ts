@@ -1,8 +1,8 @@
-import { flatten } from '@lodash-utils';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import type { Line, LineRouteId } from '../../../common/types/lines';
 
-export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId => {
+/** The route a subway line's charts read by default. Other modes pick a route in the URL, so they have none. */
+export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId | undefined => {
   switch (line) {
     case 'line-blue': {
       return 'Blue';
@@ -23,58 +23,9 @@ export const lineToDefaultRouteId = (line: Line | undefined): LineRouteId => {
       return 'bus';
     }
     default: {
-      return 'Red';
+      return undefined;
     }
   }
-};
-
-const calcValues = (predictions: TimePredictionWeek[]) => {
-  const predictionsList = flatten(predictions.map(({ prediction }) => prediction));
-
-  const averageAccurate =
-    predictionsList.reduce(
-      (currentSum, pred) =>
-        !isNaN(pred.num_accurate_predictions)
-          ? currentSum + pred.num_accurate_predictions
-          : currentSum,
-      0
-    ) / predictionsList.length;
-  const averageTotal =
-    predictionsList.reduce(
-      (currentSum, pred) =>
-        !isNaN(pred.num_predictions) ? currentSum + pred.num_predictions : currentSum,
-      0
-    ) / predictionsList.length;
-
-  const average = averageAccurate / averageTotal;
-
-  const peak = {
-    ...predictionsList.reduce(
-      (max, pred) =>
-        pred.num_accurate_predictions / pred.num_predictions >
-        max.num_accurate_predictions / max.num_predictions
-          ? pred
-          : max,
-      predictionsList[0]
-    ),
-  };
-
-  const worst = {
-    ...predictionsList.reduce(
-      (min, pred) =>
-        pred.num_accurate_predictions / pred.num_predictions <
-        min.num_accurate_predictions / min.num_predictions
-          ? pred
-          : min,
-      predictionsList[0]
-    ),
-  };
-
-  return {
-    peak,
-    worst,
-    average,
-  };
 };
 
 const weeklyAccuracy = (week: TimePredictionWeek) => {
@@ -88,6 +39,22 @@ const weeklyAccuracy = (week: TimePredictionWeek) => {
     0
   );
   return { accurate, total };
+};
+
+/** The weeks with the highest and lowest share of accurate predictions, across all bins. */
+const bestAndWorstWeeks = (data: TimePredictionWeek[]) => {
+  const weeks = data
+    .map((week) => {
+      const { accurate, total } = weeklyAccuracy(week);
+      return {
+        accuracy: total ? accurate / total : NaN,
+        date: week.prediction[0]?.weekly ?? week.week,
+      };
+    })
+    .filter(({ accuracy }) => Number.isFinite(accuracy));
+  const best = weeks.reduce((max, week) => (week.accuracy > max.accuracy ? week : max), weeks[0]);
+  const worst = weeks.reduce((min, week) => (week.accuracy < min.accuracy ? week : min), weeks[0]);
+  return { best, worst };
 };
 
 const mean = (values: number[]) =>
@@ -120,16 +87,16 @@ export const getPredictionStats = (data: TimePredictionWeek[]) => {
   const accuracyBefore = hasHalves ? mean(leading) : NaN;
   const accuracyAfter = hasHalves ? mean(trailing) : NaN;
 
-  const { peak, worst } = calcValues(data);
+  const { best, worst } = bestAndWorstWeeks(data);
 
   return {
     overallAccuracy,
     accuracyDelta: accuracyAfter - accuracyBefore,
     accuracyBefore,
     accuracyAfter,
-    peakAccuracy: peak.num_accurate_predictions / peak.num_predictions,
-    peakDate: peak.weekly,
-    worstAccuracy: worst.num_accurate_predictions / worst.num_predictions,
-    worstDate: worst.weekly,
+    peakAccuracy: best?.accuracy ?? NaN,
+    peakDate: best?.date,
+    worstAccuracy: worst?.accuracy ?? NaN,
+    worstDate: worst?.date,
   };
 };

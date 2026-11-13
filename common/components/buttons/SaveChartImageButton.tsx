@@ -8,13 +8,19 @@ import { useDelimitatedRoute } from '../../utils/router';
 import { Button } from '../ui/button';
 import { getImageFilename } from '../../utils/csv';
 import { downloadChartAsImage } from '../../utils/image';
+import { svgToCanvas } from '../../utils/svgImage';
 import { resolveChartHeading } from '../../utils/chartTitles';
 import type { CardHeading, ChartDatasetName } from '../../utils/chartTitles';
 
 interface SaveChartImageButtonProps {
-  chartRef: RefObject<Chart | null>;
+  /** The Chart.js chart to save. */
+  chartRef?: RefObject<Chart | null>;
+  /** Or an element holding an SVG chart, such as a line map. */
+  svgRef?: RefObject<HTMLElement | null>;
   datasetName: ChartDatasetName;
   startDate: string;
+  /** Shown in the image in place of the dates, for a chart of a period such as a season. */
+  period?: string;
   includeBothStopsForLocation?: boolean;
   location?: Location;
   endDate?: string;
@@ -37,8 +43,10 @@ const readCardHeading = (element: Element): CardHeading | undefined => {
 
 export const SaveChartImageButton = ({
   chartRef,
+  svgRef,
   datasetName,
   startDate,
+  period,
   includeBothStopsForLocation,
   location,
   endDate,
@@ -48,8 +56,12 @@ export const SaveChartImageButton = ({
   const { line } = useDelimitatedRoute();
 
   const handleClick = useCallback(
-    (event: MouseEvent<HTMLButtonElement>) => {
-      if (!chartRef.current) return;
+    async (event: MouseEvent<HTMLButtonElement>) => {
+      // Read the card before awaiting: React clears currentTarget once the handler yields
+      const card = readCardHeading(event.currentTarget);
+      const canvas =
+        chartRef?.current?.canvas ?? (svgRef?.current ? await svgToCanvas(svgRef.current) : null);
+      if (!canvas) return;
       const filename = getImageFilename({
         datasetName,
         includeBothStopsForLocation,
@@ -62,15 +74,16 @@ export const SaveChartImageButton = ({
         datasetName,
         chartTitle,
         chartSubtitle,
-        card: readCardHeading(event.currentTarget),
+        card,
       });
       downloadChartAsImage(
-        chartRef.current,
+        canvas,
         {
           title,
           subtitle,
           startDate,
           endDate,
+          period,
           location,
           line,
           includeBothStopsForLocation,
@@ -80,6 +93,8 @@ export const SaveChartImageButton = ({
     },
     [
       chartRef,
+      svgRef,
+      period,
       datasetName,
       includeBothStopsForLocation,
       startDate,

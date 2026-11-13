@@ -13,6 +13,7 @@ import {
   getWidgetComparisonData,
 } from '../../common/utils/widgets';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
+import { DwellsTerminusNotice } from './DwellsTerminusNotice';
 
 interface DwellsAggregateWrapperProps {
   query: ChunkedAggregateQueryResult;
@@ -45,6 +46,8 @@ export const DwellsAggregateWrapper = ({
     () => getWidgetComparisonData(allData, dayFilter, comparison),
     [allData, dayFilter, comparison]
   );
+
+  if (fromStation?.terminus) return <DwellsTerminusNotice />;
 
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;

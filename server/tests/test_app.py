@@ -367,3 +367,47 @@ class TestGitId:
         monkeypatch.setattr(chalice_app, "TM_FRONTEND_HOST", "dashboard.transitmatters.org")
         result = client.http.get("/api/git_id")
         assert result.status_code == 409
+
+
+class TestDateRangeValidation:
+    @pytest.mark.parametrize(
+        "path",
+        [
+            "/api/tripmetrics?line=line-red&agg=daily",
+            "/api/bustripmetrics?route=1&agg=daily",
+            "/api/ridership?line_id=line-Red",
+            "/api/reliability?route_id=RIDE&agg=daily",
+            "/api/linedelays?line=Red&agg=weekly",
+            "/api/scheduledservice?route_id=Red&agg=daily",
+        ],
+    )
+    def test_reversed_range_returns_400(self, client, path):
+        result = client.http.get(f"{path}&start_date=2026-02-01&end_date=2026-01-01")
+        assert result.status_code == 400
+        assert "start_date must be on or before end_date" in json.loads(result.body)["Message"]
+
+    def test_malformed_date_returns_400(self, client):
+        result = client.http.get("/api/tripmetrics?line=line-red&agg=daily&start_date=abc&end_date=2026-01-01")
+        assert result.status_code == 400
+
+    def test_same_day_range_is_allowed(self, client):
+        result = client.http.get("/api/ridership?line_id=line-Red&start_date=2026-01-01&end_date=2026-01-01")
+        assert result.status_code != 400
+
+
+class TestServiceParamsValidation:
+    def test_service_hours_requires_line_id(self, client):
+        result = client.http.get("/api/service_hours?start_date=2026-01-01&end_date=2026-01-31&agg=daily")
+        assert result.status_code == 400
+        assert "line_id" in json.loads(result.body)["Message"]
+
+    def test_service_hours_rejects_unknown_line(self, client):
+        result = client.http.get(
+            "/api/service_hours?line_id=line-purple&start_date=2026-01-01&end_date=2026-01-31&agg=daily"
+        )
+        assert result.status_code == 400
+
+    @pytest.mark.parametrize("path", ["/api/service_hours?line_id=line-red", "/api/scheduledservice?route_id=Red"])
+    def test_unknown_agg_returns_400(self, client, path):
+        result = client.http.get(f"{path}&start_date=2026-01-01&end_date=2026-01-31&agg=yearly")
+        assert result.status_code == 400

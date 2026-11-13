@@ -9,7 +9,7 @@ import { sortFunctions } from './sorting';
 
 type Props = {
   lineData: Record<string, LineData>;
-  // eslint-disable-next-line react/no-unused-prop-types -- we'll use this eventually
+  // eslint-disable-next-line react-x/no-unused-props -- we'll use this eventually
   summaryData: SummaryData;
   filter?: (r: LineData) => boolean;
 };

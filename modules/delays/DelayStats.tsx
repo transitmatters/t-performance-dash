@@ -3,13 +3,14 @@ import {
   StatCardGrid,
   type StatSentiment,
 } from '../../common/components/widgets/StatCard';
-import type { LineDelays } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
 import { type DelayAgg, AGG_PERIOD, formatDelay } from './format';
+import type { RangeRow } from './range';
 import { getDelayStats } from './utils';
 
 interface DelayStatsProps {
-  data: LineDelays[];
+  /** Rows covering exactly the selected dates. */
+  data: RangeRow[];
   agg: DelayAgg;
   line?: Line;
 }

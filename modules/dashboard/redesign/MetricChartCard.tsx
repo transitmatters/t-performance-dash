@@ -24,6 +24,7 @@ const METRIC_COPY: Required<MetricCopy> = {
   slowzones: { title: 'Slow zones', subtitle: 'Time lost to slow zones, last 30 days' },
   ridership: { title: 'Ridership', subtitle: 'Fare validations, last 30 days' },
   delays: { title: 'Alert delays', subtitle: 'Daily time delayed per MBTA alerts, last 30 days' },
+  reliability: { title: 'Reliability', subtitle: 'Share of headways, last 30 days' },
 };
 
 /** The single chart the scorecard drives — clicking a row swaps which metric renders here. */

@@ -8,6 +8,8 @@ import '@transitmatters/stripmap/dist/style.css';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { abbreviateStationName, getStripMapWatermark } from '../../../common/utils/stripmap';
+import { useDelimitatedRoute } from '../../../common/utils/router';
+import { SvgChart } from '../../../common/components/charts/SvgChart';
 import { StationRidershipTooltip } from './StationRidershipTooltip';
 import { formatStationRidership, getOtherLinesAtStation } from './utils';
 import type { StationRidershipLineName } from './utils';
@@ -27,6 +29,7 @@ export const StationRidershipMap = ({
   selectedStationId,
   onSelectStation,
 }: StationRidershipMapProps) => {
+  const { startDate, endDate } = useDelimitatedRoute().query;
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
     [lineName]
@@ -45,11 +48,14 @@ export const StationRidershipMap = ({
     ({ isHorizontal }: { isHorizontal: boolean }): StationRenderOptions[] =>
       Object.entries(averages).map(([stationId, average]) => {
         const isSelected = stationId === selectedStationId;
+        // Scale the dot's area, not its radius, with ridership
+        const radius = 1.25 + 2.25 * Math.sqrt(average / maxAverage);
+        // The dot sits on the label's edge nearest the line: its left in a vertical map, its bottom in a horizontal one
+        const distanceFromStation = radius + 1.5;
         return {
           stationId,
           dot: {
-            // Scale the dot's area, not its radius, with ridership
-            radius: 1.25 + 2.25 * Math.sqrt(average / maxAverage),
+            radius,
             fill: isSelected ? line.color : 'white',
             strokeWidth: isSelected ? 1.5 : 1,
           },
@@ -57,12 +63,12 @@ export const StationRidershipMap = ({
             {
               mapSide: '0',
               length: 15,
-              boundingSize: isHorizontal ? 8 : 14,
-              // Keep clear of the dot, which sits on the edge of the label nearest the line
+              boundingSize: isHorizontal ? 8 : 16,
               content: ({ width, height }) => (
                 <text
-                  x={isHorizontal ? width / 2 : 4.5}
-                  y={isHorizontal ? 4.5 : height / 2 + 1.25}
+                  x={isHorizontal ? width / 2 : distanceFromStation}
+                  y={isHorizontal ? height - distanceFromStation : height / 2}
+                  dominantBaseline={isHorizontal ? undefined : 'central'}
                   fontSize={3.5}
                   textAnchor={isHorizontal ? 'middle' : 'start'}
                   fontWeight={isSelected ? 'bold' : undefined}
@@ -97,19 +103,21 @@ export const StationRidershipMap = ({
   );
 
   return (
-    <LineMap
-      diagram={diagram}
-      strokeOptions={{ stroke: line.color }}
-      direction={direction}
-      getStationLabel={abbreviateStationName}
-      getStations={getStations}
-      stationTooltip={{ render: renderStationTooltip }}
-      onStationClick={(stationId) => {
-        if (stationId in averages) {
-          onSelectStation(stationId === selectedStationId ? null : stationId);
-        }
-      }}
-      watermark={getStripMapWatermark(isHorizontal, isDark)}
-    />
+    <SvgChart datasetName="station-ridership-map" startDate={startDate} endDate={endDate}>
+      <LineMap
+        diagram={diagram}
+        strokeOptions={{ stroke: line.color }}
+        direction={direction}
+        getStationLabel={abbreviateStationName}
+        getStations={getStations}
+        stationTooltip={{ render: renderStationTooltip }}
+        onStationClick={(stationId) => {
+          if (stationId in averages) {
+            onSelectStation(stationId === selectedStationId ? null : stationId);
+          }
+        }}
+        watermark={getStripMapWatermark(isHorizontal, isDark)}
+      />
+    </SvgChart>
   );
 };
