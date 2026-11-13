@@ -1436,6 +1436,87 @@
         "operationId": "getReliability"
       }
     },
+    "/api/excess_trip_time": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExcessTripTimeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "A required query parameter is missing or invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "/api"
+        ],
+        "summary": "Retrieve the MBTA's excess trip time for the Red, Orange or Blue Line: riders and their wait and travel minutes against a baseline.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "line",
+            "required": true,
+            "schema": {
+              "enum": [
+                "line-red",
+                "line-orange",
+                "line-blue"
+              ],
+              "type": "string"
+            },
+            "description": "The subway line. The MBTA publishes excess trip time for the Red, Orange and Blue Lines."
+          },
+          {
+            "in": "query",
+            "name": "start_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "Start of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "end_date",
+            "required": true,
+            "schema": {
+              "format": "date",
+              "type": "string"
+            },
+            "description": "End of the date range, inclusive (YYYY-MM-DD)."
+          },
+          {
+            "in": "query",
+            "name": "agg",
+            "required": true,
+            "schema": {
+              "enum": [
+                "daily",
+                "weekly",
+                "monthly"
+              ],
+              "type": "string"
+            },
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`."
+          }
+        ],
+        "operationId": "getExcessTripTime"
+      }
+    },
     "/api/crscorecard": {
       "get": {
         "responses": {
@@ -2739,6 +2820,59 @@
           "$ref": "#/components/schemas/ReliabilityEntry"
         },
         "title": "ReliabilityResponse",
+        "type": "array"
+      },
+      "ExcessTripTimeParams": {
+        "description": "Parameters for the `/api/excess_trip_time` endpoint.\n\nAttributes:\n    line: The subway line.\n    start_date: Start of date range.\n    end_date: End of date range.\n    agg: Aggregation level \u2014 `daily`, `weekly`, or `monthly`.",
+        "properties": {
+          "line": {
+            "description": "The subway line. The MBTA publishes excess trip time for the Red, Orange and Blue Lines.",
+            "enum": [
+              "line-red",
+              "line-orange",
+              "line-blue"
+            ],
+            "title": "Line",
+            "type": "string"
+          },
+          "start_date": {
+            "description": "Start of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "End of the date range, inclusive (YYYY-MM-DD).",
+            "format": "date",
+            "title": "End Date",
+            "type": "string"
+          },
+          "agg": {
+            "description": "Aggregation period: `daily`, `weekly`, or `monthly`.",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly"
+            ],
+            "title": "Agg",
+            "type": "string"
+          }
+        },
+        "required": [
+          "line",
+          "start_date",
+          "end_date",
+          "agg"
+        ],
+        "title": "ExcessTripTimeParams",
+        "type": "object"
+      },
+      "ExcessTripTimeResponse": {
+        "description": "Response for `/api/excess_trip_time`: excess trip time sums for a subway line, one entry per period.",
+        "items": {
+          "$ref": "#/components/schemas/ExcessTripTimeEntry"
+        },
+        "title": "ExcessTripTimeResponse",
         "type": "array"
       },
       "CrScorecardParams": {
@@ -4542,6 +4676,230 @@
           "days"
         ],
         "title": "ReliabilityEntry",
+        "type": "object"
+      },
+      "ExcessTripTimeEntry": {
+        "description": "Excess trip time sums for one day, week, or month.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    days: Service days with data in the period.\n    byDirection: The same sums, and per-period sums, per GTFS direction ID (`\"0\"`, `\"1\"`).",
+        "properties": {
+          "riders": {
+            "title": "Riders",
+            "type": "number"
+          },
+          "waitTime": {
+            "title": "Waittime",
+            "type": "number"
+          },
+          "travelTime": {
+            "title": "Traveltime",
+            "type": "number"
+          },
+          "baselineTripTime": {
+            "title": "Baselinetriptime",
+            "type": "number"
+          },
+          "baselineWaitTime": {
+            "title": "Baselinewaittime",
+            "type": "number"
+          },
+          "baselineTravelTime": {
+            "title": "Baselinetraveltime",
+            "type": "number"
+          },
+          "withinFiveMin": {
+            "title": "Withinfivemin",
+            "type": "number"
+          },
+          "withinTwentyMin": {
+            "title": "Withintwentymin",
+            "type": "number"
+          },
+          "withinTwentyPct": {
+            "title": "Withintwentypct",
+            "type": "number"
+          },
+          "withinThirtyPct": {
+            "title": "Withinthirtypct",
+            "type": "number"
+          },
+          "byPeriod": {
+            "$ref": "#/components/schemas/ExcessTripTimePeriods"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "days": {
+            "title": "Days",
+            "type": "integer"
+          },
+          "byDirection": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ExcessTripTimeScope"
+            },
+            "title": "Bydirection",
+            "type": "object"
+          }
+        },
+        "required": [
+          "riders",
+          "waitTime",
+          "travelTime",
+          "baselineTripTime",
+          "baselineWaitTime",
+          "baselineTravelTime",
+          "withinFiveMin",
+          "withinTwentyMin",
+          "withinTwentyPct",
+          "withinThirtyPct",
+          "byPeriod",
+          "date",
+          "days",
+          "byDirection"
+        ],
+        "title": "ExcessTripTimeEntry",
+        "type": "object"
+      },
+      "ExcessTripTimePeriods": {
+        "description": "Excess trip time sums per service period, as the MBTA's Service Delivery Policy defines them.\n\nAttributes:\n    amPeak: Weekdays 7\u20139am.\n    pmPeak: Weekdays 4\u20136:30pm.\n    offPeak: Every other time, and all weekend and holiday service.",
+        "properties": {
+          "amPeak": {
+            "$ref": "#/components/schemas/ExcessTripTimeSums"
+          },
+          "pmPeak": {
+            "$ref": "#/components/schemas/ExcessTripTimeSums"
+          },
+          "offPeak": {
+            "$ref": "#/components/schemas/ExcessTripTimeSums"
+          }
+        },
+        "required": [
+          "amPeak",
+          "pmPeak",
+          "offPeak"
+        ],
+        "title": "ExcessTripTimePeriods",
+        "type": "object"
+      },
+      "ExcessTripTimeScope": {
+        "description": "Excess trip time sums for both directions or one, with the same sums per service period.\n\nAttributes:\n    byPeriod: The same sums per service period.",
+        "properties": {
+          "riders": {
+            "title": "Riders",
+            "type": "number"
+          },
+          "waitTime": {
+            "title": "Waittime",
+            "type": "number"
+          },
+          "travelTime": {
+            "title": "Traveltime",
+            "type": "number"
+          },
+          "baselineTripTime": {
+            "title": "Baselinetriptime",
+            "type": "number"
+          },
+          "baselineWaitTime": {
+            "title": "Baselinewaittime",
+            "type": "number"
+          },
+          "baselineTravelTime": {
+            "title": "Baselinetraveltime",
+            "type": "number"
+          },
+          "withinFiveMin": {
+            "title": "Withinfivemin",
+            "type": "number"
+          },
+          "withinTwentyMin": {
+            "title": "Withintwentymin",
+            "type": "number"
+          },
+          "withinTwentyPct": {
+            "title": "Withintwentypct",
+            "type": "number"
+          },
+          "withinThirtyPct": {
+            "title": "Withinthirtypct",
+            "type": "number"
+          },
+          "byPeriod": {
+            "$ref": "#/components/schemas/ExcessTripTimePeriods"
+          }
+        },
+        "required": [
+          "riders",
+          "waitTime",
+          "travelTime",
+          "baselineTripTime",
+          "baselineWaitTime",
+          "baselineTravelTime",
+          "withinFiveMin",
+          "withinTwentyMin",
+          "withinTwentyPct",
+          "withinThirtyPct",
+          "byPeriod"
+        ],
+        "title": "ExcessTripTimeScope",
+        "type": "object"
+      },
+      "ExcessTripTimeSums": {
+        "description": "Riders and their passenger-weighted trip times, summed over a period (and a direction or service\nperiod, when nested). Divide minutes by `riders` for per-rider averages. Excess trip time is\n`waitTime + travelTime - baselineTripTime`.\n\nAttributes:\n    riders: Estimated riders, from fare taps.\n    waitTime: Total minutes riders waited for a train (each train's headway halved).\n    travelTime: Total minutes riders spent on board, including dwells.\n    baselineTripTime: Total baseline trip (wait plus travel) minutes, as the MBTA measures it.\n    baselineWaitTime: Total baseline wait minutes, from the best schedule for the fleet.\n    baselineTravelTime: Total baseline travel minutes, from the fastest monthly median since 2021.\n    withinFiveMin: Riders whose trip took at most 5 minutes longer than the baseline.\n    withinTwentyMin: Riders whose trip took at most 20 minutes longer than the baseline.\n    withinTwentyPct: Riders whose trip took at most 20% longer than the baseline.\n    withinThirtyPct: Riders whose trip took at most 30% longer than the baseline.",
+        "properties": {
+          "riders": {
+            "title": "Riders",
+            "type": "number"
+          },
+          "waitTime": {
+            "title": "Waittime",
+            "type": "number"
+          },
+          "travelTime": {
+            "title": "Traveltime",
+            "type": "number"
+          },
+          "baselineTripTime": {
+            "title": "Baselinetriptime",
+            "type": "number"
+          },
+          "baselineWaitTime": {
+            "title": "Baselinewaittime",
+            "type": "number"
+          },
+          "baselineTravelTime": {
+            "title": "Baselinetraveltime",
+            "type": "number"
+          },
+          "withinFiveMin": {
+            "title": "Withinfivemin",
+            "type": "number"
+          },
+          "withinTwentyMin": {
+            "title": "Withintwentymin",
+            "type": "number"
+          },
+          "withinTwentyPct": {
+            "title": "Withintwentypct",
+            "type": "number"
+          },
+          "withinThirtyPct": {
+            "title": "Withinthirtypct",
+            "type": "number"
+          }
+        },
+        "required": [
+          "riders",
+          "waitTime",
+          "travelTime",
+          "baselineTripTime",
+          "baselineWaitTime",
+          "baselineTravelTime",
+          "withinFiveMin",
+          "withinTwentyMin",
+          "withinTwentyPct",
+          "withinThirtyPct"
+        ],
+        "title": "ExcessTripTimeSums",
         "type": "object"
       },
       "CrScorecardDirection": {

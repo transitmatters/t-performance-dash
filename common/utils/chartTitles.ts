@@ -34,6 +34,7 @@ const CHART_TITLES = {
   'fleet-cab-car-age': 'Average cab car age',
   'reliability-on-time': 'On time over time',
   'reliability-off-schedule': 'Bunching or long gaps',
+  'reliability-excess-trip-time': 'Where the extra time comes from',
   'reliability-on-time-performance': 'On-time performance',
   'cr-cancelled-trains': 'Cancelled trains per day',
   'ride-trips': 'Trips per day',

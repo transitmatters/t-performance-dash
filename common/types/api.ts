@@ -147,6 +147,17 @@ export enum FetchReliabilityParams {
   agg = 'agg',
 }
 
+export type FetchExcessTripTimeOptions = {
+  [key in FetchExcessTripTimeParams]?: string;
+};
+
+export enum FetchExcessTripTimeParams {
+  line = 'line',
+  startDate = 'start_date',
+  endDate = 'end_date',
+  agg = 'agg',
+}
+
 export type FetchWeatherOptions = {
   [key in FetchWeatherParams]?: string;
 };

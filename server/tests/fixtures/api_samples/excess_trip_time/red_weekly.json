@@ -1,0 +1,772 @@
+[
+  {
+    "date": "2026-08-31",
+    "days": 6,
+    "baselineTravelTime": 9828017.3,
+    "baselineTripTime": 13021387.0,
+    "baselineWaitTime": 3202106.1,
+    "byDirection": {
+      "0": {
+        "baselineTravelTime": 4677028.2,
+        "baselineTripTime": 6221662.3,
+        "baselineWaitTime": 1547469.2,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 447111.1,
+            "baselineTripTime": 552056.6,
+            "baselineWaitTime": 104945.6,
+            "riders": 43561.6,
+            "travelTime": 480762.9,
+            "waitTime": 128672.9,
+            "withinFiveMin": 42442.1,
+            "withinThirtyPct": 39370.2,
+            "withinTwentyMin": 43561.6,
+            "withinTwentyPct": 34561.5
+          },
+          "offPeak": {
+            "baselineTravelTime": 3224555.0,
+            "baselineTripTime": 4420065.4,
+            "baselineWaitTime": 1198345.6,
+            "riders": 301584.8,
+            "travelTime": 3426262.2,
+            "waitTime": 1252753.2,
+            "withinFiveMin": 286126.9,
+            "withinThirtyPct": 273975.9,
+            "withinTwentyMin": 301450.6,
+            "withinTwentyPct": 251672.4
+          },
+          "pmPeak": {
+            "baselineTravelTime": 1005362.4,
+            "baselineTripTime": 1249540.4,
+            "baselineWaitTime": 244178.0,
+            "riders": 82157.7,
+            "travelTime": 1085477.5,
+            "waitTime": 323771.6,
+            "withinFiveMin": 74946.6,
+            "withinThirtyPct": 68496.8,
+            "withinTwentyMin": 82157.7,
+            "withinTwentyPct": 57249.2
+          }
+        },
+        "riders": 427304.0,
+        "travelTime": 4992502.6,
+        "waitTime": 1705197.6,
+        "withinFiveMin": 403515.6,
+        "withinThirtyPct": 381842.9,
+        "withinTwentyMin": 427169.8,
+        "withinTwentyPct": 343483.1
+      },
+      "1": {
+        "baselineTravelTime": 5150989.1,
+        "baselineTripTime": 6799724.6,
+        "baselineWaitTime": 1654636.9,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 771505.0,
+            "baselineTripTime": 957948.7,
+            "baselineWaitTime": 186443.8,
+            "riders": 59212.0,
+            "travelTime": 818648.6,
+            "waitTime": 222710.3,
+            "withinFiveMin": 56624.5,
+            "withinThirtyPct": 54427.4,
+            "withinTwentyMin": 59212.0,
+            "withinTwentyPct": 49415.3
+          },
+          "offPeak": {
+            "baselineTravelTime": 3607335.7,
+            "baselineTripTime": 4900865.7,
+            "baselineWaitTime": 1299431.3,
+            "riders": 323078.1,
+            "travelTime": 3828821.0,
+            "waitTime": 1323885.5,
+            "withinFiveMin": 309313.4,
+            "withinThirtyPct": 296578.0,
+            "withinTwentyMin": 323071.0,
+            "withinTwentyPct": 270632.4
+          },
+          "pmPeak": {
+            "baselineTravelTime": 772148.4,
+            "baselineTripTime": 940910.2,
+            "baselineWaitTime": 168761.8,
+            "riders": 69528.5,
+            "travelTime": 864238.6,
+            "waitTime": 234474.1,
+            "withinFiveMin": 60164.8,
+            "withinThirtyPct": 53489.4,
+            "withinTwentyMin": 69528.5,
+            "withinTwentyPct": 43687.2
+          }
+        },
+        "riders": 451818.8,
+        "travelTime": 5511708.2,
+        "waitTime": 1781069.8,
+        "withinFiveMin": 426102.9,
+        "withinThirtyPct": 404494.7,
+        "withinTwentyMin": 451811.7,
+        "withinTwentyPct": 363734.8
+      }
+    },
+    "byPeriod": {
+      "amPeak": {
+        "baselineTravelTime": 1218616.0,
+        "baselineTripTime": 1510005.4,
+        "baselineWaitTime": 291389.4,
+        "riders": 102773.7,
+        "travelTime": 1299411.5,
+        "waitTime": 351383.1,
+        "withinFiveMin": 99066.6,
+        "withinThirtyPct": 93797.6,
+        "withinTwentyMin": 102773.7,
+        "withinTwentyPct": 83976.8
+      },
+      "offPeak": {
+        "baselineTravelTime": 6831890.6,
+        "baselineTripTime": 9320931.3,
+        "baselineWaitTime": 2497777.0,
+        "riders": 624662.9,
+        "travelTime": 7255083.1,
+        "waitTime": 2576638.8,
+        "withinFiveMin": 595440.3,
+        "withinThirtyPct": 570553.9,
+        "withinTwentyMin": 624521.6,
+        "withinTwentyPct": 522304.7
+      },
+      "pmPeak": {
+        "baselineTravelTime": 1777510.8,
+        "baselineTripTime": 2190450.5,
+        "baselineWaitTime": 412939.8,
+        "riders": 151686.2,
+        "travelTime": 1949716.1,
+        "waitTime": 558245.5,
+        "withinFiveMin": 135111.4,
+        "withinThirtyPct": 121986.2,
+        "withinTwentyMin": 151686.2,
+        "withinTwentyPct": 100936.4
+      }
+    },
+    "riders": 879122.8,
+    "travelTime": 10504210.9,
+    "waitTime": 3486267.5,
+    "withinFiveMin": 829618.3,
+    "withinThirtyPct": 786337.6,
+    "withinTwentyMin": 878981.5,
+    "withinTwentyPct": 707218.0
+  },
+  {
+    "date": "2026-09-07",
+    "days": 7,
+    "baselineTravelTime": 11650727.9,
+    "baselineTripTime": 15440339.3,
+    "baselineWaitTime": 3800735.3,
+    "byDirection": {
+      "0": {
+        "baselineTravelTime": 5522778.4,
+        "baselineTripTime": 7347941.9,
+        "baselineWaitTime": 1828821.0,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 532504.7,
+            "baselineTripTime": 656987.1,
+            "baselineWaitTime": 124482.6,
+            "riders": 51781.4,
+            "travelTime": 569167.0,
+            "waitTime": 154126.9,
+            "withinFiveMin": 50083.7,
+            "withinThirtyPct": 46346.6,
+            "withinTwentyMin": 51781.4,
+            "withinTwentyPct": 40707.8
+          },
+          "offPeak": {
+            "baselineTravelTime": 3873522.5,
+            "baselineTripTime": 5300626.0,
+            "baselineWaitTime": 1430760.8,
+            "riders": 355590.5,
+            "travelTime": 4039127.6,
+            "waitTime": 1489390.1,
+            "withinFiveMin": 339767.9,
+            "withinThirtyPct": 326791.2,
+            "withinTwentyMin": 355579.9,
+            "withinTwentyPct": 302270.5
+          },
+          "pmPeak": {
+            "baselineTravelTime": 1116751.2,
+            "baselineTripTime": 1390328.8,
+            "baselineWaitTime": 273577.7,
+            "riders": 91588.3,
+            "travelTime": 1241339.6,
+            "waitTime": 394476.5,
+            "withinFiveMin": 73964.0,
+            "withinThirtyPct": 67970.3,
+            "withinTwentyMin": 91573.7,
+            "withinTwentyPct": 56023.1
+          }
+        },
+        "riders": 498960.2,
+        "travelTime": 5849634.2,
+        "waitTime": 2037993.5,
+        "withinFiveMin": 463815.6,
+        "withinThirtyPct": 441108.2,
+        "withinTwentyMin": 498935.0,
+        "withinTwentyPct": 399001.2
+      },
+      "1": {
+        "baselineTravelTime": 6127949.6,
+        "baselineTripTime": 8092397.4,
+        "baselineWaitTime": 1971914.1,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 910455.1,
+            "baselineTripTime": 1135538.2,
+            "baselineWaitTime": 225083.0,
+            "riders": 70272.4,
+            "travelTime": 1038452.5,
+            "waitTime": 276285.6,
+            "withinFiveMin": 58483.7,
+            "withinThirtyPct": 57062.6,
+            "withinTwentyMin": 70272.4,
+            "withinTwentyPct": 45228.3
+          },
+          "offPeak": {
+            "baselineTravelTime": 4297423.6,
+            "baselineTripTime": 5836536.1,
+            "baselineWaitTime": 1546578.7,
+            "riders": 381432.1,
+            "travelTime": 4623576.1,
+            "waitTime": 1570597.6,
+            "withinFiveMin": 359978.0,
+            "withinThirtyPct": 345549.3,
+            "withinTwentyMin": 381430.2,
+            "withinTwentyPct": 309606.9
+          },
+          "pmPeak": {
+            "baselineTravelTime": 920070.8,
+            "baselineTripTime": 1120323.3,
+            "baselineWaitTime": 200252.3,
+            "riders": 81410.5,
+            "travelTime": 1035142.9,
+            "waitTime": 308116.8,
+            "withinFiveMin": 67410.8,
+            "withinThirtyPct": 59170.5,
+            "withinTwentyMin": 81406.6,
+            "withinTwentyPct": 46304.2
+          }
+        },
+        "riders": 533115.2,
+        "travelTime": 6697171.5,
+        "waitTime": 2155000.1,
+        "withinFiveMin": 485872.7,
+        "withinThirtyPct": 461782.4,
+        "withinTwentyMin": 533109.3,
+        "withinTwentyPct": 401139.5
+      }
+    },
+    "byPeriod": {
+      "amPeak": {
+        "baselineTravelTime": 1442959.7,
+        "baselineTripTime": 1792525.4,
+        "baselineWaitTime": 349565.7,
+        "riders": 122053.9,
+        "travelTime": 1607619.6,
+        "waitTime": 430412.4,
+        "withinFiveMin": 108567.5,
+        "withinThirtyPct": 103409.2,
+        "withinTwentyMin": 122053.9,
+        "withinTwentyPct": 85936.2
+      },
+      "offPeak": {
+        "baselineTravelTime": 8170946.2,
+        "baselineTripTime": 11137161.9,
+        "baselineWaitTime": 2977339.5,
+        "riders": 737022.6,
+        "travelTime": 8662703.6,
+        "waitTime": 3059987.6,
+        "withinFiveMin": 699745.7,
+        "withinThirtyPct": 672340.3,
+        "withinTwentyMin": 737010.0,
+        "withinTwentyPct": 611877.4
+      },
+      "pmPeak": {
+        "baselineTravelTime": 2036822.0,
+        "baselineTripTime": 2510652.0,
+        "baselineWaitTime": 473830.1,
+        "riders": 172998.8,
+        "travelTime": 2276482.5,
+        "waitTime": 702593.4,
+        "withinFiveMin": 141374.9,
+        "withinThirtyPct": 127141.0,
+        "withinTwentyMin": 172980.3,
+        "withinTwentyPct": 102327.3
+      }
+    },
+    "riders": 1032075.4,
+    "travelTime": 12546805.6,
+    "waitTime": 4192993.5,
+    "withinFiveMin": 949688.2,
+    "withinThirtyPct": 902890.5,
+    "withinTwentyMin": 1032044.3,
+    "withinTwentyPct": 800140.7
+  },
+  {
+    "date": "2026-09-14",
+    "days": 7,
+    "baselineTravelTime": 12507044.9,
+    "baselineTripTime": 16359931.5,
+    "baselineWaitTime": 3864180.0,
+    "byDirection": {
+      "0": {
+        "baselineTravelTime": 5928024.0,
+        "baselineTripTime": 7795520.7,
+        "baselineWaitTime": 1871337.6,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 683138.6,
+            "baselineTripTime": 843802.2,
+            "baselineWaitTime": 160663.6,
+            "riders": 66726.6,
+            "travelTime": 732144.9,
+            "waitTime": 202759.2,
+            "withinFiveMin": 64182.1,
+            "withinThirtyPct": 58712.0,
+            "withinTwentyMin": 66726.6,
+            "withinTwentyPct": 50534.3
+          },
+          "offPeak": {
+            "baselineTravelTime": 3887407.7,
+            "baselineTripTime": 5262601.6,
+            "baselineWaitTime": 1379034.7,
+            "riders": 360009.2,
+            "travelTime": 4241340.7,
+            "waitTime": 1631470.6,
+            "withinFiveMin": 315847.6,
+            "withinThirtyPct": 292607.0,
+            "withinTwentyMin": 359040.3,
+            "withinTwentyPct": 257887.4
+          },
+          "pmPeak": {
+            "baselineTravelTime": 1357477.7,
+            "baselineTripTime": 1689117.0,
+            "baselineWaitTime": 331639.2,
+            "riders": 110448.5,
+            "travelTime": 1531586.8,
+            "waitTime": 489434.4,
+            "withinFiveMin": 89860.8,
+            "withinThirtyPct": 79340.0,
+            "withinTwentyMin": 109681.4,
+            "withinTwentyPct": 63707.6
+          }
+        },
+        "riders": 537184.3,
+        "travelTime": 6505072.5,
+        "waitTime": 2323664.3,
+        "withinFiveMin": 469890.3,
+        "withinThirtyPct": 430658.9,
+        "withinTwentyMin": 535448.3,
+        "withinTwentyPct": 372129.2
+      },
+      "1": {
+        "baselineTravelTime": 6579021.1,
+        "baselineTripTime": 8564410.8,
+        "baselineWaitTime": 1992842.6,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 1171823.3,
+            "baselineTripTime": 1461227.9,
+            "baselineWaitTime": 289404.8,
+            "riders": 89661.4,
+            "travelTime": 1301720.8,
+            "waitTime": 368275.1,
+            "withinFiveMin": 80676.2,
+            "withinThirtyPct": 75513.1,
+            "withinTwentyMin": 89661.4,
+            "withinTwentyPct": 63664.1
+          },
+          "offPeak": {
+            "baselineTravelTime": 4285343.0,
+            "baselineTripTime": 5736005.5,
+            "baselineWaitTime": 1458115.1,
+            "riders": 378125.9,
+            "travelTime": 4827428.6,
+            "waitTime": 1667996.5,
+            "withinFiveMin": 324181.5,
+            "withinThirtyPct": 301504.6,
+            "withinTwentyMin": 377184.9,
+            "withinTwentyPct": 258482.1
+          },
+          "pmPeak": {
+            "baselineTravelTime": 1121854.7,
+            "baselineTripTime": 1367177.3,
+            "baselineWaitTime": 245322.6,
+            "riders": 100919.3,
+            "travelTime": 1283182.3,
+            "waitTime": 398247.0,
+            "withinFiveMin": 78072.1,
+            "withinThirtyPct": 69768.6,
+            "withinTwentyMin": 100854.7,
+            "withinTwentyPct": 53944.3
+          }
+        },
+        "riders": 568706.3,
+        "travelTime": 7412331.7,
+        "waitTime": 2434518.6,
+        "withinFiveMin": 482929.6,
+        "withinThirtyPct": 446786.3,
+        "withinTwentyMin": 567700.8,
+        "withinTwentyPct": 376090.5
+      }
+    },
+    "byPeriod": {
+      "amPeak": {
+        "baselineTravelTime": 1854961.9,
+        "baselineTripTime": 2305030.1,
+        "baselineWaitTime": 450068.4,
+        "riders": 156388.0,
+        "travelTime": 2033865.6,
+        "waitTime": 571034.3,
+        "withinFiveMin": 144858.3,
+        "withinThirtyPct": 134225.1,
+        "withinTwentyMin": 156388.0,
+        "withinTwentyPct": 114198.5
+      },
+      "offPeak": {
+        "baselineTravelTime": 8172750.7,
+        "baselineTripTime": 10998607.0,
+        "baselineWaitTime": 2837149.9,
+        "riders": 738134.9,
+        "travelTime": 9068769.3,
+        "waitTime": 3299467.1,
+        "withinFiveMin": 640028.9,
+        "withinThirtyPct": 594111.6,
+        "withinTwentyMin": 736225.0,
+        "withinTwentyPct": 516369.5
+      },
+      "pmPeak": {
+        "baselineTravelTime": 2479332.4,
+        "baselineTripTime": 3056294.2,
+        "baselineWaitTime": 576961.9,
+        "riders": 211367.7,
+        "travelTime": 2814769.0,
+        "waitTime": 887681.3,
+        "withinFiveMin": 167932.7,
+        "withinThirtyPct": 149108.5,
+        "withinTwentyMin": 210536.0,
+        "withinTwentyPct": 117651.8
+      }
+    },
+    "riders": 1105890.6,
+    "travelTime": 13917404.1,
+    "waitTime": 4758182.8,
+    "withinFiveMin": 952820.0,
+    "withinThirtyPct": 877445.3,
+    "withinTwentyMin": 1103149.3,
+    "withinTwentyPct": 748219.7
+  },
+  {
+    "date": "2026-09-21",
+    "days": 7,
+    "baselineTravelTime": 11865375.9,
+    "baselineTripTime": 15500772.0,
+    "baselineWaitTime": 3646349.9,
+    "byDirection": {
+      "0": {
+        "baselineTravelTime": 5670739.6,
+        "baselineTripTime": 7441135.9,
+        "baselineWaitTime": 1774484.5,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 677267.8,
+            "baselineTripTime": 836729.2,
+            "baselineWaitTime": 159461.6,
+            "riders": 65950.3,
+            "travelTime": 720462.1,
+            "waitTime": 211578.5,
+            "withinFiveMin": 63823.2,
+            "withinThirtyPct": 58839.4,
+            "withinTwentyMin": 65936.1,
+            "withinTwentyPct": 52340.9
+          },
+          "offPeak": {
+            "baselineTravelTime": 3553756.0,
+            "baselineTripTime": 4811039.3,
+            "baselineWaitTime": 1261371.5,
+            "riders": 329935.7,
+            "travelTime": 3743621.8,
+            "waitTime": 1570998.5,
+            "withinFiveMin": 304819.1,
+            "withinThirtyPct": 287411.4,
+            "withinTwentyMin": 327088.1,
+            "withinTwentyPct": 261668.4
+          },
+          "pmPeak": {
+            "baselineTravelTime": 1439715.9,
+            "baselineTripTime": 1793367.4,
+            "baselineWaitTime": 353651.5,
+            "riders": 118643.2,
+            "travelTime": 1589143.2,
+            "waitTime": 500515.1,
+            "withinFiveMin": 102500.0,
+            "withinThirtyPct": 93534.6,
+            "withinTwentyMin": 118643.2,
+            "withinTwentyPct": 73637.3
+          }
+        },
+        "riders": 514529.3,
+        "travelTime": 6053227.0,
+        "waitTime": 2283092.2,
+        "withinFiveMin": 471142.3,
+        "withinThirtyPct": 439785.3,
+        "withinTwentyMin": 511667.5,
+        "withinTwentyPct": 387646.6
+      },
+      "1": {
+        "baselineTravelTime": 6194636.4,
+        "baselineTripTime": 8059635.9,
+        "baselineWaitTime": 1871865.2,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 1139179.1,
+            "baselineTripTime": 1421418.9,
+            "baselineWaitTime": 282240.0,
+            "riders": 88725.1,
+            "travelTime": 1300045.4,
+            "waitTime": 364972.4,
+            "withinFiveMin": 72870.8,
+            "withinThirtyPct": 72942.6,
+            "withinTwentyMin": 88361.6,
+            "withinTwentyPct": 56332.6
+          },
+          "offPeak": {
+            "baselineTravelTime": 3885626.5,
+            "baselineTripTime": 5215250.6,
+            "baselineWaitTime": 1336489.6,
+            "riders": 347398.7,
+            "travelTime": 4496330.3,
+            "waitTime": 1497268.9,
+            "withinFiveMin": 295675.5,
+            "withinThirtyPct": 278729.5,
+            "withinTwentyMin": 342911.4,
+            "withinTwentyPct": 241468.6
+          },
+          "pmPeak": {
+            "baselineTravelTime": 1169830.8,
+            "baselineTripTime": 1422966.7,
+            "baselineWaitTime": 253135.9,
+            "riders": 103388.4,
+            "travelTime": 1429203.8,
+            "waitTime": 391102.9,
+            "withinFiveMin": 75749.7,
+            "withinThirtyPct": 63902.2,
+            "withinTwentyMin": 102840.8,
+            "withinTwentyPct": 47842.5
+          }
+        },
+        "riders": 539512.1,
+        "travelTime": 7225579.5,
+        "waitTime": 2253344.3,
+        "withinFiveMin": 444296.0,
+        "withinThirtyPct": 415574.3,
+        "withinTwentyMin": 534113.9,
+        "withinTwentyPct": 345643.6
+      }
+    },
+    "byPeriod": {
+      "amPeak": {
+        "baselineTravelTime": 1816446.7,
+        "baselineTripTime": 2258148.2,
+        "baselineWaitTime": 441701.4,
+        "riders": 154675.3,
+        "travelTime": 2020507.5,
+        "waitTime": 576550.8,
+        "withinFiveMin": 136694.0,
+        "withinThirtyPct": 131782.0,
+        "withinTwentyMin": 154297.7,
+        "withinTwentyPct": 108673.5
+      },
+      "offPeak": {
+        "baselineTravelTime": 7439382.5,
+        "baselineTripTime": 10026289.8,
+        "baselineWaitTime": 2597861.4,
+        "riders": 677334.2,
+        "travelTime": 8239952.1,
+        "waitTime": 3068267.5,
+        "withinFiveMin": 600494.7,
+        "withinThirtyPct": 566140.8,
+        "withinTwentyMin": 669999.4,
+        "withinTwentyPct": 503137.0
+      },
+      "pmPeak": {
+        "baselineTravelTime": 2609546.8,
+        "baselineTripTime": 3216333.9,
+        "baselineWaitTime": 606787.1,
+        "riders": 222031.7,
+        "travelTime": 3018346.9,
+        "waitTime": 891618.1,
+        "withinFiveMin": 178249.8,
+        "withinThirtyPct": 157436.6,
+        "withinTwentyMin": 221484.2,
+        "withinTwentyPct": 121479.9
+      }
+    },
+    "riders": 1054041.3,
+    "travelTime": 13278806.2,
+    "waitTime": 4536436.5,
+    "withinFiveMin": 915438.7,
+    "withinThirtyPct": 855359.5,
+    "withinTwentyMin": 1045781.4,
+    "withinTwentyPct": 733290.2
+  },
+  {
+    "date": "2026-09-28",
+    "days": 3,
+    "baselineTravelTime": 5930815.9,
+    "baselineTripTime": 7631767.7,
+    "baselineWaitTime": 1707094.3,
+    "byDirection": {
+      "0": {
+        "baselineTravelTime": 2842388.6,
+        "baselineTripTime": 3674042.8,
+        "baselineWaitTime": 833770.1,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 419078.8,
+            "baselineTripTime": 516252.6,
+            "baselineWaitTime": 97173.8,
+            "riders": 40800.1,
+            "travelTime": 449342.7,
+            "waitTime": 121196.7,
+            "withinFiveMin": 39070.7,
+            "withinThirtyPct": 36275.8,
+            "withinTwentyMin": 40800.1,
+            "withinTwentyPct": 31353.6
+          },
+          "offPeak": {
+            "baselineTravelTime": 1582187.5,
+            "baselineTripTime": 2109637.0,
+            "baselineWaitTime": 529565.4,
+            "riders": 146004.2,
+            "travelTime": 1699333.3,
+            "waitTime": 572986.1,
+            "withinFiveMin": 136139.2,
+            "withinThirtyPct": 129844.2,
+            "withinTwentyMin": 145937.4,
+            "withinTwentyPct": 116044.5
+          },
+          "pmPeak": {
+            "baselineTravelTime": 841122.2,
+            "baselineTripTime": 1048153.1,
+            "baselineWaitTime": 207030.9,
+            "riders": 68699.8,
+            "travelTime": 950140.4,
+            "waitTime": 319174.4,
+            "withinFiveMin": 54205.5,
+            "withinThirtyPct": 47793.1,
+            "withinTwentyMin": 68697.9,
+            "withinTwentyPct": 38096.8
+          }
+        },
+        "riders": 255504.2,
+        "travelTime": 3098816.4,
+        "waitTime": 1013357.2,
+        "withinFiveMin": 229415.4,
+        "withinThirtyPct": 213913.2,
+        "withinTwentyMin": 255435.5,
+        "withinTwentyPct": 185495.0
+      },
+      "1": {
+        "baselineTravelTime": 3088427.3,
+        "baselineTripTime": 3957724.9,
+        "baselineWaitTime": 873324.1,
+        "byPeriod": {
+          "amPeak": {
+            "baselineTravelTime": 697331.8,
+            "baselineTripTime": 869383.6,
+            "baselineWaitTime": 172051.9,
+            "riders": 54145.0,
+            "travelTime": 820833.1,
+            "waitTime": 229488.3,
+            "withinFiveMin": 42240.3,
+            "withinThirtyPct": 40225.3,
+            "withinTwentyMin": 54059.2,
+            "withinTwentyPct": 29841.4
+          },
+          "offPeak": {
+            "baselineTravelTime": 1739466.0,
+            "baselineTripTime": 2297037.3,
+            "baselineWaitTime": 561597.8,
+            "riders": 152756.0,
+            "travelTime": 1963469.9,
+            "waitTime": 629272.2,
+            "withinFiveMin": 133603.2,
+            "withinThirtyPct": 124432.2,
+            "withinTwentyMin": 152620.4,
+            "withinTwentyPct": 105416.0
+          },
+          "pmPeak": {
+            "baselineTravelTime": 651629.5,
+            "baselineTripTime": 791303.8,
+            "baselineWaitTime": 139674.3,
+            "riders": 58627.1,
+            "travelTime": 773118.5,
+            "waitTime": 222496.9,
+            "withinFiveMin": 44064.7,
+            "withinThirtyPct": 38203.1,
+            "withinTwentyMin": 58432.2,
+            "withinTwentyPct": 29715.9
+          }
+        },
+        "riders": 265528.1,
+        "travelTime": 3557421.5,
+        "waitTime": 1081257.4,
+        "withinFiveMin": 219908.1,
+        "withinThirtyPct": 202860.8,
+        "withinTwentyMin": 265111.8,
+        "withinTwentyPct": 164973.2
+      }
+    },
+    "byPeriod": {
+      "amPeak": {
+        "baselineTravelTime": 1116410.6,
+        "baselineTripTime": 1385636.2,
+        "baselineWaitTime": 269225.6,
+        "riders": 94945.1,
+        "travelTime": 1270175.9,
+        "waitTime": 350685.0,
+        "withinFiveMin": 81310.9,
+        "withinThirtyPct": 76501.2,
+        "withinTwentyMin": 94859.3,
+        "withinTwentyPct": 61194.9
+      },
+      "offPeak": {
+        "baselineTravelTime": 3321653.4,
+        "baselineTripTime": 4406674.3,
+        "baselineWaitTime": 1091163.3,
+        "riders": 298760.2,
+        "travelTime": 3662803.1,
+        "waitTime": 1202258.3,
+        "withinFiveMin": 269742.4,
+        "withinThirtyPct": 254276.5,
+        "withinTwentyMin": 298557.8,
+        "withinTwentyPct": 221460.5
+      },
+      "pmPeak": {
+        "baselineTravelTime": 1492751.8,
+        "baselineTripTime": 1839457.0,
+        "baselineWaitTime": 346705.2,
+        "riders": 127327.0,
+        "travelTime": 1723258.9,
+        "waitTime": 541671.2,
+        "withinFiveMin": 98270.2,
+        "withinThirtyPct": 85996.5,
+        "withinTwentyMin": 127130.2,
+        "withinTwentyPct": 67812.9
+      }
+    },
+    "riders": 521032.4,
+    "travelTime": 6656238.0,
+    "waitTime": 2094614.7,
+    "withinFiveMin": 449323.6,
+    "withinThirtyPct": 416774.0,
+    "withinTwentyMin": 520547.3,
+    "withinTwentyPct": 350468.3
+  }
+]

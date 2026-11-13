@@ -243,6 +243,29 @@ class TestReliabilityValidation:
         assert result.status_code == 200
 
 
+class TestExcessTripTimeValidation:
+    PARAMS = "start_date=2026-09-01&end_date=2026-09-30&agg=weekly"
+
+    def test_missing_line_returns_400(self, client):
+        result = client.http.get(f"/api/excess_trip_time?{self.PARAMS}")
+        assert result.status_code == 400
+
+    def test_line_without_data_returns_400(self, client):
+        result = client.http.get(f"/api/excess_trip_time?line=line-mattapan&{self.PARAMS}")
+        assert result.status_code == 400
+        assert "line-red" in json.loads(result.body)["Message"]
+
+    def test_invalid_agg_returns_400(self, client):
+        result = client.http.get(
+            "/api/excess_trip_time?line=line-red&start_date=2026-09-01&end_date=2026-09-30&agg=hourly"
+        )
+        assert result.status_code == 400
+
+    def test_valid_request_returns_200(self, client):
+        result = client.http.get(f"/api/excess_trip_time?line=line-red&{self.PARAMS}")
+        assert result.status_code == 200
+
+
 class TestCrScorecardValidation:
     PARAMS = "route_id=CR-Worcester&start_date=2024-01-01&end_date=2024-02-01"
 
@@ -377,6 +400,7 @@ class TestDateRangeValidation:
             "/api/bustripmetrics?route=1&agg=daily",
             "/api/ridership?line_id=line-Red",
             "/api/reliability?route_id=RIDE&agg=daily",
+            "/api/excess_trip_time?line=line-red&agg=daily",
             "/api/linedelays?line=Red&agg=weekly",
             "/api/scheduledservice?route_id=Red&agg=daily",
         ],

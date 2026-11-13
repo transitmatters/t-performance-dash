@@ -194,6 +194,12 @@
     "status": 403,
     "captured_at": "2026-10-14T19:12:24+00:00"
   },
+  "excess_trip_time/red_weekly": {
+    "url": "https://dashboard-api-beta.labs.transitmatters.org/api/excess_trip_time?line=line-red&start_date=2026-09-01&end_date=2026-09-30&agg=weekly",
+    "status": 200,
+    "captured_at": "2026-11-12T15:29:32+00:00",
+    "note": "Generated locally from the MBTA open data CSV through the branch's ingest and API code, before the ingest was deployed. Recapture with capture_api_samples."
+  },
   "facilities/alewife": {
     "url": "https://dashboard-api.labs.transitmatters.org/api/facilities?stop=place-alfcl",
     "status": 200,
