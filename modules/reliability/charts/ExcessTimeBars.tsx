@@ -1,10 +1,8 @@
 import { useRef } from 'react';
 import { Bar } from '@chartjs-components';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { LINE_COLORS } from '../../../common/constants/colors';
 import type { Line } from '../../../common/types/lines';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
@@ -12,8 +10,8 @@ import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import type { AggType } from '../../speed/constants/speeds';
-import type { EttRow } from '../excessTripTime';
-import { excessTravel, excessTripTime, excessWait, formatMinutes } from '../excessTripTime';
+import type { EttRow } from '../excessTripTimeUtils';
+import { excessTravel, excessTripTime, excessWait, formatMinutes } from '../excessTripTimeUtils';
 import { periodName, periodTimeScale, periodTitle } from './timeAxis';
 
 interface ExcessTimeBarsProps {
@@ -75,8 +73,6 @@ export const ExcessTimeBars = ({ rows, line, agg, startDate, endDate }: ExcessTi
             responsive: true,
             maintainAspectRatio: false,
             interaction: { intersect: false, mode: 'index' },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               legend: {
                 display: true,
@@ -136,7 +132,6 @@ export const ExcessTimeBars = ({ rows, line, agg, startDate, endDate }: ExcessTi
               x: periodTimeScale(agg, startDate, endDate, chartTheme),
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
       <div className="flex flex-row items-end justify-end gap-4">

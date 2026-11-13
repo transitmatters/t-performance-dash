@@ -16,7 +16,7 @@ import { TheRideReliability } from './TheRideReliability';
 import { CommuterRailReliability } from './CommuterRailReliability';
 import { HeadwayReliability } from './HeadwayReliability';
 import { ExcessTripTime } from './ExcessTripTime';
-import { hasExcessTripTime } from './excessTripTime';
+import { hasExcessTripTime } from './excessTripTimeUtils';
 
 // "commuter-rail" asks the API for every commuter rail route combined
 const ALL_COMMUTER_RAIL = 'commuter-rail';

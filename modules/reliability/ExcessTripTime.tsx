@@ -20,7 +20,7 @@ import {
   toEttRows,
   withinFiveShare,
   withinTwentyShare,
-} from './excessTripTime';
+} from './excessTripTimeUtils';
 import { formatCount, formatPercent, toPoints } from './utils';
 
 interface ExcessTripTimeProps {

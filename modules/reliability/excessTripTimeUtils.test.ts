@@ -14,7 +14,7 @@ import {
   toEttRows,
   withinFiveShare,
   withinTwentyShare,
-} from './excessTripTime';
+} from './excessTripTimeUtils';
 
 // 100 riders who waited 5 min (baseline 4) and rode 12 min (baseline 10.5); 90 within 5 min
 const sums = (scale = 1): ExcessTripTimeSums => ({
