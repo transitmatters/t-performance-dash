@@ -104,6 +104,8 @@ The frontend is a static Vite + React SPA using TanStack Router, Zustand, TanSta
 
 When adding a `/$line/...` page, also add its lines to `common/constants/staticRoutes.ts`, which drives 404s and the prerendered HTML. For links and URL state, use `common/components/general/Link` and the hooks in `common/utils/router.tsx`.
 
+Charts are drawn with Chart.js, imported from `@chartjs-components` and `@chartjs-utils`. The exceptions are the line maps, which use [`@transitmatters/stripmap`](https://github.com/transitmatters/stripmap), and the sparkline and context tracks, which are small hand-drawn SVGs. Give a chart its Copy link, PNG, CSV and Embed buttons with `ChartActions` (or wrap an SVG chart in `SvgChart`) rather than building its own row, and add its fallback PNG title to `common/utils/chartTitles.ts`. Every Chart.js chart gets the watermark from `watermarkPlugin`.
+
 Other useful commands:
 
 - `npm run get-data` fetches static data for local development (runs automatically with `npm start`)

@@ -5,7 +5,6 @@ import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import duration from 'dayjs/plugin/duration';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { Line } from '@chartjs-components';
 import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { DayDelayTotals } from '../../../common/types/dataPoints';
@@ -14,7 +13,6 @@ import { SUBWAY_LINES } from '../../../common/types/lines';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { getTimeUnitSlowzones, toChartDateBound } from '../../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { getFormattedTimeString } from '../../../common/utils/time';
@@ -174,8 +172,6 @@ export const TotalSlowTime = ({
                 display: true,
               },
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 intersect: false,
@@ -212,7 +208,6 @@ export const TotalSlowTime = ({
                 if (showTitle) drawSimpleTitle(`Total slow time`, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>

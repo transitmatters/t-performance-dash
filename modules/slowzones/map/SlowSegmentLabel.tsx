@@ -73,7 +73,15 @@ const SlowZoneLabel = ({
   const timeText = <tspan fontWeight={isBold ? 'bold' : undefined}>{timeString}</tspan>;
 
   return (
-    <text y={offset} x={containingWidth / 2} textAnchor="middle" fontSize={LABEL_HEIGHT}>
+    // currentColor is the card's text color, like the map's station names; SVG text with no fill
+    // is black whatever the theme
+    <text
+      y={offset}
+      x={containingWidth / 2}
+      textAnchor="middle"
+      fontSize={LABEL_HEIGHT}
+      fill="currentColor"
+    >
       {indicatorBeforeText ? <>{indicator} </> : null}
       {timeText}
       {!indicatorBeforeText ? <> {indicator}</> : null}

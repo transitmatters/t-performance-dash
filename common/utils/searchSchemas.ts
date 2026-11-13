@@ -69,6 +69,8 @@ const speedSearch = (search: RawSearch) => ({
 const serviceSearch = (search: RawSearch) => ({
   serviceScope: str(search.serviceScope),
   day: str(search.day),
+  /** Commuter Rail's longest-wait window: midday, or `evening`. */
+  wait: str(search.wait),
   /** What service delivered is a percentage of: the schedule, or `peak` for the historical maximum. */
   compare: str(search.compare),
 });
