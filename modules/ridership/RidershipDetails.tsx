@@ -2,7 +2,10 @@ import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData, useStationRidershipData } from '../../common/api/hooks/ridership';
-import { useRidershipBaseline } from '../../common/api/hooks/baselines';
+import {
+  useRidershipBaseline,
+  useSeasonalRidershipMaximums,
+} from '../../common/api/hooks/baselines';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
@@ -70,7 +73,10 @@ export function RidershipDetails() {
   const selectedStationName = selectedStationId && getStationById(selectedStationId)?.stop_name;
 
   const peakRidership = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
-  const stats = ridership.data ? getRidershipStats(ridership.data, peakRidership) : null;
+  const seasonal = useSeasonalRidershipMaximums(line, busRoute, crRoute, ferryRoute);
+  const stats = ridership.data
+    ? getRidershipStats(ridership.data, peakRidership, seasonal.maximumFor)
+    : null;
   const deltaFor = (delta: number, negligible: number) => {
     if (!Number.isFinite(delta)) return undefined;
     const sentiment: StatSentiment =
@@ -93,9 +99,16 @@ export function RidershipDetails() {
               delta={deltaFor(stats.averageDelta, 1)}
             />
             <StatCard
-              label="Of historical maximum"
+              label={
+                stats.seasonalPeak
+                  ? `Of the maximum for ${stats.seasonalPeak.season}`
+                  : 'Of historical maximum'
+              }
               value={
-                Number.isFinite(stats.percentage) ? `${Math.round(stats.percentage * 100)}%` : '—'
+                // Wait for the seasonal maximum rather than flash the all-time one
+                !seasonal.isPending && Number.isFinite(stats.percentage)
+                  ? `${Math.round(stats.percentage * 100)}%`
+                  : '—'
               }
             />
             <StatCard

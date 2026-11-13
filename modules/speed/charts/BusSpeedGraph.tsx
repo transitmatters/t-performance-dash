@@ -2,12 +2,9 @@ import { useMemo, useRef } from 'react';
 import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
-import { watermarkLayout } from '../../../common/constants/charts';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import type { DeliveredTripMetricsBus } from '../../../common/types/dataPoints';
 import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme';
@@ -99,8 +96,6 @@ export const BusSpeedGraph = ({
             responsive: true,
             maintainAspectRatio: false,
             interaction: { intersect: false, mode: 'index' },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               // The HTML legend below the chart replaces this one.
               legend: { display: false },
@@ -164,27 +159,18 @@ export const BusSpeedGraph = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <BusSpeedBandLegend visible={visible} colors={colors} onChange={onVisibleChange} />
-        <div className="flex shrink-0 flex-row items-end justify-end gap-4">
-          <SaveChartImageButton
-            chartRef={ref}
-            datasetName="speed"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
-          <DownloadButton
-            data={csvData}
-            datasetName="speed"
-            includeBothStopsForLocation={false}
-            startDate={startDate}
-            endDate={endDate}
-          />
-        </div>
+        <ChartActions
+          datasetName="speed"
+          chartRef={ref}
+          csv={csvData}
+          startDate={startDate}
+          endDate={endDate}
+          className="shrink-0"
+        />
       </div>
     </ChartStack>
   );

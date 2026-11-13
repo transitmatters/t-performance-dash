@@ -2,13 +2,11 @@
 
 import datetime
 from chalicelib import data_funcs, s3
+from chalicelib.date_utils import SERVICE_DAY_START
 import pandas as pd
 from pandas.core.groupby.generic import DataFrameGroupBy
 import numpy as np
 from pandas.tseries.holiday import USFederalHolidayCalendar
-
-# This matches the cutoff used in MbtaPerformanceApi.py
-SERVICE_HR_OFFSET = datetime.timedelta(hours=3, minutes=30)
 
 
 def add_holidays(
@@ -142,7 +140,7 @@ def aggregate_traveltime_data(start_date: datetime.date, end_date: datetime.date
     df["dep_time"] = df["dep_dt"].dt.time
 
     # label service date
-    service_date = df["dep_dt"] - SERVICE_HR_OFFSET
+    service_date = df["dep_dt"] - SERVICE_DAY_START
     df["service_date"] = service_date.dt.date
     df["weekday"] = service_date.dt.dayofweek
     df = train_peak_status(df)
@@ -166,7 +164,7 @@ def calc_travel_times_by_time(df: pd.DataFrame, min_count: int = DEFAULT_MIN_COU
     """
     # convert time of day to a consistent datetime relative to epoch
     timedeltas = pd.to_timedelta(df["dep_time"].astype(str))
-    timedeltas.loc[timedeltas < SERVICE_HR_OFFSET] += datetime.timedelta(days=1)
+    timedeltas.loc[timedeltas < SERVICE_DAY_START] += datetime.timedelta(days=1)
     df["dep_time_from_epoch"] = timedeltas + datetime.datetime(1970, 1, 1)
 
     stats = faster_describe(
@@ -288,7 +286,7 @@ def headways_over_time(start_date: datetime.date, end_date: datetime.date, stops
     df["dep_time"] = df["dep_dt"].dt.time
 
     # label service date
-    service_date = df["dep_dt"] - SERVICE_HR_OFFSET
+    service_date = df["dep_dt"] - SERVICE_DAY_START
     df["service_date"] = service_date.dt.date
     df["weekday"] = service_date.dt.dayofweek
     df = train_peak_status(df)
@@ -362,7 +360,7 @@ def dwells_over_time(start_date: str | datetime.date, end_date: str | datetime.d
     df["dep_time"] = df["dep_dt"].dt.time
 
     # label service date
-    service_date = df["dep_dt"] - SERVICE_HR_OFFSET
+    service_date = df["dep_dt"] - SERVICE_DAY_START
     df["service_date"] = service_date.dt.date
     df["weekday"] = service_date.dt.dayofweek
     df = train_peak_status(df)

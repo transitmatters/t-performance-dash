@@ -1,14 +1,11 @@
 import { Bar } from '@chartjs-components';
 import { useMemo, useRef } from 'react';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import type { Location } from '../../../common/types/charts';
 import type { Line } from '../../../common/types/lines';
 import { hexWithAlpha } from '../../../common/utils/general';
@@ -106,8 +103,6 @@ export const TravelTimesByVehicleChart = ({
             responsive: true,
             maintainAspectRatio: false,
             interaction: { mode: 'index', intersect: false },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               legend: {
                 display: showLegend,
@@ -178,27 +173,17 @@ export const TravelTimesByVehicleChart = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark]}
         />
       </ChartDiv>
-      <div className="flex flex-row justify-end">
-        <div className="-mr-2.5 flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
-          <SaveChartImageButton
-            chartRef={ref}
-            datasetName="traveltimes-by-vehicle"
-            location={location}
-            includeBothStopsForLocation={true}
-            startDate={date}
-          />
-          <DownloadButton
-            data={data}
-            datasetName={`traveltimes by ${noun}`}
-            location={location}
-            includeBothStopsForLocation={true}
-            startDate={date}
-          />
-        </div>
-      </div>
+      <ChartActions
+        datasetName="traveltimes-by-vehicle"
+        chartRef={ref}
+        location={location}
+        includeBothStopsForLocation
+        csv={data}
+        csvName={`traveltimes by ${noun}`}
+        startDate={date}
+      />
     </ChartStack>
   );
 };
