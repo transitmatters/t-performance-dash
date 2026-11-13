@@ -6,11 +6,11 @@ import type {
   RreScenarioError,
   RreSegment,
 } from '../../../common/types/regionalRailExplorer';
+import { formatClock } from '../../service/regionalRail/utils';
 import {
   compareTrips,
   dayKindForDate,
   describeDeparture,
-  formatClock,
   formatDuration,
   percentLess,
   summarizeTrip,

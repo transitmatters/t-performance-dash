@@ -13,7 +13,7 @@ interface ChartActionsProps {
   datasetName: ChartDatasetName;
   /** The Chart.js chart to save as a PNG. */
   chartRef?: RefObject<Chart | null>;
-  /** Or the element holding an SVG chart, such as a line map, to save instead. */
+  /** Or the element holding an SVG chart, such as a line map, to save instead. With neither, there's no PNG. */
   svgRef?: RefObject<HTMLElement | null>;
   /** The rows behind the chart, offered as a CSV. */
   csv?: ComponentProps<typeof DownloadButton>['data'];
