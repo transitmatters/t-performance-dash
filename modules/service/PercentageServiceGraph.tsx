@@ -1,4 +1,5 @@
 import { useMemo, useRef } from 'react';
+import type { ReactNode } from 'react';
 import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
@@ -16,6 +17,7 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { explainGaps, usePageShutdowns } from '../shutdowns';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
+import { ChartActions } from '../../common/components/charts/ChartActions';
 import {
   getMajorEventAnnotations,
   hideGapsExplainedByEvents,
@@ -32,6 +34,8 @@ interface PercentageServiceGraphProps {
   comparison: 'Historical Maximum' | 'Scheduled';
   showTitle?: boolean;
   fill?: boolean;
+  /** The chart's embed button, shown with its other actions. */
+  embed?: ReactNode;
 }
 
 export const PercentageServiceGraph = ({
@@ -43,6 +47,7 @@ export const PercentageServiceGraph = ({
   comparison,
   showTitle = false,
   fill = false,
+  embed,
 }: PercentageServiceGraphProps) => {
   const { line, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
@@ -238,5 +243,17 @@ export const PercentageServiceGraph = ({
     unit,
     tooltipFormat,
   ]);
-  return chart;
+  // Outside the memo: a new embed element each render would otherwise rebuild the chart.
+  return (
+    <>
+      {chart}
+      <ChartActions
+        datasetName="service-delivered"
+        chartRef={ref}
+        startDate={startDate}
+        endDate={endDate}
+        embed={embed}
+      />
+    </>
+  );
 };

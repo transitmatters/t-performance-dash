@@ -6,10 +6,7 @@ import { useDelimitatedRoute } from '../../../common/utils/router';
 import { useCrScorecard } from '../../../common/api/hooks/crScorecard';
 import { PageWrapper } from '../../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
-import { ByHourHistogram } from '../../../common/components/charts/ByHourHistogram';
-import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { DataNotes } from '../../../common/components/notices/DataNotes';
-import { Link } from '../../../common/components/general/Link';
 import { Widget } from '../../../common/components/widgets';
 import {
   StatCard,
@@ -17,11 +14,15 @@ import {
   type StatSentiment,
 } from '../../../common/components/widgets/StatCard';
 import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import {
+  REGIONAL_RAIL_EXPLORER_URL,
+  REGIONAL_RAIL_REPORTS_URL,
+} from '../../../common/constants/regionalRail';
 import { useCrServiceScope, useServiceDay } from '../../../common/hooks/usePageFilters';
 import type { DayKind } from '../../../common/types/dataPoints';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
-import { ScorecardGraph } from './ScorecardGraph';
+import { ScorecardByHour, ScorecardGraph } from './ScorecardGraph';
 import { ScorecardTable } from './ScorecardTable';
 import {
   DIRECTIONS,
@@ -38,8 +39,6 @@ import {
   waitTone,
 } from './utils';
 import type { Tone } from './utils';
-
-const REGIONAL_RAIL_URL = 'https://transitmatters.org/regional-rail';
 
 // "commuter-rail" asks the API for one summary per line
 const ALL_COMMUTER_RAIL = 'commuter-rail';
@@ -201,6 +200,7 @@ export function CommuterRailService() {
             >
               <ScorecardGraph
                 {...graphProps}
+                datasetName="cr-hours-at-target"
                 data={directionLines('hoursAtTarget')}
                 valueAxisLabel="Hours"
                 format={(v) => `${v.toFixed(1)} of ${SPAN_HOURS} hours`}
@@ -219,6 +219,7 @@ export function CommuterRailService() {
             >
               <ScorecardGraph
                 {...graphProps}
+                datasetName="cr-midday-wait"
                 data={directionLines('maxGapMidday')}
                 valueAxisLabel="Minutes"
                 format={formatMinutes}
@@ -232,6 +233,7 @@ export function CommuterRailService() {
             >
               <ScorecardGraph
                 {...graphProps}
+                datasetName="cr-evening-wait"
                 data={directionLines('maxGapEvening')}
                 valueAxisLabel="Minutes"
                 format={formatMinutes}
@@ -245,6 +247,7 @@ export function CommuterRailService() {
             >
               <ScorecardGraph
                 {...graphProps}
+                datasetName="cr-trains-per-day"
                 data={[
                   ...directionLines('trips', tripsData, bars),
                   {
@@ -262,9 +265,12 @@ export function CommuterRailService() {
               subtitle={`Average ${day} in this range · Regional Rail runs at least 2 an hour`}
               ready={ready}
             >
-              <ChartStack>
-                <ByHourHistogram data={hourly} valueAxis={HOURLY_AXIS} />
-              </ChartStack>
+              <ScorecardByHour
+                data={hourly}
+                valueAxis={HOURLY_AXIS}
+                startDate={startDate}
+                endDate={endDate}
+              />
             </Widget>
           </>
         ) : (
@@ -281,9 +287,13 @@ export function CommuterRailService() {
             Built from the MBTA&apos;s published schedules, not trains actually run.
             TransitMatters&apos; Regional Rail vision calls for a train at least every 30 minutes in
             both directions, from 5am to 1am, on a repeating hourly pattern riders can memorize.{' '}
-            <Link href={REGIONAL_RAIL_URL} rel="noopener noreferrer" target="_blank">
+            <a href={REGIONAL_RAIL_REPORTS_URL} rel="noopener" target="_blank">
               Read our Regional Rail reports
-            </Link>
+            </a>
+            , or{' '}
+            <a href={REGIONAL_RAIL_EXPLORER_URL} rel="noopener" target="_blank">
+              plan a trip on the Regional Rail Explorer
+            </a>
             .
           </p>
           <p>

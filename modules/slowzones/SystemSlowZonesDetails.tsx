@@ -9,7 +9,6 @@ import {
 } from '../../common/api/hooks/slowzones';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { Widget } from '../../common/components/widgets';
-import { ChartStack } from '../../common/components/charts/ChartStack';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { filterAllSlow, formatSegments } from '../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -21,7 +20,6 @@ import type { Direction } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import { LineSegments } from './charts/LineSegments';
-import { getLineSegmentsContainerStyle } from './constants/chartConfig';
 import { DirectionObject } from './constants/constants';
 import { SlowZonesMap } from './map';
 import type { SlowZonesLineName } from './types';
@@ -42,7 +40,6 @@ const LINE_OPTIONS: [SlowZonesLineName, string][] = [
 export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDetailsProps) {
   const delayTotals = useSlowzoneDelayTotalData();
   const allData = useSlowzoneAllData();
-  const isMobile = !useBreakpoint('sm');
   const { value: direction, control: directionControl } = useChartToggle(
     'northbound',
     DIRECTION_OPTIONS
@@ -71,8 +68,6 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
       return formatSegments(fitleredData, startDateUTC, direction);
     } else return [];
   }, [allData.data, endDateUTC, startDateUTC, direction]);
-
-  const stationPairs = new Set(graphData.map((dataPoint) => dataPoint.id));
 
   if (!endDateUTC || !startDateUTC) {
     return <p>Select a date range to load graphs.</p>;
@@ -129,20 +124,12 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           action={directionControl}
           ready={[allData]}
         >
-          <ChartStack>
-            {/* On mobile the strip scrolls sideways, so it bleeds to the card edge rather than
-                stopping at the padding. */}
-            <div className="-mx-3 overflow-x-auto overflow-y-hidden px-3 sm:mx-0 sm:px-0">
-              <div style={getLineSegmentsContainerStyle(stationPairs.size, isMobile)}>
-                <LineSegments
-                  data={graphData}
-                  startDateUTC={startDateUTC}
-                  endDateUTC={endDateUTC}
-                  direction={direction}
-                />
-              </div>
-            </div>
-          </ChartStack>
+          <LineSegments
+            data={graphData}
+            startDateUTC={startDateUTC}
+            endDateUTC={endDateUTC}
+            direction={direction}
+          />
         </Widget>
       </ChartPageDiv>
     </PageWrapper>

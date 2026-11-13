@@ -72,6 +72,10 @@ export const useIsNotFound = () =>
       matches.some((match) => match.status === 'notFound' || match._notFound === true),
   });
 
+/** True on an embed route (`staticData.embed`), which shows a chart on someone else's page. */
+export const useIsEmbed = () =>
+  useMatches({ select: (matches) => matches[matches.length - 1]?.staticData?.embed === true });
+
 /** The line, tab and page a pathname points at. Pure, so the router can use it before render. */
 export const parseRoutePath = (pathname: string) => {
   // Page detection expects Next's trailing-slash paths; a hand-typed `/red/speed` still has to work.

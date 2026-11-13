@@ -6,9 +6,8 @@ import { LINE_COLORS } from '../../../common/constants/colors';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import type { AggType } from '../../speed/constants/speeds';
 import type { HeadwayRow } from '../utils';
@@ -107,22 +106,14 @@ export const OnTimeBars = ({ rows, agg, startDate, endDate }: OnTimeBarsProps) =
           }}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        <SaveChartImageButton
-          chartRef={ref}
-          datasetName="reliability-on-time"
-          includeBothStopsForLocation={false}
-          startDate={startDate}
-          endDate={endDate}
-        />
-        <DownloadButton
-          data={toCsvRows(rows)}
-          datasetName="reliability-headways"
-          includeBothStopsForLocation={false}
-          startDate={startDate}
-          endDate={endDate}
-        />
-      </div>
+      <ChartActions
+        datasetName="reliability-on-time"
+        chartRef={ref}
+        csv={toCsvRows(rows)}
+        csvName="reliability-headways"
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

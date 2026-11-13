@@ -13,9 +13,8 @@ import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import {
   getNoDataSinceLatestAnnotation,
   getShuttlingBlockAnnotations,
@@ -198,26 +197,13 @@ export const FleetAgeChart = ({
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <>
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName={metric.datasetName}
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-            <DownloadButton
-              data={data}
-              datasetName={metric.datasetName}
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </>
-        )}
-      </div>
+      <ChartActions
+        datasetName={metric.datasetName}
+        chartRef={ref}
+        csv={data}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

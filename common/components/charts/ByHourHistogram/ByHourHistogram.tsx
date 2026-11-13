@@ -1,7 +1,8 @@
 import { useMemo, useRef, useCallback } from 'react';
+import type { RefObject } from 'react';
 import Color from 'color';
 
-import type { TooltipItem } from 'chart.js';
+import type { Chart, TooltipItem } from 'chart.js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -31,6 +32,8 @@ interface Props {
   compareDatasets?: boolean;
   /** Take the parent's height instead of a fixed one, as an embed does. */
   fill?: boolean;
+  /** Receives the Chart.js chart, for saving it as a PNG. */
+  chartRef?: RefObject<Chart<'bar'> | null>;
 }
 
 const allTimeLabels = ['AM', 'PM']
@@ -66,12 +69,14 @@ export const ByHourHistogram = (props: Props) => {
     datasetRoundTrips = false,
     compareDatasets = false,
     fill = false,
+    chartRef,
   } = props;
   const { data, timeLabels } = useMemo(
     () => toServiceDayWithoutEmptyHours(dataWithZeros),
     [dataWithZeros]
   );
-  const ref = useRef(null);
+  const ownRef = useRef(null);
+  const ref = chartRef ?? ownRef;
   const isMobile = !useBreakpoint('md');
 
   const hoverCard = useCallback(

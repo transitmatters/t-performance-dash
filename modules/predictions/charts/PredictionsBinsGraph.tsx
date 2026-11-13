@@ -12,6 +12,7 @@ import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
@@ -245,6 +246,12 @@ export const PredictionsBinsGraph = ({
           ]}
         />
       </ChartDiv>
+      <ChartActions
+        datasetName="predictions-bins"
+        chartRef={ref}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };
