@@ -49,23 +49,21 @@ export const HeadwayReliability = ({
 
   return (
     <>
+      {/* The range's totals, then how the off-schedule ones moved from period to period */}
       {card(
         'How reliable was service',
-        `A headway is the gap between one ${vehicle} and the next. Each is compared with the scheduled headway at that time: on time is within 25% of it (with a ${vehicle} every 8 minutes, a gap of 6 to 10 minutes), bunched is half of it or less, and a long gap is half again as long or more.`,
+        `A headway is the gap between one ${vehicle} and the next. Each is compared with the scheduled headway at that time: on time is within 25% of it (with a ${vehicle} every 8 minutes, a gap of 6 to 10 minutes), bunched is half of it or less, and a long gap is half again as long or more. Long gaps mean longer waits. Bunching often follows them, as the next ${vehicle} catches up to the late one, so the two tend to rise together.`,
         'Every headway in these dates, compared with the scheduled headway',
-        <HeadwayBreakdown counts={getHeadwayTotals(rows)} />
+        <div className="flex flex-col gap-6">
+          <HeadwayBreakdown counts={getHeadwayTotals(rows)} />
+          <OffScheduleDivergingBars {...chartProps} />
+        </div>
       )}
       {card(
         'On time over time',
         `The share of headways within 25% of the scheduled headway. This is the measure the home page judges each line on.`,
         `Share of headways on time, per ${period}`,
         <OnTimeBars {...chartProps} />
-      )}
-      {card(
-        'Bunching or long gaps',
-        `Long gaps mean longer waits. Bunching often follows them, as the next ${vehicle} catches up to the late one, so the two tend to rise together.`,
-        `Each ${period}: headways longer than scheduled above the line, shorter (bunching) below it`,
-        <OffScheduleDivergingBars {...chartProps} />
       )}
     </>
   );
