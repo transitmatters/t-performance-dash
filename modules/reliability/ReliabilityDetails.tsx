@@ -90,10 +90,6 @@ export function ReliabilityDetails() {
                 every station divided by all of them, added up over the period rather than averaged
                 from daily percentages. On time is the measure the home page judges each line on.
               </p>
-              <p>
-                Before 2025, the MBTA&apos;s monthly archives compare Green Line trunk stations with
-                a single branch&apos;s schedule, so those weeks show more bunching than riders saw.
-              </p>
             </>
           ) : isBus ? (
             <>
