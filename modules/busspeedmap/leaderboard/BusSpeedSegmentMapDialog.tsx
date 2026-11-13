@@ -2,7 +2,10 @@
 import { useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { BusSpeedDataUnavailableError } from '../../../common/api/busSpeedSegments';
-import { useBusSpeedSegmentsUrl } from '../../../common/api/hooks/busSpeedSegments';
+import {
+  useBusDwellsUrl,
+  useBusSpeedSegmentsUrl,
+} from '../../../common/api/hooks/busSpeedSegments';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { ErrorNotice } from '../../../common/components/notices/ErrorNotice';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
@@ -15,7 +18,7 @@ import {
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
 import { BusSpeedMapViewLazy } from '../map/BusSpeedMapViewLazy';
 import type { BusSpeedSegmentLeaderboardEntry, DayType, Period, TimeBand } from '../types';
-import { segmentDistanceAndTime } from '../utils';
+import { formatSegmentSpeed, segmentDistanceAndTime } from '../utils';
 
 interface BusSpeedSegmentMapDialogProps {
   entry: BusSpeedSegmentLeaderboardEntry | undefined;
@@ -45,6 +48,7 @@ export const BusSpeedSegmentMapDialog = ({
   if (entry && entry !== lastEntry) setLastEntry(entry);
 
   const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, open && Boolean(date));
+  const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand }, open && Boolean(date));
 
   const renderMap = () => {
     if (!lastEntry) return null;
@@ -65,6 +69,7 @@ export const BusSpeedSegmentMapDialog = ({
       <ErrorBoundary fallbackRender={() => <ErrorNotice />}>
         <BusSpeedMapViewLazy
           pmtilesUrl={segments.data}
+          dwellsUrl={dwellsUrl ?? undefined}
           period={period}
           dayType={dayType}
           timeBand={timeBand}
@@ -95,9 +100,7 @@ export const BusSpeedSegmentMapDialog = ({
             </DialogHeader>
             <div className="h-72 w-full overflow-hidden rounded-lg sm:h-96">{renderMap()}</div>
             <p className="text-sm text-stone-600">
-              <span className="font-semibold text-stone-900">
-                {lastEntry.p50_speed_mph.toFixed(1)} mph
-              </span>{' '}
+              <span className="font-semibold text-stone-900">{formatSegmentSpeed(lastEntry)}</span>{' '}
               {segmentDistanceAndTime(lastEntry) && `· ${segmentDistanceAndTime(lastEntry)} `}·
               Median of {lastEntry.n_traversals} trips
               {lastEntry.n_interpolated > 0 &&

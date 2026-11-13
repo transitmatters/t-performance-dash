@@ -33,6 +33,7 @@ VALID_LINES = [
     "CR-Needham",
     "CR-Newburyport",
     "CR-Providence",
+    "CR-CapeFlyer",
 ]
 
 # Config map for daily vs weekly delay queries

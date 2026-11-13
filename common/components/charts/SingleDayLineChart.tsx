@@ -3,7 +3,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { useMemo, useRef } from 'react';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import type { DataPoint } from '../../types/dataPoints';
 import type { SingleDayLineProps } from '../../types/charts';
 import {
@@ -14,12 +13,8 @@ import {
   temperatureGradient,
 } from '../../../modules/weather/utils/temperatureDataset';
 import { prettyDate } from '../../utils/date';
-import { DownloadButton } from '../buttons/DownloadButton';
-import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
-import { CopyLinkButton } from '../buttons/CopyLinkButton';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-import { watermarkLayout } from '../../constants/charts';
 import {
   BUNCHED_RATIO,
   SEVERITY_COLORS,
@@ -34,6 +29,7 @@ import type { HoverCardContent } from './hoverCard/types';
 import { LegendSingleDay } from './Legend';
 import { ChartDiv } from './ChartDiv';
 import { ChartStack } from './ChartStack';
+import { ChartActions } from './ChartActions';
 import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
 import { singleDayAxisBounds } from './contextTrack/segments';
@@ -210,8 +206,6 @@ export const SingleDayLineChart = ({
           options={{
             responsive: true,
             maintainAspectRatio: false,
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -382,7 +376,7 @@ export const SingleDayLineChart = ({
               },
             },
           }}
-          plugins={[ChartjsPluginWatermark, geometryPlugin]}
+          plugins={[geometryPlugin]}
         />
       </ChartDiv>
       <ContextTrack layers={layers} chartRef={ref} />
@@ -393,27 +387,17 @@ export const SingleDayLineChart = ({
           ) : (
             <div className="w-full" />
           )}
-          {date && !fill && (
-            <div className="-mr-2.5 ml-auto flex shrink-0 flex-row items-center gap-x-0.5 whitespace-nowrap">
-              <CopyLinkButton />
-              <SaveChartImageButton
-                chartRef={ref}
-                datasetName={fname}
-                location={location}
-                includeBothStopsForLocation={includeBothStopsForLocation}
-                startDate={date}
-                chartTitle={chartTitle}
-              />
-              <DownloadButton
-                data={data}
-                datasetName={fname}
-                location={location}
-                includeBothStopsForLocation={includeBothStopsForLocation}
-                startDate={date}
-              />
-              {embedChart && <TripEmbedButton page="single" chart={embedChart} />}
-            </div>
-          )}
+          <ChartActions
+            datasetName={fname}
+            chartRef={ref}
+            location={location}
+            includeBothStopsForLocation={includeBothStopsForLocation}
+            csv={data}
+            startDate={date}
+            chartTitle={chartTitle}
+            embed={embedChart && <TripEmbedButton page="single" chart={embedChart} />}
+            className="ml-auto shrink-0 whitespace-nowrap"
+          />
         </div>
       </div>
     </ChartStack>

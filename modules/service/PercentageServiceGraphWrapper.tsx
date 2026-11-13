@@ -17,7 +17,7 @@ interface PercentageServiceGraphWrapperProps {
   startDate: string;
   endDate: string;
   comparison: ServiceComparison;
-  /** Fill the parent's height and leave out the Embed button, as an embed does. */
+  /** Fill the parent's height, as an embed does. */
   fill?: boolean;
 }
 
@@ -53,12 +53,8 @@ export const PercentageServiceGraphWrapper = ({
         endDate={endDate}
         comparison={SERVICE_COMPARISON_LABELS[comparison]}
         fill={fill}
+        embed={<ServiceEmbedButton chart="delivered" />}
       />
-      {!fill && (
-        <div className="flex flex-row items-end justify-end gap-4">
-          <ServiceEmbedButton chart="delivered" />
-        </div>
-      )}
     </ChartStack>
   );
 };

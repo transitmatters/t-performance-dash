@@ -157,7 +157,8 @@ def _rearrived_quickly(departure, arrival):
 def headways(stop_ids: list, start_date: date, end_date: date, single_day=False):
     """Calculate headways from consecutive departure events.
 
-    Computes the time between consecutive departures at a stop. Skips
+    Computes the time between consecutive departures at a stop on the same
+    service date, so each day's first departure has no headway. Skips
     duplicate departures from the same trip and filters out headways
     exceeding 120 minutes (except for commuter rail).
 
@@ -178,6 +179,10 @@ def headways(stop_ids: list, start_date: date, end_date: date, single_day=False)
 
     headways = []
     for prev, this in pairwise(only_departures):
+        if this["service_date"] != prev["service_date"]:
+            # The gap since the previous night's last departure isn't a headway. The 120-minute cutoff
+            # below misses it for Commuter Rail, which is exempt, and for buses that run until 2 AM.
+            continue
         if this["trip_id"] == prev["trip_id"] != "":
             # in rare cases, same train can arrive and depart twice
             # Here, we should skip the headway

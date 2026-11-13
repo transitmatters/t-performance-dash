@@ -1,8 +1,8 @@
 import { useMemo, useRef, useCallback } from 'react';
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
+import type { RefObject } from 'react';
 import Color from 'color';
 
-import type { TooltipItem } from 'chart.js';
+import type { Chart, TooltipItem } from 'chart.js';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +13,6 @@ import {
 } from '@chartjs-utils';
 import { Bar as BarChart } from '@chartjs-components';
 import { useBreakpoint } from '../../../hooks/useBreakpoint';
-import { watermarkLayout } from '../../../constants/charts';
 import { getFormattedTimeString } from '../../../utils/time';
 import { SERVICE_DAY_START_HOUR } from '../../../constants/time';
 import type { HoverCardContent } from '../hoverCard/types';
@@ -33,6 +32,8 @@ interface Props {
   compareDatasets?: boolean;
   /** Take the parent's height instead of a fixed one, as an embed does. */
   fill?: boolean;
+  /** Receives the Chart.js chart, for saving it as a PNG. */
+  chartRef?: RefObject<Chart<'bar'> | null>;
 }
 
 const allTimeLabels = ['AM', 'PM']
@@ -68,12 +69,14 @@ export const ByHourHistogram = (props: Props) => {
     datasetRoundTrips = false,
     compareDatasets = false,
     fill = false,
+    chartRef,
   } = props;
   const { data, timeLabels } = useMemo(
     () => toServiceDayWithoutEmptyHours(dataWithZeros),
     [dataWithZeros]
   );
-  const ref = useRef(null);
+  const ownRef = useRef(null);
+  const ref = chartRef ?? ownRef;
   const isMobile = !useBreakpoint('md');
 
   const hoverCard = useCallback(
@@ -155,7 +158,6 @@ export const ByHourHistogram = (props: Props) => {
       },
       responsive: true,
       maintainAspectRatio: false,
-      watermark: watermarkLayout(isMobile),
       plugins: {
         legend: {
           display: true,
@@ -167,17 +169,11 @@ export const ByHourHistogram = (props: Props) => {
         },
       },
     };
-  }, [valueAxis.title, isMobile, hoverCard]);
+  }, [valueAxis.title, hoverCard]);
 
   return (
     <ChartDiv isMobile={isMobile} fill={fill}>
-      <BarChart
-        redraw
-        ref={ref}
-        data={chartData}
-        options={chartOptions}
-        plugins={[ChartjsPluginWatermark]}
-      />
+      <BarChart redraw ref={ref} data={chartData} options={chartOptions} />
     </ChartDiv>
   );
 };

@@ -1,4 +1,5 @@
 import type { WatermarkOptions } from '@transitmatters/stripmap';
+import { WATERMARK, watermarkSize } from '../constants/charts';
 
 export const abbreviateStationName = ({ stationName }: { stationName: string }) => {
   if (stationName.startsWith('JFK')) {
@@ -18,12 +19,13 @@ export const abbreviateStationName = ({ stationName }: { stationName: string }) 
 export const getStripMapWatermark = (isHorizontal: boolean, isDark: boolean): WatermarkOptions => ({
   // Vertical maps end at a terminal label in the bottom-right corner
   position: isHorizontal ? 'bottom-right' : 'bottom-left',
-  opacity: 0.2,
+  opacity: WATERMARK.opacity,
   content: (
     <img
-      src={isDark ? '/Logo_wordmark_white.png' : '/Logo_wordmark.png'}
+      src={WATERMARK.src[isDark ? 'dark' : 'light']}
       alt="TransitMatters"
-      width={isHorizontal ? 160 : 120}
+      // Vertical maps are the narrow, phone layout
+      width={watermarkSize(!isHorizontal).width}
     />
   ),
 });
