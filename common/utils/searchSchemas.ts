@@ -69,6 +69,8 @@ const speedSearch = (search: RawSearch) => ({
 const serviceSearch = (search: RawSearch) => ({
   serviceScope: str(search.serviceScope),
   day: str(search.day),
+  /** Commuter Rail's longest-wait window: midday, or `evening`. */
+  wait: str(search.wait),
   /** What service delivered is a percentage of: the schedule, or `peak` for the historical maximum. */
   compare: str(search.compare),
 });
@@ -94,8 +96,6 @@ const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[
 
 const overviewSearch = (search: RawSearch) => ({
   view: oneOf(OVERVIEW_VIEWS)(search.view),
-  /** `?redesign=0` opts a Subway overview back into the classic page. */
-  redesign: oneOf(['0'])(search.redesign),
 });
 
 export const validateLineSearch = (search: RawSearch) => ({

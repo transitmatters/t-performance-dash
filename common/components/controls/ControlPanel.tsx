@@ -1,81 +1,48 @@
-import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
-import type { DateStoreSection } from '../../constants/pages';
+import { usePageControls } from '../../hooks/usePageControls';
+import { DateSelection } from '../inputs/DateSelection/DateSelection';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
-import { DateControl } from './DateControl';
+import { DisplayMenu } from './DisplayMenu';
+import { PageFilters } from './PageFilters';
 import { RouteSelector } from './RouteSelector';
 import { TripModeToggle } from './TripModeToggle';
 
-interface ControlPanelProps {
-  dateStoreSection: DateStoreSection;
-  busRoute: BusRoute | undefined;
-  crRoute: CommuterRailRoute | undefined;
-  line: Line | undefined;
-  ferryRoute: FerryRoute | undefined;
-  hasStationStore?: boolean;
-  hasRouteSelector?: boolean;
-}
-
-const isTripsSection = (dateStoreSection: DateStoreSection) =>
-  dateStoreSection === 'singleTrips' || dateStoreSection === 'multiTrips';
-
-const hasDateControl = (dateStoreSection: DateStoreSection) =>
-  isTripsSection(dateStoreSection) ||
-  dateStoreSection === 'line' ||
-  dateStoreSection === 'overview' ||
-  dateStoreSection === 'system';
-
-/** Route and date: the controls that sit on the title row. */
-export const PrimaryControls = ({
-  dateStoreSection,
-  line,
-  hasStationStore,
-  hasRouteSelector = true,
-}: ControlPanelProps) => {
-  if (!hasDateControl(dateStoreSection)) return null;
-  const queryType = dateStoreSection === 'singleTrips' ? 'single' : 'range';
+/** What the page is about, on the line-colored band: the route and the stops. */
+export const BandControls = () => {
+  const { line, busRoute, crRoute, ferryRoute, showRouteSelector, showTripControls } =
+    usePageControls();
   return (
-    <div className="flex shrink-0 flex-row flex-wrap items-center gap-x-2 gap-y-2 overflow-visible">
-      {hasRouteSelector && <RouteSelector />}
-      {/* The toggle switches between the two trips pages, so pages that merely borrow the
-          singleTrips section for date storage (like the bus speed map) shouldn't show it. */}
-      {isTripsSection(dateStoreSection) && hasStationStore && <TripModeToggle />}
-      {line || dateStoreSection === 'system' ? (
-        <DateControl dateStoreSection={dateStoreSection} queryType={queryType} />
-      ) : null}
+    <div className="flex min-w-0 flex-row flex-wrap items-center justify-end gap-2">
+      {showRouteSelector && <RouteSelector />}
+      {showTripControls && line && (
+        <StationSelectorWidget
+          line={line}
+          busRoute={busRoute}
+          crRoute={crRoute}
+          ferryRoute={ferryRoute}
+        />
+      )}
     </div>
   );
 };
 
-/** Origin and destination: their own row, since station names run long. */
-export const StationControls = ({
-  dateStoreSection,
-  line,
-  busRoute,
-  crRoute,
-  ferryRoute,
-  hasStationStore,
-}: ControlPanelProps) => {
-  // Pages can share the single-date section without being about a pair of stops — the bus
-  // speed map covers the whole network — so the picker follows the page's own hasStationStore
-  // rather than the section it stores dates under.
-  if (!isTripsSection(dateStoreSection) || !line || !hasStationStore) return null;
+/** When and how, on the neutral bar: dates, page-wide filters, and display options. */
+export const BarControls = () => {
+  const { queryType, showTripControls, showDateControl, showDisplayMenu } = usePageControls();
   return (
-    <div className="flex w-full flex-row items-center overflow-visible">
-      <StationSelectorWidget
-        line={line}
-        busRoute={busRoute}
-        crRoute={crRoute}
-        ferryRoute={ferryRoute}
-      />
-    </div>
-  );
-};
-
-export const ControlPanel = (props: ControlPanelProps) => {
-  return (
-    <div className="flex w-full shrink flex-col items-end justify-end gap-y-2 overflow-visible p-3 pl-0 text-stone-900 lg:max-w-2xl">
-      <PrimaryControls {...props} />
-      <StationControls {...props} />
+    <div className="flex flex-row flex-wrap items-center gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-5 py-2 text-stone-900 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-100">
+      {showTripControls && <TripModeToggle />}
+      {showDateControl && <DateSelection type={queryType} />}
+      {/* Filters and Display wrap as one, so Display is never left alone on a second row. */}
+      <div className="flex min-w-fit flex-1 flex-row items-center gap-x-3">
+        <div className="flex flex-row flex-wrap items-center gap-x-5 gap-y-2 empty:hidden">
+          <PageFilters />
+        </div>
+        {showDisplayMenu && (
+          <div className="ml-auto">
+            <DisplayMenu />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

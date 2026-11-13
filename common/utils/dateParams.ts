@@ -10,7 +10,7 @@ import { useDateStore } from '../state/dateStore';
 import { getDateStoreSection } from '../state/utils/dateStoreUtils';
 import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
-import { parseRoutePath, stripForeignRouteParams } from './router';
+import { parseRoutePath, stripForeignRouteParams, withDefaultRouteParam } from './router';
 import type { SearchObject } from './searchParams';
 import { stringifySearch } from './searchParams';
 
@@ -144,11 +144,11 @@ export const getDateRedirectHref = (pathname: string, search: SearchObject) => {
 
 /**
  * Where to send a URL whose query doesn't fit its page: a route param from another mode (the line
- * would render as that route), or missing or broken dates. Route params go first, since they set
- * the date bounds.
+ * would render as that route), a missing route on a bus, Commuter Rail or ferry page, or missing or
+ * broken dates. Route params go first, since they set the date bounds.
  */
 export const getCanonicalSearchHref = (pathname: string, search: SearchObject) => {
-  const stripped = stripForeignRouteParams(pathname, search);
+  const stripped = withDefaultRouteParam(pathname, stripForeignRouteParams(pathname, search));
   const dateHref = getDateRedirectHref(pathname, stripped);
   if (dateHref) return dateHref;
   return isEqual(stripped, search) ? undefined : `${pathname}${stringifySearch(stripped)}`;

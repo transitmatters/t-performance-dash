@@ -11,9 +11,8 @@ import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import { formatPercentChange, halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { getBusRouteIds } from '../../common/constants/lines';
-import { useChartToggle } from '../../common/hooks/useChartToggle';
+import { useFleetScope } from '../../common/hooks/usePageFilters';
 import { SelectedBusRouteScope } from '../../common/hooks/useChartBusRoute';
-import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { FleetAgeGraphWrapper } from './FleetAgeGraphWrapper';
 import { FleetShareGraphWrapper } from './FleetShareGraphWrapper';
@@ -38,20 +37,7 @@ export function FleetDetails() {
   const isCommuterRail = line === 'line-commuter-rail';
   const isRail = !isBus && !isCommuterRail;
   const selectedRoute = isBus ? busRoute : isCommuterRail ? crRoute : undefined;
-  const routeLabel = isBus
-    ? `Route ${busRoute}`
-    : (COMMUTER_RAIL_LINE_NAMES[crRoute!] ?? crRoute ?? '');
-  // Commuter Rail calls its routes lines, as on the Reliability page.
-  const allLabel = isCommuterRail ? 'All lines' : 'All routes';
-  // Follows the route picked in the header, like the other bus and CR pages.
-  const { value: scope, control: scopeControl } = useChartToggle(
-    'route',
-    [
-      ['route', routeLabel],
-      ['all', allLabel],
-    ],
-    { paramKey: 'fleetScope' }
-  );
+  const { value: scope, routeLabel, allLabel } = useFleetScope();
   const byRoute = scope === 'route' && Boolean(selectedRoute);
   const route = byRoute ? selectedRoute : SYSTEM_WIDE_ROUTE;
   const enabled = Boolean(startDate && endDate && line && config.agg);
@@ -128,7 +114,6 @@ export function FleetDetails() {
       {/* "All routes" charts aren't about the route picked in the header. */}
       <SelectedBusRouteScope shown={byRoute}>
         <ChartPageDiv>
-          {!isRail && selectedRoute && <div className="flex justify-end">{scopeControl}</div>}
           {stats && Number.isFinite(stats.age.value) && (
             <StatCardGrid>
               {shareStat && (

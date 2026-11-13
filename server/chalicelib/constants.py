@@ -2,6 +2,8 @@
 
 EVENT_ARRIVAL = ["ARR", "PRA"]
 EVENT_DEPARTURE = ["DEP", "PRD"]
+# Arrivals/departures the MBTA inferred rather than recorded, e.g. at short-turn terminals during diversions
+EVENT_PREDICTED = ["PRA", "PRD"]
 
 DATE_FORMAT_BACKEND = "%Y-%m-%d"
 

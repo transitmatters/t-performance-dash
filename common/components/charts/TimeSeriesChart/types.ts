@@ -2,7 +2,8 @@ import type { ChartDataset } from 'chart.js';
 import type { AggType } from '../../../../modules/speed/constants/speeds';
 import type { AnnotationTooltipContent } from '../annotationTooltip';
 
-export type DataPoint = ({ date: string } | { time: string }) & { value: number };
+/** `value` is null for a period with nothing measured, drawn as a gap so every series keeps one point per period. */
+export type DataPoint = ({ date: string } | { time: string }) & { value: number | null };
 
 type ResolvedFromDataPoint<
   Applied extends boolean,

@@ -14,3 +14,17 @@ class TestGetServiceHours:
         result = service_hours.get_service_hours("line-green", date(2026, 9, 1), date(2026, 9, 30), "daily")
 
         assert result == []
+
+    def test_mattapan_queries_its_one_route(self, monkeypatch):
+        queried = []
+
+        def fake_query(**kwargs):
+            queried.extend(kwargs["route_ids"])
+            return []
+
+        monkeypatch.setattr(service_hours, "get_scheduled_service_hours", lambda **kwargs: {})
+        monkeypatch.setattr(service_hours, "query_extended_trip_metrics", fake_query)
+
+        service_hours.get_service_hours("line-mattapan", date(2026, 9, 1), date(2026, 9, 30), "daily")
+
+        assert queried == ["line-mattapan"]

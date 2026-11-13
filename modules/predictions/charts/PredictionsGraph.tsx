@@ -4,7 +4,6 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import ChartjsPluginWatermark from 'chartjs-plugin-watermark';
 import { max, min } from 'date-fns';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -12,13 +11,11 @@ import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
-import { watermarkLayout } from '../../../common/constants/charts';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
+import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
-import { DownloadButton } from '../../../common/components/buttons/DownloadButton';
-import { SaveChartImageButton } from '../../../common/components/buttons/SaveChartImageButton';
 import { addAccuracyPercentageToData } from '../../../common/utils/csv';
 
 interface PredictionsGraphProps {
@@ -111,8 +108,6 @@ export const PredictionsGraph = ({
             interaction: {
               intersect: false,
             },
-            // @ts-expect-error The watermark plugin doesn't have typescript support
-            watermark: watermarkLayout(isMobile),
             plugins: {
               tooltip: {
                 mode: 'index',
@@ -200,30 +195,16 @@ export const PredictionsGraph = ({
                 if (showTitle) drawSimpleTitle(`Arrival Predictions`, chart);
               },
             },
-            ChartjsPluginWatermark,
           ]}
         />
       </ChartDiv>
-      <div className="flex flex-row items-end justify-end gap-4">
-        {startDate && (
-          <>
-            <SaveChartImageButton
-              chartRef={ref}
-              datasetName="predictions"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-            <DownloadButton
-              data={dataWithPercentage}
-              datasetName="predictions"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </>
-        )}
-      </div>
+      <ChartActions
+        datasetName="predictions"
+        chartRef={ref}
+        csv={dataWithPercentage}
+        startDate={startDate}
+        endDate={endDate}
+      />
     </ChartStack>
   );
 };

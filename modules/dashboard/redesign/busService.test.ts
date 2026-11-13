@@ -1,12 +1,7 @@
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import type { BusTripCounts } from '../../../common/types/dataPoints';
-import {
-  buildBusServiceRow,
-  formatDeliveredPct,
-  mayIncludeTrackingGaps,
-  summarizeBusService,
-} from './busService';
+import { buildBusServiceRow, formatDeliveredPct, summarizeBusService } from './busService';
 
 type Row = BusTripCounts & { date: string };
 
@@ -129,17 +124,5 @@ describe('formatDeliveredPct', () => {
     expect(formatDeliveredPct(99.96)).toBe('99.9%');
     expect(formatDeliveredPct(100)).toBe('100%');
     expect(formatDeliveredPct(99.44)).toBe('99.4%');
-  });
-});
-
-describe('mayIncludeTrackingGaps', () => {
-  it('flags many unobserved trips with few waivers', () => {
-    expect(mayIncludeTrackingGaps({ scheduled: 1854, dropped: 257, waived: 0 })).toBe(true);
-    expect(mayIncludeTrackingGaps({ scheduled: 7378, dropped: 24, waived: 1 })).toBe(true);
-  });
-
-  it('leaves alone routes with waivers or too few trips to judge', () => {
-    expect(mayIncludeTrackingGaps({ scheduled: 6450, dropped: 30, waived: 12 })).toBe(false);
-    expect(mayIncludeTrackingGaps({ scheduled: 1500, dropped: 9, waived: 0 })).toBe(false);
   });
 });

@@ -100,7 +100,7 @@ export const WidgetTitle = ({
             {action}
           </div>
         )}
-        {location && <LocationTitle location={location} both={both} />}
+        {location && <LocationTitle location={location} both={both} line={line} />}
       </div>
     </CardHeader>
   );

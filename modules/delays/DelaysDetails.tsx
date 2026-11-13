@@ -4,7 +4,6 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
-import { BranchSelector } from '../../common/components/inputs/BranchSelector';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Link } from '../../common/components/general/Link';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
@@ -25,13 +24,8 @@ export function DelaysDetails() {
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const { alertDelays, agg, period, isActual, delayData, series, greenBranch } = useDelays(
-    startDate,
-    endDate
-  );
-  const greenBranchToggle = line === 'line-green' && (
-    <BranchSelector routeId={greenBranch.routeId} setRouteId={greenBranch.setRouteId} />
-  );
+  const { alertDelays, agg, period, isActual, delayData, series, rangeData, rangeQueries } =
+    useDelays(startDate, endDate);
 
   const { focus, setFocus } = useFocusedReason();
   const { value: stackMode, control: stackModeControl } = useChartToggle(
@@ -47,7 +41,7 @@ export function DelaysDetails() {
   return (
     <PageWrapper pageTitle={'Delays'}>
       <ChartPageDiv>
-        {delayData && <DelayStats data={delayData} agg={agg} line={line} />}
+        {rangeData && <DelayStats data={rangeData} agg={agg} line={line} />}
         <Widget
           title="How much delay"
           subtitle={
@@ -56,7 +50,6 @@ export function DelaysDetails() {
               : `Minutes delayed per ${period}, from rider alerts`
           }
           ready={[alertDelays]}
-          action={greenBranchToggle}
         >
           <DelayTotalBars
             data={delayData ?? []}
@@ -69,7 +62,7 @@ export function DelaysDetails() {
         <Widget
           title="What caused it"
           subtitle="Total for these dates. Click a cause to see it in the chart above."
-          ready={[alertDelays]}
+          ready={rangeQueries}
           action={
             focus && (
               <button
@@ -83,7 +76,7 @@ export function DelaysDetails() {
           }
         >
           <DelayCauseBars
-            data={delayData ?? []}
+            data={rangeData ?? []}
             startDate={startDate}
             endDate={endDate}
             focus={focus}

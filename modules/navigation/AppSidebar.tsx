@@ -10,6 +10,7 @@ import {
   useSidebar,
 } from '../../common/components/ui/sidebar';
 import { isBetaHost } from '../../common/utils/constants';
+import { SidebarCommandTrigger } from '../commandPalette/CommandPaletteTrigger';
 import { NavLines } from './NavLines';
 import { NavSystem } from './NavSystem';
 import { ExtraMenuItems } from './ExtraMenuItems';
@@ -42,6 +43,7 @@ export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
         <SidebarTrigger className="hidden shrink-0 md:inline-flex" />
       </SidebarHeader>
       <SidebarContent>
+        <SidebarCommandTrigger />
         <NavSystem close={close} />
         <NavLines close={close} />
       </SidebarContent>

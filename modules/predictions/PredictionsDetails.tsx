@@ -1,6 +1,5 @@
 'use client';
 
-import { useState, useMemo } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Link } from '../../common/components/general/Link';
@@ -8,7 +7,6 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { usePredictionData } from '../../common/api/hooks/predictions';
-import type { LineRouteId } from '../../common/types/lines';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import {
@@ -18,7 +16,7 @@ import {
   statDelta,
 } from '../../common/utils/statDelta';
 import { DataNotes } from '../../common/components/notices/DataNotes';
-import { BranchSelector } from '../../common/components/inputs/BranchSelector';
+import { useGreenBranch } from '../../common/hooks/useGreenBranch';
 import { prettyDate } from '../../common/utils/date';
 import { getPredictionStats, lineToDefaultRouteId } from './utils/utils';
 import { PredictionsGraphWrapper } from './charts/PredictionsGraphWrapper';
@@ -31,20 +29,17 @@ export function PredictionsDetails() {
     line,
     query: { startDate, endDate },
   } = useDelimitatedRoute();
-  const enabled = Boolean(line);
-
-  const [greenRouteId, setGreenRouteId] = useState<LineRouteId>(lineToDefaultRouteId('line-green'));
-  const routeId = line === 'line-green' ? greenRouteId : lineToDefaultRouteId(line);
-
-  const greenBranchToggle = useMemo(() => {
-    return (
-      line === 'line-green' && <BranchSelector routeId={routeId} setRouteId={setGreenRouteId} />
-    );
-  }, [line, routeId]);
+  const greenBranch = useGreenBranch();
+  const routeId = line === 'line-green' ? greenBranch.routeId : lineToDefaultRouteId(line);
+  const enabled = Boolean(routeId);
 
   const predictions = usePredictionData(
     {
-      route_id: routeId,
+      // Only subway lines have a Predictions page, and each has a default route.
+      route_id: routeId!,
+      // Without these the stat cards cover all history, not the charted range.
+      start_date: startDate,
+      end_date: endDate,
     },
     enabled
   );
@@ -94,7 +89,6 @@ export function PredictionsDetails() {
           title="Arrival predictions"
           subtitle="Share of predictions that were accurate"
           ready={[predictions]}
-          action={greenBranchToggle}
         >
           <PredictionsGraphWrapper
             data={predictions.data!}
@@ -106,7 +100,6 @@ export function PredictionsDetails() {
           title="Arrival predictions by bin"
           subtitle="Accuracy by how far out the prediction was made"
           ready={[predictions]}
-          action={greenBranchToggle}
         >
           <PredictionsBinsGraphWrapper
             data={predictions.data!}

@@ -8,6 +8,7 @@ import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../common/utils/widgets';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
+import { DwellsTerminusNotice } from './DwellsTerminusNotice';
 
 interface DwellsAggregateWrapperProps {
   query: ChunkedAggregateQueryResult;
@@ -34,6 +35,8 @@ export const DwellsAggregateWrapper = ({
   }, [allData, dayFilter]);
 
   const comparisonData = useMemo(() => getComparisonData(allData, dayFilter), [allData, dayFilter]);
+
+  if (fromStation?.terminus) return <DwellsTerminusNotice />;
 
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;

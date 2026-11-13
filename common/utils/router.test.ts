@@ -10,6 +10,7 @@ import {
   parseRoutePath,
   stationScope,
   stripForeignRouteParams,
+  withDefaultRouteParam,
 } from './router';
 
 describe('getQueryParams stations', () => {
@@ -70,6 +71,30 @@ describe('stripForeignRouteParams', () => {
     expect(stripForeignRouteParams('/ferry/', { ferryRoute: 'Boat-F1' })).toEqual({
       ferryRoute: 'Boat-F1',
     });
+  });
+});
+
+describe('withDefaultRouteParam', () => {
+  it("fills in the mode's default route when the URL has none", () => {
+    expect(withDefaultRouteParam('/bus/ridership/', {})).toEqual({ busRoute: '1' });
+    expect(withDefaultRouteParam('/commuter-rail/delays/', { view: 'year' })).toEqual({
+      view: 'year',
+      crRoute: 'CR-Fairmount',
+    });
+    expect(withDefaultRouteParam('/ferry/ridership/', {})).toEqual({ ferryRoute: 'Boat-F6' });
+    expect(withDefaultRouteParam('/embed/commuter-rail/delays/total/', {})).toEqual({
+      crRoute: 'CR-Fairmount',
+    });
+  });
+
+  it('keeps a route that is already there', () => {
+    expect(withDefaultRouteParam('/bus/speed/', { busRoute: '22' })).toEqual({ busRoute: '22' });
+  });
+
+  it('leaves the leaderboard and subway pages without one', () => {
+    expect(withDefaultRouteParam('/bus/leaderboard/', {})).toEqual({});
+    expect(withDefaultRouteParam('/red/ridership/', {})).toEqual({});
+    expect(withDefaultRouteParam('/system/ridership/', {})).toEqual({});
   });
 });
 

@@ -1,7 +1,11 @@
 import { useMemo, useState } from 'react';
+import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useRidershipData, useStationRidershipData } from '../../common/api/hooks/ridership';
-import { useRidershipBaseline } from '../../common/api/hooks/baselines';
+import {
+  useRidershipBaseline,
+  useSeasonalRidershipMaximums,
+} from '../../common/api/hooks/baselines';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
@@ -11,6 +15,7 @@ import {
   type StatSentiment,
 } from '../../common/components/widgets/StatCard';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
+import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
 import { getRidershipLineId } from '../../common/utils/ridership';
 import { getStationById } from '../../common/utils/stations';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -68,7 +73,10 @@ export function RidershipDetails() {
   const selectedStationName = selectedStationId && getStationById(selectedStationId)?.stop_name;
 
   const peakRidership = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
-  const stats = ridership.data ? getRidershipStats(ridership.data, peakRidership) : null;
+  const seasonal = useSeasonalRidershipMaximums(line, busRoute, crRoute, ferryRoute);
+  const stats = ridership.data
+    ? getRidershipStats(ridership.data, peakRidership, seasonal.maximumFor)
+    : null;
   const deltaFor = (delta: number, negligible: number) => {
     if (!Number.isFinite(delta)) return undefined;
     const sentiment: StatSentiment =
@@ -91,14 +99,24 @@ export function RidershipDetails() {
               delta={deltaFor(stats.averageDelta, 1)}
             />
             <StatCard
-              label="Of historical maximum"
+              label={
+                stats.seasonalPeak
+                  ? `Of the maximum for ${stats.seasonalPeak.season}`
+                  : 'Of historical maximum'
+              }
               value={
-                Number.isFinite(stats.percentage) ? `${Math.round(stats.percentage * 100)}%` : '—'
+                // Wait for the seasonal maximum rather than flash the all-time one
+                !seasonal.isPending && Number.isFinite(stats.percentage)
+                  ? `${Math.round(stats.percentage * 100)}%`
+                  : '—'
               }
             />
             <StatCard
               label={
-                stats.peakDate ? `Peak day · ${config.getWidgetTitle(stats.peakDate)}` : 'Peak day'
+                // Each point is a week's average weekday ridership, so the peak is a week, not a day.
+                stats.peakDate
+                  ? `Peak week · ${dayjs(stats.peakDate).format(PRETTY_DATE_FORMAT)}`
+                  : 'Peak week'
               }
               value={
                 stats.peakCount != null
@@ -130,10 +148,8 @@ export function RidershipDetails() {
             config={config}
             startDate={startDate!}
             endDate={endDate!}
-            line={line}
             busRoute={busRoute}
             crRoute={crRoute}
-            ferryRoute={ferryRoute}
           />
         </Widget>
         {hasStationMap && (

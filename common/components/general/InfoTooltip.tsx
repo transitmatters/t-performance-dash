@@ -20,3 +20,11 @@ export const InfoTooltip = ({ info, className }: InfoTooltipProps) => {
     </Tooltip>
   );
 };
+
+/** A card title with an info pill beside it. */
+export const TitleWithInfo = ({ title, info }: { title: string; info: string }) => (
+  <span className="inline-flex items-center gap-2">
+    {title}
+    <InfoTooltip info={info} className="leading-none text-muted-foreground" />
+  </span>
+);

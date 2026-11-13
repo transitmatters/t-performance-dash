@@ -3,6 +3,8 @@ import { station_distances } from '../constants/station_distances';
 
 const stationDistanceIndex: Record<string, Distance> = station_distances;
 
-export const getStationDistance = (fromStationId: string, toStationId: string) => {
-  return stationDistanceIndex[fromStationId][toStationId];
-};
+// Undefined for stations with no stored distance, such as bus stops.
+export const getStationDistance = (
+  fromStationId: string,
+  toStationId: string
+): number | undefined => stationDistanceIndex[fromStationId]?.[toStationId];

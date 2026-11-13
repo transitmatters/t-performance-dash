@@ -2,6 +2,7 @@ import { useTripExplorerQueries } from '../../common/api/datadashboard';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import {
@@ -18,6 +19,7 @@ import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
 import { WidgetTitle } from '../../common/components/widgets';
+import { RegionalRailPreview } from './regionalRail/RegionalRailPreview';
 
 interface CommuterRailTripGraphsProps {
   fromStation: Station;
@@ -62,7 +64,9 @@ export const CommuterRailTripGraphs = ({
     parameters,
     // @ts-expect-error The overloading doesn't seem to handle this const
     aggregate,
-    enabled
+    enabled,
+    undefined,
+    fromStation?.terminus ? [QueryNameKeys.dwells] : []
   );
   const location = getLocationDetails(fromStation, toStation);
 
@@ -135,6 +139,7 @@ export const CommuterRailTripGraphs = ({
               peakTime={peakTime === 'weekday'}
             />
           </WidgetDiv>
+          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
         </>
       ) : (
         <>
@@ -175,6 +180,7 @@ export const CommuterRailTripGraphs = ({
             />
             <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
           </WidgetDiv>
+          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
         </>
       )}
     </>

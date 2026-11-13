@@ -6,6 +6,7 @@ import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
 import type { LineShort } from '../../../common/types/lines';
 import { useSubwayScorecardRows } from './scorecardRows';
 import { useBusScorecardRows, BusMetricChart } from './busOverview';
+import { hasBusReliability } from './busReliability';
 import { useCrScorecardRows, CrMetricChart } from './crOverview';
 import { MetricsScorecard } from './MetricsScorecard';
 import { MetricChartCard } from './MetricChartCard';
@@ -72,15 +73,19 @@ const BusOverview = () => {
   const busRoute = query.busRoute ?? '1';
   const { rows, isLoading } = useBusScorecardRows(busRoute);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('speed');
+  const showsReliability = hasBusReliability(busRoute);
+  // The page stays mounted when switching routes, so a route without the Reliability row falls back
+  // to Speed rather than charting nothing.
+  const metric = selectedMetric === 'reliability' && !showsReliability ? 'speed' : selectedMetric;
 
   return (
     <OverviewLayout
       rows={rows}
       isLoading={isLoading}
-      skeletonRows={4}
-      selectedMetric={selectedMetric}
+      skeletonRows={showsReliability ? 5 : 4}
+      selectedMetric={metric}
       onSelectMetric={setSelectedMetric}
-      chart={<BusMetricChart metric={selectedMetric} busRoute={busRoute} />}
+      chart={<BusMetricChart metric={metric} busRoute={busRoute} />}
       chartCopy={BUS_CHART_COPY}
       cards={<ServiceAlertsCard lineShort="Bus" busRoute={busRoute} label={`Route ${busRoute}`} />}
     />
@@ -113,12 +118,14 @@ const CommuterRailOverview = () => {
 };
 
 /** Design-doc option 2b: verdict + scorecard + one chart, replacing the 4-card grid.
- * Each mode picks its own scorecard rows and charts; the layout is shared. */
+ * Each mode picks its own scorecard rows and charts; the layout is shared. Each is keyed by its
+ * line or route so the picked metric starts over on a switch: Slow zones picked on Red would
+ * otherwise stay charted on Mattapan, whose scorecard has no such row. */
 export const OverviewRedesign = () => {
-  const { tab, lineShort } = useDelimitatedRoute();
+  const { tab, lineShort, query } = useDelimitatedRoute();
 
-  if (tab === 'Bus') return <BusOverview />;
-  if (tab === 'Commuter Rail') return <CommuterRailOverview />;
+  if (tab === 'Bus') return <BusOverview key={query.busRoute} />;
+  if (tab === 'Commuter Rail') return <CommuterRailOverview key={query.crRoute} />;
   if (tab !== 'Subway' || !lineShort) return null;
-  return <SubwayOverview lineShort={lineShort} />;
+  return <SubwayOverview key={lineShort} lineShort={lineShort} />;
 };

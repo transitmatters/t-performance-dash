@@ -8,17 +8,16 @@ interface BranchSelectorProps {
 }
 
 enum GreenLineBranchOptions {
-  'Green-B' = 'B Branch',
-  'Green-C' = 'C Branch',
-  'Green-D' = 'D Branch',
-  'Green-E' = 'E Branch',
+  'Green-B' = 'B',
+  'Green-C' = 'C',
+  'Green-D' = 'D',
+  'Green-E' = 'E',
 }
 
 export const BranchSelector = ({ routeId, setRouteId }: BranchSelectorProps) => {
   const { line } = useDelimitatedRoute();
   const selectedIndex = Object.keys(GreenLineBranchOptions).findIndex((route) => route === routeId);
 
-  // Sized like useChartToggle's segmented control, since it sits in the same card-header slot.
   return (
     <ButtonGroup
       line={line}
@@ -26,7 +25,7 @@ export const BranchSelector = ({ routeId, setRouteId }: BranchSelectorProps) => 
       pressFunction={setRouteId}
       options={Object.entries(GreenLineBranchOptions)}
       additionalDivClass="w-auto"
-      additionalButtonClass="px-3"
+      additionalButtonClass="flex-none px-3"
     />
   );
 };

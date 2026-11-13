@@ -53,11 +53,15 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          additionalClasses="justify-between grow min-w-0 overflow-hidden h-10 md:h-7"
+          additionalClasses="justify-between grow min-w-0 overflow-hidden h-10 md:h-8 md:w-auto md:max-w-64 md:grow-0"
           aria-label={`${type === 'from' ? 'Start' : 'End'} ${noun}: ${station.stop_name}. Change it.`}
         >
-          <p className="items-center gap-x-1 truncate text-sm font-semibold">{station.stop_name}</p>
-          <FontAwesomeIcon icon={faChevronDown} className="h-4 w-4 pl-2" aria-hidden />
+          <p className="items-center gap-x-1 truncate text-sm">{station.stop_name}</p>
+          <FontAwesomeIcon
+            icon={faChevronDown}
+            className="size-3 shrink-0 pl-2 text-stone-500 dark:text-stone-400"
+            aria-hidden
+          />
         </Button>
       </PopoverTrigger>
       <PopoverContent align="start" style={lineColorVar(line)} className="w-[min(22rem,90vw)] p-0">
@@ -69,8 +73,10 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
               const disabled = isDisabled(option);
               return (
                 <CommandItem
-                  key={option.stop_name}
-                  value={option.stop_name}
+                  // Some routes repeat a stop name, so the station id keeps each option distinct.
+                  key={option.station}
+                  value={option.station}
+                  keywords={[option.stop_name]}
                   disabled={disabled}
                   onSelect={() => {
                     setStation(option);
@@ -89,9 +95,9 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
                           branchLabelWidth[line ?? 'DEFAULT'] ?? ''
                         )}
                       >
-                        {option.branches?.map((branch) => (
-                          <p key={branch}>{branch}</p>
-                        ))}
+                        {/* Ferry branches only keep alternate terminals apart; riders don't see them. */}
+                        {lineShort !== 'Ferry' &&
+                          option.branches?.map((branch) => <p key={branch}>{branch}</p>)}
                       </div>
                       <span className="truncate">{option.stop_name}</span>
                     </div>

@@ -1,13 +1,7 @@
 import classNames from 'classnames';
 import { Link } from '../general/Link';
 import { TRIP_PAGES } from '../../constants/pages';
-import { LINE_COLORS, LINE_COLORS_DARK } from '../../constants/colors';
-import {
-  buttonHighlightFocus,
-  lineColorDarkBackground,
-  lineColorLightBorder,
-} from '../../styles/general';
-import { readableOn } from '../../utils/general';
+import { FOCUS_RING_ON_SURFACE, lineColorVar, textOnLineColor } from '../../styles/general';
 import { useDelimitatedRoute, useGenerateHref, useHandleConfigStore } from '../../utils/router';
 
 /** Labelled for where they sit — beside the date control, which is what they change. */
@@ -18,9 +12,8 @@ const MODE_LABELS: Record<string, string> = {
 
 /**
  * Switches between the two trip views. They are separate routes rendering the same component, told
- * apart only by which date params happen to be set, and until now the only path between them was a
- * sidebar item — behind a hamburger on mobile. Presenting them as two views of one surface makes
- * the relationship visible, and `getTripHopDates` keeps the selected day or range across the hop.
+ * apart only by which date params happen to be set; `getTripHopDates` keeps the selected day or
+ * range across the hop.
  */
 export const TripModeToggle = () => {
   const { line, page, query, linePath } = useDelimitatedRoute();
@@ -29,19 +22,12 @@ export const TripModeToggle = () => {
 
   if (!line) return null;
 
-  // The band behind the control and the selected segment's fill are different colors, so each
-  // needs its own readable-text decision.
-  const bandNeedsDarkText = readableOn(LINE_COLORS[line]) === 'dark';
-  const fillNeedsDarkText = readableOn(LINE_COLORS_DARK[line]) === 'dark';
-
   return (
     <div
       role="group"
       aria-label="Trip view"
-      className={classNames(
-        'flex shrink-0 flex-row overflow-hidden rounded-md border',
-        lineColorLightBorder[line ?? 'DEFAULT']
-      )}
+      style={lineColorVar(line)}
+      className="flex h-10 w-full shrink-0 flex-row gap-0.5 rounded-md border border-stone-200 bg-white p-0.5 md:h-8 md:w-auto dark:border-stone-700 dark:bg-stone-900"
     >
       {TRIP_PAGES.map((tripPage) => {
         const selected = page === tripPage.key;
@@ -52,22 +38,19 @@ export const TripModeToggle = () => {
             aria-current={selected ? 'page' : undefined}
             onClick={() => handlePageConfig(tripPage)}
             className={classNames(
-              'flex h-10 items-center px-3 text-sm whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:outline-hidden focus-visible:ring-inset md:h-7',
-              buttonHighlightFocus[line],
+              'flex flex-1 items-center justify-center rounded-[5px] px-3 text-sm whitespace-nowrap transition-colors focus-visible:ring-offset-1',
+              FOCUS_RING_ON_SURFACE,
               selected
-                ? classNames(
-                    'font-semibold',
-                    lineColorDarkBackground[line],
-                    fillNeedsDarkText ? 'text-stone-900' : 'text-white'
-                  )
-                : classNames(
-                    bandNeedsDarkText
-                      ? 'text-stone-900 hover:bg-stone-900/10'
-                      : 'text-white hover:bg-white/15'
-                  )
+                ? 'bg-(--line-color) font-semibold'
+                : 'hover:bg-stone-100 dark:hover:bg-stone-800'
             )}
           >
-            {MODE_LABELS[tripPage.key] ?? tripPage.name}
+            {/* The global `a { color: inherit }` outranks text utilities on the link itself. */}
+            <span
+              className={selected ? textOnLineColor(line) : 'text-stone-700 dark:text-stone-300'}
+            >
+              {MODE_LABELS[tripPage.key] ?? tripPage.name}
+            </span>
           </Link>
         );
       })}

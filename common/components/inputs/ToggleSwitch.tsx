@@ -23,7 +23,10 @@ export const ToggleSwitch = ({ enabled, setEnabled, label }: ToggleSwitchProps) 
         style={lineColorVar(line)}
         className="data-[state=checked]:bg-(--line-color)"
       />
-      <Label htmlFor={id} className="cursor-pointer text-sm whitespace-nowrap text-stone-500">
+      <Label
+        htmlFor={id}
+        className="cursor-pointer text-sm whitespace-nowrap text-stone-600 dark:text-stone-300"
+      >
         {label}
       </Label>
     </div>

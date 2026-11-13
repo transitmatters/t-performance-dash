@@ -1,17 +1,27 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { FREQUENT_BUS_ROUTE_IDS, getBusRouteDisplayName } from '../../common/constants/lines';
-import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
+import type { BusSpeedLeaderboardEntry, BusTripCounts } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { getFormattedTimeString } from '../../common/utils/time';
+import type { HeadwayField } from '../reliability/utils';
+import { HEADWAY_FIELDS } from '../reliability/utils';
+import {
+  DWELL_SUMMARY_SIZE,
+  MIN_DWELL_STOPS_PER_DAY,
+  MIN_RUNNING_SPEED_SEGMENT_M,
+} from './constants';
 import type {
+  BusDwellProperties,
   BusSpeedSegmentLeaderboardByBand,
   BusSpeedSegmentLeaderboardByDayType,
   BusSpeedSegmentLeaderboardEntry,
   BusSpeedSegmentLeaderboardResponse,
   BusSpeedSegmentProperties,
   DayType,
+  LeaderboardMetricConfig,
   Period,
+  StopDwell,
   TimeBand,
 } from './types';
 
@@ -85,32 +95,73 @@ export const selectSegmentLeaderboardEntries = (
 const METERS_PER_MILE = 1609.344;
 
 /**
- * "0.25 mi · 1m 52s" -- the segment's length and median travel time, the two numbers its
- * p50_speed_mph is computed from. Shared by leaderboard rows and map features; undefined for
- * files published before the pipeline started writing them.
+ * The segment's median speed: its running speed, or in an archive published before there was
+ * one, its arrival-to-arrival speed (see ArrivalToArrivalSpeeds). Undefined for a segment too
+ * short to time.
+ */
+export const segmentSpeed = (
+  segment: Pick<BusSpeedSegmentProperties, 'p50_running_speed_mph' | 'p50_speed_mph'>
+): number | undefined => segment.p50_running_speed_mph ?? segment.p50_speed_mph;
+
+/** "12.4 mph", or "No speed" for a segment too short to time. */
+export const formatSegmentSpeed = (
+  segment: Pick<BusSpeedSegmentProperties, 'p50_running_speed_mph' | 'p50_speed_mph'>
+): string => {
+  const speed = segmentSpeed(segment);
+  return speed == null ? 'No speed' : `${speed.toFixed(1)} mph`;
+};
+
+const formatMiles = (meters: number): string => `${(meters / METERS_PER_MILE).toFixed(2)} mi`;
+
+/**
+ * "0.19 mi · 42s" -- the two numbers the segment's speed is computed from: the running length
+ * and median running time, or for an older file, the whole segment and its arrival-to-arrival
+ * time. Shared by leaderboard rows and map features; undefined for a segment too short to time,
+ * and for files published before the pipeline started writing them.
  */
 export const segmentDistanceAndTime = (
-  entry: Pick<BusSpeedSegmentLeaderboardEntry, 'segment_length_m' | 'p50_total_time_seconds'>
+  entry: Pick<
+    BusSpeedSegmentLeaderboardEntry,
+    'running_length_m' | 'p50_running_time_seconds' | 'segment_length_m' | 'p50_total_time_seconds'
+  >
 ): string | undefined => {
-  if (entry.segment_length_m == null || entry.p50_total_time_seconds == null) return undefined;
-  const miles = (entry.segment_length_m / METERS_PER_MILE).toFixed(2);
-  return `${miles} mi · ${getFormattedTimeString(entry.p50_total_time_seconds)}`;
+  const [meters, seconds] =
+    entry.p50_running_time_seconds != null
+      ? [entry.running_length_m, entry.p50_running_time_seconds]
+      : [entry.segment_length_m, entry.p50_total_time_seconds];
+  if (meters == null || seconds == null) return undefined;
+  return `${formatMiles(meters)} · ${getFormattedTimeString(seconds)}`;
 };
+
+/**
+ * Why a segment has no speed, for its popup: almost always that its stops are too close together
+ * to time, as LAMP's times leave out about 90m around them.
+ */
+export const noSpeedReason = (
+  segment: Pick<BusSpeedSegmentProperties, 'segment_length_m'>
+): string =>
+  segment.segment_length_m != null && segment.segment_length_m < MIN_RUNNING_SPEED_SEGMENT_M
+    ? `Stops ${formatMiles(segment.segment_length_m)} apart, too close together to time.`
+    : 'Too few trips with usable times to give a speed.';
 
 /** " this week" or " this month", to follow "Median of 40 trips"; nothing for a single day. */
 export const periodSuffix = (period: Period): string =>
   period === 'daily' ? '' : ` this ${period === 'weekly' ? 'week' : 'month'}`;
 
+/** "25s", or "1m 05s" for a long hold. */
+export const formatDwell = (seconds: number): string => getFormattedTimeString(seconds);
+
 /**
- * "25s" -- the median time buses spent at a segment's first stop, which its speed already counts.
- * Undefined for tiles published without it, and for zero, which says nothing about the stop: it
- * can mean most buses pass without stopping, or that trips start there, since a trip's layover at
- * its first stop isn't counted as dwell.
+ * "25s" -- in an archive published before dwell had a layer of its own, the median time buses
+ * spent at a segment's first stop, which its speed counts. Undefined for newer archives, whose
+ * speeds leave it out, and for zero, which says nothing about the stop: it can mean most buses
+ * pass without stopping, or that trips start there, since a trip's layover at its first stop
+ * isn't counted as dwell.
  */
 export const segmentDwell = (
   segment: Pick<BusSpeedSegmentProperties, 'median_dwell_seconds'>
 ): string | undefined =>
-  segment.median_dwell_seconds ? getFormattedTimeString(segment.median_dwell_seconds) : undefined;
+  segment.median_dwell_seconds ? formatDwell(segment.median_dwell_seconds) : undefined;
 
 const formatSpeed = (speed: number): string => speed.toFixed(speed < 10 ? 1 : 0);
 
@@ -120,10 +171,15 @@ const formatSpeed = (speed: number): string => speed.toFixed(speed < 10 ? 1 : 0)
  * them, and for a segment with too few trips to say.
  */
 export const segmentSpeedRange = (
-  segment: Pick<BusSpeedSegmentProperties, 'p10_speed_mph' | 'p90_speed_mph'>
+  segment: Pick<
+    BusSpeedSegmentProperties,
+    'p10_running_speed_mph' | 'p90_running_speed_mph' | 'p10_speed_mph' | 'p90_speed_mph'
+  >
 ): string | undefined => {
-  if (segment.p10_speed_mph == null || segment.p90_speed_mph == null) return undefined;
-  return `${formatSpeed(segment.p90_speed_mph)}–${formatSpeed(segment.p10_speed_mph)} mph`;
+  const fastest = segment.p10_running_speed_mph ?? segment.p10_speed_mph;
+  const slowest = segment.p90_running_speed_mph ?? segment.p90_speed_mph;
+  if (fastest == null || slowest == null) return undefined;
+  return `${formatSpeed(slowest)}–${formatSpeed(fastest)} mph`;
 };
 
 /**
@@ -153,21 +209,39 @@ export const isPooledSegment = (
 export const compareRouteNames = (a: string, b: string): number =>
   a.localeCompare(b, 'en', { numeric: true });
 
+/** A dwell point's figures, for the stop's popup. */
+export const dwellFromPoint = (point: BusDwellProperties): StopDwell => ({
+  route_id: point.route_id,
+  median_dwell_seconds: point.median_dwell_seconds,
+  p90_dwell_seconds: point.p90_dwell_seconds,
+  n_trips: point.n_dwells,
+});
+
 /**
- * A stop's dwell, one row per route in route order, from the segments leaving it. A route that
- * branches at the stop has a segment per next stop, and the one most of its trips took speaks for
- * it. A segment comes back once per tile it crosses, and a pooled one repeats its routes.
+ * The dwell an older archive's segment carries for its first stop, for that stop's popup.
+ * Undefined for a pooled segment, which repeats its routes, and wherever segmentDwell is.
  */
-export const stopDwellsByRoute = (
-  segments: BusSpeedSegmentProperties[]
-): BusSpeedSegmentProperties[] => {
-  const busiest = new Map<string, BusSpeedSegmentProperties>();
-  for (const segment of segments) {
-    if (isPooledSegment(segment) || !segmentDwell(segment)) continue;
-    const current = busiest.get(segment.route_id);
-    if (!current || segment.n_traversals > current.n_traversals) {
-      busiest.set(segment.route_id, segment);
-    }
+export const dwellFromSegment = (segment: BusSpeedSegmentProperties): StopDwell | undefined =>
+  !isPooledSegment(segment) && segmentDwell(segment) && segment.median_dwell_seconds
+    ? {
+        route_id: segment.route_id,
+        median_dwell_seconds: segment.median_dwell_seconds,
+        n_trips: segment.n_traversals,
+      }
+    : undefined;
+
+/**
+ * A stop's dwell, one row per route in route order. Where a route has more than one -- in an
+ * older archive, a segment per next stop where the route branches; in either, the stop served in
+ * both directions -- the one with the most trips speaks for it. A feature comes back once per
+ * tile it's in, so duplicates are expected.
+ */
+export const stopDwellsByRoute = (dwells: (StopDwell | undefined)[]): StopDwell[] => {
+  const busiest = new Map<string, StopDwell>();
+  for (const dwell of dwells) {
+    if (!dwell) continue;
+    const current = busiest.get(dwell.route_id);
+    if (!current || dwell.n_trips > current.n_trips) busiest.set(dwell.route_id, dwell);
   }
   return [...busiest.values()].sort((a, b) =>
     compareRouteNames(getBusRouteDisplayName(a.route_id), getBusRouteDisplayName(b.route_id))
@@ -175,41 +249,194 @@ export const stopDwellsByRoute = (
 };
 
 export interface GroupedBusSpeedLeaderboardEntry extends BusSpeedLeaderboardEntry {
+  total_dwell: number;
+  n_dwell_stops: number;
+  /** Days any raw route_id behind this label had speed data: the most of any one of them. */
+  n_days: number;
   /** Whether any raw route_id behind this curated label is a Frequent Bus Route. */
   isFrequentRoute: boolean;
 }
 
 const FREQUENT_BUS_ROUTES = new Set(FREQUENT_BUS_ROUTE_IDS);
 
+const sumOf = <T>(items: T[], pick: (item: T) => number): number =>
+  items.reduce((total, item) => total + pick(item), 0);
+
+/**
+ * The battery share of several routes' trips together, each weighted by the trips it sampled,
+ * the same way the API pools the days of one route (_rollup_fleet_fields). Empty if none of them
+ * has fleet data.
+ */
+const poolBatteryShare = (
+  entries: BusSpeedLeaderboardEntry[]
+): Pick<BusSpeedLeaderboardEntry, 'fleet_trips' | 'pct_battery_trips'> => {
+  const sampled = entries.filter((entry) => entry.fleet_trips && entry.pct_battery_trips != null);
+  if (sampled.length === 0) return {};
+  const fleetTrips = sumOf(sampled, (entry) => entry.fleet_trips ?? 0);
+  const batteryShare =
+    sumOf(sampled, (entry) => (entry.pct_battery_trips ?? 0) * (entry.fleet_trips ?? 0)) /
+    fleetTrips;
+  return { fleet_trips: fleetTrips, pct_battery_trips: batteryShare };
+};
+
+/**
+ * Each of `fields` summed over the entries that have it, and left off when none does, so a range
+ * from before the pipeline counted it reads as unmeasured rather than as zero.
+ */
+const sumPresent = <F extends HeadwayField | keyof BusTripCounts>(
+  entries: BusSpeedLeaderboardEntry[],
+  fields: readonly F[]
+): Partial<Record<F, number>> =>
+  Object.fromEntries(
+    fields.flatMap((field) => {
+      const counted = entries.filter((entry) => entry[field] != null);
+      return counted.length ? [[field, sumOf(counted, (entry) => entry[field] ?? 0)]] : [];
+    })
+  ) as Partial<Record<F, number>>;
+
+/**
+ * Each headway count summed over the Frequent Bus Routes among `entries` that have it (116 of
+ * 114/116/117), as on the route overview, so a timetabled route's longer headways don't count toward
+ * a frequent one. Left off when none has it, so a label with no frequent routes, or a range before the
+ * counts start, has no headway share to rank by.
+ */
+const poolFrequentHeadways = (
+  entries: BusSpeedLeaderboardEntry[]
+): Partial<Record<HeadwayField, number>> =>
+  sumPresent(
+    entries.filter((entry) => FREQUENT_BUS_ROUTES.has(entry.route)),
+    HEADWAY_FIELDS
+  );
+
+const TRIP_COUNT_FIELDS = [
+  'scheduled_trips',
+  'unobserved_trips',
+  'unobserved_waived_trips',
+] as const satisfies readonly (keyof BusTripCounts)[];
+
 /**
  * The API ranks raw GTFS route_ids, but the rest of the dashboard shows curated BusRoute labels
  * (SL4/SL5, 114/116/117, ...), so the leaderboard would otherwise list 751 and 749 as separate
  * "SL4" and "SL5" rows. Summing miles_covered/total_time per label keeps the speed a true
- * weighted average, same as the per-route speed page does for composites, then re-ranks
- * slowest first. `date` picks which labels were in service (see getBusRouteGroup).
+ * weighted average, same as the per-route speed page does for composites, and the battery share
+ * is pooled by trips the same way. Dwell is summed too, so its averages stay weighted by stops.
+ * Headway counts are pooled from the label's Frequent Bus Routes only (see poolFrequentHeadways), and
+ * trip counts from all of them, so its dropped-trip rate is pooled over trips.
+ * Routes under one label run on the same days, so the label's days of service are the most of any
+ * one route's, not their sum. `date` picks which labels were in service (see getBusRouteGroup).
+ * Unordered: rankLeaderboard sorts by whichever metric is picked.
  */
 export const groupLeaderboardByBusRoute = (
   entries: BusSpeedLeaderboardEntry[],
   date: string
 ): GroupedBusSpeedLeaderboardEntry[] => {
-  const groups = new Map<string, GroupedBusSpeedLeaderboardEntry>();
+  const groups = new Map<string, BusSpeedLeaderboardEntry[]>();
   for (const entry of entries) {
     const route = getBusRouteGroup(entry.route, date);
-    const group = groups.get(route) ?? {
-      route,
-      miles_covered: 0,
-      total_time: 0,
-      count: 0,
-      n_traversals: 0,
-      isFrequentRoute: false,
-    };
-    group.miles_covered += entry.miles_covered;
-    group.total_time += entry.total_time;
-    group.count += entry.count;
-    group.n_traversals += entry.n_traversals;
-    group.isFrequentRoute ||= FREQUENT_BUS_ROUTES.has(entry.route);
-    groups.set(route, group);
+    groups.set(route, [...(groups.get(route) ?? []), entry]);
   }
-  const mph = (entry: BusSpeedLeaderboardEntry) => entry.miles_covered / (entry.total_time / 3600);
-  return [...groups.values()].sort((a, b) => mph(a) - mph(b));
+  return [...groups].map(([route, members]) => ({
+    route,
+    miles_covered: sumOf(members, (entry) => entry.miles_covered),
+    total_time: sumOf(members, (entry) => entry.total_time),
+    count: sumOf(members, (entry) => entry.count),
+    n_traversals: sumOf(members, (entry) => entry.n_traversals),
+    total_dwell: sumOf(members, (entry) => entry.total_dwell ?? 0),
+    n_dwell_stops: sumOf(members, (entry) => entry.n_dwell_stops ?? 0),
+    n_days: Math.max(0, ...members.map((entry) => entry.n_days ?? 0)),
+    ...poolBatteryShare(members),
+    ...poolFrequentHeadways(members),
+    ...sumPresent(members, TRIP_COUNT_FIELDS),
+    isFrequentRoute: members.some((entry) => FREQUENT_BUS_ROUTES.has(entry.route)),
+  }));
+};
+
+export interface BusDwellSummary {
+  /** Seconds per stop and share of route time, pooled over every route given that has dwell. */
+  overall: { averageDwell: number; dwellShare: number } | undefined;
+  /** Longest average dwell per stop first, among routes serving enough stops. */
+  byAverageDwell: GroupedBusSpeedLeaderboardEntry[];
+  /** Largest share of route time spent at stops first, among routes serving enough stops. */
+  byDwellShare: GroupedBusSpeedLeaderboardEntry[];
+}
+
+/** Seconds spent around each stop, on average. */
+export const averageDwell = (entry: GroupedBusSpeedLeaderboardEntry): number =>
+  entry.total_dwell / entry.n_dwell_stops;
+
+/** The share of time spent around stops, as total_time runs arrival to arrival. */
+export const dwellShare = (entry: GroupedBusSpeedLeaderboardEntry): number =>
+  entry.total_dwell / entry.total_time;
+
+/**
+ * The leaderboard's dwell summary: the routes with the longest average dwell per stop, and with
+ * the largest share of their time spent at stops. Routes serving fewer than
+ * MIN_DWELL_STOPS_PER_DAY stops per day of service are left out of both lists, which also drops
+ * leaderboards computed before the dwell fields existed (no stops, no days).
+ */
+export const summarizeDwell = (entries: GroupedBusSpeedLeaderboardEntry[]): BusDwellSummary => {
+  const withDwell = entries.filter((entry) => entry.n_dwell_stops > 0);
+  const totalDwell = withDwell.reduce((sum, entry) => sum + entry.total_dwell, 0);
+  const totalStops = withDwell.reduce((sum, entry) => sum + entry.n_dwell_stops, 0);
+  const totalTime = withDwell.reduce((sum, entry) => sum + entry.total_time, 0);
+  const ranked = withDwell.filter(
+    (entry) => entry.n_days > 0 && entry.n_dwell_stops >= MIN_DWELL_STOPS_PER_DAY * entry.n_days
+  );
+  const top = (value: (entry: GroupedBusSpeedLeaderboardEntry) => number) =>
+    [...ranked].sort((a, b) => value(b) - value(a)).slice(0, DWELL_SUMMARY_SIZE);
+  return {
+    overall: withDwell.length
+      ? { averageDwell: totalDwell / totalStops, dwellShare: totalDwell / totalTime }
+      : undefined,
+    byAverageDwell: top(averageDwell),
+    byDwellShare: top(dwellShare),
+  };
+};
+
+export interface RankedBusRoute {
+  route: string;
+  value: number;
+  /** See LeaderboardMetricConfig's `detail`. */
+  detail?: string;
+  isFrequentRoute: boolean;
+}
+
+/** The routes `metric` has a figure for, in its order (see LeaderboardMetricConfig). */
+export const rankLeaderboard = (
+  entries: GroupedBusSpeedLeaderboardEntry[],
+  metric: LeaderboardMetricConfig
+): RankedBusRoute[] =>
+  entries
+    .flatMap((entry) => {
+      const value = metric.value(entry);
+      return value === undefined
+        ? []
+        : [
+            {
+              route: entry.route,
+              value,
+              detail: metric.detail?.(entry),
+              isFrequentRoute: entry.isFrequentRoute,
+            },
+          ];
+    })
+    .sort((a, b) => (metric.order === 'ascending' ? a.value - b.value : b.value - a.value));
+
+/**
+ * The routes `metric` ranks, and the ones it sets aside to list below them (see its `setAside`),
+ * each in its order.
+ */
+export const rankAndSetAside = (
+  entries: GroupedBusSpeedLeaderboardEntry[],
+  metric: LeaderboardMetricConfig
+): { ranked: RankedBusRoute[]; setAside: RankedBusRoute[] } => {
+  const isSetAside = (entry: GroupedBusSpeedLeaderboardEntry) =>
+    metric.setAside?.test(entry) ?? false;
+  return {
+    ranked: rankLeaderboard(
+      entries.filter((entry) => !isSetAside(entry)),
+      metric
+    ),
+    setAside: rankLeaderboard(entries.filter(isSetAside), metric),
+  };
 };

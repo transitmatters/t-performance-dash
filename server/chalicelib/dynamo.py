@@ -22,6 +22,28 @@ def set_dynamodb_resource():
     dynamodb = boto3.resource("dynamodb", region_name=region)
 
 
+def _query_all(table, **query_kwargs) -> List[dict]:
+    """Run a DynamoDB query and follow ``LastEvaluatedKey`` until every page is read.
+
+    One query page stops at 1MB, which a multi-year range for one partition can exceed.
+
+    Args:
+      table: A boto3 DynamoDB Table resource.
+      **query_kwargs: Arguments for ``table.query``, e.g. ``KeyConditionExpression``.
+
+    Returns:
+      list[dict]: Deserialized records from every page.
+    """
+    items = []
+    while True:
+        response = table.query(**query_kwargs)
+        items.extend(ddb_json.loads(response["Items"]))
+        last_evaluated_key = response.get("LastEvaluatedKey")
+        if not last_evaluated_key:
+            return items
+        query_kwargs = {**query_kwargs, "ExclusiveStartKey": last_evaluated_key}
+
+
 def query_daily_trips_on_route(table_name: str, route, start_date: str | date, end_date: str | date):
     """Query daily trip metrics for a single route from DynamoDB.
 
@@ -35,18 +57,8 @@ def query_daily_trips_on_route(table_name: str, route, start_date: str | date, e
       list[dict]: Deserialized trip metric records.
     """
     table = dynamodb.Table(table_name)
-    # Paginate: long bus ranges (rolled up to weekly/monthly in speed.py) can exceed a single
-    # 1MB query page for one route.
     query_kwargs = {"KeyConditionExpression": Key("route").eq(route) & Key("date").between(start_date, end_date)}
-    items = []
-    while True:
-        response = table.query(**query_kwargs)
-        items.extend(ddb_json.loads(response["Items"]))
-        last_evaluated_key = response.get("LastEvaluatedKey")
-        if not last_evaluated_key:
-            break
-        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
-    return items
+    return _query_all(table, **query_kwargs)
 
 
 def scan_trip_metrics_in_range(table_name: str, start_date: str | date, end_date: str | date) -> List[dict]:
@@ -141,9 +153,7 @@ def query_scheduled_service(start_date: date, end_date: date, route_id: str = No
     table = dynamodb.Table("ScheduledServiceDaily")
     line_condition = Key("routeId").eq(route_id)
     date_condition = Key("date").between(start_date.isoformat(), end_date.isoformat())
-    condition = line_condition & date_condition
-    response = table.query(KeyConditionExpression=condition)
-    return ddb_json.loads(response["Items"])
+    return _query_all(table, KeyConditionExpression=line_condition & date_condition)
 
 
 def query_ridership(start_date: date, end_date: date, line_id: str = None):
@@ -160,9 +170,7 @@ def query_ridership(start_date: date, end_date: date, line_id: str = None):
     table = dynamodb.Table("Ridership")
     line_condition = Key("lineId").eq(line_id)
     date_condition = Key("date").between(start_date.isoformat(), end_date.isoformat())
-    condition = line_condition & date_condition
-    response = table.query(KeyConditionExpression=condition)
-    return ddb_json.loads(response["Items"])
+    return _query_all(table, KeyConditionExpression=line_condition & date_condition)
 
 
 def query_reliability(route_id: str, start_date: date, end_date: date):
@@ -177,20 +185,11 @@ def query_reliability(route_id: str, start_date: date, end_date: date):
       list[dict]: Deserialized reliability records.
     """
     table = dynamodb.Table("Reliability")
-    # Paginate: The RIDE goes back to 2014, which can exceed one 1MB page
     query_kwargs = {
         "KeyConditionExpression": Key("routeId").eq(route_id)
         & Key("date").between(start_date.isoformat(), end_date.isoformat())
     }
-    items = []
-    while True:
-        response = table.query(**query_kwargs)
-        items.extend(ddb_json.loads(response["Items"]))
-        last_evaluated_key = response.get("LastEvaluatedKey")
-        if not last_evaluated_key:
-            break
-        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
-    return items
+    return _query_all(table, **query_kwargs)
 
 
 def query_headway_reliability(route: str, start_date: date, end_date: date):
@@ -209,15 +208,7 @@ def query_headway_reliability(route: str, start_date: date, end_date: date):
         "KeyConditionExpression": Key("route").eq(route)
         & Key("date").between(start_date.isoformat(), end_date.isoformat())
     }
-    items = []
-    while True:
-        response = table.query(**query_kwargs)
-        items.extend(ddb_json.loads(response["Items"]))
-        last_evaluated_key = response.get("LastEvaluatedKey")
-        if not last_evaluated_key:
-            break
-        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
-    return items
+    return _query_all(table, **query_kwargs)
 
 
 def query_regional_rail_scorecard(route_id: str, start_date: date, end_date: date):
@@ -232,20 +223,11 @@ def query_regional_rail_scorecard(route_id: str, start_date: date, end_date: dat
       list[dict]: Deserialized scorecard records, one per day.
     """
     table = dynamodb.Table("ScheduledServiceRegionalRail")
-    # Paginate: years of daily rows, with hourly counts, can exceed one 1MB page
     query_kwargs = {
         "KeyConditionExpression": Key("routeId").eq(route_id)
         & Key("date").between(start_date.isoformat(), end_date.isoformat())
     }
-    items = []
-    while True:
-        response = table.query(**query_kwargs)
-        items.extend(ddb_json.loads(response["Items"]))
-        last_evaluated_key = response.get("LastEvaluatedKey")
-        if not last_evaluated_key:
-            break
-        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
-    return items
+    return _query_all(table, **query_kwargs)
 
 
 def query_agg_trip_metrics(start_date: str | date, end_date: str | date, table_name: str, line: str = None):
@@ -263,9 +245,7 @@ def query_agg_trip_metrics(start_date: str | date, end_date: str | date, table_n
     table = dynamodb.Table(table_name)
     line_condition = Key("line").eq(line)
     date_condition = Key("date").between(start_date, end_date)
-    condition = line_condition & date_condition
-    response = table.query(KeyConditionExpression=condition)
-    return ddb_json.loads(response["Items"])
+    return _query_all(table, KeyConditionExpression=line_condition & date_condition)
 
 
 def query_station_ridership(start_date: date, end_date: date, line_id: str) -> List[dict]:
@@ -284,15 +264,7 @@ def query_station_ridership(start_date: date, end_date: date, line_id: str) -> L
         "KeyConditionExpression": Key("lineId").eq(line_id)
         & Key("date").between(start_date.isoformat(), end_date.isoformat()),
     }
-    items = []
-    while True:
-        response = table.query(**query_kwargs)
-        items.extend(ddb_json.loads(response["Items"]))
-        last_evaluated_key = response.get("LastEvaluatedKey")
-        if not last_evaluated_key:
-            break
-        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
-    return items
+    return _query_all(table, **query_kwargs)
 
 
 def query_shutdowns(line: str, start_date: str | date, end_date: str | date) -> List[dict]:
@@ -311,15 +283,7 @@ def query_shutdowns(line: str, start_date: str | date, end_date: str | date) -> 
         "KeyConditionExpression": Key("line").eq(line),
         "FilterExpression": Attr("first_start").lte(str(end_date)) & Attr("last_end").gte(str(start_date)),
     }
-    items = []
-    while True:
-        response = table.query(**query_kwargs)
-        items.extend(ddb_json.loads(response["Items"]))
-        last_evaluated_key = response.get("LastEvaluatedKey")
-        if not last_evaluated_key:
-            break
-        query_kwargs["ExclusiveStartKey"] = last_evaluated_key
-    return items
+    return _query_all(table, **query_kwargs)
 
 
 def query_extended_trip_metrics(
@@ -344,12 +308,8 @@ def query_extended_trip_metrics(
     end_date_str = end_date.strftime("%Y-%m-%d")
     response_dicts = []
     for route_id in route_ids:
-        route_condition = Key("route").eq(route_id)
-        date_condition = Key("date").between(start_date_str, end_date_str)
-        condition = route_condition & date_condition
-        response = table.query(KeyConditionExpression=condition)
-        responses = ddb_json.loads(response["Items"])
-        response_dicts.extend(responses)
+        condition = Key("route").eq(route_id) & Key("date").between(start_date_str, end_date_str)
+        response_dicts.extend(_query_all(table, KeyConditionExpression=condition))
     return response_dicts
 
 

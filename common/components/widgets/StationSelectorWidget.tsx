@@ -1,6 +1,5 @@
 import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
 import { useEffect } from 'react';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
@@ -18,14 +17,19 @@ import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/
 import { LINE_OBJECTS } from '../../constants/lines';
 import type { Station } from '../../types/stations';
 
-interface StationSelectorWidgetProps {
+export interface StationSelectorWidgetProps {
   line: Line;
   busRoute: BusRoute | undefined;
   crRoute: CommuterRailRoute | undefined;
   ferryRoute: FerryRoute | undefined;
 }
 
-export const StationSelectorWidget = ({
+/**
+ * The trip's two ends, falling back to the route's defaults, and kept valid in the URL. Mounted
+ * wherever the trip is shown, even with the picker hidden (the mobile controls sheet), so a
+ * first visit always gets stations.
+ */
+export const useTripStations = ({
   line,
   busRoute,
   crRoute,
@@ -55,6 +59,23 @@ export const StationSelectorWidget = ({
     }
   }, [fromStation, toStation, updateQueryParams, stations]);
 
+  return { stations, fromStation, toStation, lineShort };
+};
+
+export const StationSelectorWidget = ({
+  line,
+  busRoute,
+  crRoute,
+  ferryRoute,
+}: StationSelectorWidgetProps) => {
+  const updateQueryParams = useUpdateQuery();
+  const { stations, fromStation, toStation, lineShort } = useTripStations({
+    line,
+    busRoute,
+    crRoute,
+    ferryRoute,
+  });
+
   const updateStations = (action: 'to' | 'from' | 'swap', newStation?: Station) => {
     switch (action) {
       case 'to':
@@ -71,8 +92,9 @@ export const StationSelectorWidget = ({
           newStation.branches &&
           !newStation?.branches?.some((branch) => toStation?.branches?.includes(branch))
         ) {
-          // If `from` station is on a separate branch, set the `to` station to gov center for GL and Park for RL.
-          const newToStation = getStationForInvalidFromSelection(line, busRoute);
+          // The new `from` is on a branch the current `to` isn't: end the trip where the branches meet.
+          const newToStation = getStationForInvalidFromSelection(line, newStation, stations);
+          if (!newToStation) break;
           const stationIds = stopIdsForStations(newStation, newToStation);
           updateQueryParams(
             {
@@ -102,12 +124,11 @@ export const StationSelectorWidget = ({
   if (!fromStation || !toStation) {
     return null;
   }
+  // Some stops are only served one way, so the reverse trip can have no stop to end at.
+  const reversed = stopIdsForStations(toStation, fromStation);
+  const canSwap = Boolean(reversed.fromStopIds?.length && reversed.toStopIds?.length);
   return (
-    <div
-      className={classNames(
-        'flex w-full flex-row items-center gap-1 overflow-hidden p-1 md:p-0 xl:w-auto'
-      )}
-    >
+    <div className="flex w-full min-w-0 flex-row items-center gap-1.5 md:w-auto">
       <StationSelector
         type={'from'}
         fromStation={fromStation}
@@ -126,9 +147,14 @@ export const StationSelectorWidget = ({
       />
       <Button
         onClick={() => updateStations('swap')}
-        title={`Swap ${stopNoun(lineShort)}s`}
+        disabled={!canSwap}
+        title={
+          canSwap
+            ? `Swap ${stopNoun(lineShort)}s`
+            : `No trips run from ${toStation.stop_name} to ${fromStation.stop_name}`
+        }
         aria-label={`Swap direction: show ${toStation.stop_name} to ${fromStation.stop_name}`}
-        additionalClasses={'shrink-0 w-fit'}
+        additionalClasses={'shrink-0 w-fit disabled:cursor-not-allowed disabled:opacity-50'}
       >
         <FontAwesomeIcon icon={faRightLeft} className={'h-4 w-4'} aria-hidden />
       </Button>

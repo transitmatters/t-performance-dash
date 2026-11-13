@@ -211,7 +211,7 @@ class RidershipParams(BaseModel):
     Attributes:
         start_date: Start of date range.
         end_date: End of date range.
-        line_id: Line identifier (e.g., `line-Red`, `line-1`, `line-Fairmount`).
+        line_id: Line identifier (e.g., `line-Red`, `line-1`, `line-Fairmount`, `line-Boat-F1`, `line-RIDE`).
     """
 
     start_date: date = Field(description=_DATE_RANGE_START_DESC)
@@ -222,7 +222,9 @@ class RidershipParams(BaseModel):
             "Rapid transit: `line-Red`, `line-Orange`, `line-Blue`, `line-Green`. "
             "Bus: `line-{route}` (e.g. `line-1`, `line-66`). "
             "Commuter rail: `line-{line}` (e.g. `line-Fairmount`). "
-            "Ferry: `line-F1`, `line-F4`, etc."
+            "Ferry: `line-Boat-{route}` (e.g. `line-Boat-F1`, `line-Boat-F4`). "
+            "The RIDE: `line-RIDE`. "
+            "Unknown IDs return an empty list rather than an error."
         ),
     )
 
@@ -830,7 +832,7 @@ class AggregateByTime(AggregateStats):
 
     dep_time_from_epoch: str = Field(
         description=(
-            "Bucket start as `1970-01-01THH:MM:SS`. Departures after midnight and before 03:30 use `1970-01-02`."
+            "Bucket start as `1970-01-01THH:MM:SS`. Departures after midnight and before 03:00 use `1970-01-02`."
         )
     )
     is_peak_day: bool = Field(description="`true` for non-holiday weekdays, `false` for weekends and holidays.")
@@ -1006,18 +1008,31 @@ class BusTripMetricsEntry(BaseModel):
     These are omitted when unknown. Daily entries for the whole day (no `time_band`) also have
     `median_speed_mph` and `mean_speed_mph`.
 
+    The `headways_*` fields count headways at mid-route timepoints by their ratio to the scheduled
+    headway, in the same buckets as `/api/reliability`. They're counted from 2025-12-24 and for the
+    whole day only, so they're omitted before then and when a `time_band` is requested.
+
     Attributes:
         date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
         route: Route ID, or the comma-separated group that was requested.
         count: Trips delivered.
-        total_time: Total trip time in seconds.
+        total_time: Total trip time in seconds, arrival to arrival, so including dwell.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
+        headways_under_50: Headways at most half the scheduled headway (bunched).
+        headways_50_75: Headways over 50% and up to 75% of scheduled.
+        headways_75_125: Headways over 75% and under 125% of scheduled.
+        headways_125_150: Headways 125% up to 150% of scheduled.
+        headways_over_150: Headways 150% of scheduled or more.
         scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.
         unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.
             Omitted with `scheduled_trips`.
         unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
             `scheduled_trips`.
+        total_dwell: Seconds spent around the stops in `n_dwell_stops`. Missing from daily rows
+            written before the pipeline recorded dwell.
+        n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).
+            Average dwell per stop is `total_dwell / n_dwell_stops`.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1027,9 +1042,16 @@ class BusTripMetricsEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    headways_under_50: int | None = None
+    headways_50_75: int | None = None
+    headways_75_125: int | None = None
+    headways_125_150: int | None = None
+    headways_over_150: int | None = None
     scheduled_trips: int | None = None
     unobserved_trips: int | None = None
     unobserved_waived_trips: int | None = None
+    total_dwell: float | None = None
+    n_dwell_stops: float | None = None
 
 
 class BusTripMetricsResponse(RootModel[List[BusTripMetricsEntry]]):
@@ -1061,17 +1083,40 @@ class CrTripMetricsResponse(RootModel[List[CrTripMetricsEntry]]):
 class BusSpeedLeaderboardEntry(BaseModel):
     """A bus route's totals over the date range. Speed in mph is `miles_covered / (total_time / 3600)`.
 
+    `total_dwell`, `n_dwell_stops` and `n_days` are missing from leaderboards computed before they
+    were added, such as the static sample data.
+
+    The `headways_*` fields are as in `BusTripMetricsEntry`, summed over the days that have them, and
+    omitted when none do.
+
+    Routes with fleet data also have its stats for the range, each day weighted by `fleet_trips`:
+    the fields below and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).
+    These are omitted when unknown.
+
     Attributes:
         route: Route ID.
         count: Trips delivered.
-        total_time: Total trip time in seconds.
+        total_time: Total trip time in seconds, arrival to arrival, so including dwell.
         miles_covered: Total miles covered.
         n_traversals: Segment traversals measured.
+        headways_under_50: Headways at most half the scheduled headway (bunched).
+        headways_50_75: Headways over 50% and up to 75% of scheduled.
+        headways_75_125: Headways over 75% and under 125% of scheduled.
+        headways_125_150: Headways 125% up to 150% of scheduled.
+        headways_over_150: Headways 150% of scheduled or more.
         scheduled_trips: Trips scheduled, on the days in the range from 2025-12-24.
         unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.
             Omitted with `scheduled_trips`.
         unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with
             `scheduled_trips`.
+        total_dwell: Seconds spent around the stops in `n_dwell_stops`. Its share of the route's
+            time is `total_dwell / total_time`.
+        n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).
+            Average dwell per stop is `total_dwell / n_dwell_stops`.
+        n_days: Days in the range with recorded speed data for the route.
+        fleet_trips: Trips with a known vehicle.
+        pct_battery_trips: Percentage of those trips run by battery-electric buses.
+        avg_bus_age: Average bus age in years.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1080,9 +1125,20 @@ class BusSpeedLeaderboardEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    headways_under_50: int | None = None
+    headways_50_75: int | None = None
+    headways_75_125: int | None = None
+    headways_125_150: int | None = None
+    headways_over_150: int | None = None
     scheduled_trips: int | None = None
     unobserved_trips: int | None = None
     unobserved_waived_trips: int | None = None
+    total_dwell: float | None = None
+    n_dwell_stops: float | None = None
+    n_days: int | None = None
+    fleet_trips: float | None = None
+    pct_battery_trips: float | None = None
+    avg_bus_age: float | None = None
 
 
 class BusSpeedLeaderboardResponse(RootModel[List[BusSpeedLeaderboardEntry]]):

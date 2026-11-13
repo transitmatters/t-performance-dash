@@ -67,11 +67,31 @@ def occupancy(row: dict):
     }
 
 
-def dwells(stop_ids: list, start_date: date, end_date: date, single_day=False):
-    """Calculate dwell times from raw arrival/departure event pairs.
+# A train recorded arriving again this soon after it departed is still making the same stop, e.g. a
+# Park St train moving up a berth, or the doubled events at Tufts in 2019. Real second visits come much
+# later: some trip_ids pass through the same station again hours later on the same day.
+SAME_STOP_REARRIVAL_SEC = 60
 
-    Matches consecutive ARR/DEP events for the same trip_id and computes
-    the time difference as dwell time in seconds.
+
+class _Stop:
+    """One train's stop at the station, built up from its events."""
+
+    __slots__ = ("arrival", "departure", "at_station")
+
+    def __init__(self, arrival):
+        self.arrival = arrival
+        self.departure = None
+        self.at_station = True
+
+
+def dwells(stop_ids: list, start_date: date, end_date: date, single_day=False):
+    """Calculate dwell times from raw arrival/departure events.
+
+    A dwell runs from a trip's arrival to its next departure, matched on service date and
+    trip_id, so other trains' events in between don't break it up. That matters wherever
+    trains overlap at a station, like the Green Line trunk. Repeat arrivals before the
+    departure are ignored, a re-arrival within SAME_STOP_REARRIVAL_SEC of departing extends
+    the same stop, and events without a trip_id are skipped because they can't be matched.
 
     Args:
         stop_ids: Stop IDs to fetch event data for.
@@ -85,40 +105,60 @@ def dwells(stop_ids: list, start_date: date, end_date: date, single_day=False):
     """
     rows_by_time = s3.download_events(start_date, end_date, stop_ids, single_day)
 
-    dwells = []
-    for maybe_an_arrival, maybe_a_departure in pairwise(rows_by_time):
-        # Look for all ARR/DEP pairs for same trip id
-        if (
-            maybe_an_arrival["event_type"] in EVENT_ARRIVAL
-            and maybe_a_departure["event_type"] in EVENT_DEPARTURE
-            and maybe_an_arrival["trip_id"] == maybe_a_departure["trip_id"]
-        ):
-            dep_dt = date_utils.parse_event_date(maybe_a_departure["event_time"])
-            arr_dt = date_utils.parse_event_date(maybe_an_arrival["event_time"])
-            delta = dep_dt - arr_dt
+    stops = []  # in order of arrival
+    latest_stop = {}  # (service_date, trip_id) -> that trip's most recent stop
+    for event in rows_by_time:
+        if event["trip_id"] == "":
+            continue
+        key = (event["service_date"], event["trip_id"])
+        stop = latest_stop.get(key)
+        if event["event_type"] in EVENT_ARRIVAL:
+            if stop is not None and (stop.at_station or _rearrived_quickly(stop.departure, event)):
+                stop.at_station = True
+            else:
+                stop = latest_stop[key] = _Stop(event)
+                stops.append(stop)
+        elif event["event_type"] in EVENT_DEPARTURE and stop is not None and stop.at_station:
+            stop.departure = event
+            stop.at_station = False
 
-            # not every vehicle will have vehicle_consist or occupancy
-            vehicle_consist = maybe_a_departure.get("vehicle_consist")
-            dwells.append(
-                {
-                    "route_id": maybe_a_departure["route_id"],
-                    "direction": int(maybe_a_departure["direction_id"]),
-                    "arr_dt": date_utils.return_formatted_date(arr_dt),
-                    "dep_dt": date_utils.return_formatted_date(dep_dt),
-                    "dwell_time_sec": delta.total_seconds(),
-                    "vehicle_consist": vehicle_consist,
-                    **occupancy(maybe_a_departure),
-                    "vehicle_label": maybe_a_departure["vehicle_label"],
-                }
-            )
+    dwells = []
+    for stop in stops:
+        departure = stop.departure
+        if departure is None:
+            continue
+        arr_dt = date_utils.parse_event_date(stop.arrival["event_time"])
+        dep_dt = date_utils.parse_event_date(departure["event_time"])
+
+        # not every vehicle will have vehicle_consist or occupancy
+        vehicle_consist = departure.get("vehicle_consist")
+        dwells.append(
+            {
+                "route_id": departure["route_id"],
+                "direction": int(departure["direction_id"]),
+                "arr_dt": date_utils.return_formatted_date(arr_dt),
+                "dep_dt": date_utils.return_formatted_date(dep_dt),
+                "dwell_time_sec": (dep_dt - arr_dt).total_seconds(),
+                "vehicle_consist": vehicle_consist,
+                **occupancy(departure),
+                "vehicle_label": departure["vehicle_label"],
+            }
+        )
 
     return dwells
+
+
+def _rearrived_quickly(departure, arrival):
+    """Whether an arrival comes soon enough after the same trip's departure to be the same stop."""
+    gap = date_utils.parse_event_date(arrival["event_time"]) - date_utils.parse_event_date(departure["event_time"])
+    return gap.total_seconds() <= SAME_STOP_REARRIVAL_SEC
 
 
 def headways(stop_ids: list, start_date: date, end_date: date, single_day=False):
     """Calculate headways from consecutive departure events.
 
-    Computes the time between consecutive departures at a stop. Skips
+    Computes the time between consecutive departures at a stop on the same
+    service date, so each day's first departure has no headway. Skips
     duplicate departures from the same trip and filters out headways
     exceeding 120 minutes (except for commuter rail).
 
@@ -139,6 +179,10 @@ def headways(stop_ids: list, start_date: date, end_date: date, single_day=False)
 
     headways = []
     for prev, this in pairwise(only_departures):
+        if this["service_date"] != prev["service_date"]:
+            # The gap since the previous night's last departure isn't a headway. The 120-minute cutoff
+            # below misses it for Commuter Rail, which is exempt, and for buses that run until 2 AM.
+            continue
         if this["trip_id"] == prev["trip_id"] != "":
             # in rare cases, same train can arrive and depart twice
             # Here, we should skip the headway
