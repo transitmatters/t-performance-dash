@@ -34,17 +34,19 @@ export const NavLines = ({ close }: NavLinesProps) => {
         {NAV_LINES.map((line) => {
           const lineObject = LINE_OBJECTS[line];
           const isActive = route.line === line;
+          // The open line wears the page's color, which is silver on a Silver Line route.
+          const colorKey = isActive ? route.colorKey : line;
           return (
             <Collapsible key={line} asChild open={isActive} className="group/line">
               <SidebarMenuItem
-                style={lineColorVar(line)}
+                style={lineColorVar(colorKey)}
                 className={classNames('rounded-md', isActive && 'bg-(--line-color)/10')}
               >
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
                     asChild
                     tooltip={lineObject.name}
-                    style={lineColorVar(line)}
+                    style={lineColorVar(colorKey)}
                     className={classNames(
                       'group-data-[collapsible=icon]:justify-center hover:bg-transparent',
                       isActive && 'font-semibold'

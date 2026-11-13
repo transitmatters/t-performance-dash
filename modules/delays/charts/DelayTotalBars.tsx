@@ -45,11 +45,11 @@ export const DelayTotalBars = ({
   focus,
   fill = false,
 }: DelayTotalBarsProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line, colorKey, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
-  const lineColor = LINE_COLORS[line ?? 'default'];
+  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   const period = AGG_PERIOD[agg];
   const timeAxis = delayTimeAxis(agg);
 

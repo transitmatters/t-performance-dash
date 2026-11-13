@@ -93,6 +93,7 @@ export default {
           ferry: '#008EAA',
           lightFerry: '#80C7D7',
           darkFerry: '#006B82',
+          silver: '#7C878E',
         },
         tm: {
           red: '#a31e1e',

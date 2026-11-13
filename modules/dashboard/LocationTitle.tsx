@@ -1,12 +1,12 @@
 import type { CSSProperties } from 'react';
 import type { Location } from '../../common/types/charts';
-import type { Line } from '../../common/types/lines';
+import type { LineColorKey } from '../../common/types/lines';
 import { LINE_TEXT_COLORS } from '../../common/constants/colors';
 
 interface LocationTitleProps {
   location: Location;
   both: boolean;
-  line?: Line;
+  line?: LineColorKey;
 }
 
 /**

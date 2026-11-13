@@ -4,7 +4,8 @@ import { useBusStopRidershipData } from '../../common/api/hooks/ridership';
 import { Widget } from '../../common/components/widgets';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { getBusRouteDisplayName, LINE_OBJECTS } from '../../common/constants/lines';
+import { getLineColorKey, LINE_COLORS } from '../../common/constants/colors';
+import { getBusRouteDisplayName } from '../../common/constants/lines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import type { BusStopRidership as BusStopRidershipData } from '../../common/types/dataPoints';
 import { BusStopRidershipMap } from './map/BusStopRidershipMap';
@@ -141,7 +142,7 @@ export const BusStopRidership = ({ busRoute }: { busRoute: string }) => {
             key={`${view.route.route_id}-${view.season}-${view.directionId}-${isDesktop}`}
             stops={view.stops}
             stopNames={view.route.stop_names}
-            color={LINE_OBJECTS['line-bus'].color}
+            color={LINE_COLORS[getLineColorKey('line-bus', busRoute)]}
             direction={isDesktop ? 'horizontal' : 'vertical'}
             period={view.season}
             getStopDetails={(stopId) => (

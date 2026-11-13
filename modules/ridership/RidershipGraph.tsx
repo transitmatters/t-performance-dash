@@ -48,6 +48,7 @@ export const RidershipGraph = ({
 }: RidershipGraphProps) => {
   const {
     line,
+    colorKey,
     linePath,
     query: { busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
@@ -63,7 +64,7 @@ export const RidershipGraph = ({
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
-    const lineColor = LINE_COLORS[line ?? 'default'];
+    const lineColor = LINE_COLORS[colorKey ?? 'default'];
     // Each week against the most riders in the same week of past years, so December and holiday
     // weeks aren't measured against a fall peak (#938). Without it, the flat all-time maximum.
     const seasonalPeaks = seasonalMaximumFor
@@ -284,7 +285,7 @@ export const RidershipGraph = ({
     seasonalMaximumFor,
     seasonalPending,
     stationName,
-    line,
+    colorKey,
     data,
     isMobile,
     linePath,

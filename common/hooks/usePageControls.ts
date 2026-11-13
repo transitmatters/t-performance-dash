@@ -18,6 +18,7 @@ const SECTIONS_WITH_CONTROLS: DateStoreSection[] = [
 export const usePageControls = () => {
   const {
     line,
+    colorKey,
     page,
     tab,
     query: { busRoute, crRoute, ferryRoute },
@@ -32,6 +33,7 @@ export const usePageControls = () => {
       SECTIONS_WITH_CONTROLS.includes(section) &&
       (line !== undefined || tab === 'System'),
     line,
+    colorKey,
     busRoute,
     crRoute,
     ferryRoute,

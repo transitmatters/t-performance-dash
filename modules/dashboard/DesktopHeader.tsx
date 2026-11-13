@@ -7,15 +7,15 @@ import { lineColorBackground, needsDarkTextOn, textOnLineColor } from '../../com
 
 export const DesktopHeader = () => {
   const { lineName, pageTitle } = usePageHeading();
-  const { visible: showControls, line } = usePageControls();
+  const { visible: showControls, colorKey } = usePageControls();
 
   return (
     <div className="sticky top-0 z-10 mb-2 shadow-md">
       <div
         className={classNames(
           'flex flex-row flex-wrap items-center justify-between gap-x-5 gap-y-2 px-5 py-3',
-          textOnLineColor(line),
-          lineColorBackground[line ?? 'DEFAULT']
+          textOnLineColor(colorKey),
+          lineColorBackground[colorKey ?? 'DEFAULT']
         )}
       >
         <h1 className="flex shrink-0 flex-row items-baseline gap-x-2 text-xl">
@@ -24,7 +24,7 @@ export const DesktopHeader = () => {
             size="sm"
             className={classNames(
               'self-center',
-              needsDarkTextOn(line) ? 'text-stone-900/60' : 'text-white/70'
+              needsDarkTextOn(colorKey) ? 'text-stone-900/60' : 'text-white/70'
             )}
           />
           <span className="font-normal select-none">{pageTitle}</span>

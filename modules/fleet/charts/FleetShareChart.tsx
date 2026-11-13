@@ -47,13 +47,13 @@ export const FleetShareChart = ({
   endDate,
   showTitle = false,
 }: FleetShareChartProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line, colorKey, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
-  const lineColor = LINE_COLORS[line ?? 'default'];
+  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
   // service metrics while cars still ran (and were sampled) on the remaining branches.
   // Checked against null rather than truthiness -- 0% is a real value.

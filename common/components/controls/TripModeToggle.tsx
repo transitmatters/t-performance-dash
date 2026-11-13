@@ -16,7 +16,7 @@ const MODE_LABELS: Record<string, string> = {
  * range across the hop.
  */
 export const TripModeToggle = () => {
-  const { line, page, query, linePath } = useDelimitatedRoute();
+  const { line, colorKey, page, query, linePath } = useDelimitatedRoute();
   const generateHref = useGenerateHref();
   const handlePageConfig = useHandleConfigStore();
 
@@ -26,7 +26,7 @@ export const TripModeToggle = () => {
     <div
       role="group"
       aria-label="Trip view"
-      style={lineColorVar(line)}
+      style={lineColorVar(colorKey)}
       className="flex h-10 w-full shrink-0 flex-row gap-0.5 rounded-md border border-stone-200 bg-white p-0.5 md:h-8 md:w-auto dark:border-stone-700 dark:bg-stone-900"
     >
       {TRIP_PAGES.map((tripPage) => {
@@ -47,7 +47,9 @@ export const TripModeToggle = () => {
           >
             {/* The global `a { color: inherit }` outranks text utilities on the link itself. */}
             <span
-              className={selected ? textOnLineColor(line) : 'text-stone-700 dark:text-stone-300'}
+              className={
+                selected ? textOnLineColor(colorKey) : 'text-stone-700 dark:text-stone-300'
+              }
             >
               {MODE_LABELS[tripPage.key] ?? tripPage.name}
             </span>

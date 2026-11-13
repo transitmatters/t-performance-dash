@@ -1,6 +1,6 @@
 import type { Page } from '../constants/pages';
 import type { QueryParams } from '../utils/searchSchemas';
-import type { Line, LinePath, LineShort } from './lines';
+import type { Line, LineColorKey, LinePath, LineShort } from './lines';
 
 export interface Route {
   line: Line | undefined;
@@ -9,6 +9,8 @@ export interface Route {
   page: Page;
   query: QueryParams;
   tab: Tab;
+  /** The color the page is drawn in: its line's, or `line-silver` on a Silver Line route. */
+  colorKey: LineColorKey | undefined;
   color: string;
 }
 

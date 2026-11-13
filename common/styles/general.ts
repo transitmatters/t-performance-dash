@@ -1,15 +1,15 @@
 import type { CSSProperties } from 'react';
 import { LINE_COLORS, LINE_COLORS_DARK } from '../constants/colors';
-import type { Line } from '../types/lines';
-import type { DefaultStyleMap } from '../types/styles';
+import type { LineColorKey } from '../types/lines';
+import type { DefaultStyleMap, LineColorStyleMap } from '../types/styles';
 import { readableOn } from '../utils/general';
 
 /** Whether text on a solid fill of the line's color has to be dark: bus yellow can't carry white. */
-export const needsDarkTextOn = (line?: Line | null) =>
+export const needsDarkTextOn = (line?: LineColorKey | null) =>
   readableOn(LINE_COLORS[line ?? 'default']) === 'dark';
 
 /** The readable text color for a solid fill of the line's color. */
-export const textOnLineColor = (line?: Line | null) =>
+export const textOnLineColor = (line?: LineColorKey | null) =>
   needsDarkTextOn(line) ? 'text-stone-900' : 'text-white';
 
 /**
@@ -18,13 +18,13 @@ export const textOnLineColor = (line?: Line | null) =>
  * for it at any alpha: `bg-(--line-color)/75`, `hover:border-(--line-color)/50`, and so on.
  * The variable inherits, so setting it on a container covers its children.
  */
-export const lineColorVar = (line?: Line | null): CSSProperties =>
+export const lineColorVar = (line?: LineColorKey | null): CSSProperties =>
   ({
     '--line-color': LINE_COLORS[line ?? 'default'],
     '--line-color-dark': LINE_COLORS_DARK[line ?? 'default'],
   }) as CSSProperties;
 
-export const lineColorBackground: DefaultStyleMap = {
+export const lineColorBackground: LineColorStyleMap = {
   'line-red': `bg-mbta-red`,
   'line-orange': `bg-mbta-orange`,
   'line-green': `bg-mbta-green`,
@@ -34,6 +34,7 @@ export const lineColorBackground: DefaultStyleMap = {
   'line-commuter-rail': `bg-mbta-commuterRail`,
   'line-ferry': `bg-mbta-ferry`,
   'line-RIDE': `bg-mbta-bus`,
+  'line-silver': `bg-mbta-silver`,
   DEFAULT: `bg-stone-800`,
 };
 
@@ -50,7 +51,7 @@ export const lineColorLightBorder: DefaultStyleMap = {
   DEFAULT: `border-stone-900`,
 };
 
-export const mbtaTextConfig: DefaultStyleMap = {
+export const mbtaTextConfig: LineColorStyleMap = {
   'line-red': `text-mbta-red`,
   'line-orange': `text-mbta-orange`,
   'line-green': `text-mbta-green`,
@@ -60,6 +61,7 @@ export const mbtaTextConfig: DefaultStyleMap = {
   'line-commuter-rail': `text-mbta-commuterRail`,
   'line-ferry': `text-mbta-ferry`,
   'line-RIDE': `text-mbta-bus`,
+  'line-silver': `text-mbta-silver`,
   DEFAULT: `text-black`,
 };
 

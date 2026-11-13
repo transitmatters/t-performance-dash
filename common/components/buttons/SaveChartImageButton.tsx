@@ -53,7 +53,7 @@ export const SaveChartImageButton = ({
   chartTitle,
   chartSubtitle,
 }: SaveChartImageButtonProps) => {
-  const { line } = useDelimitatedRoute();
+  const { line, colorKey } = useDelimitatedRoute();
 
   const handleClick = useCallback(
     async (event: MouseEvent<HTMLButtonElement>) => {
@@ -85,7 +85,7 @@ export const SaveChartImageButton = ({
           endDate,
           period,
           location,
-          line,
+          line: colorKey,
           includeBothStopsForLocation,
         },
         filename
@@ -99,6 +99,7 @@ export const SaveChartImageButton = ({
       includeBothStopsForLocation,
       startDate,
       line,
+      colorKey,
       location,
       endDate,
       chartTitle,
