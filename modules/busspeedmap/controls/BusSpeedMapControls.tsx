@@ -1,8 +1,15 @@
 import type { Dispatch, SetStateAction } from 'react';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { getBusRouteDisplayName } from '../../../common/constants/lines';
-import { ALL_ROUTES, DAY_TYPES, DIRECTIONS, PERIODS, TIME_BANDS } from '../constants';
-import type { DayType, DirectionFilter, Period, TimeBand } from '../types';
+import {
+  ALL_ROUTES,
+  COLOR_BY_OPTIONS,
+  DAY_TYPES,
+  DIRECTIONS,
+  PERIODS,
+  TIME_BANDS,
+} from '../constants';
+import type { DayType, DirectionFilter, Period, SegmentColorBy, TimeBand } from '../types';
 
 interface BusSpeedMapControlsProps {
   period: Period;
@@ -28,6 +35,10 @@ interface BusSpeedMapControlsProps {
   // always wants every control, doesn't have to pass them.
   showDayType?: boolean;
   showTimeBand?: boolean;
+  // Speed or delay. Left out where there's no delay to show: by the leaderboard, and by the map for
+  // an archive without free-flow times.
+  colorBy?: SegmentColorBy;
+  setColorBy?: Dispatch<SetStateAction<SegmentColorBy>>;
 }
 
 export const BusSpeedMapControls = ({
@@ -44,6 +55,8 @@ export const BusSpeedMapControls = ({
   setRouteId,
   showDayType = true,
   showTimeBand = true,
+  colorBy,
+  setColorBy,
 }: BusSpeedMapControlsProps) => {
   const periodOptions = PERIODS.map((option) => [option.key, option.label] as [Period, string]);
   const selectedPeriodIndex = PERIODS.findIndex((option) => option.key === period);
@@ -58,6 +71,11 @@ export const BusSpeedMapControls = ({
     (option) => [option.key, option.label] as [DirectionFilter, string]
   );
   const selectedDirectionIndex = DIRECTIONS.findIndex((option) => option.key === direction);
+
+  const colorByOptions = COLOR_BY_OPTIONS.map(
+    (option) => [option.key, option.label] as [SegmentColorBy, string]
+  );
+  const selectedColorByIndex = COLOR_BY_OPTIONS.findIndex((option) => option.key === colorBy);
 
   const routeOptions: [string, string][] = [
     [ALL_ROUTES, 'All'],
@@ -125,6 +143,33 @@ export const BusSpeedMapControls = ({
                 onChange={(event) => setDayType(event.target.value as DayType)}
               >
                 {DAY_TYPES.map((option) => (
+                  <option key={option.key} value={option.key}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </>
+        )}
+
+        {colorBy && setColorBy && (
+          <>
+            <div className="hidden shrink-0 lg:block">
+              <ButtonGroup
+                options={colorByOptions}
+                pressFunction={setColorBy}
+                selectedIndex={selectedColorByIndex}
+                line="line-bus"
+              />
+            </div>
+            <label className="flex items-center gap-2 text-sm lg:hidden">
+              <span className="text-stone-600">Color by</span>
+              <select
+                className="flex-1 rounded-md border border-stone-300 px-2 py-1.5 text-sm"
+                value={colorBy}
+                onChange={(event) => setColorBy(event.target.value as SegmentColorBy)}
+              >
+                {COLOR_BY_OPTIONS.map((option) => (
                   <option key={option.key} value={option.key}>
                     {option.label}
                   </option>

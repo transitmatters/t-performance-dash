@@ -16,6 +16,9 @@ export type TimeBand =
 
 export type DirectionFilter = 'inbound' | 'outbound';
 
+/** What the map colours segments by: their speed, or their running time against light traffic. */
+export type SegmentColorBy = 'speed' | 'delay';
+
 /** Whether most of a segment's trips start on it or end on it. */
 export type TerminalSection = 'first' | 'last';
 
@@ -75,6 +78,12 @@ export interface ArrivalToArrivalSpeeds {
  * mbta-performance's shared_segments.py), drawn in place of each route's own line when every one
  * of them is selected. Missing everywhere else, and from tiles published before the pipeline
  * pooled them.
+ *
+ * `free_flow_running_time_seconds` is the segment's median running time when traffic is light:
+ * trips that left before 6am or from 10pm, pooled over every day in the archive (mbta-performance's
+ * free_flow_running_times). The map's delay colouring compares `p50_running_time_seconds` with it.
+ * Missing where there were fewer than 10 such trips, and from archives published before the
+ * pipeline started writing it (see fetchBusSpeedSegmentsHasFreeFlow).
  */
 export interface BusSpeedSegmentProperties extends ArrivalToArrivalSpeeds {
   route_id: string;
@@ -93,6 +102,7 @@ export interface BusSpeedSegmentProperties extends ArrivalToArrivalSpeeds {
   p50_running_time_seconds?: number;
   terminal_section?: TerminalSection;
   shared_routes?: string;
+  free_flow_running_time_seconds?: number;
 }
 
 /**

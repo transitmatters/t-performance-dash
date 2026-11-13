@@ -4,8 +4,16 @@ import {
   busDwellsPath,
   busSpeedSegmentsPath,
   fetchBusDwellsUrl,
+  fetchBusSpeedSegmentsHasFreeFlow,
   fetchBusSpeedSegmentsUrl,
 } from './busSpeedSegments';
+
+const getMetadata = vi.fn();
+vi.mock('pmtiles', () => ({
+  PMTiles: vi.fn(function PMTiles() {
+    return { getMetadata };
+  }),
+}));
 
 const BASE = '/businsights/BusSpeedSegments';
 const BANDS = ['early_am', 'am_peak', 'midday', 'pm_peak', 'evening', 'late_night'] as const;
@@ -129,5 +137,40 @@ describe('fetchBusDwellsUrl', () => {
     await expect(
       fetchBusDwellsUrl({ date: '2026-11-04', period: 'daily', timeBand: 'am_peak' })
     ).rejects.toThrow();
+  });
+});
+
+describe('fetchBusSpeedSegmentsHasFreeFlow', () => {
+  const url = `https://dashboard.transitmatters.org${BASE}/monthly/Year=2026/Month=10/segments.pmtiles`;
+  const segmentsLayer = (fields: string[]) => ({
+    vector_layers: [
+      { id: 'segments', fields: Object.fromEntries(fields.map((field) => [field, 'Number'])) },
+    ],
+  });
+
+  afterEach(() => getMetadata.mockReset());
+
+  it('is true where the segments layer lists free-flow times', async () => {
+    getMetadata.mockResolvedValue(
+      segmentsLayer(['p50_running_time_seconds', 'free_flow_running_time_seconds'])
+    );
+    await expect(fetchBusSpeedSegmentsHasFreeFlow(url)).resolves.toBe(true);
+  });
+
+  it('is false for an archive published before them', async () => {
+    getMetadata.mockResolvedValue(segmentsLayer(['p50_running_time_seconds']));
+    await expect(fetchBusSpeedSegmentsHasFreeFlow(url)).resolves.toBe(false);
+  });
+
+  it('only reads the segments layer', async () => {
+    getMetadata.mockResolvedValue({
+      vector_layers: [{ id: 'dwells', fields: { free_flow_running_time_seconds: 'Number' } }],
+    });
+    await expect(fetchBusSpeedSegmentsHasFreeFlow(url)).resolves.toBe(false);
+  });
+
+  it('is false for metadata with no layer list', async () => {
+    getMetadata.mockResolvedValue({});
+    await expect(fetchBusSpeedSegmentsHasFreeFlow(url)).resolves.toBe(false);
   });
 });

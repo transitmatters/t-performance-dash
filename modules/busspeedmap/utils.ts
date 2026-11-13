@@ -166,6 +166,41 @@ export const segmentDwell = (
 const formatSpeed = (speed: number): string => speed.toFixed(speed < 10 ? 1 : 0);
 
 /**
+ * How much longer the segment's median trip took than in light traffic (its free-flow running time,
+ * see BusSpeedSegmentProperties): as a ratio, and in seconds. Undefined without a free-flow time,
+ * and for a segment with no running speed: one too short to time, whose few seconds of running
+ * time would make the ratio noise. Seconds can be negative, as the early morning can run faster.
+ */
+export const segmentDelay = (
+  segment: Pick<
+    BusSpeedSegmentProperties,
+    'p50_running_speed_mph' | 'p50_running_time_seconds' | 'free_flow_running_time_seconds'
+  >
+): { ratio: number; seconds: number } | undefined => {
+  const { p50_running_speed_mph, p50_running_time_seconds, free_flow_running_time_seconds } =
+    segment;
+  if (p50_running_speed_mph == null || p50_running_time_seconds == null) return undefined;
+  if (!free_flow_running_time_seconds) return undefined;
+  return {
+    ratio: p50_running_time_seconds / free_flow_running_time_seconds,
+    seconds: p50_running_time_seconds - free_flow_running_time_seconds,
+  };
+};
+
+/**
+ * "21s slower than in light traffic (1.6×)", or "About as fast as in light traffic" within a
+ * second or 5% of it, including where it ran faster. Undefined where segmentDelay is.
+ */
+export const formatSegmentDelay = (
+  segment: Parameters<typeof segmentDelay>[0]
+): string | undefined => {
+  const delay = segmentDelay(segment);
+  if (!delay) return undefined;
+  if (delay.seconds < 1 || delay.ratio < 1.05) return 'About as fast as in light traffic';
+  return `${getFormattedTimeString(delay.seconds)} slower than in light traffic (${delay.ratio.toFixed(1)}×)`;
+};
+
+/**
  * "2.1-9.0 mph" -- the speeds eight in ten trips fell between, slowest first: enough to tell a
  * section that's always slow from one a few trips hold up. Undefined for tiles published without
  * them, and for a segment with too few trips to say.

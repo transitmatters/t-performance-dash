@@ -9,6 +9,7 @@ import {
   busSpeedSegmentsFile,
   fetchBusDwellsUrl,
   fetchBusSpeedSegmentLeaderboard,
+  fetchBusSpeedSegmentsHasFreeFlow,
   fetchBusSpeedSegmentsUrl,
   fetchBusSpeedStops,
 } from '../busSpeedSegments';
@@ -59,6 +60,22 @@ export const useBusDwellsUrl = (options: FetchBusSpeedSegmentsUrlOptions, enable
     enabled: enabled,
     placeholderData: (previous, previousQuery) =>
       sameDateAndPeriod(options, previous, previousQuery?.queryKey[1]),
+    staleTime: ONE_DAY,
+    gcTime: ONE_DAY,
+  });
+};
+
+/**
+ * Whether the segments archive at `pmtilesUrl` has free-flow times to colour by delay. Holds the
+ * last answer while a new archive is checked, so switching band or date doesn't flash the control
+ * away and back. Undefined while unknown, and if the metadata can't be read.
+ */
+export const useBusSpeedSegmentsHasFreeFlow = (pmtilesUrl: string | undefined) => {
+  return useQuery({
+    queryKey: ['busSpeedSegmentsHasFreeFlow', pmtilesUrl] as const,
+    queryFn: () => (pmtilesUrl ? fetchBusSpeedSegmentsHasFreeFlow(pmtilesUrl) : false),
+    enabled: Boolean(pmtilesUrl),
+    placeholderData: (previous) => previous,
     staleTime: ONE_DAY,
     gcTime: ONE_DAY,
   });
