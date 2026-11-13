@@ -12,6 +12,7 @@ import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard
 import { formatPercentChange, halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { useFleetScope } from '../../common/hooks/usePageFilters';
+import { SelectedBusRouteScope } from '../../common/hooks/useChartBusRoute';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { FleetAgeGraphWrapper } from './FleetAgeGraphWrapper';
 import { FleetShareGraphWrapper } from './FleetShareGraphWrapper';
@@ -63,7 +64,10 @@ export function FleetDetails() {
   const fleetTypes = line ? FLEET_TYPES[line] : undefined;
   const metrics = getFleetModeMetrics(line);
   const scopeLabel = byRoute ? routeLabel : allLabel;
-  const subtitle = (railSubtitle: string) => (isRail ? railSubtitle : scopeLabel);
+  // A bus route is named by the badge on each chart title, so the subtitle only has to say
+  // "All routes" or which Commuter Rail line.
+  const scopeSubtitle = isBus && byRoute ? undefined : scopeLabel;
+  const subtitle = (railSubtitle: string) => (isRail ? railSubtitle : scopeSubtitle);
   // Shuttle shading marks rail shutdowns; bus and CR gaps are just missing samples.
   const shuttling = isRail;
 
@@ -107,86 +111,93 @@ export function FleetDetails() {
 
   return (
     <PageWrapper pageTitle={'Fleet'}>
-      <ChartPageDiv>
-        {stats && Number.isFinite(stats.age.value) && (
-          <StatCardGrid>
-            {shareStat && (
+      {/* "All routes" charts aren't about the route picked in the header. */}
+      <SelectedBusRouteScope shown={byRoute}>
+        <ChartPageDiv>
+          {stats && Number.isFinite(stats.age.value) && (
+            <StatCardGrid>
+              {shareStat && (
+                <StatCard
+                  label={shareLabel}
+                  value={percent(shareStat.value)}
+                  delta={shareDelta(shareStat)}
+                />
+              )}
               <StatCard
-                label={shareLabel}
-                value={percent(shareStat.value)}
-                delta={shareDelta(shareStat)}
+                label={metrics.age.title}
+                value={stats.age.value.toFixed(1)}
+                unit="years"
+                delta={ageDelta(stats.age)}
               />
-            )}
-            <StatCard
-              label={metrics.age.title}
-              value={stats.age.value.toFixed(1)}
-              unit="years"
-              delta={ageDelta(stats.age)}
-            />
-            {stats.mostCommon && (
-              <StatCard
-                label={mostCommonLabel}
-                value={stats.mostCommon.type.label}
-                unit={`${percent(stats.mostCommon.value)} of ${isRail ? 'cars' : 'trips'}`}
+              {stats.mostCommon && (
+                <StatCard
+                  label={mostCommonLabel}
+                  value={stats.mostCommon.type.label}
+                  unit={`${percent(stats.mostCommon.value)} of ${isRail ? 'cars' : 'trips'}`}
+                />
+              )}
+            </StatCardGrid>
+          )}
+          {metrics.share && (
+            <Widget
+              title={metrics.share.title}
+              subtitle={subtitle('Share of trips across the line')}
+              ready={[fleetMetrics]}
+            >
+              <FleetShareGraphWrapper
+                data={fleetMetrics.data!}
+                metric={metrics.share}
+                showShuttling={shuttling}
+                config={config}
+                startDate={startDate}
+                endDate={endDate}
               />
-            )}
-          </StatCardGrid>
-        )}
-        {metrics.share && (
+            </Widget>
+          )}
           <Widget
-            title={metrics.share.title}
-            subtitle={subtitle('Share of trips across the line')}
+            title={metrics.age.title}
+            subtitle={subtitle('Average across the line')}
             ready={[fleetMetrics]}
           >
-            <FleetShareGraphWrapper
+            <FleetAgeGraphWrapper
               data={fleetMetrics.data!}
-              metric={metrics.share}
+              metric={metrics.age}
               showShuttling={shuttling}
               config={config}
               startDate={startDate}
               endDate={endDate}
             />
           </Widget>
-        )}
-        <Widget
-          title={metrics.age.title}
-          subtitle={subtitle('Average across the line')}
-          ready={[fleetMetrics]}
-        >
-          <FleetAgeGraphWrapper
-            data={fleetMetrics.data!}
-            metric={metrics.age}
-            showShuttling={shuttling}
-            config={config}
-            startDate={startDate}
-            endDate={endDate}
-          />
-        </Widget>
-        {fleetTypes && (
-          <Widget
-            title={metrics.mixTitle}
-            subtitle={isRail ? metrics.mixSubtitle : `${metrics.mixSubtitle} · ${scopeLabel}`}
-            ready={[fleetMetrics]}
-          >
-            <FleetMixGraphWrapper
-              data={fleetMetrics.data!}
-              types={fleetTypes}
-              showShuttling={shuttling}
-              config={config}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </Widget>
-        )}
-        <p className="text-sm text-muted-foreground">
-          {isBus &&
-            'Based on the buses seen at one stop per direction on each route, so expect some day-to-day noise. '}
-          {isCommuterRail &&
-            "The MBTA's feed identifies only the cab car at one end of each train, not the locomotive or the other coaches, so these figures describe cab cars. Based on one stop per direction on each line. "}
-          {isRail &&
-            'Based on a representative sample of trips per day, not a full census of the line, so expect some day-to-day noise.'}
-        </p>
-      </ChartPageDiv>
+          {fleetTypes && (
+            <Widget
+              title={metrics.mixTitle}
+              subtitle={
+                isRail || !scopeSubtitle
+                  ? metrics.mixSubtitle
+                  : `${metrics.mixSubtitle} · ${scopeSubtitle}`
+              }
+              ready={[fleetMetrics]}
+            >
+              <FleetMixGraphWrapper
+                data={fleetMetrics.data!}
+                types={fleetTypes}
+                showShuttling={shuttling}
+                config={config}
+                startDate={startDate}
+                endDate={endDate}
+              />
+            </Widget>
+          )}
+          <p className="text-sm text-muted-foreground">
+            {isBus &&
+              'Based on the buses seen at one stop per direction on each route, so expect some day-to-day noise. '}
+            {isCommuterRail &&
+              "The MBTA's feed identifies only the cab car at one end of each train, not the locomotive or the other coaches, so these figures describe cab cars. Based on one stop per direction on each line. "}
+            {isRail &&
+              'Based on a representative sample of trips per day, not a full census of the line, so expect some day-to-day noise.'}
+          </p>
+        </ChartPageDiv>
+      </SelectedBusRouteScope>
     </PageWrapper>
   );
 }
