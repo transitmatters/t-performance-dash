@@ -9,7 +9,7 @@ import type {
   RreScenarioError,
   RreTravelSegment,
 } from '../../../common/types/regionalRailExplorer';
-import { formatMinutes } from '../../service/regionalRail/utils';
+import { formatClock, formatMinutes } from '../../service/regionalRail/utils';
 
 const HOUR = 3600;
 
@@ -143,11 +143,3 @@ export const trainsMultiple = (today: number, regionalRail: number) => {
 
 /** A duration in seconds, floored to the minute as the Explorer does: "49 min", "1 hr 12 min". */
 export const formatDuration = (seconds: number) => formatMinutes(Math.floor(seconds / 60));
-
-/** A time of day in seconds after midnight: "9:05 PM". Trains after midnight wrap around. */
-export const formatClock = (seconds: number) => {
-  const minutes = Math.floor(seconds / 60) % (24 * 60);
-  const hours = Math.floor(minutes / 60);
-  const suffix = hours < 12 ? 'AM' : 'PM';
-  return `${hours % 12 || 12}:${`${minutes % 60}`.padStart(2, '0')} ${suffix}`;
-};

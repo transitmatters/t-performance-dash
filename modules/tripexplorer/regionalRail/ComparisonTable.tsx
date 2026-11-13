@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
 import { Badge } from '../../../common/components/ui/badge';
 import { cn } from '../../../common/utils/cn';
+import { formatClock } from '../../service/regionalRail/utils';
 import type { TripSummary } from './utils';
-import { DOT_CLASS, formatClock, formatDuration, percentLess, trainsMultiple } from './utils';
+import { DOT_CLASS, formatDuration, percentLess, trainsMultiple } from './utils';
 
 const Value = ({ children, better }: { children?: ReactNode; better?: string }) => (
   <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold tabular-nums">

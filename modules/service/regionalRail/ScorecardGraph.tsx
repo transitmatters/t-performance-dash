@@ -4,12 +4,28 @@ import type { Benchmark, Dataset } from '../../../common/components/charts/TimeS
 import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
 import { getLabelsForData } from '../../../common/components/charts/TimeSeriesChart/helpers';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import { ByHourHistogram } from '../../../common/components/charts/ByHourHistogram';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartActions } from '../../../common/components/charts/ChartActions';
 import type { ChartDatasetName } from '../../../common/utils/chartTitles';
 import type { AggType } from '../../speed/constants/speeds';
+import { CHART_COLORS, LINE_COLORS, LINE_COLORS_ON_DARK } from '../../../common/constants/colors';
+import { hexWithAlpha } from '../../../common/utils/general';
 import { getNoDataSinceLatestBlock } from '../utils/graphUtils';
+
+const CR = LINE_COLORS['line-commuter-rail'];
+const CR_LIGHT = LINE_COLORS_ON_DARK['line-commuter-rail'];
+
+/** Both directions in Commuter Rail purple, inbound a lighter shade, each lightly filled. */
+export const DIRECTION_STYLES = {
+  outbound: { color: CR, fillColor: hexWithAlpha(CR, 0.15), fillPattern: 'solid' as const },
+  inbound: {
+    color: CR_LIGHT,
+    fillColor: hexWithAlpha(CR_LIGHT, 0.15),
+    fillPattern: 'solid' as const,
+  },
+};
+
+export const REVERSE_PEAK_STYLE = { color: CHART_COLORS.YELLOW, width: 1 };
 
 interface ScorecardGraphProps {
   data: Dataset[];
@@ -20,11 +36,12 @@ interface ScorecardGraphProps {
   format: (value: number) => string;
   max?: number;
   benchmark?: Benchmark;
-  /** Names the chart's PNG. */
+  /** Names the chart's PNG and CSV. */
   datasetName: ChartDatasetName;
+  csv?: ComponentProps<typeof ChartActions>['csv'];
 }
 
-/** One line per direction over time, against the Regional Rail target. */
+/** One stepped line per direction over time, against the Regional Rail target. */
 export const ScorecardGraph = ({
   data,
   agg,
@@ -35,6 +52,7 @@ export const ScorecardGraph = ({
   max,
   benchmark,
   datasetName,
+  csv,
 }: ScorecardGraphProps) => {
   const ref = useRef(null);
   if (data.every((dataset) => dataset.data.length === 0)) {
@@ -48,7 +66,8 @@ export const ScorecardGraph = ({
         valueAxis={{ min: 0, max, label: valueAxisLabel }}
         timeAxis={{ agg, from: startDate, to: endDate }}
         style={{
-          pointRadius: agg === 'daily' ? 0 : 2,
+          stepped: true,
+          pointRadius: 0,
           pointHitRadius: 8,
           tooltipLabel: (point, context) =>
             `${context.dataset.label}: ${point.value == null ? '—' : format(point.value)}`,
@@ -60,30 +79,7 @@ export const ScorecardGraph = ({
       <ChartActions
         datasetName={datasetName}
         chartRef={ref}
-        startDate={startDate}
-        endDate={endDate}
-      />
-    </ChartStack>
-  );
-};
-
-/** Trains by hour on an average day, with its action row. */
-export const ScorecardByHour = ({
-  data,
-  valueAxis,
-  startDate,
-  endDate,
-}: Pick<ComponentProps<typeof ByHourHistogram>, 'data' | 'valueAxis'> & {
-  startDate: string;
-  endDate: string;
-}) => {
-  const ref = useRef(null);
-  return (
-    <ChartStack>
-      <ByHourHistogram data={data} valueAxis={valueAxis} chartRef={ref} />
-      <ChartActions
-        datasetName="cr-trains-by-hour"
-        chartRef={ref}
+        csv={csv}
         startDate={startDate}
         endDate={endDate}
       />

@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import { cn } from '../../../common/utils/cn';
-import { formatClock } from './utils';
+import { formatClock } from '../../service/regionalRail/utils';
 
 const HOUR = 3600;
 // 4am to 2am covers the first and last trains on both schedules

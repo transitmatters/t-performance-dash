@@ -11,8 +11,8 @@ import { SaveChartImageButton } from '../buttons/SaveChartImageButton';
 interface ChartActionsProps {
   /** Names the PNG and CSV files, and titles a PNG saved from outside a card. */
   datasetName: ChartDatasetName;
-  /** The chart to save as a PNG. */
-  chartRef: RefObject<Chart | null>;
+  /** The chart to save as a PNG. Left off for a card that isn't a canvas, which then has no PNG. */
+  chartRef?: RefObject<Chart | null>;
   /** The rows behind the chart, offered as a CSV. */
   csv?: ComponentProps<typeof DownloadButton>['data'];
   /** Names the CSV file instead of `datasetName`, when its rows cover more than this chart. */
@@ -61,7 +61,7 @@ export const ChartActions = ({
       )}
     >
       <CopyLinkButton />
-      {startDate && (
+      {startDate && chartRef && (
         <SaveChartImageButton
           chartRef={chartRef}
           datasetName={datasetName}

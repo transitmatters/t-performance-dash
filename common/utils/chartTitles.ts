@@ -36,10 +36,10 @@ const CHART_TITLES = {
   'ride-trips': 'Trips per day',
   'ride-missed-trips': 'Missed trips and no-shows per day',
   'cr-hours-at-target': 'Hours with a train every 30 minutes',
-  'cr-midday-wait': 'Longest midday wait',
-  'cr-evening-wait': 'Longest evening wait',
+  'cr-longest-wait': 'Longest wait between trains',
   'cr-trains-per-day': 'Trains per day',
-  'cr-trains-by-hour': 'Trains by hour',
+  'cr-service-pattern': 'When trains run',
+  'cr-lines-service-pattern': 'Lines against Regional Rail standards',
   'traveltimes-by-vehicle': 'By vehicle',
 } as const;
 

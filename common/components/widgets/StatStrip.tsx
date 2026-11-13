@@ -16,7 +16,7 @@ interface StatCellProps {
   valueClassName?: string;
 }
 
-const StatCell = ({ label, description, children, valueClassName }: StatCellProps) => (
+export const StatCell = ({ label, description, children, valueClassName }: StatCellProps) => (
   // `bg-muted` rather than a fixed light grey: the figures inside inherit the card foreground, so a
   // cell pinned to stone-50 put near-white text on a near-white ground once the theme flipped.
   <div className="flex flex-col gap-y-1 bg-muted px-3.5 py-2.5">
@@ -111,14 +111,17 @@ export const StatStrip = ({ widgetObjects }: StatStripProps) => {
     );
   }
 
-  return (
-    <div
-      // The container color shows through the 1px gaps as the hairlines between cells, so it has to
-      // be a border token rather than a fixed black tint that vanishes on a dark card.
-      className="mt-3 grid gap-px overflow-hidden rounded-lg bg-border"
-      style={{ gridTemplateColumns: `repeat(auto-fit, minmax(9rem, 1fr))` }}
-    >
-      {cells}
-    </div>
-  );
+  return <StatStripGrid>{cells}</StatStripGrid>;
 };
+
+/** The strip's hairline grid, for cells built directly with `StatCell`. */
+export const StatStripGrid = ({ children }: { children: ReactNode }) => (
+  <div
+    // The container color shows through the 1px gaps as the hairlines between cells, so it has to
+    // be a border token rather than a fixed black tint that vanishes on a dark card.
+    className="mt-3 grid gap-px overflow-hidden rounded-lg bg-border"
+    style={{ gridTemplateColumns: `repeat(auto-fit, minmax(9rem, 1fr))` }}
+  >
+    {children}
+  </div>
+);
