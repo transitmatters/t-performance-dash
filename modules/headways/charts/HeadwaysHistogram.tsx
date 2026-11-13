@@ -21,7 +21,7 @@ export const HeadwaysHistogram = ({
   date: dateProp,
   fill = false,
 }: HeadwaysChartProps) => {
-  const { line, linePath, lineShort, query } = useDelimitatedRoute();
+  const { colorKey, linePath, lineShort, query } = useDelimitatedRoute();
   const date = dateProp ?? query.date;
 
   const ref = useRef(null);
@@ -46,7 +46,7 @@ export const HeadwaysHistogram = ({
             data={{
               datasets: [
                 {
-                  backgroundColor: LINE_COLORS[line ?? 'default'],
+                  backgroundColor: LINE_COLORS[colorKey ?? 'default'],
                   borderRadius: 4,
                   label:
                     lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
@@ -109,12 +109,12 @@ export const HeadwaysHistogram = ({
                         hero: {
                           value: count.toLocaleString(),
                           unit: count === 1 ? vehicle : vehicles,
-                          color: LINE_COLORS[line ?? 'default'],
+                          color: LINE_COLORS[colorKey ?? 'default'],
                         },
                         meter: {
                           fraction: pctTrips / 100,
                           label: `${pctTrips}% of ${vehicles}`,
-                          color: LINE_COLORS[line ?? 'default'],
+                          color: LINE_COLORS[colorKey ?? 'default'],
                         },
                         rows: benchmark
                           ? [
@@ -157,7 +157,7 @@ export const HeadwaysHistogram = ({
     fill,
     dataObject,
     isMobile,
-    line,
+    colorKey,
     linePath,
     lineShort,
     buckets,

@@ -13,10 +13,10 @@ interface NavLayoutProps {
 
 export const NavLayout = ({ children }: NavLayoutProps) => {
   // "The Living Map": the active line themes the whole shell (see [data-line] in globals.css).
-  const { line } = useDelimitatedRoute();
+  const { colorKey } = useDelimitatedRoute();
   useCommandPaletteShortcut();
   return (
-    <SidebarProvider data-line={line ?? undefined}>
+    <SidebarProvider data-line={colorKey}>
       <AppSidebar />
       {/* The content ground sits one step back from the cards so they lift off it. `bg-stone-100`
           alone pinned that ground to light in both themes, which left every translucent surface on

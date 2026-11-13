@@ -47,6 +47,7 @@ export const MobileControlPanel = () => {
   const [open, setOpen] = useState(false);
   const {
     line,
+    colorKey,
     busRoute,
     crRoute,
     ferryRoute,
@@ -67,8 +68,8 @@ export const MobileControlPanel = () => {
   const lineButton = classNames(
     'rounded-lg text-sm font-semibold focus-visible:ring-offset-2',
     FOCUS_RING_ON_SURFACE,
-    lineColorBackground[line ?? 'DEFAULT'],
-    textOnLineColor(line)
+    lineColorBackground[colorKey ?? 'DEFAULT'],
+    textOnLineColor(colorKey)
   );
 
   return (

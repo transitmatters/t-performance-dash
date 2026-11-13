@@ -1,7 +1,7 @@
 import { useLocation, useMatches, useNavigate, useRouter } from '@tanstack/react-router';
 import { useCallback, useMemo } from 'react';
 import { isEqual, pickBy, startCase, toLower } from '@lodash-utils';
-import type { Line, LinePath, LineShort } from '../types/lines';
+import type { Line, LineColorKey, LinePath, LineShort } from '../types/lines';
 import { RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tab } from '../types/router';
 import { CHART_PARAMS, DATE_PARAMS } from '../types/router';
@@ -18,7 +18,7 @@ import type { StationStore } from '../state/stationStore';
 import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
 import type { DateStore } from '../state/dateStore';
-import { LINE_COLORS } from '../constants/colors';
+import { getLineColorKey, LINE_COLORS } from '../constants/colors';
 import type { SearchObject } from './searchParams';
 import { validateAnySearch } from './searchSchemas';
 
@@ -140,6 +140,7 @@ export const useDelimitatedRoute = (): Route => {
   // Merged like TanStack merges a route's validated search, so unknown params still carry over.
   const query: QueryParams = useMemo(() => ({ ...search, ...validateAnySearch(search) }), [search]);
   const { pathItems, tab, page, line } = parseRoutePath(withoutEmbedPrefix(pathname));
+  const colorKey = getLineColorKey(line, query.busRoute);
 
   return {
     line,
@@ -148,8 +149,19 @@ export const useDelimitatedRoute = (): Route => {
     page: page,
     tab,
     query,
-    color: LINE_COLORS[line ?? 'default'],
+    colorKey,
+    color: LINE_COLORS[colorKey ?? 'default'],
   };
+};
+
+/**
+ * The color to draw `line` in on the current page. That's the page's own color when `line` is the
+ * page's line, so the bus line turns silver on a Silver Line route, and `line` itself otherwise.
+ */
+export const useLineColorKey = (line: Line | null | undefined): LineColorKey | undefined => {
+  const route = useDelimitatedRoute();
+  if (!line) return undefined;
+  return line === route.line ? route.colorKey : line;
 };
 
 /**

@@ -1,4 +1,4 @@
-import type { Line } from '../types/lines';
+import type { Line, LineColorKey } from '../types/lines';
 import { hexWithAlpha } from '../utils/general';
 
 export const COLORS = {
@@ -17,6 +17,7 @@ export const COLORS = {
     commuterRail: '#80276c',
     ferry: '#008EAA',
     theRide: '#FFC72C',
+    silver: '#7C878E',
   },
   charts: {
     fillBackgroundColor: '#bfc8d680',
@@ -64,7 +65,7 @@ export const CHART_COLORS = {
   TARGET_ZONE: hexWithAlpha('#64b96a', 0.15),
 };
 
-export const LINE_COLORS: { [key in Line | 'default']: string } = {
+export const LINE_COLORS: { [key in LineColorKey | 'default']: string } = {
   'line-red': COLORS.mbta.red,
   'line-orange': COLORS.mbta.orange,
   'line-blue': COLORS.mbta.blue,
@@ -74,15 +75,22 @@ export const LINE_COLORS: { [key in Line | 'default']: string } = {
   'line-commuter-rail': COLORS.mbta.commuterRail,
   'line-ferry': COLORS.mbta.ferry,
   'line-RIDE': COLORS.mbta.theRide,
+  'line-silver': COLORS.mbta.silver,
   default: '#303030',
 };
+
+/** The color a line's page is drawn in: Silver Line routes (SL1–SL5, SLW) get their own silver. */
+export const getLineColorKey = <L extends Line | undefined>(
+  line: L,
+  busRoute: string | undefined
+): L | 'line-silver' => (line === 'line-bus' && busRoute?.startsWith('SL') ? 'line-silver' : line);
 
 /**
  * Line colours for small text, such as station names: each brand colour with its OKLCH lightness
  * capped at 0.56 on light cards and raised to at least 0.72 on dark ones, so every line reads at
  * 4.5:1 or better while keeping its hue.
  */
-export const LINE_TEXT_COLORS: Record<Line, { light: string; dark: string }> = {
+export const LINE_TEXT_COLORS: Record<LineColorKey, { light: string; dark: string }> = {
   'line-red': { light: '#d52216', dark: '#ff7360' },
   'line-mattapan': { light: '#d52216', dark: '#ff7360' },
   'line-orange': { light: '#a76101', dark: '#ed8b00' },
@@ -92,10 +100,11 @@ export const LINE_TEXT_COLORS: Record<Line, { light: string; dark: string }> = {
   'line-RIDE': { light: '#916f04', dark: '#ffc72c' },
   'line-commuter-rail': { light: '#80276c', dark: '#de7ec4' },
   'line-ferry': { light: '#07829b', dark: '#45b5d1' },
+  'line-silver': { light: '#6b767c', dark: '#9ba6ac' },
 };
 
 // Darker line shades, mirroring the `mbta.dark*` colors in tailwind.config.js.
-export const LINE_COLORS_DARK: { [key in Line | 'default']: string } = {
+export const LINE_COLORS_DARK: { [key in LineColorKey | 'default']: string } = {
   'line-red': '#bc2020',
   'line-orange': '#e08300',
   'line-blue': '#19376B',
@@ -105,6 +114,7 @@ export const LINE_COLORS_DARK: { [key in Line | 'default']: string } = {
   'line-commuter-rail': '#6c215c',
   'line-ferry': '#006B82',
   'line-RIDE': '#E6A800',
+  'line-silver': '#5A656A',
   default: '#292524',
 };
 
@@ -114,7 +124,7 @@ export const LINE_COLORS_DARK: { [key in Line | 'default']: string } = {
  * a dark card, so those two in particular have to be raised to stay readable. Every value here
  * clears 4.5:1 on #171717.
  */
-export const LINE_COLORS_ON_DARK: { [key in Line | 'default']: string } = {
+export const LINE_COLORS_ON_DARK: { [key in LineColorKey | 'default']: string } = {
   'line-red': '#f1554a',
   'line-orange': '#ed8b00',
   'line-blue': '#5b8def',
@@ -124,6 +134,8 @@ export const LINE_COLORS_ON_DARK: { [key in Line | 'default']: string } = {
   'line-commuter-rail': '#c05fa8',
   'line-ferry': '#3fbbd6',
   'line-RIDE': '#ffc72c',
+  // Already 4.9:1 on #171717, so the brand silver is used as is.
+  'line-silver': COLORS.mbta.silver,
   default: '#d6d3d1',
 };
 

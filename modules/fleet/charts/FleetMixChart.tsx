@@ -48,13 +48,13 @@ export const FleetMixChart = ({
   endDate,
   showTitle = false,
 }: FleetMixChartProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line, colorKey, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
-  const lineColor = LINE_COLORS[line ?? 'default'];
+  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
   const shuttlingBlocks = showShuttling
