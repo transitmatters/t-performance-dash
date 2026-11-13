@@ -16,9 +16,9 @@ export const percent = (numerator?: number, denominator?: number) =>
  * Map each period to a point, with a null value (a gap) where nothing was measured. Every series
  * keeps one point per period, so a hover card reads the same period from each.
  */
-export const toPoints = (
-  data: ReliabilityEntry[],
-  value: (entry: ReliabilityEntry) => number | undefined
+export const toPoints = <Entry extends { date: string }>(
+  data: Entry[],
+  value: (entry: Entry) => number | undefined
 ): Point[] =>
   data.map((entry) => {
     const v = value(entry);

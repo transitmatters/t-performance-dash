@@ -54,7 +54,7 @@ export const SaveChartImageButton = ({
   chartTitle,
   chartSubtitle,
 }: SaveChartImageButtonProps) => {
-  const { line } = useDelimitatedRoute();
+  const { line, colorKey } = useDelimitatedRoute();
   const busRoute = useChartBusRoute();
 
   const handleClick = useCallback(
@@ -87,7 +87,7 @@ export const SaveChartImageButton = ({
           endDate,
           period,
           location,
-          line,
+          line: colorKey,
           busRoute,
           includeBothStopsForLocation,
         },
@@ -102,6 +102,7 @@ export const SaveChartImageButton = ({
       includeBothStopsForLocation,
       startDate,
       line,
+      colorKey,
       busRoute,
       location,
       endDate,

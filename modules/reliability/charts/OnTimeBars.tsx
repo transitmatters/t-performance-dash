@@ -31,11 +31,11 @@ interface OnTimeBarsProps {
 
 /** One bar per period: the share of headways on time: within 25% of the scheduled headway. */
 export const OnTimeBars = ({ rows, agg, startDate, endDate }: OnTimeBarsProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { colorKey, linePath } = useDelimitatedRoute();
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
-  const lineColor = LINE_COLORS[line ?? 'default'];
+  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   const shares = rows.map((row) => headwayShare(row.counts, ON_TIME) ?? null);
 
   if (shares.every((share) => share == null)) return <NoDataNotice isLineMetric />;

@@ -345,6 +345,39 @@ export type ReliabilityEntry = Partial<HeadwayCounts> & {
   byDirection?: Record<string, HeadwayCounts>;
 };
 
+/**
+ * Riders and their passenger-weighted minutes, summed over a period; see
+ * server/chalicelib/reliability.py. Divide minutes by riders for per-rider averages.
+ */
+export type ExcessTripTimeSums = {
+  riders: number;
+  waitTime: number;
+  travelTime: number;
+  baselineTripTime: number;
+  baselineWaitTime: number;
+  baselineTravelTime: number;
+  withinFiveMin: number;
+  withinTwentyMin: number;
+  withinTwentyPct: number;
+  withinThirtyPct: number;
+};
+
+export type ExcessTripTimePeriod = 'amPeak' | 'pmPeak' | 'offPeak';
+
+/** Sums for both directions or one, with the same sums per service period. */
+export type ExcessTripTimeScope = ExcessTripTimeSums & {
+  byPeriod: Record<ExcessTripTimePeriod, ExcessTripTimeSums>;
+};
+
+/** One day, week, or month of the MBTA's excess trip time for a subway line. */
+export type ExcessTripTimeEntry = ExcessTripTimeScope & {
+  date: string;
+  // Service days with data in the period
+  days: number;
+  // Per GTFS direction_id ("0", "1")
+  byDirection: Record<string, ExcessTripTimeScope>;
+};
+
 /** One direction's schedule, measured at its Boston terminal; see server/chalicelib/regional_rail.py. */
 export type ScorecardDirection = {
   trips: number;

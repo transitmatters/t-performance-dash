@@ -4,6 +4,7 @@ import type { SingleDayDataPoint, BenchmarkFieldKeys, MetricFieldKeys } from '..
 import { PointFieldKeys } from '../../types/charts';
 import { lineColorVar } from '../../styles/general';
 import type { Line } from '../../types/lines';
+import { useLineColorKey } from '../../utils/router';
 import { PRETTY_DATE_FORMAT, TODAY_STRING, YESTERDAY_STRING } from '../../constants/dates';
 
 /** Matches the chart legend's "25%+ off" band, so the callout and the plot agree. */
@@ -51,6 +52,7 @@ export const DelayInsight = ({
   subject,
   line,
 }: DelayInsightProps) => {
+  const colorKey = useLineColorKey(line);
   const insight = useMemo(() => {
     const behind = data.filter((point) => {
       const benchmark = point[benchmarkField];
@@ -76,7 +78,7 @@ export const DelayInsight = ({
   const trips = insight.count === 1 ? 'trip' : 'trips';
   return (
     <div
-      style={lineColorVar(line)}
+      style={lineColorVar(colorKey)}
       className="flex flex-row items-center gap-x-2.5 rounded-lg border border-(--line-color)/40 bg-(--line-color)/10 px-4 py-2.5"
     >
       <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-(--line-color) text-[11px] font-bold text-stone-900">

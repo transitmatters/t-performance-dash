@@ -49,7 +49,7 @@ export const PercentageServiceGraph = ({
   fill = false,
   embed,
 }: PercentageServiceGraphProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line, colorKey, linePath } = useDelimitatedRoute();
   const { tooltipFormat, unit, callbacks } = config;
 
   const isMobile = !useBreakpoint('md');
@@ -60,7 +60,7 @@ export const PercentageServiceGraph = ({
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
-    const lineColor = LINE_COLORS[line ?? 'default'];
+    const lineColor = LINE_COLORS[colorKey ?? 'default'];
     const shuttlingBlocks = hideGapsExplainedByEvents(
       explainGaps(getShuttlingBlockAnnotations(data), shutdowns, { startDate, endDate }),
       events
@@ -228,7 +228,7 @@ export const PercentageServiceGraph = ({
   }, [
     data,
     shutdowns,
-    line,
+    colorKey,
     comparison,
     isMobile,
     linePath,

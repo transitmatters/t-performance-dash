@@ -844,6 +844,42 @@ def get_reliability():
 
 
 @app.route(
+    "/api/excess_trip_time",
+    cors=cors_config,
+    docs=Docs(request=models.ExcessTripTimeParams, responses=[Resp(models.ExcessTripTimeResponse), BAD_REQUEST]),
+)
+def get_excess_trip_time():
+    """Retrieve the MBTA's excess trip time for the Red, Orange or Blue Line: riders and their wait and travel minutes against a baseline."""
+    query_params = app.current_request.query_params or {}
+    validate_query_params(query_params, ["line", "start_date", "end_date", "agg"])
+    start_date, end_date = parse_date_range(query_params)
+    if query_params["line"] not in reliability.EXCESS_TRIP_TIME_LINES:
+        raise BadRequestError(
+            f"Invalid line '{query_params['line']}'. Expected one of: {', '.join(reliability.EXCESS_TRIP_TIME_LINES)}."
+        )
+    if query_params["agg"] not in reliability.AGGS:
+        raise BadRequestError(f"Invalid agg '{query_params['agg']}'. Expected one of: {', '.join(reliability.AGGS)}.")
+    cache_max_age = cache.get_cache_max_age(query_params)
+
+    if config.BACKEND_SOURCE == "static":
+        data = static_data.get_excess_trip_time(query_params)
+    elif config.BACKEND_SOURCE == "prod":
+        data = static_data.proxy_request("/api/excess_trip_time", query_params)
+    else:
+        data = reliability.get_excess_trip_time(
+            line=query_params["line"],
+            start_date=start_date,
+            end_date=end_date,
+            agg=query_params["agg"],
+        )
+
+    return Response(
+        body=json.dumps(data),
+        headers={"Content-Type": "application/json", "Cache-Control": f"public, max-age={cache_max_age}"},
+    )
+
+
+@app.route(
     "/api/crscorecard",
     cors=cors_config,
     docs=Docs(request=models.CrScorecardParams, responses=[Resp(models.CrScorecardResponse), BAD_REQUEST]),

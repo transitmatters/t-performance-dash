@@ -400,6 +400,24 @@ class ReliabilityParams(BaseModel):
     agg: AggregationPeriod = Field(description=_AGG_DESC)
 
 
+class ExcessTripTimeParams(BaseModel):
+    """Parameters for the `/api/excess_trip_time` endpoint.
+
+    Attributes:
+        line: The subway line.
+        start_date: Start of date range.
+        end_date: End of date range.
+        agg: Aggregation level — `daily`, `weekly`, or `monthly`.
+    """
+
+    line: Literal["line-red", "line-orange", "line-blue"] = Field(
+        description="The subway line. The MBTA publishes excess trip time for the Red, Orange and Blue Lines."
+    )
+    start_date: date = Field(description=_DATE_RANGE_START_DESC)
+    end_date: date = Field(description=_DATE_RANGE_END_DESC)
+    agg: AggregationPeriod = Field(description=_AGG_DESC)
+
+
 class CrScorecardParams(BaseModel):
     """Parameters for the `/api/crscorecard` endpoint.
 
@@ -1384,6 +1402,78 @@ class ReliabilityEntry(BaseModel):
 
 class ReliabilityResponse(RootModel[List[ReliabilityEntry]]):
     """Response for `/api/reliability`: on-time performance or headway counts, one entry per period."""
+
+
+class ExcessTripTimeSums(BaseModel):
+    """Riders and their passenger-weighted trip times, summed over a period (and a direction or service
+    period, when nested). Divide minutes by `riders` for per-rider averages. Excess trip time is
+    `waitTime + travelTime - baselineTripTime`.
+
+    Attributes:
+        riders: Estimated riders, from fare taps.
+        waitTime: Total minutes riders waited for a train (each train's headway halved).
+        travelTime: Total minutes riders spent on board, including dwells.
+        baselineTripTime: Total baseline trip (wait plus travel) minutes, as the MBTA measures it.
+        baselineWaitTime: Total baseline wait minutes, from the best schedule for the fleet.
+        baselineTravelTime: Total baseline travel minutes, from the fastest monthly median since 2021.
+        withinFiveMin: Riders whose trip took at most 5 minutes longer than the baseline.
+        withinTwentyMin: Riders whose trip took at most 20 minutes longer than the baseline.
+        withinTwentyPct: Riders whose trip took at most 20% longer than the baseline.
+        withinThirtyPct: Riders whose trip took at most 30% longer than the baseline.
+    """
+
+    riders: float
+    waitTime: float
+    travelTime: float
+    baselineTripTime: float
+    baselineWaitTime: float
+    baselineTravelTime: float
+    withinFiveMin: float
+    withinTwentyMin: float
+    withinTwentyPct: float
+    withinThirtyPct: float
+
+
+class ExcessTripTimePeriods(BaseModel):
+    """Excess trip time sums per service period, as the MBTA's Service Delivery Policy defines them.
+
+    Attributes:
+        amPeak: Weekdays 7–9am.
+        pmPeak: Weekdays 4–6:30pm.
+        offPeak: Every other time, and all weekend and holiday service.
+    """
+
+    amPeak: ExcessTripTimeSums
+    pmPeak: ExcessTripTimeSums
+    offPeak: ExcessTripTimeSums
+
+
+class ExcessTripTimeScope(ExcessTripTimeSums):
+    """Excess trip time sums for both directions or one, with the same sums per service period.
+
+    Attributes:
+        byPeriod: The same sums per service period.
+    """
+
+    byPeriod: ExcessTripTimePeriods
+
+
+class ExcessTripTimeEntry(ExcessTripTimeScope):
+    """Excess trip time sums for one day, week, or month.
+
+    Attributes:
+        date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
+        days: Service days with data in the period.
+        byDirection: The same sums, and per-period sums, per GTFS direction ID (`"0"`, `"1"`).
+    """
+
+    date: str
+    days: int
+    byDirection: Dict[str, ExcessTripTimeScope]
+
+
+class ExcessTripTimeResponse(RootModel[List[ExcessTripTimeEntry]]):
+    """Response for `/api/excess_trip_time`: excess trip time sums for a subway line, one entry per period."""
 
 
 class CrScorecardDirection(BaseModel):

@@ -2,13 +2,15 @@
 
 - The RIDE and commuter rail: on-time performance from the MBTA open data portal, in the
   ``Reliability`` table keyed by ``routeId`` (``"RIDE"``, ``"CR-Worcester"``, ...) and ``date``.
+- Excess trip time on the Red, Orange and Blue Lines: riders and passenger-weighted minutes from the
+  MBTA open data portal, in the same ``Reliability`` table under ``"line-red"``, ... (weekly, ~5 weeks behind).
 - Subway lines: headways bucketed by their ratio to the scheduled headway, measured by TransitMatters
   from per-stop events, in the ``HeadwayReliability`` table keyed by ``route`` (``"line-red"``, ...).
 - Bus routes: the same five headway buckets at mid-route timepoints, written by mbta-performance from
   LAMP onto each route/day row of ``DeliveredTripMetricsBus`` (from 2025-12-24).
 
-Everything here is a raw count, so rolling up to weekly/monthly or across commuter rail routes is a
-sum; percentages are computed by the client.
+Everything here is a raw count (or, for excess trip time, a sum of minutes over riders), so rolling up to
+weekly/monthly or across commuter rail routes is a sum; percentages and averages are computed by the client.
 """
 
 from datetime import date, timedelta
@@ -20,6 +22,8 @@ from .dynamo import query_daily_trips_on_routes, query_headway_reliability, quer
 THE_RIDE_ROUTE_ID = "RIDE"
 COMMUTER_RAIL_ROUTE_ID = "commuter-rail"
 SUBWAY_LINES = {"line-red", "line-orange", "line-blue", "line-green", "line-mattapan"}
+# The lines the MBTA publishes excess trip time for. It plans to add the Green Line.
+EXCESS_TRIP_TIME_LINES = ("line-red", "line-orange", "line-blue")
 
 COMMUTER_RAIL_ROUTES = [
     "CR-Fairmount",
@@ -148,3 +152,32 @@ def get_reliability(route_id: str, start_date: date, end_date: date, agg: str) -
     route_ids = COMMUTER_RAIL_ROUTES if route_id == COMMUTER_RAIL_ROUTE_ID else [route_id]
     items = [item for rid in route_ids for item in query_reliability(rid, start_date, end_date)]
     return aggregate(items, agg)
+
+
+def _round_sums(counts: Dict) -> Dict:
+    """Round summed minutes and riders to a tenth, which is how they're stored, so float noise from
+    adding them up (``1234.5000000001``) doesn't bloat the response."""
+    return {
+        key: _round_sums(value) if isinstance(value, dict) else round(value, 1) if isinstance(value, float) else value
+        for key, value in counts.items()
+    }
+
+
+def get_excess_trip_time(line: str, start_date: date, end_date: date, agg: str) -> List[Dict]:
+    """Retrieve excess trip time sums for a subway line, rolled up to days, weeks, or months.
+
+    Args:
+        line: One of ``EXCESS_TRIP_TIME_LINES``.
+        start_date: First date of the range (inclusive).
+        end_date: Last date of the range (inclusive).
+        agg: ``daily``, ``weekly``, or ``monthly``.
+
+    Returns:
+        A list of dicts with ``date`` (bucket start), ``days``, ``riders``, actual and baseline
+        passenger-minutes (``waitTime``, ``travelTime``, ``baselineTripTime``, ``baselineWaitTime``,
+        ``baselineTravelTime``) and riders within each threshold of the baseline (``withinFiveMin``,
+        ``withinTwentyMin``, ``withinTwentyPct``, ``withinThirtyPct``). The same sums per service
+        period are under ``byPeriod`` (``amPeak``, ``pmPeak``, ``offPeak``), and both again per
+        GTFS direction under ``byDirection`` (``"0"``, ``"1"``).
+    """
+    return [_round_sums(entry) for entry in aggregate(query_reliability(line, start_date, end_date), agg)]

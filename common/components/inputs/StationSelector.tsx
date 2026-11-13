@@ -26,6 +26,7 @@ const branchLabelWidth = {
 export const StationSelector = ({ type, fromStation, toStation, setStation }: StationSelector) => {
   const {
     line,
+    colorKey,
     lineShort,
     query: { busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
@@ -64,7 +65,11 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="start" style={lineColorVar(line)} className="w-[min(22rem,90vw)] p-0">
+      <PopoverContent
+        align="start"
+        style={lineColorVar(colorKey)}
+        className="w-[min(22rem,90vw)] p-0"
+      >
         <Command>
           <CommandInput placeholder={`Search ${noun}s...`} />
           <CommandList>

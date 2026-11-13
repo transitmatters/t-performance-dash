@@ -3,7 +3,8 @@ import type { Benchmark, Dataset } from '../../../common/components/charts/TimeS
 import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
 import { getLabelsForData } from '../../../common/components/charts/TimeSeriesChart/helpers';
 import { CHART_COLORS, LINE_COLORS, LINE_COLORS_DARK } from '../../../common/constants/colors';
-import type { Line } from '../../../common/types/lines';
+import type { Line, LineColorKey } from '../../../common/types/lines';
+import { useLineColorKey } from '../../../common/utils/router';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartActions } from '../../../common/components/charts/ChartActions';
@@ -26,10 +27,10 @@ interface ReliabilityGraphProps {
 }
 
 // Colors by position, in the line's own shades like the other v5 charts
-const seriesStyle = (line: Line, index: number) =>
+const seriesStyle = (colorKey: LineColorKey, index: number) =>
   index === 0
-    ? { color: LINE_COLORS[line], fill: true }
-    : { color: index === 1 ? LINE_COLORS_DARK[line] : CHART_COLORS.ANNOTATIONS };
+    ? { color: LINE_COLORS[colorKey], fill: true }
+    : { color: index === 1 ? LINE_COLORS_DARK[colorKey] : CHART_COLORS.ANNOTATIONS };
 
 /** A stepped chart of on-time percentages or per-day counts, one series per dataset. */
 export const ReliabilityGraph = ({
@@ -43,6 +44,7 @@ export const ReliabilityGraph = ({
   benchmarks,
   datasetName,
 }: ReliabilityGraphProps) => {
+  const colorKey = useLineColorKey(line) ?? line;
   const ref = useRef(null);
   if (data.every((dataset) => dataset.data.length === 0)) {
     return <NoDataNotice isLineMetric />;
@@ -54,7 +56,7 @@ export const ReliabilityGraph = ({
       chartRef={ref}
       data={data.map((dataset, index) => ({
         ...dataset,
-        style: { ...seriesStyle(line, index), ...dataset.style },
+        style: { ...seriesStyle(colorKey, index), ...dataset.style },
       }))}
       valueAxis={{
         min: 0,

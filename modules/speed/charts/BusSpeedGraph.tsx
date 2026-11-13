@@ -17,7 +17,7 @@ import {
 import { explainGaps, usePageShutdowns } from '../../shutdowns';
 import type { ParamsType } from '../constants/speeds';
 import { bandMph, flattenBandsForCsv } from '../utils/busSpeedBands';
-import { ALL_DAY_FILL, BusSpeedBandLegend, useBandColors } from './BusSpeedBandLegend';
+import { allDayFill, BusSpeedBandLegend, useBandColors } from './BusSpeedBandLegend';
 
 interface BusSpeedGraphProps {
   data: DeliveredTripMetricsBus[];
@@ -80,9 +80,7 @@ export const BusSpeedGraph = ({
                 // bands its fill fades to a backdrop, and it draws underneath them (higher order
                 // draws first), so the band lines stay on top.
                 fill: isAllDay,
-                backgroundColor: isAllDay
-                  ? ALL_DAY_FILL[anyBandShown ? 'backdrop' : 'solo']
-                  : colors[key],
+                backgroundColor: isAllDay ? allDayFill(colors.all_day, anyBandShown) : colors[key],
                 order: isAllDay ? 1 : 0,
                 stepped: true,
                 spanGaps: false,
