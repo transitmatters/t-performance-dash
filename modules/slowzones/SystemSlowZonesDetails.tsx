@@ -20,7 +20,7 @@ import type { Direction } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import { LineSegments } from './charts/LineSegments';
-import { DirectionObject } from './constants/constants';
+import { DirectionObject, MAP_LABEL_OPTIONS } from './constants/constants';
 import { SlowZonesMap } from './map';
 import type { SlowZonesLineName } from './types';
 
@@ -44,6 +44,9 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
     'northbound',
     DIRECTION_OPTIONS
   );
+  const { value: mapLabel, control: mapLabelControl } = useChartToggle('slow', MAP_LABEL_OPTIONS, {
+    paramKey: 'szLabels',
+  });
 
   const [lineShort, setLineShort] = useState<SlowZonesLineName>('Red');
   const line = `line-${lineShort.toLowerCase()}` as Line;
@@ -99,14 +102,17 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           title="Line map"
           subtitle={`As of ${formatDateTodayCheck(endDate!)}`}
           action={
-            <ButtonGroup
-              line={line}
-              pressFunction={setLineShort}
-              selectedIndex={LINE_OPTIONS.findIndex(([key]) => key === lineShort)}
-              options={LINE_OPTIONS}
-              additionalDivClass="w-auto"
-              additionalButtonClass="px-3"
-            />
+            <>
+              <ButtonGroup
+                line={line}
+                pressFunction={setLineShort}
+                selectedIndex={LINE_OPTIONS.findIndex(([key]) => key === lineShort)}
+                options={LINE_OPTIONS}
+                additionalDivClass="w-auto"
+                additionalButtonClass="px-3"
+              />
+              {mapLabelControl}
+            </>
           }
           ready={[allData, speedRestrictions]}
         >
@@ -115,6 +121,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
             slowZones={allData.data!}
             speedRestrictions={speedRestrictions.data}
             lineName={lineShort}
+            label={mapLabel}
             direction={isDesktop ? 'horizontal' : 'vertical'}
           />
         </Widget>
