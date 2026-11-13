@@ -1,12 +1,17 @@
 import { useMemo } from 'react';
 import type { ChunkedAggregateQueryResult, DayFilter } from '../../common/types/charts';
+import type { TripComparison } from '../../common/types/comparison';
 import type { Station } from '../../common/types/stations';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PartialDataNotice } from '../../common/components/notices/PartialDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../common/utils/widgets';
+import {
+  filterByDayType,
+  getAggDataWidgets,
+  getWidgetComparisonData,
+} from '../../common/utils/widgets';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 import { DwellsTerminusNotice } from './DwellsTerminusNotice';
 
@@ -16,6 +21,8 @@ interface DwellsAggregateWrapperProps {
   fromStation: Station;
   /** Owned by the parent, whose card header renders the day-filter control. */
   dayFilter: DayFilter;
+  /** A second period to draw and compare the stats against. */
+  comparison?: TripComparison;
 }
 
 export const DwellsAggregateWrapper = ({
@@ -23,6 +30,7 @@ export const DwellsAggregateWrapper = ({
   toStation,
   fromStation,
   dayFilter,
+  comparison,
 }: DwellsAggregateWrapperProps) => {
   const allData = useMemo(
     () => query.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [],
@@ -34,7 +42,10 @@ export const DwellsAggregateWrapper = ({
     return filterByDayType(allData, dayFilter);
   }, [allData, dayFilter]);
 
-  const comparisonData = useMemo(() => getComparisonData(allData, dayFilter), [allData, dayFilter]);
+  const comparisonData = useMemo(
+    () => getWidgetComparisonData(allData, dayFilter, comparison),
+    [allData, dayFilter, comparison]
+  );
 
   if (fromStation?.terminus) return <DwellsTerminusNotice />;
 
@@ -54,6 +65,7 @@ export const DwellsAggregateWrapper = ({
           toStation={toStation}
           fromStation={fromStation}
           dayFilter={dayFilter}
+          comparison={comparison}
         />
         {!query.chunks?.pending && <StatStrip widgetObjects={widgetObjects} />}
         <PartialDataNotice query={query} />

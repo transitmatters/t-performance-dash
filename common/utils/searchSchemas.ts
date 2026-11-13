@@ -59,6 +59,15 @@ const chartSearch = (search: RawSearch) => ({
   ...dayFilterSearch(search),
 });
 
+/**
+ * A second period the multi-day trip charts are drawn against: `previous`, `year`, or a custom
+ * start date. Checked by getComparisonPeriod, which ignores anything else. Named `vs` rather than
+ * `compare`, which the Service page already uses for something unrelated.
+ */
+const comparisonSearch = (search: RawSearch) => ({
+  vs: str(search.vs),
+});
+
 // Same idea for the page-level toggles on Speed, Service and Fleet.
 const speedSearch = (search: RawSearch) => ({
   speedDays: str(search.speedDays),
@@ -112,6 +121,7 @@ export const validateOverviewSearch = (search: RawSearch) => ({
 export const validateTripSearch = (search: RawSearch) => ({
   ...validateLineSearch(search),
   ...chartSearch(search),
+  ...comparisonSearch(search),
 });
 
 export const validateSpeedSearch = (search: RawSearch) => ({
@@ -177,6 +187,7 @@ export const validateMultiTripEmbedSearch = (search: RawSearch) => ({
   ...validateTripEmbedSearch(search),
   ...dayFilterSearch(search),
   ...trendSearch(search),
+  ...comparisonSearch(search),
 });
 
 /**
@@ -187,6 +198,7 @@ export const validateMultiTripEmbedSearch = (search: RawSearch) => ({
 export const validateAnySearch = (search: RawSearch) => ({
   ...validateOverviewSearch(search),
   ...chartSearch(search),
+  ...comparisonSearch(search),
   ...speedSearch(search),
   ...serviceSearch(search),
   ...fleetSearch(search),

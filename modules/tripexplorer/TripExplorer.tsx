@@ -16,6 +16,7 @@ import { useAlertStore } from './AlertStore';
 import { TripGraphs } from './TripGraphs';
 import { TripSetupNotice } from './TripSetupNotice';
 import { TripGraphsBoundary } from './TripGraphsBoundary';
+import { ComparisonSelector } from './ComparisonSelector';
 
 const describeDates = (date?: string, startDate?: string, endDate?: string) => {
   if (date) return ` on ${date}`;
@@ -68,6 +69,7 @@ export const TripExplorer = () => {
               <CoverageGapNotice />
               <TerminusNotice toStation={toStation} fromStation={fromStation} />
             </div>
+            {page === 'multiTrips' && <ComparisonSelector />}
             <TripGraphsBoundary>
               <TripGraphs fromStation={fromStation} toStation={toStation} />
             </TripGraphsBoundary>

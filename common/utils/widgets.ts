@@ -1,6 +1,7 @@
 import type { MiniWidgetObject, WidgetComparison } from '../components/widgets/MiniWidgetCreator';
 import { MPHWidgetValue, PercentageWidgetValue, TimeWidgetValue } from '../types/basicWidgets';
 import type { DayFilter } from '../types/charts';
+import type { TripComparison } from '../types/comparison';
 import {
   BenchmarkFieldKeys,
   type AggregateDataPoint,
@@ -130,12 +131,31 @@ export const getComparisonData = (allData: AggregateDataPoint[], dayFilter: DayF
   return { data, label: oppositeLabel };
 };
 
+type WidgetComparisonData = { data: AggregateDataPoint[]; label: string };
+
+/**
+ * What the stats under a chart compare against: the period in the `vs` param when one is chosen
+ * (nothing until it loads), otherwise weekdays against weekends when a day filter is set.
+ */
+export const getWidgetComparisonData = (
+  allData: AggregateDataPoint[],
+  dayFilter: DayFilter,
+  comparison: TripComparison | undefined,
+  transform: (data: AggregateDataPoint[]) => AggregateDataPoint[] = (data) => data
+): WidgetComparisonData | undefined => {
+  if (!comparison) return getComparisonData(allData, dayFilter);
+  const byDate = comparison.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [];
+  const data = dayFilter === 'all' ? byDate : filterByDayType(byDate, dayFilter);
+  if (data.length === 0) return undefined;
+  return { data: transform(data), label: comparison.period.description };
+};
+
 const makeComparison = (
   current: number | undefined,
   other: number | undefined,
   label: string,
   unit: WidgetComparison['unit'],
-  higherIsBetter?: boolean
+  higherIsBetter = false
 ): WidgetComparison | undefined => {
   if (current === undefined || other === undefined) return undefined;
   return { delta: current - other, label, unit, higherIsBetter };
@@ -173,48 +193,55 @@ const getHeadwayShareWidgets = (
 export const getAggDataWidgets = (
   aggData: AggregateDataPoint[],
   type: 'times' | 'speeds',
-  comparisonData?: { data: AggregateDataPoint[]; label: string }
+  comparisonData?: WidgetComparisonData
 ): MiniWidgetObject[] => {
   const { average, min, max, median, p10, p90 } = getAggDataPointsOfInterest(aggData);
   const comp = comparisonData ? getAggDataPointsOfInterest(comparisonData.data) : undefined;
   const label = comparisonData?.label ?? '';
+  // Speeds read the other way round: a rise is an improvement.
+  const unit = type === 'speeds' ? 'mph' : 'time';
+  const higherIsBetter = type === 'speeds';
 
   return [
     {
       text: 'Average',
       widgetValue: getWidget(type, average),
       type: 'data',
-      comparison: comp ? makeComparison(average, comp.average, label, 'time') : undefined,
+      comparison: comp
+        ? makeComparison(average, comp.average, label, unit, higherIsBetter)
+        : undefined,
     },
     {
       text: 'Median',
       widgetValue: getWidget(type, median),
       type: 'data',
-      comparison: comp ? makeComparison(median, comp.median, label, 'time') : undefined,
+      comparison: comp
+        ? makeComparison(median, comp.median, label, unit, higherIsBetter)
+        : undefined,
     },
     {
       text: '10%',
       widgetValue: getWidget(type, p10),
       type: 'data',
-      comparison: comp ? makeComparison(p10, comp.p10, label, 'time') : undefined,
+      comparison: comp ? makeComparison(p10, comp.p10, label, unit, higherIsBetter) : undefined,
     },
     {
       text: '90%',
       widgetValue: getWidget(type, p90),
       type: 'data',
-      comparison: comp ? makeComparison(p90, comp.p90, label, 'time') : undefined,
+      comparison: comp ? makeComparison(p90, comp.p90, label, unit, higherIsBetter) : undefined,
     },
     {
       text: 'Min',
       widgetValue: getWidget(type, min),
       type: 'data',
-      comparison: comp ? makeComparison(min, comp.min, label, 'time') : undefined,
+      comparison: comp ? makeComparison(min, comp.min, label, unit, higherIsBetter) : undefined,
     },
     {
       text: 'Max',
       widgetValue: getWidget(type, max),
       type: 'data',
-      comparison: comp ? makeComparison(max, comp.max, label, 'time') : undefined,
+      comparison: comp ? makeComparison(max, comp.max, label, unit, higherIsBetter) : undefined,
     },
   ];
 };
@@ -222,7 +249,7 @@ export const getAggDataWidgets = (
 export const getAggHeadwayDataWidgets = (
   aggData: AggregateDataPoint[],
   type: 'times',
-  comparisonData?: { data: AggregateDataPoint[]; label: string }
+  comparisonData?: WidgetComparisonData
 ): MiniWidgetObject[] => {
   const { average, min, max, median, p10, p90, bunched, onTime } = getAggHeadwayDataPoints(aggData);
   const comp = comparisonData ? getAggHeadwayDataPoints(comparisonData.data) : undefined;
