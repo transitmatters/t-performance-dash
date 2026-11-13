@@ -30,15 +30,23 @@ ROUTES_CR = [
     "CR-Needham",
     "CR-Newburyport",
     "CR-Providence",
+    "CR-CapeFlyer",
 ]
 
+# Most CR keys match their MBTA GTFS route_id exactly. The CapeFlyer is the exception:
+# its GTFS route_id (and S3 prefix) is "CapeFlyer" with no "CR-" prefix, so we keep the
+# "CR-CapeFlyer" key for the dashboard but query upstream with the real id.
+CR_ROUTE_ID_OVERRIDES = {
+    "CR-CapeFlyer": "CapeFlyer",
+}
 
-def get_line_stops():
+
+def get_line_stops(api_id):
     s3 = boto3.client("s3", config=botocore.client.Config(max_pool_connections=15))
 
     objects = []
 
-    for file in get_all_s3_objects(s3, Bucket=BUCKET, Prefix="Events-live/daily-cr-data/{}".format(LINE_KEY)):
+    for file in get_all_s3_objects(s3, Bucket=BUCKET, Prefix="Events-live/daily-cr-data/{}".format(api_id)):
         objects.append(file)
 
     stop_names = set()
@@ -48,7 +56,7 @@ def get_line_stops():
 
     stop_ids = []
 
-    stop_prefix_len = len(LINE_KEY) + 3
+    stop_prefix_len = len(api_id) + 3
     for stop in stop_names:
         stop_ids.append({"id": stop[stop_prefix_len:], "name": stop})
 
@@ -88,10 +96,13 @@ def parse_stop_name(stop_name: str):
 
 
 for LINE_KEY in ROUTES_CR:
-    r_f = requests.get("https://api-v3.mbta.com/stops?filter%5Broute%5D={}&filter%5Bdirection_id%5D=1".format(LINE_KEY))
+    # Upstream MBTA API / S3 data is keyed by the GTFS route_id, which equals LINE_KEY for
+    # every line except the CapeFlyer (see CR_ROUTE_ID_OVERRIDES).
+    API_ID = CR_ROUTE_ID_OVERRIDES.get(LINE_KEY, LINE_KEY)
+    r_f = requests.get("https://api-v3.mbta.com/stops?filter%5Broute%5D={}&filter%5Bdirection_id%5D=1".format(API_ID))
     stops = r_f.json()
 
-    stop_layout = get_line_stops()
+    stop_layout = get_line_stops(API_ID)
 
     stops_formatted = []
 
@@ -118,8 +129,8 @@ for LINE_KEY in ROUTES_CR:
                 child_stop["id"] for child_stop in stop_details["data"]["relationships"]["child_stops"]["data"]
             ]
             stops_map = {
-                "0": [f"{LINE_KEY}_0_{stop}" for stop in child_stops],
-                "1": [f"{LINE_KEY}_1_{stop}" for stop in child_stops],
+                "0": [f"{API_ID}_0_{stop}" for stop in child_stops],
+                "1": [f"{API_ID}_1_{stop}" for stop in child_stops],
             }
 
             stops_formatted.append(

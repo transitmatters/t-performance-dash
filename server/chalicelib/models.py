@@ -850,7 +850,7 @@ class AggregateByTime(AggregateStats):
 
     dep_time_from_epoch: str = Field(
         description=(
-            "Bucket start as `1970-01-01THH:MM:SS`. Departures after midnight and before 03:30 use `1970-01-02`."
+            "Bucket start as `1970-01-01THH:MM:SS`. Departures after midnight and before 03:00 use `1970-01-02`."
         )
     )
     is_peak_day: bool = Field(description="`true` for non-holiday weekdays, `false` for weekends and holidays.")

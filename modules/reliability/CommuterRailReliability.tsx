@@ -46,6 +46,7 @@ export const CommuterRailReliability = ({
         ready={ready}
       >
         <ReliabilityGraph
+          datasetName="reliability-on-time-performance"
           line="line-commuter-rail"
           data={[
             {
@@ -72,6 +73,7 @@ export const CommuterRailReliability = ({
       </Widget>
       <Widget title="Cancelled trains per day" ready={ready}>
         <ReliabilityGraph
+          datasetName="cr-cancelled-trains"
           line="line-commuter-rail"
           data={[
             {

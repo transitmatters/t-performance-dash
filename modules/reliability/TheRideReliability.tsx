@@ -46,6 +46,7 @@ export const TheRideReliability = ({
         ready={ready}
       >
         <ReliabilityGraph
+          datasetName="reliability-on-time-performance"
           line="line-RIDE"
           data={[
             {
@@ -70,6 +71,7 @@ export const TheRideReliability = ({
       </Widget>
       <Widget title="Trips per day" ready={ready}>
         <ReliabilityGraph
+          datasetName="ride-trips"
           line="line-RIDE"
           data={[
             {
@@ -91,6 +93,7 @@ export const TheRideReliability = ({
       {hasNoShows && (
         <Widget title="Missed trips and no-shows per day" ready={ready}>
           <ReliabilityGraph
+            datasetName="ride-missed-trips"
             line="line-RIDE"
             data={[
               {

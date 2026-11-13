@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import type { TooltipItem } from 'chart.js';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -6,7 +6,7 @@ import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import { DownloadButton } from '../../common/components/buttons/DownloadButton';
+import { ChartActions } from '../../common/components/charts/ChartActions';
 import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { hexWithAlpha } from '../../common/utils/general';
@@ -29,6 +29,7 @@ interface ServiceGraphProps {
 export const ServiceGraph = (props: ServiceGraphProps) => {
   const { data, predictedData, startDate, endDate, config, fill = false } = props;
   const { line } = useDelimitatedRoute();
+  const ref = useRef(null);
   const lineColor = LINE_COLORS[line ?? 'default'];
 
   const peak = useScheduledServiceBaseline(line);
@@ -137,22 +138,17 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
         endDate={endDate}
         agg={config.agg}
         fill={fill}
+        chartRef={ref}
       />
 
-      {!fill && (
-        <div className="flex flex-row items-end justify-end gap-4">
-          {startDate && (
-            <DownloadButton
-              data={data}
-              datasetName="service"
-              includeBothStopsForLocation={false}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          )}
-          <ServiceEmbedButton chart="round-trips" />
-        </div>
-      )}
+      <ChartActions
+        datasetName="service"
+        chartRef={ref}
+        csv={data}
+        startDate={startDate}
+        endDate={endDate}
+        embed={<ServiceEmbedButton chart="round-trips" />}
+      />
     </ChartStack>
   );
 };
