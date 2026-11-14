@@ -13,6 +13,7 @@ import {
   dwellFromPoint,
   dwellFromSegment,
   dwellShare,
+  formatSegmentDelay,
   formatSegmentSpeed,
   groupLeaderboardByBusRoute,
   isPooledSegment,
@@ -20,6 +21,7 @@ import {
   periodSuffix,
   rankAndSetAside,
   rankLeaderboard,
+  segmentDelay,
   segmentDistanceAndTime,
   segmentDwell,
   segmentSpeed,
@@ -178,6 +180,64 @@ describe('segmentSpeedRange', () => {
 
   it('is undefined for a segment with too few trips to say', () => {
     expect(segmentSpeedRange({ p90_running_speed_mph: 8.4 })).toBeUndefined();
+  });
+});
+
+describe('segmentDelay', () => {
+  const timed = { p50_running_speed_mph: 9.5, p50_running_time_seconds: 56 };
+
+  it('compares the median running time with free flow', () => {
+    expect(segmentDelay({ ...timed, free_flow_running_time_seconds: 35 })).toEqual({
+      ratio: 1.6,
+      seconds: 21,
+    });
+  });
+
+  it('is negative where the median ran faster than free flow', () => {
+    expect(segmentDelay({ ...timed, free_flow_running_time_seconds: 60 })?.seconds).toBe(-4);
+  });
+
+  it('is undefined without a free-flow time, as in archives published before it', () => {
+    expect(segmentDelay(timed)).toBeUndefined();
+    expect(segmentDelay({ ...timed, free_flow_running_time_seconds: 0 })).toBeUndefined();
+  });
+
+  it('is undefined for a segment too short to time', () => {
+    expect(
+      segmentDelay({ p50_running_time_seconds: 6, free_flow_running_time_seconds: 3 })
+    ).toBeUndefined();
+  });
+});
+
+describe('formatSegmentDelay', () => {
+  const timed = { p50_running_speed_mph: 9.5, p50_running_time_seconds: 56 };
+
+  it('says how much slower than in light traffic, with the ratio', () => {
+    expect(formatSegmentDelay({ ...timed, free_flow_running_time_seconds: 35 })).toBe(
+      '21s slower than in light traffic (1.6×)'
+    );
+  });
+
+  it('formats a long delay in minutes', () => {
+    expect(
+      formatSegmentDelay({
+        p50_running_speed_mph: 3,
+        p50_running_time_seconds: 240,
+        free_flow_running_time_seconds: 60,
+      })
+    ).toBe('3m 00s slower than in light traffic (4.0×)');
+  });
+
+  it('calls a delay within 5% or a second, or a faster run, as fast as in light traffic', () => {
+    for (const free_flow_running_time_seconds of [55, 54, 60]) {
+      expect(formatSegmentDelay({ ...timed, free_flow_running_time_seconds })).toBe(
+        'About as fast as in light traffic'
+      );
+    }
+  });
+
+  it('is undefined without a free-flow time', () => {
+    expect(formatSegmentDelay(timed)).toBeUndefined();
   });
 });
 

@@ -17,6 +17,7 @@ import {
   BOSTON_CENTER,
   BUS_SPEED_STOPS_PATH,
   BUS_STOPS_SOURCE_LAYER,
+  DELAY_COLOR_STOPS,
   DWELL_COLOR,
   DWELL_DOTS_MINIMUM_ZOOM,
   DWELL_MINIMUM_ZOOM,
@@ -39,6 +40,7 @@ import type {
   DayType,
   DirectionFilter,
   Period,
+  SegmentColorBy,
   StationProperties,
   StopDwell,
   TimeBand,
@@ -128,6 +130,28 @@ const speedColor: DataDrivenPropertyValueSpecification<string> = [
   ['interpolate', ['linear'], ['get', 'p50_running_speed_mph'], ...SPEED_COLOR_STOPS.flat()],
   ['has', 'p50_speed_mph'],
   ['interpolate', ['linear'], ['get', 'p50_speed_mph'], ...SPEED_COLOR_STOPS.flat()],
+  NO_SPEED_COLOR,
+] as unknown as DataDrivenPropertyValueSpecification<string>;
+
+/**
+ * Median running time over free-flow running time (see segmentDelay in utils.ts). Only where there's
+ * a running speed: a segment too short to time has a few seconds of running time, which would make
+ * the ratio noise. Without a free-flow time, as on a route with no late-night service, it's no data.
+ */
+const delayColor: DataDrivenPropertyValueSpecification<string> = [
+  'case',
+  [
+    'all',
+    ['has', 'p50_running_speed_mph'],
+    ['has', 'p50_running_time_seconds'],
+    ['>', ['coalesce', ['get', 'free_flow_running_time_seconds'], 0], 0],
+  ],
+  [
+    'interpolate',
+    ['linear'],
+    ['/', ['get', 'p50_running_time_seconds'], ['get', 'free_flow_running_time_seconds']],
+    ...DELAY_COLOR_STOPS.flat(),
+  ],
   NO_SPEED_COLOR,
 ] as unknown as DataDrivenPropertyValueSpecification<string>;
 
@@ -395,6 +419,8 @@ interface BusSpeedMapViewProps {
    * these straight from the clicked row. Requires routeFilter to also be set.
    */
   segmentStops?: SegmentStops;
+  /** Delay only for an archive with free-flow times (see useBusSpeedSegmentsHasFreeFlow). */
+  colorBy?: SegmentColorBy;
 }
 
 export const BusSpeedMapView = ({
@@ -406,6 +432,7 @@ export const BusSpeedMapView = ({
   direction,
   routeFilter,
   segmentStops,
+  colorBy = 'speed',
 }: BusSpeedMapViewProps) => {
   const [hovered, setHovered] = useState<Hovered | undefined>();
   // The arrow layer only mounts once its image exists: maplibre drops a symbol whose icon is
@@ -848,7 +875,7 @@ export const BusSpeedMapView = ({
           filter={filter}
           layout={{ 'line-cap': 'round', 'line-join': 'round' }}
           paint={{
-            'line-color': speedColor,
+            'line-color': colorBy === 'delay' ? delayColor : speedColor,
             'line-width': lineWidth,
             'line-dasharray': lineDashes,
           }}

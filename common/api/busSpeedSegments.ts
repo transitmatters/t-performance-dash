@@ -3,6 +3,7 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import {
   BUS_SPEED_SEGMENTS_BASE_PATH,
   BUS_SPEED_STOPS_PATH,
+  PMTILES_SOURCE_LAYER,
 } from '../../modules/busspeedmap/constants';
 import type {
   BusSpeedSegmentLeaderboardResponse,
@@ -96,6 +97,27 @@ export const fetchBusSpeedSegmentsUrl = async ({
   }
 
   return url.toString();
+};
+
+/** The part of tippecanoe's archive metadata that lists each layer's properties. */
+interface SegmentsArchiveMetadata {
+  vector_layers?: { id: string; fields?: Record<string, string> }[];
+}
+
+/**
+ * Whether a segments archive carries free-flow running times (mbta-performance#166), which the
+ * map's delay colouring needs. Archives published before the pipeline wrote them don't, and
+ * neither do any rebuilt from them. Read off the property list tippecanoe writes into the
+ * archive's metadata, a range request or two rather than a tile, since a feature can be missing
+ * the property just for want of quiet-hour trips.
+ *
+ * pmtiles is loaded here on demand, so the page doesn't take it on before the map needs it.
+ */
+export const fetchBusSpeedSegmentsHasFreeFlow = async (url: string): Promise<boolean> => {
+  const { PMTiles } = await import('pmtiles');
+  const metadata = (await new PMTiles(url).getMetadata()) as SegmentsArchiveMetadata;
+  const fields = metadata.vector_layers?.find((layer) => layer.id === PMTILES_SOURCE_LAYER)?.fields;
+  return fields != null && 'free_flow_running_time_seconds' in fields;
 };
 
 /**
