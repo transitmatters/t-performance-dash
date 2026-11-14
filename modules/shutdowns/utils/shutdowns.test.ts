@@ -208,6 +208,44 @@ describe('explainGaps', () => {
     ]);
   });
 
+  it("doesn't count the rest of the week before a weekly gap as missing", () => {
+    // Thu Mar 5 through Mon Mar 16, so only the week of Mar 9 has no trips at all
+    const longer = describeShutdowns(
+      [
+        shutdown({
+          periods: [{ start: '2026-03-05T03:00:00-05:00', end: '2026-03-17T03:00:00-04:00' }],
+          first_start: '2026-03-05',
+          last_end: '2026-03-16',
+        }),
+      ],
+      'Red'
+    );
+    expect(
+      explainGaps([noData('2026-03-02', '2026-03-16')], longer, { agg: 'weekly' })
+    ).toMatchObject([
+      { xMin: '2026-03-02', xMax: '2026-03-16', label: { content: 'Partial shutdown' } },
+    ]);
+  });
+
+  it("doesn't count the rest of the month before a monthly gap as missing", () => {
+    // Jan 28 through Mar 3, so only February has no trips at all
+    const longer = describeShutdowns(
+      [
+        shutdown({
+          periods: [{ start: '2026-01-28T03:00:00-05:00', end: '2026-03-04T03:00:00-05:00' }],
+          first_start: '2026-01-28',
+          last_end: '2026-03-03',
+        }),
+      ],
+      'Red'
+    );
+    expect(
+      explainGaps([noData('2026-01-01', '2026-03-01')], longer, { agg: 'monthly' })
+    ).toMatchObject([
+      { xMin: '2026-01-01', xMax: '2026-03-01', label: { content: 'Partial shutdown' } },
+    ]);
+  });
+
   it('leaves narrow bands unlabelled', () => {
     const [band] = explainGaps([noData('2026-03-06', '2026-03-09')], views, {
       startDate: '2025-01-01',

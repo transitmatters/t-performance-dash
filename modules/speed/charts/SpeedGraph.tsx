@@ -54,7 +54,11 @@ export const SpeedGraph = ({
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
   const shuttlingBlocks = hideGapsExplainedByEvents(
-    explainGaps(getShuttlingBlockAnnotations(data), shutdowns, { startDate, endDate }),
+    explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
+      startDate,
+      endDate,
+      agg: config.agg,
+    }),
     events
   );
   const dataWithMPH = addMPHToSpeedData(data);
