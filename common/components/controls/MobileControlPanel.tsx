@@ -2,6 +2,8 @@ import classNames from 'classnames';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders } from '@fortawesome/free-solid-svg-icons';
+import { PeriodDateControl } from '../../../modules/busspeedmap/controls/PeriodDateControl';
+import { usePeriodDateLabel } from '../../../modules/busspeedmap/useBusSpeedParams';
 import { usePageControls } from '../../hooks/usePageControls';
 import { usePageHeading } from '../../hooks/usePageHeading';
 import { useMajorEventsStore } from '../../state/majorEventsStore';
@@ -55,16 +57,19 @@ export const MobileControlPanel = () => {
     showRouteSelector,
     showTripControls,
     showDateControl,
+    showPeriodDate,
     showDisplayMenu,
   } = usePageControls();
   const { presetName, dates } = useDateSummary(queryType);
+  const periodDate = usePeriodDateLabel();
   const { lineName, pageTitle } = usePageHeading();
   const { showEvents, setShowEvents } = useMajorEventsStore();
   const stationProps =
     showTripControls && line ? { line, busRoute, crRoute, ferryRoute } : undefined;
 
-  const headline = showDateControl ? (presetName ?? dates) : pageTitle;
-  const detail = showDateControl && presetName ? dates : undefined;
+  const dateHeadline = showPeriodDate ? periodDate : (presetName ?? dates);
+  const headline = showDateControl ? dateHeadline : pageTitle;
+  const detail = showDateControl && !showPeriodDate && presetName ? dates : undefined;
   const lineButton = classNames(
     'rounded-lg text-sm font-semibold focus-visible:ring-offset-2',
     FOCUS_RING_ON_SURFACE,
@@ -115,7 +120,7 @@ export const MobileControlPanel = () => {
           )}
           {showDateControl && (
             <LabeledControl label="Dates">
-              <DateSelection type={queryType} />
+              {showPeriodDate ? <PeriodDateControl /> : <DateSelection type={queryType} />}
             </LabeledControl>
           )}
           <div className="flex flex-col gap-4 empty:hidden">

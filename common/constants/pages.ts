@@ -59,6 +59,8 @@ export type PageMetadata = {
   // Defaults to true. The leaderboard ranks across all routes at once, so it has no single
   // route to parameterize the page with.
   hasRouteSelector?: boolean;
+  /** Shows a day, week or month around the selected date, picked in the header. */
+  hasPeriodDate?: boolean;
   // Route to open on when navigating in without one already selected, e.g. from the
   // leaderboard, which carries no busRoute of its own.
   defaultBusRoute?: BusRoute;
@@ -261,6 +263,7 @@ export const ALL_PAGES: PageMap = {
     // 'singleTrips' is the only section whose stored selection is a single date, and
     // sharing it means the chosen service date carries over to and from the trips pages.
     dateStoreSection: 'singleTrips',
+    hasPeriodDate: true,
   },
   leaderboard: {
     key: 'leaderboard',
@@ -278,6 +281,7 @@ export const ALL_PAGES: PageMap = {
     // derives its own start/end range from this same single date + period (periodDateRange in
     // modules/busspeedmap/utils.ts) rather than getting a second, mismatched date control.
     dateStoreSection: 'singleTrips',
+    hasPeriodDate: true,
   },
 };
 

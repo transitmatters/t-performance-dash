@@ -92,6 +92,18 @@ const reliabilitySearch = (search: RawSearch) => ({
   relDir: str(search.relDir),
 });
 
+/** The bus speed map and Rankings. Each value is checked against its control's options. */
+const busSpeedSearch = (search: RawSearch) => ({
+  period: str(search.period),
+  dayType: str(search.dayType),
+  band: str(search.band),
+  direction: str(search.direction),
+  /** One route_id of a combined route like SL4/SL5. */
+  routeId: str(search.routeId),
+  rank: str(search.rank),
+  rankView: str(search.rankView),
+});
+
 const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[];
 
 const overviewSearch = (search: RawSearch) => ({
@@ -137,6 +149,11 @@ export const validateDelaysSearch = (search: RawSearch) => ({
 export const validateReliabilitySearch = (search: RawSearch) => ({
   ...validateLineSearch(search),
   ...reliabilitySearch(search),
+});
+
+export const validateBusSpeedSearch = (search: RawSearch) => ({
+  ...validateLineSearch(search),
+  ...busSpeedSearch(search),
 });
 
 export const validateSystemSearch = dateSearch;
@@ -192,6 +209,7 @@ export const validateAnySearch = (search: RawSearch) => ({
   ...fleetSearch(search),
   ...delaysSearch(search),
   ...reliabilitySearch(search),
+  ...busSpeedSearch(search),
   ...validateEmbedSearch(search),
   ...trendSearch(search),
 });

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { DATE_FORMAT } from '../../common/constants/dates';
 import { FREQUENT_BUS_ROUTE_IDS, getBusRouteDisplayName } from '../../common/constants/lines';
 import type { BusSpeedLeaderboardEntry, BusTripCounts } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
@@ -28,27 +29,62 @@ import type {
 dayjs.extend(isoWeek);
 
 /**
- * The single-date picker (shared with the trips pages via dateStoreSection: 'singleTrips')
- * stays the only date control -- weekly/monthly just reinterpret whichever date is already
- * selected as "the week/month containing this date", rather than adding a second picker UI.
- * Undefined for 'daily': the date itself already says which day it is.
+ * The URL holds a single date (shared with the trips pages via dateStoreSection: 'singleTrips');
+ * a week or month is the one containing it. Weeks are ISO weeks, Monday to Sunday, as the
+ * pipeline's weekly files are.
  */
+export const periodStart = (date: string, period: Period): string => {
+  if (period === 'daily') return date;
+  return dayjs(date)
+    .startOf(period === 'monthly' ? 'month' : 'isoWeek')
+    .format(DATE_FORMAT);
+};
+
+export const periodEnd = (date: string, period: Period): string => {
+  if (period === 'daily') return date;
+  return dayjs(date)
+    .endOf(period === 'monthly' ? 'month' : 'isoWeek')
+    .format(DATE_FORMAT);
+};
+
+const PERIOD_UNITS = { daily: 'day', weekly: 'week', monthly: 'month' } as const;
+
+/** One period on or back, keeping the day of the month where it can (Jan 31 → Feb 28). */
+export const stepPeriod = (date: string, period: Period, step: 1 | -1): string =>
+  dayjs(date).add(step, PERIOD_UNITS[period]).format(DATE_FORMAT);
+
+export const clampDate = (date: string, minDate: string, maxDate: string): string =>
+  date < minDate ? minDate : date > maxDate ? maxDate : date;
+
+/** Whether the next (or previous) period has any day inside the bounds. */
+export const canStepPeriod = (
+  date: string,
+  period: Period,
+  step: 1 | -1,
+  minDate: string,
+  maxDate: string
+): boolean => {
+  const target = stepPeriod(date, period, step);
+  return step > 0 ? periodStart(target, period) <= maxDate : periodEnd(target, period) >= minDate;
+};
+
+/** The span a period covers, in words: "Thu, Nov 5, 2026", "Nov 2 – 8, 2026", "November 2026". */
 export const periodLabel = (date: string | undefined, period: Period): string | undefined => {
-  if (!date || period === 'daily') return undefined;
+  if (!date) return undefined;
   const day = dayjs(date);
+  if (period === 'daily') return day.format('ddd, MMM D, YYYY');
   if (period === 'monthly') return day.format('MMMM YYYY');
   const start = day.startOf('isoWeek');
   const end = day.endOf('isoWeek');
   const endFormat = start.isSame(end, 'month') ? 'D, YYYY' : 'MMM D, YYYY';
-  return `Week of ${start.format('MMM D')} – ${end.format(endFormat)}`;
+  const startFormat = start.isSame(end, 'year') ? 'MMM D' : 'MMM D, YYYY';
+  return `${start.format(startFormat)} – ${end.format(endFormat)}`;
 };
 
 /** The current, still-accumulating week/month has a tile too, built from partial data. */
 export const isPeriodInProgress = (date: string | undefined, period: Period): boolean => {
   if (!date || period === 'daily') return false;
-  const day = dayjs(date);
-  const periodEnd = period === 'monthly' ? day.endOf('month') : day.endOf('isoWeek');
-  return periodEnd.isAfter(dayjs());
+  return dayjs(periodEnd(date, period)).endOf('day').isAfter(dayjs());
 };
 
 /**

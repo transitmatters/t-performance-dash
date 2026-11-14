@@ -45,6 +45,7 @@ export const usePageControls = () => {
     showTripControls: isTrips && line !== undefined && Boolean(config?.hasStationStore),
     // The Overview is fixed to the last month, so it has no date control.
     showDateControl: section !== 'overview' && (line !== undefined || section === 'system'),
+    showPeriodDate: Boolean(config?.hasPeriodDate),
     // Events mark dates on a range; a single day has none to mark.
     showDisplayMenu: section !== 'singleTrips',
   };

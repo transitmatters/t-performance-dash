@@ -6,6 +6,7 @@ import type {
   DirectionFilter,
   LeaderboardMetric,
   LeaderboardMetricConfig,
+  LeaderboardViewMode,
   Period,
   TerminalSection,
   TimeBand,
@@ -315,6 +316,13 @@ export const LEADERBOARD_METRICS: LeaderboardMetricConfig[] = [
 ];
 
 export const DEFAULT_LEADERBOARD_METRIC: LeaderboardMetric = 'speed';
+
+export const LEADERBOARD_VIEW_MODES: { key: LeaderboardViewMode; label: string }[] = [
+  { key: 'route', label: 'By route' },
+  { key: 'segment', label: 'By segment' },
+];
+
+export const DEFAULT_LEADERBOARD_VIEW_MODE: LeaderboardViewMode = 'route';
 
 /**
  * Routes on the leaderboard's dwell summary must average at least this many stops with a dwell

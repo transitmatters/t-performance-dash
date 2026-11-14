@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { BusSpeedLeaderboardEntry } from '../../common/types/dataPoints';
 import { getBusRouteGroup } from '../../common/utils/stations';
 import { LEADERBOARD_METRICS, MIN_SCHEDULED_TRIPS } from './constants';
@@ -10,13 +10,19 @@ import type {
 } from './types';
 import {
   averageDwell,
+  canStepPeriod,
+  clampDate,
   dwellFromPoint,
   dwellFromSegment,
   dwellShare,
   formatSegmentSpeed,
   groupLeaderboardByBusRoute,
+  isPeriodInProgress,
   isPooledSegment,
   noSpeedReason,
+  periodEnd,
+  periodLabel,
+  periodStart,
   periodSuffix,
   rankAndSetAside,
   rankLeaderboard,
@@ -25,6 +31,7 @@ import {
   segmentSpeed,
   segmentSpeedRange,
   sharedRouteKeys,
+  stepPeriod,
   stopDwellsByRoute,
   summarizeDwell,
 } from './utils';
@@ -638,5 +645,62 @@ describe('dropped-trip rankings', () => {
   it('ranks whole months only', () => {
     expect(DROPPED.monthlyOnly).toBe(true);
     expect(LEADERBOARD_METRICS.filter((metric) => metric.monthlyOnly)).toEqual([DROPPED]);
+  });
+});
+
+describe('period dates', () => {
+  it('finds the ISO week and month around a date', () => {
+    expect(periodStart('2026-11-05', 'weekly')).toBe('2026-11-02');
+    expect(periodEnd('2026-11-05', 'weekly')).toBe('2026-11-08');
+    expect(periodStart('2026-11-05', 'monthly')).toBe('2026-11-01');
+    expect(periodEnd('2026-02-10', 'monthly')).toBe('2026-02-28');
+    expect(periodStart('2026-11-05', 'daily')).toBe('2026-11-05');
+  });
+
+  it('steps by a period, keeping the day of the month where it can', () => {
+    expect(stepPeriod('2026-01-31', 'monthly', 1)).toBe('2026-02-28');
+    expect(stepPeriod('2026-03-01', 'daily', -1)).toBe('2026-02-28');
+    expect(stepPeriod('2026-11-05', 'weekly', -1)).toBe('2026-10-29');
+  });
+
+  it('only steps to a period with a day inside the bounds', () => {
+    const [min, max] = ['2025-12-24', '2026-11-13'];
+    expect(canStepPeriod('2026-11-05', 'monthly', 1, min, max)).toBe(false);
+    expect(canStepPeriod('2026-11-05', 'weekly', 1, min, max)).toBe(true);
+    expect(canStepPeriod('2026-11-13', 'daily', 1, min, max)).toBe(false);
+    // December 2025 holds the first day of data, so it's reachable from January.
+    expect(canStepPeriod('2026-01-15', 'monthly', -1, min, max)).toBe(true);
+    expect(canStepPeriod('2025-12-30', 'monthly', -1, min, max)).toBe(false);
+  });
+
+  it('clamps to the bounds', () => {
+    expect(clampDate('2025-12-01', '2025-12-24', '2026-11-13')).toBe('2025-12-24');
+    expect(clampDate('2026-12-01', '2025-12-24', '2026-11-13')).toBe('2026-11-13');
+    expect(clampDate('2026-06-01', '2025-12-24', '2026-11-13')).toBe('2026-06-01');
+  });
+
+  it('names the span shown', () => {
+    expect(periodLabel('2026-11-05', 'daily')).toBe('Thu, Nov 5, 2026');
+    expect(periodLabel('2026-11-05', 'weekly')).toBe('Nov 2 – 8, 2026');
+    expect(periodLabel('2026-10-29', 'weekly')).toBe('Oct 26 – Nov 1, 2026');
+    expect(periodLabel('2025-12-30', 'weekly')).toBe('Dec 29, 2025 – Jan 4, 2026');
+    expect(periodLabel('2026-11-05', 'monthly')).toBe('November 2026');
+    expect(periodLabel(undefined, 'monthly')).toBeUndefined();
+  });
+
+  describe('isPeriodInProgress', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(2026, 10, 14, 12));
+    });
+    afterEach(() => vi.useRealTimers());
+
+    it('is true for the current week and month only', () => {
+      expect(isPeriodInProgress('2026-11-10', 'weekly')).toBe(true);
+      expect(isPeriodInProgress('2026-11-05', 'weekly')).toBe(false);
+      expect(isPeriodInProgress('2026-11-05', 'monthly')).toBe(true);
+      expect(isPeriodInProgress('2026-10-05', 'monthly')).toBe(false);
+      expect(isPeriodInProgress('2026-11-13', 'daily')).toBe(false);
+    });
   });
 });

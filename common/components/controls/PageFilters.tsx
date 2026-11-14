@@ -8,6 +8,10 @@ import {
 } from '../../hooks/usePageFilters';
 import { SUBWAY_LINES } from '../../types/lines';
 import { useDelimitatedRoute } from '../../utils/router';
+import {
+  RankingsFilters,
+  SpeedMapFilters,
+} from '../../../modules/busspeedmap/controls/BusSpeedFilters';
 import { BranchSelector } from '../inputs/BranchSelector';
 import { LabeledControl } from './LabeledControl';
 
@@ -86,6 +90,10 @@ export const PageFilters = () => {
         (line === 'line-bus' && busRoute) || (line === 'line-commuter-rail' && crRoute);
       return hasRoute ? <FleetScopeFilter /> : null;
     }
+    case 'speedmap':
+      return <SpeedMapFilters />;
+    case 'leaderboard':
+      return <RankingsFilters />;
     default:
       return null;
   }
