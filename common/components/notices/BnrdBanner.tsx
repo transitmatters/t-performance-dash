@@ -72,6 +72,8 @@ export const BnrdBanner = ({ busRoute }: BnrdBannerProps) => {
         return 'This route now extends to Harvard Square and runs more frequently, with service every 15 minutes or better.';
       case '110':
         return 'This route now offers improved frequency between Wellington and Wonderland, with service every 15 minutes.';
+      case '110-legacy':
+        return 'This reflects Route 110 before Dec. 15, 2024; see the current Route 110 for present-day service.';
       case '116':
         return 'This route now combines former Routes 116/117 with improved frequency, running every 15 minutes or better.';
       case '350/351':

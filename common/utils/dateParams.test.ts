@@ -126,6 +126,17 @@ describe('normalizeDateParams on range pages', () => {
       })
     ).toEqual({ busRoute: '86-legacy', startDate: '2024-12-07', endDate: '2024-12-14' });
   });
+
+  it('clamps the pre-BNRD Route 110 to its service end', () => {
+    expect(
+      normalizeDateParams({
+        section: 'multiTrips',
+        tab: 'Bus',
+        page: 'multiTrips',
+        search: { busRoute: '110-legacy', startDate: '2025-01-01', endDate: '2025-02-01' },
+      })
+    ).toEqual({ busRoute: '110-legacy', startDate: '2024-12-07', endDate: '2024-12-14' });
+  });
 });
 
 describe('normalizeDateParams on single-day pages', () => {

@@ -13,7 +13,7 @@ export const BNRD: Record<
     date: new Date('12-15-2024'),
     new_routes: [104, 109, 110, 116],
     changed_routes: [86],
-    legacy_routes: ['104/109', '114/116/117'],
+    legacy_routes: ['104/109', '110-legacy', '114/116/117'],
   },
   2: {
     url: 'https://www.mbta.com/service-changes/fall-2025-bus-service-changes',
