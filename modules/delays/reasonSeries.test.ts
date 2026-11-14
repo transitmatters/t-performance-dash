@@ -13,9 +13,11 @@ import {
 import {
   buildSeries,
   causeRows,
+  hasShare,
   medianPeriodTotal,
   minShareMinutes,
   periodTotals,
+  shareValues,
   toActualDelays,
   toMonthly,
   withinRange,
@@ -116,6 +118,12 @@ describe('period totals', () => {
     expect(medianPeriodTotal([0, 10, 30, 20, 0])).toBe(20);
     expect(medianPeriodTotal([0, 0])).toBe(0);
     expect(minShareMinutes([0, 10, 30, 20])).toBe(1);
+  });
+
+  it('leaves periods without enough delay at 0 rather than a gap', () => {
+    expect(shareValues([5, 0, 1, 30], [20, 0, 2, 30], 3)).toEqual([25, 0, 0, 100]);
+    expect(hasShare(2, 3)).toBe(false);
+    expect(hasShare(0, 0)).toBe(false);
   });
 });
 

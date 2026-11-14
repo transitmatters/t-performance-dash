@@ -86,12 +86,12 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
     }));
     return [
       ...hideBlocksExplainedByEvents(
-        explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate }),
+        explainGapBlocks(shuttlingBlocks, shutdowns, { startDate, endDate, agg: config.agg }),
         events
       ),
       ...getNoDataSinceLatestBlock(data.map((point) => point.date)),
     ];
-  }, [data, shutdowns, startDate, endDate, events]);
+  }, [data, shutdowns, startDate, endDate, config.agg, events]);
 
   const roundTrips = useMemo(
     () => getScheduledAndDeliveredRoundTrips(data, predictedData, config.agg),

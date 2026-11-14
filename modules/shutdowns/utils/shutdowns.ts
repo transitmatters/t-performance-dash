@@ -9,6 +9,7 @@ import { crStations, rtStations } from '../../../common/constants/stations';
 import type { CommuterRailRoute, LineShort } from '../../../common/types/lines';
 import type { Shutdown, ShutdownEffect } from '../../../common/types/shutdowns';
 import type { Station } from '../../../common/types/stations';
+import type { AggType } from '../../speed/constants/speeds';
 
 type Annotation = AnnotationOptions<keyof AnnotationTypeRegistry>;
 type RapidTransitLine = keyof typeof rtStations;
@@ -24,7 +25,12 @@ export type ShutdownView = {
   dayRanges: [string, string][];
 };
 
-export type ShutdownRange = { startDate?: string; endDate?: string };
+export type ShutdownRange = {
+  startDate?: string;
+  endDate?: string;
+  /** How the chart buckets its points. Defaults to daily. */
+  agg?: AggType;
+};
 
 const RAPID_TRANSIT_LINES: LineShort[] = ['Red', 'Orange', 'Blue', 'Green', 'Mattapan'];
 
@@ -218,17 +224,27 @@ const gapEdges = (gap: Gap): [Edge, Edge] | undefined => {
   return [edge(gap.xMin), edge(gap.xMax)];
 };
 
+const BUCKET_UNITS = { daily: 'day', weekly: 'week', monthly: 'month' } as const;
+
 /**
  * Splits a gap into the stretches shutdowns explain and the stretches still missing for no known
- * reason. A gap runs from the last point before it to the first point after, so its missing days
- * are the ones strictly between; segments at either end keep the gap's own edges so they still
- * meet the line. Undefined for anything that isn't a gap.
+ * reason. A gap runs from the last point before it to the first point after. Each point stands for
+ * its whole day, week or month, so the missing days run from the bucket after the first point to
+ * the day before the last; segments at either end keep the gap's own edges so they still meet the
+ * line. Undefined for anything that isn't a gap.
  */
-const splitGap = (gap: Gap, views: ShutdownView[]): Segment[] | undefined => {
+const splitGap = (
+  gap: Gap,
+  views: ShutdownView[],
+  agg: AggType = 'daily'
+): Segment[] | undefined => {
   const edges = gapEdges(gap);
   if (!edges) return undefined;
   const [xMin, xMax] = edges;
-  const first = xMin === undefined ? undefined : addDays(toDay(xMin), 1);
+  const first =
+    xMin === undefined
+      ? undefined
+      : dayjs(toDay(xMin)).add(1, BUCKET_UNITS[agg]).format(DATE_FORMAT);
   const last = xMax === undefined ? undefined : addDays(toDay(xMax), -1);
   if (first && last && last < first) return [{ from: xMin, to: xMax }];
 
@@ -315,7 +331,7 @@ export const explainGaps = (
   range: ShutdownRange = {}
 ): Annotation[] =>
   gaps.flatMap((gap) => {
-    const segments = splitGap(gap, views);
+    const segments = splitGap(gap, views, range.agg);
     if (!segments) return [gap];
     return segments.map((segment) =>
       segment.view
@@ -338,7 +354,7 @@ export const explainGapBlocks = (
   range: ShutdownRange = {}
 ): Block[] =>
   gaps.flatMap((gap) => {
-    const segments = splitGap(gap, views) ?? [{ from: gap.from, to: gap.to }];
+    const segments = splitGap(gap, views, range.agg) ?? [{ from: gap.from, to: gap.to }];
     return segments.map((segment): Block => {
       if (!segment.view) {
         return {

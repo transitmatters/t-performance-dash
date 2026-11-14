@@ -55,6 +55,7 @@ export const BusSpeedGraph = ({
   const gapBlocks = explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
     startDate,
     endDate,
+    agg: config.agg,
   });
 
   return (

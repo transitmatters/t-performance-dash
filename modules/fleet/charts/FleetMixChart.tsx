@@ -65,6 +65,7 @@ export const FleetMixChart = ({
           {
             startDate,
             endDate,
+            agg: config.agg,
           }
         ),
         events

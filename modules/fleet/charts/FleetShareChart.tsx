@@ -66,7 +66,7 @@ export const FleetShareChart = ({
             hasFleetMetric(datapoint, metric.field)
           ),
           shutdowns,
-          { startDate, endDate }
+          { startDate, endDate, agg: config.agg }
         ),
         events
       )
