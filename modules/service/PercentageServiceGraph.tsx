@@ -62,7 +62,11 @@ export const PercentageServiceGraph = ({
     const labels = data.map((point) => point.date);
     const lineColor = LINE_COLORS[colorKey ?? 'default'];
     const shuttlingBlocks = hideGapsExplainedByEvents(
-      explainGaps(getShuttlingBlockAnnotations(data), shutdowns, { startDate, endDate }),
+      explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
+        startDate,
+        endDate,
+        agg: config.agg,
+      }),
       events
     );
     const compareToScheduled = comparison === 'Scheduled';

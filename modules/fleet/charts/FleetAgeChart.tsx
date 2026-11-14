@@ -68,6 +68,7 @@ export const FleetAgeChart = ({
           {
             startDate,
             endDate,
+            agg: config.agg,
           }
         ),
         events

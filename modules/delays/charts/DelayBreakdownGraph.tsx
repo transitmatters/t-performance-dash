@@ -26,7 +26,7 @@ import {
 import { getRemainingBlockAnnotation } from '../../service/utils/graphUtils';
 import { DATE_FORMAT, TODAY } from '../../../common/constants/dates';
 import type { ReasonSeries } from '../reasonSeries';
-import { minShareMinutes, periodTotals } from '../reasonSeries';
+import { hasShare, minShareMinutes, periodTotals, shareValues } from '../reasonSeries';
 import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
 
 interface DelayBreakdownGraphProps {
@@ -79,11 +79,10 @@ export const DelayBreakdownGraph = ({
 
   const totals = periodTotals(data);
   const floor = minShareMinutes(totals);
-  const toPoint = (value: number, index: number) => {
-    if (!isShare) return value;
-    // Too little delay to say anything about the mix: leave a gap rather than a full-height band.
-    return totals[index] > 0 && totals[index] >= floor ? (value / totals[index]) * 100 : null;
-  };
+  // Too little delay to say anything about the mix, so the period is left blank.
+  const showsShare = (index: number) => !isShare || hasShare(totals[index], floor);
+  const minutesOf = (item: { datasetIndex: number; dataIndex: number }) =>
+    series[item.datasetIndex].values[item.dataIndex];
 
   return (
     <ChartStack className={fill ? 'h-full' : undefined}>
@@ -108,7 +107,7 @@ export const DelayBreakdownGraph = ({
               stepped: true,
               // Fill to the layer below; filling to zero lets the top layer cover the rest
               fill: index === 0 ? 'origin' : '-1',
-              data: layer.values.map(toPoint),
+              data: isShare ? shareValues(layer.values, totals, floor) : layer.values,
             })),
           }}
           options={{
@@ -127,15 +126,18 @@ export const DelayBreakdownGraph = ({
                 mode: 'index',
                 position: 'nearest',
                 // Biggest contributor first, and no rows for reasons that were silent that period.
-                itemSort: (a, b) => (b.parsed.y ?? 0) - (a.parsed.y ?? 0),
-                filter: hideZeroUnlessAllZero,
+                itemSort: (a, b) => minutesOf(b) - minutesOf(a),
+                // A period left blank still lists the causes it had, by minutes.
+                filter: (item, index, items) =>
+                  showsShare(item.dataIndex)
+                    ? hideZeroUnlessAllZero(item, index, items)
+                    : minutesOf(item) > 0 || totals[item.dataIndex] === 0,
                 callbacks: {
                   title: (context) => delayPeriodTitle(agg, context[0]?.label ?? ''),
                   label: (tooltipItem) => {
                     const { y } = tooltipItem.parsed;
-                    const minutes = series[tooltipItem.datasetIndex].values[tooltipItem.dataIndex];
-                    const time = formatDelay(minutes);
-                    return isShare
+                    const time = formatDelay(minutesOf(tooltipItem));
+                    return showsShare(tooltipItem.dataIndex) && isShare
                       ? `${tooltipItem.dataset.label}: ${round(y ?? 0, 1)}% (${time})`
                       : `${tooltipItem.dataset.label}: ${time}`;
                   },

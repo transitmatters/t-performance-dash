@@ -44,6 +44,18 @@ export const periodTotals = (data: LineDelays[]): number[] =>
  */
 export const minShareMinutes = (totals: number[]): number => medianPeriodTotal(totals) * 0.05;
 
+/** Whether a period has enough delay to show its mix of causes. */
+export const hasShare = (total: number, floor: number): boolean => total > 0 && total >= floor;
+
+/**
+ * Each period's value as a percent of that period's total. Periods without enough delay get 0, not
+ * null: on a stepped line a null also drops the step drawn from the period before it.
+ */
+export const shareValues = (values: number[], totals: number[], floor: number): number[] =>
+  values.map((value, index) =>
+    hasShare(totals[index], floor) ? (value / totals[index]) * 100 : 0
+  );
+
 /** The median of periods that had any delay at all: what a normal day or week looks like. */
 export const medianPeriodTotal = (totals: number[]): number => {
   const busy = totals.filter((total) => total > 0).sort((a, b) => a - b);
