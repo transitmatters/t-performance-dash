@@ -5,6 +5,7 @@ import { useDateStore } from '../state/dateStore';
 import type { StationStore } from '../state/stationStore';
 import {
   getBusRouteSelectionItemHref,
+  getBusSpeedMapRouteHref,
   getLineSelectionItemHref,
   getQueryParams,
   parseRoutePath,
@@ -148,5 +149,33 @@ describe('getBusRouteSelectionItemHref', () => {
       '/bus/trips/single?date=2025-01-01&busRoute=77'
     );
     expect(query.from).toBe('a');
+  });
+});
+
+describe('bus speed map links', () => {
+  const route = (page: string, query: Record<string, string>) =>
+    ({
+      line: 'line-bus',
+      linePath: 'bus',
+      lineShort: 'Bus',
+      page,
+      tab: 'Bus',
+      query,
+      color: '',
+    }) as Route;
+
+  it('drops the combined-route filter when switching routes', () => {
+    const from = route('speedmap', { busRoute: 'SL4/SL5', routeId: 'SL4', band: 'pm_peak' });
+    expect(getBusRouteSelectionItemHref('9', from)).toBe('/bus/speedmap?band=pm_peak&busRoute=9');
+  });
+
+  it('opens the map on the period Rankings shows, without Rankings-only params', () => {
+    const from = route('leaderboard', { date: '2026-11-05', rank: 'dropped', rankView: 'segment' });
+    expect(getBusSpeedMapRouteHref('9', from, 'daily')).toBe(
+      '/bus/speedmap?date=2026-11-05&busRoute=9&period=daily'
+    );
+    expect(getBusSpeedMapRouteHref('9', from, undefined)).toBe(
+      '/bus/speedmap?date=2026-11-05&busRoute=9'
+    );
   });
 });

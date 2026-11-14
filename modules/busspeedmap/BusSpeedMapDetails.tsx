@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import dayjs from 'dayjs';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useBusDwellsUrl, useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
 import { BusSpeedDataUnavailableError } from '../../common/api/busSpeedSegments';
+import { CopyLinkButton } from '../../common/components/buttons/CopyLinkButton';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
-import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
@@ -14,40 +14,28 @@ import { getBusRouteIds } from '../../common/constants/lines';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { BusSpeedMapControls } from './controls/BusSpeedMapControls';
+import { BusSpeedDataNotes } from './BusSpeedDataNotes';
+import { ALL_ROUTES, DAY_TYPES, DIRECTIONS, TIME_BANDS } from './constants';
+import { InProgressBadge } from './InProgressBadge';
 import { BusSpeedLegend } from './map/BusSpeedLegend';
 import { BusSpeedMapViewLazy as BusSpeedMapView } from './map/BusSpeedMapViewLazy';
 import {
-  ALL_ROUTES,
-  DAY_TYPES,
-  DEFAULT_DAY_TYPE,
-  DEFAULT_DIRECTION,
-  DEFAULT_SPEED_MAP_PERIOD,
-  DEFAULT_TIME_BAND,
-  TIME_BANDS,
-} from './constants';
-import type { DayType, DirectionFilter, Period, TimeBand } from './types';
-import { isPeriodInProgress, periodLabel } from './utils';
+  useDayType,
+  useDirection,
+  useRouteId,
+  useShownPeriod,
+  useTimeBand,
+} from './useBusSpeedParams';
 
 export function BusSpeedMapDetails() {
   const {
     query: { date, busRoute },
   } = useDelimitatedRoute();
-
-  const [period, setPeriod] = useState<Period>(DEFAULT_SPEED_MAP_PERIOD);
-  const [dayType, setDayType] = useState<DayType>(DEFAULT_DAY_TYPE);
-  const [timeBand, setTimeBand] = useState<TimeBand>(DEFAULT_TIME_BAND);
-  const [direction, setDirection] = useState<DirectionFilter>(DEFAULT_DIRECTION);
-
-  // One route_id out of a composite like SL4/SL5, or ALL_ROUTES. Back to all of them whenever
-  // the sidebar picks another route, rather than carrying a member over that isn't in it.
-  const [routeId, setRouteId] = useState<string>(ALL_ROUTES);
-  const [prevBusRoute, setPrevBusRoute] = useState(busRoute);
-  if (busRoute !== prevBusRoute) {
-    setPrevBusRoute(busRoute);
-    setRouteId(ALL_ROUTES);
-  }
-  const routeIds = busRoute ? getBusRouteIds(busRoute) : [];
+  const { shown: period } = useShownPeriod();
+  const { value: dayType } = useDayType();
+  const { value: timeBand } = useTimeBand();
+  const { value: direction } = useDirection();
+  const { value: routeId } = useRouteId(busRoute ? getBusRouteIds(busRoute) : []);
 
   const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, Boolean(date));
   const { data: pmtilesUrl } = segments;
@@ -55,12 +43,16 @@ export function BusSpeedMapDetails() {
   // that's known, as every archive from here on is.
   const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand }, Boolean(date));
 
-  const bandLabel = TIME_BANDS.find((band) => band.key === timeBand);
-  const dayTypeLabel = period !== 'daily' ? DAY_TYPES.find((dt) => dt.key === dayType) : undefined;
-  const subtitle = [
-    periodLabel(date, period),
-    dayTypeLabel?.label,
-    bandLabel && `${bandLabel.label} · ${bandLabel.hours}`,
+  const band = TIME_BANDS.find(({ key }) => key === timeBand);
+  // A single day is wholly one day type, so it's named instead.
+  const days =
+    period === 'daily'
+      ? date && dayjs(date).format('dddd')
+      : DAY_TYPES.find(({ key }) => key === dayType)?.label;
+  const summary = [
+    DIRECTIONS.find(({ key }) => key === direction)?.label,
+    days,
+    band && (band.key === 'all_day' ? band.label : `${band.label}, ${band.hours}`),
   ]
     .filter(Boolean)
     .join(' · ');
@@ -85,8 +77,7 @@ export function BusSpeedMapDetails() {
             dayType={dayType}
             timeBand={timeBand}
             direction={direction}
-            // Driven by the sidebar route picker / URL, narrowed by the in-page route control
-            // for a composite.
+            // Narrowed to one route of a combined route like SL4/SL5 by the header's Route filter.
             routeFilter={routeId === ALL_ROUTES ? busRoute : routeId}
           />
         </ErrorBoundary>
@@ -97,33 +88,22 @@ export function BusSpeedMapDetails() {
   return (
     <PageWrapper pageTitle={'Bus speed map'}>
       <ChartPageDiv>
-        <BusDataNotice />
         <WidgetDiv>
-          <WidgetTitle title="Bus speeds" subtitle={subtitle || undefined} />
+          <WidgetTitle
+            title={
+              <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                {summary}
+                <InProgressBadge date={date} period={period} />
+              </span>
+            }
+            action={<CopyLinkButton />}
+          />
           <div className="flex flex-col gap-3">
-            <BusSpeedMapControls
-              period={period}
-              setPeriod={setPeriod}
-              dayType={dayType}
-              setDayType={setDayType}
-              timeBand={timeBand}
-              setTimeBand={setTimeBand}
-              direction={direction}
-              setDirection={setDirection}
-              routeIds={routeIds}
-              routeId={routeId}
-              setRouteId={setRouteId}
-            />
-            {isPeriodInProgress(date, period) && (
-              <p className="text-xs text-stone-500">
-                This {period === 'weekly' ? 'week' : 'month'} is still in progress — figures reflect
-                service so far, not the full period.
-              </p>
-            )}
             {renderBody()}
             <BusSpeedLegend hasDwells={dwellsUrl !== null} />
           </div>
         </WidgetDiv>
+        <BusSpeedDataNotes />
       </ChartPageDiv>
     </PageWrapper>
   );

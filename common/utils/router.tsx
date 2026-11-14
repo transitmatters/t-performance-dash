@@ -266,7 +266,8 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/trips/single?busRoute=${newRoute}`;
   }
-  const queryParams = queryWithout(query, ['from', 'to', 'busRoute']);
+  // routeId picks one route of a combined route like SL4/SL5, so it means nothing on another.
+  const queryParams = queryWithout(query, ['from', 'to', 'busRoute', 'routeId']);
   queryParams.append('busRoute', newRoute);
   let href = `/bus${currentPath}`;
   href += `?${queryParams.toString() ?? ''}`;
@@ -277,12 +278,18 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
  * Unlike getBusRouteSelectionItemHref, this deliberately navigates rather than reparameterizing
  * the current page -- the leaderboard's "by route" view has no filtered view of its own to land
  * on, only the speed map does (via the same `busRoute` param, resolved there against the loaded
- * tileset's route_ids -- see BusSpeedMapDetails).
+ * tileset's route_ids -- see BusSpeedMapDetails). `period` is the map's own, left off for its
+ * default: the two pages open on different periods.
  */
-export const getBusSpeedMapRouteHref = (newRoute: string, route: Route): string => {
+export const getBusSpeedMapRouteHref = (
+  newRoute: string,
+  route: Route,
+  period: string | undefined
+): string => {
   const { query } = route;
-  const queryParams = queryWithout(query, ['from', 'to', 'busRoute']);
+  const queryParams = queryWithout(query, ['from', 'to', 'busRoute', 'period', 'rank', 'rankView']);
   queryParams.append('busRoute', newRoute);
+  if (period) queryParams.append('period', period);
   return `/bus/speedmap?${queryParams.toString()}`;
 };
 

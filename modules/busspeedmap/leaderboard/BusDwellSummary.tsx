@@ -1,5 +1,5 @@
 import { Link } from '../../../common/components/general/Link';
-import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../../common/utils/router';
+import { useSpeedMapRouteHref } from '../useBusSpeedParams';
 import { MIN_DWELL_STOPS_PER_DAY } from '../constants';
 import type { GroupedBusSpeedLeaderboardEntry } from '../utils';
 import { averageDwell, dwellShare, summarizeDwell } from '../utils';
@@ -15,7 +15,7 @@ interface DwellListProps {
 }
 
 const DwellList = ({ title, caption, entries, value }: DwellListProps) => {
-  const route = useDelimitatedRoute();
+  const speedMapHref = useSpeedMapRouteHref();
   return (
     <div className="flex flex-col">
       <h4 className="text-sm font-semibold text-foreground">{title}</h4>
@@ -24,7 +24,7 @@ const DwellList = ({ title, caption, entries, value }: DwellListProps) => {
         {entries.map((entry, index) => (
           <li key={entry.route}>
             <Link
-              href={getBusSpeedMapRouteHref(entry.route, route)}
+              href={speedMapHref(entry.route)}
               className="flex items-center justify-between gap-4 py-1.5 text-sm hover:bg-muted"
             >
               <span className="flex items-center gap-3">

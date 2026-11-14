@@ -1,5 +1,5 @@
 import { Link } from '../../../common/components/general/Link';
-import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../../common/utils/router';
+import { useSpeedMapRouteHref } from '../useBusSpeedParams';
 import type { LeaderboardMetricConfig } from '../types';
 import type { RankedBusRoute } from '../utils';
 
@@ -15,14 +15,14 @@ export const BusSpeedRouteLeaderboard = ({
   metric,
   numbered = true,
 }: BusSpeedRouteLeaderboardProps) => {
-  const route = useDelimitatedRoute();
+  const speedMapHref = useSpeedMapRouteHref();
 
   return (
     <ol className="flex flex-col divide-y divide-border">
       {data.map((entry, index) => (
         <li key={entry.route}>
           <Link
-            href={getBusSpeedMapRouteHref(entry.route, route)}
+            href={speedMapHref(entry.route)}
             className="flex items-center justify-between gap-4 py-2 text-sm hover:bg-muted"
           >
             <span className="flex items-center gap-3">
