@@ -4,6 +4,8 @@ import {
   validateEmbedSearch,
   validateLineSearch,
   validateOverviewSearch,
+  validateSlowZonesSearch,
+  validateSystemSlowZonesSearch,
   validateTripSearch,
 } from './searchSchemas';
 
@@ -18,6 +20,12 @@ describe('search validators', () => {
     const searchStr =
       '?from=place-davis&to=place-pktrm&date=2025-01-01&busRoute=1&ttDays=weekday&peak=am&utm_source=x';
     expect(stringifySearch(resolve(validateTripSearch, searchStr))).toBe(searchStr);
+  });
+
+  it('keep the slow zone map labels on line and system pages', () => {
+    const searchStr = '?startDate=2025-01-01&endDate=2025-02-01&szLabels=travel';
+    expect(stringifySearch(resolve(validateSlowZonesSearch, searchStr))).toBe(searchStr);
+    expect(validateSystemSlowZonesSearch(parseSearch(searchStr)).szLabels).toBe('travel');
   });
 
   it('keep route ids as strings', () => {

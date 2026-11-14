@@ -27,7 +27,7 @@ import { GreenLineSlowZoneNotice } from '../../common/components/notices/GreenLi
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
-import { DirectionObject } from './constants/constants';
+import { DirectionObject, MAP_LABEL_OPTIONS } from './constants/constants';
 import { getSlowZoneStats } from './utils';
 
 dayjs.extend(utc);
@@ -39,6 +39,9 @@ export function SlowZonesDetails() {
     'northbound',
     DIRECTION_OPTIONS
   );
+  const { value: mapLabel, control: mapLabelControl } = useChartToggle('slow', MAP_LABEL_OPTIONS, {
+    paramKey: 'szLabels',
+  });
 
   const {
     lineShort,
@@ -149,6 +152,7 @@ export function SlowZonesDetails() {
         <Widget
           title="Line map"
           subtitle={`As of ${formatDateTodayCheck(endDate!)}`}
+          action={canShowSlowZonesMap ? mapLabelControl : undefined}
           ready={[allSlow, speedRestrictions]}
         >
           {canShowSlowZonesMap ? (
@@ -157,6 +161,7 @@ export function SlowZonesDetails() {
               slowZones={allSlow.data!}
               speedRestrictions={speedRestrictions.data}
               lineName={lineShort}
+              label={mapLabel}
               direction={isDesktop ? 'horizontal' : 'vertical'}
             />
           ) : (
