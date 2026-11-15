@@ -69,7 +69,7 @@ export const MetricsScorecard = ({
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="pl-6">Metric</TableHead>
-              <TableHead>Last 30 days</TableHead>
+              <TableHead>Latest 30 days</TableHead>
               <TableHead>
                 <span className="md:hidden">Vs prev</span>
                 <span className="hidden md:inline">Vs previous 30 days</span>

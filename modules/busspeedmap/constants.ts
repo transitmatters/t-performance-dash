@@ -274,7 +274,7 @@ export const LEADERBOARD_METRICS: LeaderboardMetricConfig[] = [
     key: 'reliability',
     label: 'Reliability',
     title: 'Least reliable routes',
-    rankedBy: 'Ranked by share of headways within 75–125% of schedule',
+    rankedBy: 'Ranked by share of headways within 75–125% of the scheduled headway',
     value: (entry) => headwayShare(entry, ON_TIME),
     format: (pct) => `${pct.toFixed(1)}% within 75–125%`,
     order: 'ascending',

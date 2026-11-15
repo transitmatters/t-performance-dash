@@ -2,7 +2,12 @@ import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { getWeekStart } from '../../../common/utils/date';
-import { WINDOW_START, YEAR_OVER_YEAR_START, buildRidershipRow } from './scorecardUtils';
+import {
+  WINDOW_START,
+  YEAR_OVER_YEAR_START,
+  buildRidershipRow,
+  trailingWindowLabel,
+} from './scorecardUtils';
 
 /** Weekly ridership from YEAR_OVER_YEAR_START to two weeks ago, like the bus feed. */
 const ridership = (count: (weeksAgo: number) => number): RidershipCount[] => {
@@ -51,5 +56,18 @@ describe('buildRidershipRow', () => {
     expect(buildRidershipRow(data, '#000', { yearOverYear: true })?.trend).toEqual(
       buildRidershipRow(windowOnly, '#000')?.trend
     );
+  });
+});
+
+describe('trailingWindowLabel', () => {
+  it('reads as the last 30 days while the data is current', () => {
+    expect(trailingWindowLabel(dayjs().subtract(3, 'day').format('YYYY-MM-DD'))).toBe(
+      'last 30 days'
+    );
+  });
+
+  it('names the end date when the data is well behind today', () => {
+    const end = dayjs().subtract(60, 'day');
+    expect(trailingWindowLabel(end.format('YYYY-MM-DD'))).toBe(`30 days to ${end.format('MMM D')}`);
   });
 });

@@ -7,7 +7,7 @@ import type { LineShort } from '../../../common/types/lines';
 import { useSubwayScorecardRows } from './scorecardRows';
 import { useBusScorecardRows, BusMetricChart } from './busOverview';
 import { hasBusReliability } from './busReliability';
-import { useCrScorecardRows, CrMetricChart } from './crOverview';
+import { useCrScorecardRows, useCrChartCopy, CrMetricChart } from './crOverview';
 import { MetricsScorecard } from './MetricsScorecard';
 import { MetricChartCard } from './MetricChartCard';
 import type { MetricCopy } from './MetricChartCard';
@@ -96,6 +96,7 @@ const CommuterRailOverview = () => {
   const { query } = useDelimitatedRoute();
   const crRoute = query.crRoute ?? 'CR-Fairmount';
   const { rows, isLoading } = useCrScorecardRows(crRoute);
+  const chartCopy = useCrChartCopy(crRoute);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('ridership');
 
   return (
@@ -106,6 +107,7 @@ const CommuterRailOverview = () => {
       selectedMetric={selectedMetric}
       onSelectMetric={setSelectedMetric}
       chart={<CrMetricChart metric={selectedMetric} crRoute={crRoute} />}
+      chartCopy={chartCopy}
       cards={
         <ServiceAlertsCard
           lineShort="Commuter Rail"

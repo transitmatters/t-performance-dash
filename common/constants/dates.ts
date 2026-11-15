@@ -26,6 +26,7 @@ export const TODAY_MIDNIGHT = dayjs().startOf('day');
 export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const YESTERDAY_STRING = TODAY.subtract(1, 'day').format(DATE_FORMAT);
+export const TWO_DAYS_AGO_STRING = TODAY.subtract(2, 'day').format(DATE_FORMAT);
 export const TODAY_SERVICE_STARTED = TODAY.hour() >= 6;
 export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);

@@ -18,7 +18,9 @@ import {
   buildRidershipRow,
   buildRow,
   chartWindowStart,
+  trailingWindowLabel,
 } from './scorecardUtils';
+import type { MetricCopy } from './MetricChartCard';
 import type { MetricKey, ScorecardRow } from './types';
 
 const ridershipLineId = (crRoute: CommuterRailRoute) =>
@@ -64,6 +66,31 @@ export const useCrScorecardRows = (crRoute: CommuterRailRoute) => {
   }, [ridership.data, delays.data]);
 
   return { rows, isLoading: ridership.isLoading || delays.isLoading };
+};
+
+/** Chart titles that name the window the chart actually shows, since ridership lags by months. */
+export const useCrChartCopy = (crRoute: CommuterRailRoute): MetricCopy => {
+  // The scorecard's queries, so these read the cache.
+  const ridership = useRidershipData({
+    line_id: ridershipLineId(crRoute),
+    start_date: WINDOW_START,
+    end_date: TODAY_STRING,
+  });
+  const delays = useAlertDelays({
+    start_date: WINDOW_START,
+    end_date: TODAY_STRING,
+    line: crRoute,
+    agg: 'daily',
+  });
+  const windowFor = (data?: { date: string }[]) =>
+    trailingWindowLabel(data?.[data.length - 1]?.date ?? TODAY_STRING);
+  return {
+    ridership: { title: 'Ridership', subtitle: `Fare validations, ${windowFor(ridership.data)}` },
+    delays: {
+      title: 'Alert delays',
+      subtitle: `Daily time delayed per MBTA alerts, ${windowFor(delays.data)}`,
+    },
+  };
 };
 
 export const CrMetricChart = ({
