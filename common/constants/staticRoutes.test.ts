@@ -1,5 +1,38 @@
 import { describe, expect, it } from 'vitest';
-import { EMBED_PATHS, STATIC_PATHS } from './staticRoutes';
+import { linePathToKeyMap } from '../utils/router';
+import type { LinePath } from '../types/lines';
+import { ALL_PAGES } from './pages';
+import type { LinePageKey } from './staticRoutes';
+import { EMBED_PATHS, LINE_PAGE_LINES, STATIC_PATHS } from './staticRoutes';
+
+const PAGE_FOR_ROUTE: Record<LinePageKey, keyof typeof ALL_PAGES> = {
+  '': 'overview',
+  delays: 'delays',
+  fleet: 'fleet',
+  leaderboard: 'leaderboard',
+  predictions: 'predictions',
+  reliability: 'reliability',
+  ridership: 'ridership',
+  service: 'service',
+  slowzones: 'slowzones',
+  speed: 'speed',
+  speedmap: 'speedmap',
+  'trips/multi': 'multiTrips',
+  'trips/single': 'singleTrips',
+};
+
+describe('LINE_PAGE_LINES', () => {
+  // A route without the page's line renders an empty page; a page without the route 404s.
+  it.each(Object.entries(PAGE_FOR_ROUTE))(
+    '/$line/%s exists for the lines its page shows',
+    (route, page) => {
+      const routeLines = LINE_PAGE_LINES[route as LinePageKey].map(
+        (line) => linePathToKeyMap[line as LinePath]
+      );
+      expect([...routeLines].sort()).toEqual([...ALL_PAGES[page].lines].sort());
+    }
+  );
+});
 
 describe('EMBED_PATHS', () => {
   it('covers every rail line and the systemwide slow zone chart', () => {
