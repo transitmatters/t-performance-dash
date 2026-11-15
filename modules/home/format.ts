@@ -43,11 +43,12 @@ export const formatCell = (cell: Cell, withUnit = false) => {
 /** "▲ 5% vs 12 weeks", or points when comparing shares a year apart. */
 export const formatTrend = (cell: Pick<Cell, 'trend' | 'trendBasis'>) => {
   if (cell.trend === null || !Number.isFinite(cell.trend)) return null;
-  const arrow = cell.trend > 0 ? '▲' : cell.trend < 0 ? '▼' : '';
-  const amount = Math.abs(Math.round(cell.trend * 100));
+  const rounded = Math.round(cell.trend * 100);
+  const arrow = rounded > 0 ? '▲ ' : rounded < 0 ? '▼ ' : '';
+  const amount = Math.abs(rounded);
   return cell.trendBasis === 'yearAgo'
-    ? `${arrow} ${amount} pts vs a year ago`
-    : `${arrow} ${amount}% last 2 weeks vs 12`;
+    ? `${arrow}${amount} pts vs a year ago`
+    : `${arrow}${amount}% last 2 weeks vs 12`;
 };
 
 const formatThreshold = (value: number, unit: Unit) =>

@@ -1,24 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import { linePathToKeyMap } from '../utils/router';
 import type { LinePath } from '../types/lines';
-import { ALL_PAGES } from './pages';
+import { ALL_PAGES, PAGES } from './pages';
 import type { LinePageKey } from './staticRoutes';
 import { EMBED_PATHS, LINE_PAGE_LINES, STATIC_PATHS } from './staticRoutes';
 
-const PAGE_FOR_ROUTE: Record<LinePageKey, keyof typeof ALL_PAGES> = {
-  '': 'overview',
-  delays: 'delays',
-  fleet: 'fleet',
-  leaderboard: 'leaderboard',
-  predictions: 'predictions',
-  reliability: 'reliability',
-  ridership: 'ridership',
-  service: 'service',
-  slowzones: 'slowzones',
-  speed: 'speed',
-  speedmap: 'speedmap',
-  'trips/multi': 'multiTrips',
-  'trips/single': 'singleTrips',
+const PAGE_FOR_ROUTE: Record<LinePageKey, PAGES> = {
+  '': PAGES.overview,
+  delays: PAGES.delays,
+  fleet: PAGES.fleet,
+  leaderboard: PAGES.leaderboard,
+  predictions: PAGES.predictions,
+  reliability: PAGES.reliability,
+  ridership: PAGES.ridership,
+  service: PAGES.service,
+  slowzones: PAGES.slowzones,
+  speed: PAGES.speed,
+  speedmap: PAGES.speedmap,
+  'trips/multi': PAGES.multiTrips,
+  'trips/single': PAGES.singleTrips,
 };
 
 describe('LINE_PAGE_LINES', () => {
