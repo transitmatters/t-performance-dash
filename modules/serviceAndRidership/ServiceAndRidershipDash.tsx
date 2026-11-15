@@ -1,4 +1,3 @@
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useServiceAndRidershipDashboard } from '../../common/api/hooks/serviceAndRidership';
 
 import { LineGrid } from './LineGrid';
@@ -9,13 +8,13 @@ export function ServiceAndRidershipDash() {
   const { data } = useServiceAndRidershipDashboard();
 
   return (
-    <PageWrapper pageTitle={'Service & Ridership'}>
+    <>
       <div className="flex w-full flex-col gap-4">
         <ServiceAndRidershipProvider>
           {data && <SummaryCard {...data} />}
           {data && <LineGrid {...data} />}
         </ServiceAndRidershipProvider>
       </div>
-    </PageWrapper>
+    </>
   );
 }

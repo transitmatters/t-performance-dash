@@ -12,6 +12,7 @@ import type {
   Map as MaplibreMap,
 } from 'maplibre-gl';
 import { useBusSpeedStops } from '../../../common/api/hooks/busSpeedSegments';
+import { useThemeStore } from '../../../common/state/themeStore';
 import { getBusRouteDisplayName, getBusRouteIds } from '../../../common/constants/lines';
 import {
   BOSTON_CENTER,
@@ -99,9 +100,10 @@ const registerStopsArchive = (buffer: ArrayBuffer): string => {
   return `pmtiles://${key}`;
 };
 
-// CARTO's Positron. Free to use with attribution, and already the basemap TransitMatters
-// uses in otp-app, so there is no per-load billing to worry about here.
+// CARTO's Positron, and Dark Matter in dark mode. Free to use with attribution, and already the
+// basemap TransitMatters uses in otp-app, so there is no per-load billing to worry about here.
 const BASEMAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+const DARK_BASEMAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 const SOURCE_ID = 'bus-speed-segments';
 const ARROWS_LAYER_ID = 'bus-speed-direction-arrows';
@@ -411,6 +413,7 @@ export const BusSpeedMapView = ({
   // The arrow layer only mounts once its image exists: maplibre drops a symbol whose icon is
   // missing when its tile is laid out, and wouldn't lay that tile out again just for the image.
   const [arrowImageReady, setArrowImageReady] = useState(false);
+  const isDark = useThemeStore((state) => state.theme === 'dark');
   const mapRef = useRef<MapRef>(null);
   const routeIds = useMemo(
     () => (routeFilter ? getBusRouteIds(routeFilter) : undefined),
@@ -792,7 +795,7 @@ export const BusSpeedMapView = ({
       ref={mapRef}
       initialViewState={BOSTON_CENTER}
       maxBounds={MAP_MAX_BOUNDS}
-      mapStyle={BASEMAP_STYLE}
+      mapStyle={isDark ? DARK_BASEMAP_STYLE : BASEMAP_STYLE}
       style={{ width: '100%', height: '100%' }}
       // react-map-gl skips any not yet in the style, so the stop hitboxes can be listed before
       // the stops archive has loaded.

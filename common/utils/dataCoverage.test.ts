@@ -48,6 +48,12 @@ describe('getNoDataReason', () => {
     const reason = ferry({ startDate: '2026-05-01', endDate: '2026-06-01', isLineMetric: true });
     expect(reason.title).toBe('No data available');
     expect(reason.jumpTo).toBeUndefined();
+    expect(reason.detail).toBe('Try another date range.');
+  });
+
+  it('suggests another date, not a range, on a single-date page', () => {
+    const reason = ferry({ date: '2026-03-31', isLineMetric: true });
+    expect(reason.detail).toBe('Try another date.');
   });
 
   it('says when the filter, not the query, emptied the chart', () => {

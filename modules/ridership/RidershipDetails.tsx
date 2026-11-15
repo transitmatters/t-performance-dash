@@ -6,7 +6,6 @@ import {
   useRidershipBaseline,
   useSeasonalRidershipMaximums,
 } from '../../common/api/hooks/baselines';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
 import {
@@ -89,7 +88,7 @@ export function RidershipDetails() {
   };
 
   return (
-    <PageWrapper pageTitle={'Ridership'}>
+    <>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.average) && (
           <StatCardGrid>
@@ -174,6 +173,6 @@ export function RidershipDetails() {
         )}
         {line === 'line-bus' && busRoute && <BusStopRidership key={busRoute} busRoute={busRoute} />}
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

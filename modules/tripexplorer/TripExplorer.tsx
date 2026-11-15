@@ -4,7 +4,6 @@ import { findMatch } from '../../common/components/alerts/AlertFilter';
 import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
 import { CoverageGapNotice } from '../../common/components/notices/CoverageGapNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { getStationInOptions, optionsStation } from '../../common/utils/stations';
@@ -27,10 +26,8 @@ const describeDates = (date?: string, startDate?: string, endDate?: string) => {
 export const TripExplorer = () => {
   const {
     lineShort,
-    page,
     query: { to, from, date, startDate, endDate, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
-  const pageTitle = page === 'multiTrips' ? 'Trips over a date range' : 'Trips on a single day';
   const { data: alerts, isLoading: isAlertsLoading } = useHistoricalAlertsData(
     date,
     lineShort,
@@ -50,7 +47,7 @@ export const TripExplorer = () => {
   }, [matchingAlerts, isAlertsLoading, setAlerts]);
 
   return (
-    <PageWrapper pageTitle={pageTitle}>
+    <>
       <ChartPageDiv>
         {fromStation && toStation ? (
           <>
@@ -78,6 +75,6 @@ export const TripExplorer = () => {
           <TripSetupNotice missing="stations" />
         )}
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 };

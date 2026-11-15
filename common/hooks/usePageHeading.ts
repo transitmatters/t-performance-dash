@@ -4,6 +4,7 @@ import type { Tab } from '../types/router';
 import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../types/lines';
 import { useDelimitatedRoute } from '../utils/router';
+import { useCrServiceScope } from './usePageFilters';
 
 interface LineNameInput {
   line: Line | undefined;
@@ -36,4 +37,16 @@ export const usePageHeading = () => {
     lineName: getLineName({ line, tab, busRoute, crRoute, ferryRoute }),
     pageTitle: ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name,
   };
+};
+
+/** The tab title, named like the header: "Red Line | Speed | Data Dashboard". */
+export const usePageTitle = () => {
+  const { lineName, pageTitle } = usePageHeading();
+  const { line, page } = useDelimitatedRoute();
+  const { value: crScope } = useCrServiceScope();
+  // Commuter Rail service can chart every line together, while the URL still names one.
+  const allCrLines = line === 'line-commuter-rail' && page === 'service' && crScope === 'all';
+  return [allCrLines ? 'All Commuter Rail lines' : lineName, pageTitle, 'Data Dashboard']
+    .filter(Boolean)
+    .join(' | ');
 };

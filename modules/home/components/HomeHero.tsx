@@ -38,6 +38,15 @@ const HeroValue = ({
   );
 };
 
+// Five tiles in full rows at every width: 1 + 2 + 2 on phones, 3 + 2 at md, one row from xl.
+const TILE_SPAN = [
+  'col-span-2',
+  'md:col-span-2',
+  'md:col-span-2',
+  'md:col-span-3',
+  'md:col-span-3',
+];
+
 const HeroTile = ({
   config,
   stat,
@@ -53,7 +62,10 @@ const HeroTile = ({
   const sentiment = trendSentiment(stat?.trend ?? null, config.direction);
   return (
     <div
-      className="tm-reveal @container flex flex-col gap-1 rounded-xl border bg-card p-4"
+      className={cn(
+        'tm-reveal @container flex flex-col gap-1 rounded-xl border bg-card p-4 xl:col-span-1',
+        TILE_SPAN[index]
+      )}
       style={{ '--reveal-index': index } as CSSProperties}
     >
       <span className="text-xs font-medium text-muted-foreground">{config.label}</span>
@@ -86,7 +98,7 @@ export const HomeTitle = ({ generatedAt, failed }: { generatedAt?: string; faile
       ))}
     </div>
     <div className="flex flex-col gap-1">
-      <h1 className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         {/* The charcoal wordmark disappears on the dark background, so swap in the white one. */}
         <img
           src="/Logo_wordmark.png"
@@ -107,8 +119,8 @@ export const HomeTitle = ({ generatedAt, failed }: { generatedAt?: string; faile
         <span className="text-sm font-semibold tracking-widest text-muted-foreground uppercase sm:text-base">
           Data Dashboard
         </span>
-      </h1>
-      <p className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">How is the T doing?</p>
+      </div>
+      <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">How is the T doing?</h1>
       <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
         Every line and mode, measured against the best it has done and the service riders need.{' '}
         {generatedAt ? (
@@ -125,7 +137,7 @@ export const HomeHero = ({ stats, state }: { stats?: HeroStat[]; state: HomeStat
   <section
     aria-label="The T at a glance"
     aria-busy={state === 'loading'}
-    className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5"
+    className="grid grid-cols-2 gap-3 md:grid-cols-6 xl:grid-cols-5"
   >
     {HERO.map((config, index) => (
       <HeroTile

@@ -17,7 +17,7 @@ import {
   FERRY_ROUTES,
 } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
-import { NAV_LINES, lineIcon, pagesForLine } from '../navigation/lineNav';
+import { LINE_ENTRY_PATHS, NAV_LINES, lineIcon, pagesForLine } from '../navigation/lineNav';
 
 export type RouteLine = 'line-bus' | 'line-commuter-rail' | 'line-ferry';
 export type CommandAction = 'theme' | 'sidebar' | 'copyLink';
@@ -136,7 +136,7 @@ const lineCommands = (): Command[] =>
       group: 'Pages',
       label: LINE_OBJECTS[line].name,
       line,
-      hint: `${linePath(line)}/`,
+      hint: LINE_ENTRY_PATHS[line] ?? `${linePath(line)}/`,
       icon: lineIcon(line),
       rank: 0,
       target: { kind: 'line', line },

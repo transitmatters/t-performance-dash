@@ -62,10 +62,13 @@ export const buildRow = (params: {
   reducer: 'avg' | 'sum';
   unit: string;
   formatValue: (value: number) => string;
+  /** The change, when it reads differently from the value (percentage points). */
+  formatDelta?: (value: number) => string;
   negligibleDelta: number;
   higherIsBetter: boolean;
   color: string;
 }): ScorecardRow | null => {
+  const formatDelta = params.formatDelta ?? params.formatValue;
   const { current, delta } = getTrailingWindowDelta(params.points, params.reducer, 30);
   if (!Number.isFinite(current)) return null;
   const trend = getMonthlyTrend(params.points, params.reducer);
@@ -90,10 +93,10 @@ export const buildRow = (params: {
     deltaLabel:
       delta === null
         ? 'Not enough data'
-        : `${delta > 0 ? '+' : ''}${params.formatValue(delta)} · ${sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse'}`,
+        : `${delta > 0 ? '+' : ''}${formatDelta(delta)} · ${sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse'}`,
     // Compact form for narrow (mobile) columns: just the signed change — the badge color already
     // carries better/worse, so the word is redundant where space is tight.
-    deltaValueLabel: delta === null ? '—' : `${delta > 0 ? '+' : ''}${params.formatValue(delta)}`,
+    deltaValueLabel: delta === null ? '—' : `${delta > 0 ? '+' : ''}${formatDelta(delta)}`,
     deltaSentiment: sentiment,
     trend,
     color: params.color,

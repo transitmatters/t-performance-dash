@@ -290,8 +290,8 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
  * Unlike getBusRouteSelectionItemHref, this deliberately navigates rather than reparameterizing
  * the current page -- the leaderboard's "by route" view has no filtered view of its own to land
  * on, only the speed map does (via the same `busRoute` param, resolved there against the loaded
- * tileset's route_ids -- see BusSpeedMapDetails). `period` is the map's own, left off for its
- * default: the two pages open on different periods.
+ * tileset's route_ids -- see BusSpeedMapDetails). `period` is left off for the default, which
+ * both pages share.
  */
 export const getBusSpeedMapRouteHref = (
   newRoute: string,

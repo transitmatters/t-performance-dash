@@ -70,6 +70,15 @@ export const pagesForLine = (line: Line): PageMetadata[] => {
   }
 };
 
+const FERRY_ENTRY_PATH = '/ferry/trips/single/';
+const RIDE_ENTRY_PATH = '/the-ride/ridership/';
+
+/** Where a line without an overview opens instead. */
+export const LINE_ENTRY_PATHS: Partial<Record<Line, string>> = {
+  'line-ferry': FERRY_ENTRY_PATH,
+  'line-RIDE': RIDE_ENTRY_PATH,
+};
+
 export const hrefForLine = (line: Line, route: Route) => {
   switch (line) {
     case 'line-bus':
@@ -77,9 +86,9 @@ export const hrefForLine = (line: Line, route: Route) => {
     case 'line-commuter-rail':
       return '/commuter-rail/?crRoute=CR-Fairmount';
     case 'line-ferry':
-      return `/ferry/trips/single?ferryRoute=Boat-F6&date=${FERRY_DEFAULTS.singleTripConfig.date}`;
+      return `${FERRY_ENTRY_PATH}?ferryRoute=Boat-F6&date=${FERRY_DEFAULTS.singleTripConfig.date}`;
     case 'line-RIDE':
-      return '/the-ride/ridership';
+      return RIDE_ENTRY_PATH;
     default:
       return getLineSelectionItemHref(line, route);
   }

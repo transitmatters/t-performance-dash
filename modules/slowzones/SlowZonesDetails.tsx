@@ -19,7 +19,6 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getFormattedTimeString } from '../../common/utils/time';
 import type { Direction } from '../../common/types/dataPoints';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { formatDateTodayCheck } from '../../common/state/utils/dateStoreUtils';
@@ -96,7 +95,7 @@ export function SlowZonesDetails() {
   };
 
   return (
-    <PageWrapper pageTitle={'Slow zones'}>
+    <>
       <ChartPageDiv>
         <GreenLineSlowZoneNotice />
         {stats && Number.isFinite(stats.currentSlowTime) && (
@@ -148,7 +147,7 @@ export function SlowZonesDetails() {
         </Widget>
         <Widget
           title="Line map"
-          subtitle={`As of ${formatDateTodayCheck(endDate!)}`}
+          subtitle={`As of ${formatDateTodayCheck(endDate!).replace('Today', 'today')}`}
           ready={[allSlow, speedRestrictions]}
         >
           {canShowSlowZonesMap ? (
@@ -181,6 +180,6 @@ export function SlowZonesDetails() {
           )}
         </Widget>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

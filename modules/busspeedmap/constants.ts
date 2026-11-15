@@ -61,8 +61,8 @@ export const PERIODS: { key: Period; label: string }[] = [
   { key: 'monthly', label: 'Month' },
 ];
 
-export const DEFAULT_PERIOD: Period = 'daily';
-export const DEFAULT_SPEED_MAP_PERIOD: Period = 'monthly';
+// Both pages open on a month, which covers more segments and ranks them less noisily than a day.
+export const DEFAULT_PERIOD: Period = 'monthly';
 
 /**
  * Only meaningful for weekly/monthly periods -- a daily file's features carry no `day_type`

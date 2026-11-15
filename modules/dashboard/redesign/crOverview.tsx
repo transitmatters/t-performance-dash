@@ -50,7 +50,7 @@ export const useCrScorecardRows = (crRoute: CommuterRailRoute) => {
       delays.data &&
       buildRow({
         key: 'delays',
-        label: 'Alert delays',
+        label: 'Delays',
         subtitle: 'Time delayed per MBTA alerts, daily average',
         points: delays.data.map((point) => ({ date: point.date, value: point.total_delay_time })),
         reducer: 'avg',
@@ -87,7 +87,7 @@ export const useCrChartCopy = (crRoute: CommuterRailRoute): MetricCopy => {
   return {
     ridership: { title: 'Ridership', subtitle: `Fare validations, ${windowFor(ridership.data)}` },
     delays: {
-      title: 'Alert delays',
+      title: 'Delays',
       subtitle: `Daily time delayed per MBTA alerts, ${windowFor(delays.data)}`,
     },
   };

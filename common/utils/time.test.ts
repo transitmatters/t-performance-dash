@@ -1,6 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { getClockFormattedTimeString, getFormattedTimeString, getTimeUnit } from './time';
+import {
+  formatMinutesTick,
+  getClockFormattedTimeString,
+  getFormattedTimeString,
+  getTimeUnit,
+} from './time';
 
 describe('getFormattedTimeString', () => {
   it('shows seconds under 100 s', () => {
@@ -47,6 +52,9 @@ describe('getClockFormattedTimeString', () => {
 
   it('can leave the hours off for a duration', () => {
     expect(getClockFormattedTimeString(95, { showHours: false, showSeconds: true })).toBe('1:35');
+    expect(getClockFormattedTimeString(3700, { showHours: false, showSeconds: true })).toBe(
+      '61:40'
+    );
   });
 
   it('uses a 12-hour clock with AM and PM', () => {
@@ -59,5 +67,14 @@ describe('getClockFormattedTimeString', () => {
 
   it('shows the half hour after midnight as 12:30 AM', () => {
     expect(getClockFormattedTimeString(1800, { use12Hour: true })).toBe('12:30 AM');
+  });
+});
+
+describe('formatMinutesTick', () => {
+  it('formats every tick as minutes and seconds', () => {
+    expect(formatMinutesTick(2)).toBe('2:00');
+    expect(formatMinutesTick(1.6)).toBe('1:36');
+    expect(formatMinutesTick(0.5)).toBe('0:30');
+    expect(formatMinutesTick(75)).toBe('75:00');
   });
 });

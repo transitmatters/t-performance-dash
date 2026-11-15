@@ -80,7 +80,11 @@ export const useSubwayScorecardRows = (
     const ridershipRow = ridership.data && buildRidershipRow(ridership.data, color);
     if (ridershipRow) built.push(ridershipRow);
 
-    if (allSlow.data && lineShort && lineShort in { Red: 1, Orange: 1, Blue: 1, Green: 1 }) {
+    if (
+      allSlow.data &&
+      lineShort &&
+      lineShort in { Red: 1, Orange: 1, Blue: 1, Green: 1, Mattapan: 1 }
+    ) {
       const now = dayjs.utc();
       const zones = allSlow.data.data;
       // Anchor "this month" to the data's latest coverage, not today: the feed lags a few days, so

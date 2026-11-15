@@ -318,7 +318,12 @@ export const Scoreboard = ({
   state: HomeState;
   onRetry: () => void;
 }) => {
-  const lines = ROWS.map((config) => ({ config, row: rows?.find((r) => r.id === config.id) }));
+  // Named as in the sidebar everywhere on the row, popover and screen-reader label included,
+  // rather than by the published file's own label.
+  const lines = ROWS.map((config) => {
+    const row = rows?.find((r) => r.id === config.id);
+    return { config, row: row && { ...row, label: config.label } };
+  });
   return (
     <Card aria-busy={state === 'loading'}>
       <CardHeader>

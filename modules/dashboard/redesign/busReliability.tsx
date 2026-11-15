@@ -63,8 +63,10 @@ export const useBusReliabilityRow = (busRoute: BusRoute, color: string) => {
         subtitle: `Headways within 75–125% of schedule${subset ? `, Route ${subset} only` : ''}`,
         points: toHeadwayPoints(tripMetrics.data, ON_TIME),
         reducer: 'avg',
-        unit: '%',
-        formatValue: (v) => v.toFixed(1),
+        // "%" on the figure, as service delivered has it, rather than spaced off as a unit.
+        unit: 'of headways',
+        formatValue: (v) => `${v.toFixed(1)}%`,
+        formatDelta: (v) => `${v.toFixed(1)} pts`,
         negligibleDelta: 0.5,
         higherIsBetter: true,
         color,

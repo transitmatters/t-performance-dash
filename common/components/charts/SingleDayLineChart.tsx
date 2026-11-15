@@ -23,7 +23,7 @@ import {
   useChartTheme,
 } from '../../utils/chartTheme';
 import { CHART_COLORS } from '../../constants/colors';
-import { getFormattedTimeString } from '../../utils/time';
+import { formatMinutesTick, getFormattedTimeString } from '../../utils/time';
 import { consistHoverContent } from '../../utils/occupancy';
 import type { HoverCardContent } from './hoverCard/types';
 import { LegendSingleDay } from './Legend';
@@ -323,7 +323,7 @@ export const SingleDayLineChart = ({
                   color: chartTheme.tick,
                   callback: (value) => {
                     return units === 'Minutes' && typeof value === 'number'
-                      ? getFormattedTimeString(value, 'minutes')
+                      ? formatMinutesTick(value)
                       : value.toLocaleString();
                   },
                 },
@@ -356,6 +356,7 @@ export const SingleDayLineChart = ({
                 time: {
                   unit: 'hour',
                   tooltipFormat: 'h:mm:ss a', // locale time with seconds
+                  displayFormats: { hour: 'h a' },
                 },
                 ticks: {
                   color: chartTheme.tick,
