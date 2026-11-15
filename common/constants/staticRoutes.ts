@@ -1,19 +1,21 @@
 import { RAIL_LINES } from '../types/lines';
 
 const ALL_MODES = [...RAIL_LINES, 'bus', 'commuter-rail', 'ferry'];
+// Ferry has no line overview, Blue and Mattapan no Fleet page, and Mattapan no ridership data.
+const WITHOUT_MATTAPAN = ALL_MODES.filter((line) => line !== 'mattapan');
 
 /**
  * Which line paths each `/$line/...` page exists for. Routes 404 any other line, and the build
  * prerenders one HTML file per combination so S3 can serve every deep link directly.
  */
 export const LINE_PAGE_LINES = {
-  '': ALL_MODES,
+  '': [...RAIL_LINES, 'bus', 'commuter-rail'],
   delays: [...RAIL_LINES, 'bus', 'commuter-rail'],
-  fleet: [...RAIL_LINES, 'bus', 'commuter-rail'],
+  fleet: ['red', 'orange', 'green', 'bus', 'commuter-rail'],
   leaderboard: ['bus'],
   predictions: RAIL_LINES,
   reliability: [...RAIL_LINES, 'bus', 'commuter-rail', 'the-ride'],
-  ridership: [...ALL_MODES, 'the-ride'],
+  ridership: [...WITHOUT_MATTAPAN, 'the-ride'],
   service: [...RAIL_LINES, 'commuter-rail'],
   slowzones: RAIL_LINES,
   speed: [...RAIL_LINES, 'bus'],

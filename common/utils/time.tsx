@@ -60,10 +60,8 @@ export const getFormattedTimeString = (value: number, unit: 'minutes' | 'seconds
       return `${absValue}s`;
     case absValue < 3600:
       return `${duration.format('m')}m ${duration.format('s').padStart(2, '0')}s`;
-    case absValue > 86400:
-      return `${hoursDuration.toFixed(0)}h ${duration.format('m').padStart(2, '0')}m`;
     default:
-      return `${duration.format('H')}h ${duration.format('m').padStart(2, '0')}m`;
+      return `${Math.floor(hoursDuration)}h ${duration.format('m').padStart(2, '0')}m`;
   }
 };
 
@@ -95,7 +93,7 @@ export const getClockFormattedTimeString = (
   minutes = minutes % 60;
   hours += hoursToAdd;
   const isPM = hours >= 12 && hours < 24;
-  hours = (use12Hour && hours > 12 ? hours - 12 : hours) % 24;
+  hours = use12Hour ? hours % 12 || 12 : hours % 24;
   // eslint-disable-next-line prefer-const
   let [hoursString, minutesString, secondsString] = [hours, minutes, seconds].map((num) =>
     num.toString().padStart(2, '0')
