@@ -5,6 +5,7 @@ import { faCalendarDay, faCalendarWeek, faChevronDown } from '@fortawesome/free-
 import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
+import type { NotableDate } from '../../../constants/notableDates';
 import { getRangePresets, SINGLE_PRESETS } from '../../../constants/dates';
 import { useDatePresetStore } from '../../../state/datePresetStore';
 import { checkForPreset, useSelectedPreset } from '../../../state/utils/datePresetUtils';
@@ -13,6 +14,8 @@ import type { QueryTypeOptions } from '../../../types/router';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
+import { NotableDatePresets } from './NotableDatePresets';
+import { useNotableDates } from './useNotableDates';
 
 interface DateSelectionProps {
   type: QueryTypeOptions;
@@ -28,6 +31,9 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
   const updateQueryParams = useUpdateQuery();
   const presets = range ? getRangePresets(tab, page) : SINGLE_PRESETS[tab];
   const presetDateArray = Object.values(presets);
+  const notable = useNotableDates(type);
+  const selectedName =
+    (datePreset && presets[datePreset]?.name) ?? notable.selected?.label ?? 'Custom';
 
   const handleSelection = (datePresetKey: DatePresetKey) => {
     const selectedPreset = presets[datePresetKey];
@@ -37,6 +43,11 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
 
   const clearPreset = () => {
     setDatePreset('custom', dateStoreSection, range);
+  };
+
+  const handleNotableSelection = (entry: NotableDate) => {
+    updateQueryParams(notable.queryFor(entry), false);
+    clearPreset();
   };
 
   useEffect(() => {
@@ -61,9 +72,7 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
               className="size-3.5 shrink-0 text-stone-500 dark:text-stone-400"
               aria-hidden
             />
-            <span className="truncate font-medium">
-              {datePreset && presets[datePreset] ? presets[datePreset].name : 'Custom'}
-            </span>
+            <span className="truncate font-medium">{selectedName}</span>
           </span>
           <FontAwesomeIcon
             icon={faChevronDown}
@@ -71,12 +80,21 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
             aria-hidden
           />
         </PopoverTrigger>
-        <PopoverContent align="start" className="w-56 overflow-hidden p-0">
-          <div className="flex flex-col overflow-hidden leading-6">
+        <PopoverContent
+          align="start"
+          className="max-h-(--radix-popover-content-available-height) w-64 overflow-y-auto p-0"
+        >
+          <div className="flex flex-col leading-6">
             <DatePickerPresets
               preset={datePreset}
               selectedOptions={presetDateArray}
               handleSelection={handleSelection}
+              close={() => setOpen(false)}
+            />
+            <NotableDatePresets
+              options={notable.options}
+              selected={notable.selected}
+              handleSelection={handleNotableSelection}
               close={() => setOpen(false)}
             />
           </div>
