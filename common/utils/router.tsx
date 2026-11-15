@@ -2,7 +2,7 @@ import { useLocation, useMatches, useNavigate, useRouter } from '@tanstack/react
 import { useCallback, useMemo } from 'react';
 import { isEqual, pickBy, startCase, toLower } from '@lodash-utils';
 import type { Line, LineColorKey, LinePath, LineShort } from '../types/lines';
-import { RAIL_LINES } from '../types/lines';
+import { COMMUTER_RAIL_ROUTES, FERRY_ROUTES, RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tab } from '../types/router';
 import { CHART_PARAMS, DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
@@ -123,7 +123,17 @@ const DEFAULT_ROUTE_FOR_LINE: Partial<Record<Line, string>> = {
 };
 
 /**
- * The search with the mode's default route filled in, e.g. `/bus/ridership/` with no `busRoute`.
+ * Modes whose every route is known, so an unknown one is a typo or a dead link. Bus isn't here:
+ * its pages take routes beyond the station files, and the speed map reads its own tileset's.
+ */
+const KNOWN_ROUTES_FOR_LINE: Partial<Record<Line, readonly string[]>> = {
+  'line-commuter-rail': COMMUTER_RAIL_ROUTES,
+  'line-ferry': FERRY_ROUTES,
+};
+
+/**
+ * The search with the mode's default route filled in, e.g. `/bus/ridership/` with no `busRoute`,
+ * or `/commuter-rail/` with a `crRoute` that doesn't exist.
  * Pages that rank every route at once, like the leaderboard, are left without one.
  */
 export const withDefaultRouteParam = (pathname: string, search: SearchObject): SearchObject => {
@@ -131,7 +141,9 @@ export const withDefaultRouteParam = (pathname: string, search: SearchObject): S
   const param = line ? ROUTE_PARAM_FOR_LINE[line] : undefined;
   // Embed paths carry a chart name after the page, so their page may not resolve; they still need a route.
   if (!line || !param || ALL_PAGES[page]?.hasRouteSelector === false) return search;
-  if (search[param]) return search;
+  const route = search[param];
+  const knownRoutes = KNOWN_ROUTES_FOR_LINE[line];
+  if (route && (!knownRoutes || knownRoutes.includes(String(route)))) return search;
   return { ...search, [param]: DEFAULT_ROUTE_FOR_LINE[line] };
 };
 

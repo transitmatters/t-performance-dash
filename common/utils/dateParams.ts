@@ -67,15 +67,12 @@ const normalizeRange = (
 const normalizeSingle = (
   search: SearchObject,
   { minDate, maxDate }: { minDate: string; maxDate: string },
-  fallback: DateQuery
+  fallback: DateQuery,
+  latestDate = maxDate
 ) => {
-  const date =
-    asDate(search.date) ??
-    asDate(search.endDate) ??
-    asDate(search.startDate) ??
-    asDate(fallback.date) ??
-    maxDate;
-  return { date: clamp(date, minDate, maxDate) };
+  const date = asDate(search.date) ?? asDate(search.endDate) ?? asDate(search.startDate);
+  if (date) return { date: clamp(date, minDate, maxDate) };
+  return { date: clamp(asDate(fallback.date) ?? latestDate, minDate, latestDate) };
 };
 
 interface NormalizeDateParamsArgs {
@@ -85,6 +82,11 @@ interface NormalizeDateParamsArgs {
   search: SearchObject;
   /** The session's last complete selection for this section, preferred over the tab default. */
   stored?: DateQuery;
+  /**
+   * The newest day with data, when it can trail the picker's max date. A date the URL doesn't
+   * name opens no later than this; one it does name can still go up to the max.
+   */
+  latestDate?: string;
 }
 
 /**
@@ -98,6 +100,7 @@ export const normalizeDateParams = ({
   page,
   search,
   stored = {},
+  latestDate,
 }: NormalizeDateParamsArgs): SearchObject | undefined => {
   const isRange = RANGE_SECTIONS.includes(section);
   if (!isRange && !SINGLE_SECTIONS.includes(section)) return undefined;
@@ -119,7 +122,7 @@ export const normalizeDateParams = ({
         : FALLBACK_WINDOW_DAYS;
     dates = normalizeRange(search, bounds, fallback, windowDays);
   } else {
-    dates = normalizeSingle(search, bounds, asDate(stored.date) ? stored : defaults);
+    dates = normalizeSingle(search, bounds, asDate(stored.date) ? stored : defaults, latestDate);
   }
 
   const normalized = pickBy(
@@ -130,7 +133,11 @@ export const normalizeDateParams = ({
 };
 
 /** Where to send a URL that is missing, or has broken, dates for its page. */
-export const getDateRedirectHref = (pathname: string, search: SearchObject) => {
+export const getDateRedirectHref = (
+  pathname: string,
+  search: SearchObject,
+  latestDate?: string
+) => {
   const { tab, page, line } = parseRoutePath(pathname);
   const pageMetadata = ALL_PAGES[page];
   // Not a dated page, or a page this line doesn't have (the route 404s it).
@@ -138,7 +145,7 @@ export const getDateRedirectHref = (pathname: string, search: SearchObject) => {
 
   const section = pageMetadata.dateStoreSection;
   const stored = getDateStoreSection(section, useDateStore.getState()) as DateQuery;
-  const normalized = normalizeDateParams({ section, tab, page, search, stored });
+  const normalized = normalizeDateParams({ section, tab, page, search, stored, latestDate });
   return normalized ? `${pathname}${stringifySearch(normalized)}` : undefined;
 };
 
@@ -147,11 +154,38 @@ export const getDateRedirectHref = (pathname: string, search: SearchObject) => {
  * would render as that route), a missing route on a bus, Commuter Rail or ferry page, or missing or
  * broken dates. Route params go first, since they set the date bounds.
  */
-export const getCanonicalSearchHref = (pathname: string, search: SearchObject) => {
+export const getCanonicalSearchHref = (
+  pathname: string,
+  search: SearchObject,
+  latestDate?: string
+) => {
   const stripped = withDefaultRouteParam(pathname, stripForeignRouteParams(pathname, search));
-  const dateHref = getDateRedirectHref(pathname, stripped);
+  const dateHref = getDateRedirectHref(pathname, stripped, latestDate);
   if (dateHref) return dateHref;
   return isEqual(stripped, search) ? undefined : `${pathname}${stringifySearch(stripped)}`;
+};
+
+/**
+ * The bus speed map and Rankings read files published a day or more in arrears. Opened without a
+ * date, they wait for a check of whether yesterday's is out yet rather than open on an empty day.
+ */
+const opensOnLatestBusSpeedDate = (pathname: string, search: SearchObject) => {
+  const { line, page } = parseRoutePath(pathname);
+  return (
+    line === 'line-bus' &&
+    (page === 'speedmap' || page === 'leaderboard') &&
+    !asDate(search.date) &&
+    !asDate(search.startDate) &&
+    !asDate(search.endDate)
+  );
+};
+
+const throwCanonicalRedirect = (location: ParsedLocation, latestDate?: string) => {
+  const href = getCanonicalSearchHref(location.pathname, location.search, latestDate);
+  if (href) {
+    const hash = location.hash ? `#${location.hash}` : '';
+    throw redirect({ href: `${href}${hash}`, replace: true } as Parameters<typeof redirect>[0]);
+  }
 };
 
 /**
@@ -159,9 +193,10 @@ export const getCanonicalSearchHref = (pathname: string, search: SearchObject) =
  * query that doesn't fit it. Replace rather than push, so Back doesn't land on the broken URL again.
  */
 export const redirectToCanonicalSearch = ({ location }: { location: ParsedLocation }) => {
-  const href = getCanonicalSearchHref(location.pathname, location.search);
-  if (href) {
-    const hash = location.hash ? `#${location.hash}` : '';
-    throw redirect({ href: `${href}${hash}`, replace: true } as Parameters<typeof redirect>[0]);
+  if (!opensOnLatestBusSpeedDate(location.pathname, location.search)) {
+    return throwCanonicalRedirect(location);
   }
+  return import('../api/busSpeedSegments')
+    .then(({ getLatestBusSpeedDate }) => getLatestBusSpeedDate())
+    .then((latestDate) => throwCanonicalRedirect(location, latestDate));
 };

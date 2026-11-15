@@ -100,7 +100,7 @@ export function BusSpeedMapDetails() {
           />
           <div className="flex flex-col gap-3">
             {renderBody()}
-            <BusSpeedLegend hasDwells={dwellsUrl !== null} />
+            <BusSpeedLegend hasDwells={typeof dwellsUrl === 'string'} />
           </div>
         </WidgetDiv>
         <BusSpeedDataNotes />

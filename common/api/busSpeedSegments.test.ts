@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { TWO_DAYS_AGO_STRING, YESTERDAY_STRING } from '../constants/dates';
 import {
   BusSpeedDataUnavailableError,
   busDwellsPath,
@@ -129,5 +130,47 @@ describe('fetchBusDwellsUrl', () => {
     await expect(
       fetchBusDwellsUrl({ date: '2026-11-04', period: 'daily', timeBand: 'am_peak' })
     ).rejects.toThrow();
+  });
+});
+
+describe('getLatestBusSpeedDate', () => {
+  const fetchMock = vi.fn();
+  // The result is cached per module, so each case loads a fresh copy.
+  const latest = async () => (await import('./busSpeedSegments')).getLatestBusSpeedDate();
+
+  beforeEach(() => {
+    vi.resetModules();
+    vi.stubGlobal('window', { location: { origin: 'https://dashboard.transitmatters.org' } });
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    fetchMock.mockReset();
+  });
+
+  it("opens on yesterday once yesterday's segments are out", async () => {
+    fetchMock.mockResolvedValue(new Response(null, { status: 200 }));
+    await expect(latest()).resolves.toBe(YESTERDAY_STRING);
+    expect(fetchMock).toHaveBeenCalledWith(
+      `https://dashboard.transitmatters.org${busSpeedSegmentsPath(YESTERDAY_STRING, 'daily', 'all_day')}`,
+      { method: 'HEAD' }
+    );
+  });
+
+  it('falls back to the day before while yesterday is missing or the check fails', async () => {
+    fetchMock.mockResolvedValue(new Response(null, { status: 403 }));
+    await expect(latest()).resolves.toBe(TWO_DAYS_AGO_STRING);
+    vi.resetModules();
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
+    await expect(latest()).resolves.toBe(TWO_DAYS_AGO_STRING);
+  });
+
+  it('only checks once', async () => {
+    fetchMock.mockResolvedValue(new Response(null, { status: 200 }));
+    const { getLatestBusSpeedDate } = await import('./busSpeedSegments');
+    await getLatestBusSpeedDate();
+    await getLatestBusSpeedDate();
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });

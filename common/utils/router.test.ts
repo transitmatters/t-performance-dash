@@ -90,6 +90,24 @@ describe('withDefaultRouteParam', () => {
 
   it('keeps a route that is already there', () => {
     expect(withDefaultRouteParam('/bus/speed/', { busRoute: '22' })).toEqual({ busRoute: '22' });
+    expect(withDefaultRouteParam('/commuter-rail/', { crRoute: 'CR-Worcester' })).toEqual({
+      crRoute: 'CR-Worcester',
+    });
+  });
+
+  it('replaces an unknown Commuter Rail or ferry route with the default', () => {
+    expect(withDefaultRouteParam('/commuter-rail/', { crRoute: 'CR-Nope' })).toEqual({
+      crRoute: 'CR-Fairmount',
+    });
+    expect(withDefaultRouteParam('/ferry/ridership/', { ferryRoute: 'Boat-Nope' })).toEqual({
+      ferryRoute: 'Boat-F6',
+    });
+  });
+
+  it('leaves bus routes alone, since bus pages take routes beyond the station files', () => {
+    expect(withDefaultRouteParam('/bus/speedmap/', { busRoute: '9999' })).toEqual({
+      busRoute: '9999',
+    });
   });
 
   it('leaves the leaderboard and subway pages without one', () => {

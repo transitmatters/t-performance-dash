@@ -7,6 +7,7 @@ import {
   getRangePresets,
   OVERVIEW_OPTIONS,
   TODAY_STRING,
+  TWO_DAYS_AGO_STRING,
   YESTERDAY_STRING,
 } from '../constants/dates';
 import { getDefaultDates } from '../state/defaults/dateDefaults';
@@ -165,6 +166,24 @@ describe('normalizeDateParams on single-day pages', () => {
       });
     expect(speedmap('2016-01-01')).toEqual({ busRoute: '1', date: BUS_SPEED_MAP_MIN_DATE });
     expect(speedmap(TODAY_STRING)).toEqual({ busRoute: '1', date: YESTERDAY_STRING });
+  });
+
+  it('opens no later than the latest published day, but keeps a later date the URL names', () => {
+    const speedmap = (search: SearchObject, stored?: { date: string }) =>
+      normalizeDateParams({
+        section: 'singleTrips',
+        tab: 'Bus',
+        page: 'speedmap',
+        search: { busRoute: '1', ...search },
+        stored,
+        latestDate: TWO_DAYS_AGO_STRING,
+      });
+    expect(speedmap({})).toEqual({ busRoute: '1', date: TWO_DAYS_AGO_STRING });
+    expect(speedmap({}, { date: TODAY_STRING })).toEqual({
+      busRoute: '1',
+      date: TWO_DAYS_AGO_STRING,
+    });
+    expect(speedmap({ date: YESTERDAY_STRING })).toBeUndefined();
   });
 });
 

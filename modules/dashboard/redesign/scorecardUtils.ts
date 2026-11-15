@@ -33,6 +33,12 @@ const STALE_AFTER_DAYS = 21;
 export const chartWindowStart = (lastDate: string) =>
   dayjs(lastDate).subtract(30, 'day').format('YYYY-MM-DD');
 
+/** "last 30 days", or "30 days to Jun 22" when the window ends well before today. */
+export const trailingWindowLabel = (lastDate: string) =>
+  dayjs(TODAY_STRING).diff(lastDate, 'day') > STALE_AFTER_DAYS
+    ? `30 days to ${dayjs(lastDate).format('MMM D')}`
+    : 'last 30 days';
+
 export const formatCompact = (value: number): string => {
   if (Math.abs(value) >= 1000) return `${(value / 1000).toFixed(1)}k`;
   return Math.round(value).toLocaleString();
@@ -70,14 +76,13 @@ export const buildRow = (params: {
     (max, point) => (point.date > max ? point.date : max),
     params.points[0].date
   );
-  const isStale = dayjs(TODAY_STRING).diff(lastDate, 'day') > STALE_AFTER_DAYS;
+  const windowLabel = trailingWindowLabel(lastDate);
 
   return {
     key: params.key,
     label: params.label,
-    subtitle: isStale
-      ? `${params.subtitle} · data through ${dayjs(lastDate).format('MMM D')}`
-      : params.subtitle,
+    subtitle:
+      windowLabel === 'last 30 days' ? params.subtitle : `${params.subtitle} · ${windowLabel}`,
     formattedCurrent: params.formatValue(current),
     currentValue: current,
     formatValue: params.formatValue,

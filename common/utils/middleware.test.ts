@@ -15,6 +15,12 @@ describe('getV3RedirectHref', () => {
     );
   });
 
+  it('sends malformed v3 rapid transit links to the line page, or home', () => {
+    expect(redirect('/rapidtransit', 'config=Red,70079,70075,2024-01-10')).toBe('/red/');
+    expect(redirect('/rapidtransit/', 'config=Purple,a,b,2023-01-01,')).toBe('/');
+    expect(redirect('/rapidtransit', '')).toBe('/');
+  });
+
   it('sends v3 slow zone links to the system page, filling in an end date', () => {
     expect(redirect('/slowzones/', 'startDate=2023-01-01')).toBe(
       `/system/slowzones/?startDate=2023-01-01&endDate=${TODAY_STRING}`

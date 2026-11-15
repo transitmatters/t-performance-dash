@@ -199,7 +199,8 @@ export const RidershipGraph = ({
                       : []),
                     ...getNoDataSinceLatestAnnotation(
                       data.filter((point) => point.count !== null).map((point) => point.date),
-                      serviceEnd
+                      // Past the axis the block would be cut off, rotated label and all.
+                      serviceEnd && serviceEnd < endDate ? serviceEnd : endDate
                     ),
                     ...serviceDateBlocks,
                     ...getMajorEventAnnotations(events),
