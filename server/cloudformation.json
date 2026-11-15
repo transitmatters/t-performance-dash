@@ -303,7 +303,15 @@
             "Compress": true,
             "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
             "TargetOriginId": "only-origin",
-            "ViewerProtocolPolicy": "redirect-to-https"
+            "ViewerProtocolPolicy": "redirect-to-https",
+            "FunctionAssociations": [
+              {
+                "EventType": "viewer-request",
+                "FunctionARN": {
+                  "Fn::GetAtt": ["TrailingSlashRedirectFunction", "FunctionARN"]
+                }
+              }
+            ]
           },
           "DefaultRootObject": "index.html",
           "CacheBehaviors": [
@@ -400,6 +408,18 @@
           "Runtime": "cloudfront-js-2.0"
         },
         "FunctionCode": "function handler(event) {\n  var request = event.request;\n  request.uri = request.uri.replace(/^\\/businsights/, '');\n  return request;\n}\n"
+      }
+    },
+    "TrailingSlashRedirectFunction": {
+      "Type": "AWS::CloudFront::Function",
+      "Properties": {
+        "Name": { "Fn::Sub": "${AWS::StackName}-trailing-slash" },
+        "AutoPublish": true,
+        "FunctionConfig": {
+          "Comment": "Add the trailing slash to page paths, keeping the query string, which S3's own slash redirect never sees.",
+          "Runtime": "cloudfront-js-2.0"
+        },
+        "FunctionCode": "function handler(event) {\n  var request = event.request;\n  var uri = request.uri;\n  var lastSegment = uri.slice(uri.lastIndexOf('/') + 1);\n  if (lastSegment === '' || lastSegment.indexOf('.') !== -1) return request;\n  var query = request.rawQueryString();\n  return {\n    statusCode: 301,\n    statusDescription: 'Moved Permanently',\n    headers: { location: { value: uri + '/' + (query ? '?' + query : '') } }\n  };\n}\n"
       }
     }
   },

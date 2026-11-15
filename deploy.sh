@@ -149,12 +149,6 @@ aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*" --include "assets/*" \
 aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "assets/*" \
   --cache-control "no-cache, must-revalidate"
 
-# Band-aid the fact that v3 doesn't have trailing slashes on its path, but v4 does,
-#  so we need /THING to be a valid path in addition to the actual /THING/.
-aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/rapidtransit --no-guess-mime-type --content-type="text/html" --cache-control "no-cache, must-revalidate"
-aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/bus --no-guess-mime-type --content-type="text/html" --cache-control "no-cache, must-revalidate"
-aws s3 cp v3_to_v4_slash_trick/trick.html s3://$FRONTEND_HOSTNAME/slowzones --no-guess-mime-type --content-type="text/html" --cache-control "no-cache, must-revalidate"
-
 # Grab the cloudfront ID and invalidate its cache
 CLOUDFRONT_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Aliases.Items!=null] | [?contains(Aliases.Items, '$FRONTEND_HOSTNAME')].Id | [0]" --output text)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_ID --paths "/*"
