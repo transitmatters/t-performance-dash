@@ -7,9 +7,12 @@ import type {
   DayFilter,
 } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
+import type { TripComparison } from '../../../common/types/comparison';
 import type { Station } from '../../../common/types/stations';
+import { getComparisonSeries } from '../../../common/utils/comparison';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
+import { filterByDayType } from '../../../common/utils/widgets';
 
 interface TravelTimesAggregateChartProps {
   traveltimes: AggregateDataResponse;
@@ -23,6 +26,8 @@ interface TravelTimesAggregateChartProps {
   endDate?: string;
   fill?: boolean;
   trendline?: boolean;
+  /** A second period, drawn as a dashed median over this one. */
+  comparison?: TripComparison;
 }
 
 export const TravelTimesAggregateChart = ({
@@ -36,6 +41,7 @@ export const TravelTimesAggregateChart = ({
   endDate: endDateProp,
   fill = false,
   trendline = false,
+  comparison,
 }: TravelTimesAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -44,18 +50,16 @@ export const TravelTimesAggregateChart = ({
   const chart = useMemo(() => {
     const timeUnitByDate = timeUnit === 'by_date';
 
-    let traveltimesData = timeUnitByDate
-      ? traveltimes.by_date.filter((datapoint) => datapoint.peak === 'all')
-      : traveltimes.by_time.filter((datapoint) => datapoint.is_peak_day === peakTime);
-
-    // Apply day filter only for by_date data
-    if (timeUnitByDate && dayFilter !== 'all') {
-      traveltimesData = traveltimesData.filter((datapoint) => {
-        if (!datapoint.service_date) return true;
-        const isWeekendOrHolidayDate = datapoint.holiday || datapoint.weekend;
-        return dayFilter === 'weekend' ? isWeekendOrHolidayDate : !isWeekendOrHolidayDate;
-      });
-    }
+    // The same filter runs over the comparison period, so both lines show the same kind of day.
+    const selectData = (response: AggregateDataResponse) => {
+      if (!timeUnitByDate) {
+        return response.by_time.filter((datapoint) => datapoint.is_peak_day === peakTime);
+      }
+      const byDate = response.by_date.filter((datapoint) => datapoint.peak === 'all');
+      // Apply day filter only for by_date data
+      return dayFilter === 'all' ? byDate : filterByDayType(byDate, dayFilter);
+    };
+    const traveltimesData = selectData(traveltimes);
 
     return (
       <AggregateLineChart
@@ -78,9 +82,11 @@ export const TravelTimesAggregateChart = ({
         fill={fill}
         trendline={trendline}
         embedChart={timeUnitByDate ? 'traveltimes' : 'traveltimes-by-hour'}
+        comparison={getComparisonSeries(comparison, selectData, timeUnitByDate)}
       />
     );
   }, [
+    comparison,
     timeUnit,
     traveltimes,
     startDate,

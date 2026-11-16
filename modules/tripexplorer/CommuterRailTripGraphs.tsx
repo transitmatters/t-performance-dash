@@ -1,4 +1,5 @@
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripPageComparisons } from '../../common/api/hooks/comparison';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -68,6 +69,7 @@ export const CommuterRailTripGraphs = ({
     undefined,
     fromStation?.terminus ? [QueryNameKeys.dwells] : []
   );
+  const comparisons = useTripPageComparisons('cr', parameters, aggregate, enabled);
   const location = getLocationDetails(fromStation, toStation);
 
   return (
@@ -85,6 +87,7 @@ export const CommuterRailTripGraphs = ({
             />
             <TravelTimesAggregateWrapper
               query={traveltimes}
+              comparison={comparisons.traveltimes}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={travelTimesDayFilter}
@@ -101,6 +104,7 @@ export const CommuterRailTripGraphs = ({
 
             <HeadwaysAggregateWrapper
               query={headways}
+              comparison={comparisons.headways}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={headwaysDayFilter}
@@ -116,6 +120,7 @@ export const CommuterRailTripGraphs = ({
             />
             <DwellsAggregateWrapper
               query={dwells}
+              comparison={comparisons.dwells}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={dwellsDayFilter}
@@ -132,6 +137,7 @@ export const CommuterRailTripGraphs = ({
             />
             <AggregateChartWrapper
               query={traveltimes}
+              comparison={comparisons.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}

@@ -44,6 +44,16 @@ describe('trip embed snippets', () => {
     );
   });
 
+  it("keeps the page's comparison period on a multi-day chart only", () => {
+    const compared = { ...route, query: { ...route.query, vs: 'year' } } as Route;
+    expect(srcOf(getTripEmbedSnippet({ page: 'multi', chart: 'dwells' }, compared))).toBe(
+      'https://dashboard.transitmatters.org/embed/red/trips/multi/dwells/?from=place-pktrm&to=place-harsq&startDate=2026-09-01&endDate=2026-10-31&vs=year'
+    );
+    expect(srcOf(getTripEmbedSnippet({ page: 'single', chart: 'dwells' }, compared))).not.toContain(
+      'vs='
+    );
+  });
+
   it('keeps only the day on a single-day chart', () => {
     expect(srcOf(getTripEmbedSnippet({ page: 'single', chart: 'traveltimes' }, route))).toBe(
       'https://dashboard.transitmatters.org/embed/red/trips/single/traveltimes/?from=place-pktrm&to=place-harsq&date=2026-10-21'

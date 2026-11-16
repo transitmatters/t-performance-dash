@@ -1,4 +1,5 @@
 import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripPageComparisons } from '../../common/api/hooks/comparison';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -83,6 +84,7 @@ export const SubwayTripGraphs = ({
     undefined,
     fromStation?.terminus ? [QueryNameKeys.dwells] : []
   );
+  const comparisons = useTripPageComparisons('subway', parameters, aggregate, enabled);
   const location = getLocationDetails(fromStation, toStation);
 
   return (
@@ -102,6 +104,7 @@ export const SubwayTripGraphs = ({
                 />
                 <SpeedBetweenStationsAggregateWrapper
                   query={traveltimes}
+                  comparison={comparisons.traveltimes}
                   fromStation={fromStation}
                   toStation={toStation}
                 />
@@ -123,6 +126,7 @@ export const SubwayTripGraphs = ({
                 />
                 <TravelTimesAggregateWrapper
                   query={traveltimes}
+                  comparison={comparisons.traveltimes}
                   fromStation={fromStation}
                   toStation={toStation}
                   dayFilter={travelTimesDayFilter}
@@ -141,6 +145,7 @@ export const SubwayTripGraphs = ({
 
             <HeadwaysAggregateWrapper
               query={headways}
+              comparison={comparisons.headways}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={headwaysDayFilter}
@@ -156,6 +161,7 @@ export const SubwayTripGraphs = ({
             />
             <DwellsAggregateWrapper
               query={dwells}
+              comparison={comparisons.dwells}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={dwellsDayFilter}
@@ -172,6 +178,7 @@ export const SubwayTripGraphs = ({
             />
             <AggregateChartWrapper
               query={traveltimes}
+              comparison={comparisons.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}

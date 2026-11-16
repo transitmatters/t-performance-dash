@@ -26,7 +26,8 @@ export const StatCell = ({ label, description, children, valueClassName }: StatC
     </span>
     <span
       className={classNames(
-        'text-card-foreground flex flex-row items-baseline gap-x-1 text-[17px] leading-none font-semibold',
+        // Wraps so a comparison delta drops below the figure instead of squeezing it in a narrow cell.
+        'text-card-foreground flex flex-row flex-wrap items-baseline gap-x-1 gap-y-1 text-[17px] leading-none font-semibold',
         valueClassName
       )}
     >
@@ -47,7 +48,7 @@ const ComparisonArrow = ({ comparison }: { comparison: WidgetComparison }) => {
             } than ${comparison.label}`
       }
       className={classNames(
-        'cursor-default text-xs',
+        'flex cursor-default items-baseline gap-x-0.5 text-xs font-medium whitespace-nowrap',
         negligible
           ? 'text-muted-foreground'
           : isImprovement(comparison)
@@ -59,6 +60,7 @@ const ComparisonArrow = ({ comparison }: { comparison: WidgetComparison }) => {
         icon={negligible ? faMinus : comparison.delta > 0 ? faArrowUp : faArrowDown}
         size="xs"
       />
+      {!negligible && formatComparisonDelta(comparison)}
     </span>
   );
 };

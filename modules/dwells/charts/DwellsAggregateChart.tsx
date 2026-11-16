@@ -3,9 +3,12 @@ import { AggregateLineChart } from '../../../common/components/charts/AggregateL
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
+import type { TripComparison } from '../../../common/types/comparison';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
+import { getComparisonSeries } from '../../../common/utils/comparison';
+import { filterByDayType } from '../../../common/utils/widgets';
 
 interface DwellsAggregateChartProps {
   dwells: AggregateDataResponse;
@@ -17,6 +20,8 @@ interface DwellsAggregateChartProps {
   endDate?: string;
   fill?: boolean;
   trendline?: boolean;
+  /** A second period, drawn as a dashed median over this one. */
+  comparison?: TripComparison;
 }
 
 export const DwellsAggregateChart = ({
@@ -28,22 +33,19 @@ export const DwellsAggregateChart = ({
   endDate: endDateProp,
   fill = false,
   trendline = false,
+  comparison,
 }: DwellsAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
   const endDate = endDateProp ?? query.endDate;
 
   const chart = useMemo(() => {
-    // Filter data based on dayFilter
-    let filteredData = dwells.by_date?.filter((datapoint) => datapoint.peak === 'all') || [];
-
-    if (dayFilter !== 'all') {
-      filteredData = filteredData.filter((datapoint) => {
-        if (!datapoint.service_date) return true;
-        const isWeekendOrHolidayDate = datapoint.holiday || datapoint.weekend;
-        return dayFilter === 'weekend' ? isWeekendOrHolidayDate : !isWeekendOrHolidayDate;
-      });
-    }
+    // The same filter runs over the comparison period, so both lines show the same kind of day.
+    const selectData = (response: AggregateDataResponse) => {
+      const byDate = response.by_date?.filter((datapoint) => datapoint.peak === 'all') || [];
+      return dayFilter === 'all' ? byDate : filterByDayType(byDate, dayFilter);
+    };
+    const filteredData = selectData(dwells);
 
     return (
       <AggregateLineChart
@@ -64,9 +66,10 @@ export const DwellsAggregateChart = ({
         fill={fill}
         trendline={trendline}
         embedChart={'dwells'}
+        comparison={getComparisonSeries(comparison, selectData)}
       />
     );
-  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline]);
+  }, [dwells, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline, comparison]);
 
   return chart;
 };

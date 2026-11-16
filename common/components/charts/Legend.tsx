@@ -1,4 +1,5 @@
 import { CHART_COLORS } from '../../constants/colors';
+import type { AggregateComparisonSeries } from '../../types/comparison';
 
 interface LegendProps {
   showUnderRatio?: boolean;
@@ -8,7 +9,15 @@ interface LegendProps {
 interface LegendLongTermProps {
   isTrendlineVisible: boolean;
   onToggleTrendline: () => void;
+  comparison?: AggregateComparisonSeries;
 }
+
+const comparisonStatus = (comparison: AggregateComparisonSeries) => {
+  if (comparison.status === 'loading') return ' (loading…)';
+  if (comparison.status === 'error') return ' (failed to load)';
+  if (comparison.data.length === 0) return ' (no data)';
+  return '';
+};
 
 // The Commuter Rail data caveat lives once at the page level (BetaDataNotice),
 // so it is intentionally not repeated inside every chart legend here.
@@ -50,9 +59,13 @@ const LegendSingle = ({ usingTmBenchmark = false }: LegendProps) => {
   );
 };
 
-export const LegendLongTerm = ({ isTrendlineVisible, onToggleTrendline }: LegendLongTermProps) => {
+export const LegendLongTerm = ({
+  isTrendlineVisible,
+  onToggleTrendline,
+  comparison,
+}: LegendLongTermProps) => {
   return (
-    <div className="flex w-full flex-row items-baseline gap-2 p-1 text-left text-xs text-muted-foreground sm:gap-4">
+    <div className="flex w-full flex-row flex-wrap items-baseline gap-x-2 gap-y-1 p-1 text-left text-xs text-muted-foreground sm:gap-x-4">
       <p>
         <span className={'mr-1 inline-block h-2.5 w-2.5 rounded-full bg-foreground'}></span> Median
       </p>
@@ -66,6 +79,14 @@ export const LegendLongTerm = ({ isTrendlineVisible, onToggleTrendline }: Legend
         />
         Trendline
       </button>
+      {comparison && (
+        <p>
+          {/* Matches chartTheme.comparisonLine in each theme. */}
+          <span className="mr-1 inline-block w-4 border-t-2 border-dashed border-blue-600 align-middle dark:border-blue-400" />
+          {comparison.label}
+          {comparisonStatus(comparison)}
+        </p>
+      )}
     </div>
   );
 };

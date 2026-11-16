@@ -7,8 +7,8 @@ import { SmallData } from './internal/SmallData';
 export interface WidgetComparison {
   delta: number;
   label: string;
-  unit: 'time' | 'percentage';
-  /** Colors a rise green instead of red, for stats like On time where more is better. */
+  unit: 'time' | 'percentage' | 'mph';
+  /** Colors a rise as an improvement rather than a regression, as for speeds and on-time trips. */
   higherIsBetter?: boolean;
 }
 

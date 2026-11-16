@@ -30,11 +30,14 @@ export const MULTI_TRIP_DAY_PARAMS: Partial<Record<TripEmbedChart<'multi'>, stri
 
 const ROUTE_PARAMS = ['from', 'to', 'busRoute', 'crRoute', 'ferryRoute'];
 
-/** What an embed keeps from the trip page's query; other cards' toggles and `ttView` stay behind. */
+/**
+ * What an embed keeps from the trip page's query; other cards' toggles and `ttView` stay behind.
+ * A multi-day chart keeps the page's comparison period (`vs`), which it draws too.
+ */
 const embedParams = ({ page, chart }: TripEmbed) =>
   page === 'single'
     ? [...ROUTE_PARAMS, 'date']
-    : [...ROUTE_PARAMS, 'startDate', 'endDate', MULTI_TRIP_DAY_PARAMS[chart]];
+    : [...ROUTE_PARAMS, 'startDate', 'endDate', MULTI_TRIP_DAY_PARAMS[chart], 'vs'];
 
 const tripSearch = (embed: TripEmbed, query: QueryParams, extra: QueryParams = {}) => {
   const keep = embedParams(embed);

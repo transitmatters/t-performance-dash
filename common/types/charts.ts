@@ -2,6 +2,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { TimeUnit } from 'chart.js';
 import type { HoverCardRow } from '../components/charts/hoverCard/types';
 import type { TripEmbedChart } from '../constants/staticRoutes';
+import type { AggregateComparisonSeries } from './comparison';
 import type { Station } from './stations';
 
 export interface SingleDayDataPoint {
@@ -146,6 +147,8 @@ export interface AggregateLineProps extends LineProps {
   embedChart?: TripEmbedChart<'multi'>;
   /** Start with the trendline drawn. */
   trendline?: boolean;
+  /** A second period's median, drawn as a dashed line over this one. */
+  comparison?: AggregateComparisonSeries;
 }
 
 export interface SingleDayLineProps extends LineProps {

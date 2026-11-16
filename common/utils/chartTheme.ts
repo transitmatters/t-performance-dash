@@ -18,6 +18,8 @@ export interface ChartTheme {
   neutralPoint: string;
   /** Median line on the aggregate charts. */
   medianLine: string;
+  /** The dashed median of a second period drawn over a multi-day trip chart. */
+  comparisonLine: string;
 }
 
 const LIGHT: ChartTheme = {
@@ -28,6 +30,7 @@ const LIGHT: ChartTheme = {
   benchmarkLine: '#a0a0a030',
   neutralPoint: '#1c1c1c',
   medianLine: '#000000',
+  comparisonLine: '#2563eb',
 };
 
 const DARK: ChartTheme = {
@@ -38,6 +41,7 @@ const DARK: ChartTheme = {
   benchmarkLine: '#e8e8e84d',
   neutralPoint: '#d6d3d1',
   medianLine: '#e7e5e4',
+  comparisonLine: '#60a5fa',
 };
 
 /**
