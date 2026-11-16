@@ -9,7 +9,6 @@ import {
 } from '../../common/api/hooks/slowzones';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { Widget } from '../../common/components/widgets';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { filterAllSlow, formatSegments } from '../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
@@ -74,7 +73,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
   }
 
   return (
-    <PageWrapper pageTitle={'Slow zones'}>
+    <>
       <ChartPageDiv>
         <Widget
           title="Total slow time"
@@ -97,7 +96,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
         </Widget>
         <Widget
           title="Line map"
-          subtitle={`As of ${formatDateTodayCheck(endDate!)}`}
+          subtitle={`As of ${formatDateTodayCheck(endDate!).replace('Today', 'today')}`}
           action={
             <ButtonGroup
               line={line}
@@ -132,6 +131,6 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           />
         </Widget>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

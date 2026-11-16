@@ -6,10 +6,11 @@ const round = (value: number, digits = 0) => {
   return Math.round(value * factor) / factor;
 };
 
+// Cut-offs test the rounded figure, so 999.96 reads "1k" rather than "1000".
 export const formatNumber = (value: number) =>
   value >= 10_000
     ? `${round(value / 1000)}k`
-    : value >= 1000
+    : Math.round(value) >= 1000
       ? `${round(value / 1000, 1)}k`
       : `${round(value, value >= 100 ? 0 : 1)}`;
 
@@ -21,9 +22,11 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
     case 'mph':
       return `${round(value, 1)} mph`;
     case 'seconds':
-      return value >= 90 ? `${round(value / 60, 1)} min` : `${Math.round(value)} s`;
+      return Math.round(value) >= 90 ? `${round(value / 60, 1)} min` : `${Math.round(value)} s`;
     case 'minutes':
-      return value >= 90 ? `${round(value / 60, 1)} hr` : `${round(value, value < 10 ? 1 : 0)} min`;
+      return Math.round(value) >= 90
+        ? `${round(value / 60, 1)} hr`
+        : `${round(value, value < 10 ? 1 : 0)} min`;
     case 'years':
       return `${Math.round(value)} yr`;
     case 'count':
@@ -34,6 +37,9 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
 /** The figure shown on a stop; `withUnit` adds the count's label (trips/day) for the detail. */
 export const formatCell = (cell: Cell, withUnit = false) => {
   if (cell.status === 'na') return 'n/a';
+  // Not enough data to score: a dash on the board, like any other missing figure. The popover
+  // still shows what was measured.
+  if (cell.status === 'insufficient' && !withUnit) return '—';
   const text = formatValue(cell.value, cell.unit);
   return withUnit && cell.unit === 'count' && cell.unitLabel && text !== '—'
     ? `${text} ${cell.unitLabel}`

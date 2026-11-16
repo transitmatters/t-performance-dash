@@ -114,12 +114,16 @@ export const SpeedGraph = ({
             layout: {
               padding: {
                 top: showTitle ? 25 : 0,
+                // Room for the wordmark under the legend: its desktop height (watermarkSize) plus a gap.
+                bottom: 21,
               },
             },
             interaction: {
               intersect: false,
             },
             plugins: {
+              // Below the legend: the filled speed line often reaches the plot's top corner.
+              watermark: { placement: 'below' },
               tooltip: {
                 mode: 'index',
                 position: 'nearest',

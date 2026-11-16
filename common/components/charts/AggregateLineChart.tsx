@@ -8,7 +8,7 @@ import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useChartTheme } from '../../utils/chartTheme';
-import { getFormattedTimeString } from '../../utils/time';
+import { formatMinutesTick, getFormattedTimeString } from '../../utils/time';
 import {
   TEMPERATURE_BAND_OPACITY,
   TEMPERATURE_SCALE,
@@ -229,7 +229,7 @@ export const AggregateLineChart = ({
                   precision: 1,
                   callback: (value) => {
                     return yUnit === 'Minutes' && typeof value === 'number'
-                      ? getFormattedTimeString(value, 'minutes')
+                      ? formatMinutesTick(value)
                       : value.toLocaleString();
                   },
                 },

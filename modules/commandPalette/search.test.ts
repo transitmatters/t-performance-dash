@@ -75,3 +75,13 @@ describe('groupResults', () => {
     expect(sections.every((section) => section.commands.length <= 6)).toBe(true);
   });
 });
+
+describe('line hints', () => {
+  const hint = (id: string) => getCommandIndex().find((command) => command.id === id)?.hint;
+
+  it('show the page a line opens on', () => {
+    expect(hint('line:line-red')).toBe('/red/');
+    expect(hint('line:line-ferry')).toBe('/ferry/trips/single/');
+    expect(hint('line:line-RIDE')).toBe('/the-ride/ridership/');
+  });
+});

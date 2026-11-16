@@ -56,6 +56,14 @@ describe('formatValue', () => {
     expect(formatValue(1234, 'count')).toBe('1.2k');
     expect(formatValue(12_345, 'count')).toBe('12k');
   });
+
+  it('switches unit when the rounded figure reaches the cut-off', () => {
+    expect(formatValue(89.4, 'seconds')).toBe('89 s');
+    expect(formatValue(89.6, 'seconds')).toBe('1.5 min');
+    expect(formatValue(89.6, 'minutes')).toBe('1.5 hr');
+    expect(formatValue(999.4, 'count')).toBe('999');
+    expect(formatValue(999.96, 'count')).toBe('1k');
+  });
 });
 
 describe('formatCell', () => {
@@ -76,6 +84,12 @@ describe('formatCell', () => {
 
   it('shows n/a for a measure that does not apply', () => {
     expect(formatCell({ ...cell, status: 'na' })).toBe('n/a');
+  });
+
+  it('shows a dash on the board for a cell without enough data, and the figure in the detail', () => {
+    const insufficient: Cell = { ...cell, status: 'insufficient', value: 96 };
+    expect(formatCell(insufficient)).toBe('—');
+    expect(formatCell(insufficient, true)).toBe('96 trips/day');
   });
 
   it('does not label a missing value', () => {

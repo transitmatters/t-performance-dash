@@ -4,7 +4,7 @@ import { Link } from './general/Link';
 export const NotFound = () => (
   <LandingLayout>
     <div className="h-screen w-full">
-      <title>Data Dashboard - 404</title>
+      <title>Page not found | Data Dashboard</title>
       <div className="flex h-full w-full flex-col items-center gap-4 bg-tm-lightGrey pt-20">
         <h1 className="text-xl text-white lg:text-5xl">Sorry, we can't find that page</h1>
         <Link href="/">

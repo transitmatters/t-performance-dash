@@ -4,13 +4,12 @@ import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useReliabilityData } from '../../common/api/hooks/reliability';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Notice } from '../../common/components/notices/Notice';
 import { FREQUENT_BUS_ROUTE_IDS, getBusRouteIds } from '../../common/constants/lines';
-import { COMMUTER_RAIL_LINE_NAMES, SUBWAY_LINES } from '../../common/types/lines';
+import { SUBWAY_LINES } from '../../common/types/lines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { TheRideReliability } from './TheRideReliability';
 import { CommuterRailReliability } from './CommuterRailReliability';
@@ -50,14 +49,10 @@ export function ReliabilityDetails() {
     enabled
   );
 
-  const title =
-    isRide || isSubway || isBus
-      ? 'Reliability'
-      : `Reliability · ${crRoute ? COMMUTER_RAIL_LINE_NAMES[crRoute] : 'All lines'}`;
   const props = { reliability, agg, startDate, endDate };
 
   return (
-    <PageWrapper pageTitle={title}>
+    <>
       <ChartPageDiv>
         {isBus && busRoute && !isFrequentBus && (
           <Notice title={`Route ${busRoute} isn't a Frequent Bus route`}>
@@ -154,6 +149,6 @@ export function ReliabilityDetails() {
           )}
         </DataNotes>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

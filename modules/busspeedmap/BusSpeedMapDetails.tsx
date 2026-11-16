@@ -12,7 +12,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
+import { Skeleton } from '../../common/components/ui/skeleton';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { BusSpeedDataNotes } from './BusSpeedDataNotes';
 import { ALL_ROUTES, DAY_TYPES, DIRECTIONS, TIME_BANDS } from './constants';
@@ -57,36 +57,42 @@ export function BusSpeedMapDetails() {
     .filter(Boolean)
     .join(' · ');
 
+  const mapBox = 'h-[28rem] w-full overflow-hidden rounded-lg md:h-[36rem]';
+
   const renderBody = () => {
     if (!date) return <p>Select a date to load the bus speed map.</p>;
-    if (segments.isLoading) return <ChartPlaceHolder />;
+    if (segments.isLoading) return <Skeleton className={mapBox} />;
     // A date with no published file isn't a failure, it's just outside coverage.
     if (segments.error instanceof BusSpeedDataUnavailableError)
       return <NoDataNotice isLineMetric />;
     if (segments.isError || !pmtilesUrl) return <ChartPlaceHolder query={segments} />;
 
     return (
-      <div className="h-[28rem] w-full overflow-hidden rounded-lg md:h-[36rem]">
-        {/* A browser without usable WebGL throws while rendering the map rather than in a
+      <>
+        <div className={mapBox}>
+          {/* A browser without usable WebGL throws while rendering the map rather than in a
             query, which would otherwise take the whole page down with it. */}
-        <ErrorBoundary fallbackRender={() => <ErrorNotice />}>
-          <BusSpeedMapView
-            pmtilesUrl={pmtilesUrl}
-            dwellsUrl={dwellsUrl ?? undefined}
-            period={period}
-            dayType={dayType}
-            timeBand={timeBand}
-            direction={direction}
-            // Narrowed to one route of a combined route like SL4/SL5 by the header's Route filter.
-            routeFilter={routeId === ALL_ROUTES ? busRoute : routeId}
-          />
-        </ErrorBoundary>
-      </div>
+          <ErrorBoundary fallbackRender={() => <ErrorNotice />}>
+            <BusSpeedMapView
+              pmtilesUrl={pmtilesUrl}
+              dwellsUrl={dwellsUrl ?? undefined}
+              period={period}
+              dayType={dayType}
+              timeBand={timeBand}
+              direction={direction}
+              // Narrowed to one route of a combined route like SL4/SL5 by the header's Route filter.
+              routeFilter={routeId === ALL_ROUTES ? busRoute : routeId}
+            />
+          </ErrorBoundary>
+        </div>
+        {/* Only with a map to read it against, not under "No data available". */}
+        <BusSpeedLegend hasDwells={typeof dwellsUrl === 'string'} />
+      </>
     );
   };
 
   return (
-    <PageWrapper pageTitle={'Bus speed map'}>
+    <>
       <ChartPageDiv>
         <WidgetDiv>
           <WidgetTitle
@@ -98,13 +104,10 @@ export function BusSpeedMapDetails() {
             }
             action={<CopyLinkButton />}
           />
-          <div className="flex flex-col gap-3">
-            {renderBody()}
-            <BusSpeedLegend hasDwells={typeof dwellsUrl === 'string'} />
-          </div>
+          <div className="flex flex-col gap-3">{renderBody()}</div>
         </WidgetDiv>
         <BusSpeedDataNotes />
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

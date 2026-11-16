@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Link } from '../../common/components/general/Link';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { usePredictionData } from '../../common/api/hooks/predictions';
 import { Widget } from '../../common/components/widgets';
@@ -50,7 +49,7 @@ export function PredictionsDetails() {
   const stats = predictions.data?.length ? getPredictionStats(predictions.data) : null;
 
   return (
-    <PageWrapper pageTitle={'Predictions'}>
+    <>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.overallAccuracy) && (
           <StatCardGrid>
@@ -131,6 +130,6 @@ export function PredictionsDetails() {
           </p>
         </DataNotes>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

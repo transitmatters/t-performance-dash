@@ -9,7 +9,6 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { Widget } from '../../common/components/widgets';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { DAY_FILTER_OPTIONS, useChartToggle } from '../../common/hooks/useChartToggle';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { useDelimitatedRoute, useSetQueryParam } from '../../common/utils/router';
 import type { DayType, TimeBand } from '../busspeedmap/types';
 import { BusSpeedGraph } from './charts/BusSpeedGraph';
@@ -80,7 +79,7 @@ export function BusSpeedDetails() {
   }
 
   return (
-    <PageWrapper pageTitle={'Speed'}>
+    <>
       <ChartPageDiv>
         <BusDataNotice />
         <Widget
@@ -117,6 +116,6 @@ export function BusSpeedDetails() {
           )}
         </Widget>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }
