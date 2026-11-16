@@ -9,7 +9,7 @@ import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
 import { DynamicMetaTags } from '../common/components/DynamicMetaTags';
 import { useApplyTheme } from '../common/hooks/useApplyTheme';
 import { useGoatCounter } from '../common/hooks/useGoatCounter';
-import { BetaRumNotice } from '../common/components/notices/BetaRumNotice';
+import { BetaNotices } from '../common/components/notices/BetaNotices';
 import { initBetaRum } from '../common/utils/rum';
 import { redirectToCanonicalSearch } from '../common/utils/dateParams';
 
@@ -47,7 +47,7 @@ const RootComponent = () => {
           <SecondaryLayout>
             <Outlet />
           </SecondaryLayout>
-          <BetaRumNotice />
+          <BetaNotices />
         </NavLayout>
       </LoadPresetsLayout>
     </Layout>
