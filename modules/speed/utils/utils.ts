@@ -18,7 +18,7 @@ const weightedMph = (rows: DeliveredTripMetrics[]) => {
  * a "trending up/down over this window" signal, not a fresh query. `historicalMax` should be the
  * same baseline the chart draws, so the card and the hover agree.
  */
-export const getSpeedStats = (data: DeliveredTripMetrics[], historicalMax: number) => {
+export const getSpeedStats = (data: DeliveredTripMetrics[], historicalMax: number | undefined) => {
   const rows = data.filter((d) => d.miles_covered && d.total_time);
   const mphs = rows
     .map((d) => d.miles_covered / (d.total_time / 3600))
