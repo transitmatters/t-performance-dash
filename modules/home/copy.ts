@@ -2,7 +2,7 @@ import { METRICS } from './config';
 import type { HeadlineKind, MetricId, Status } from './types';
 
 export const STATUS_LABELS: Record<Status, string> = {
-  win: 'Win',
+  win: 'Strong',
   good: 'Good',
   room: 'Room to grow',
   problem: 'Needs work',

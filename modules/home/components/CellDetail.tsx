@@ -7,6 +7,7 @@ import {
   formatThresholds,
   formatTrend,
   formatValue,
+  STATUS_NODE_TONE,
   STATUS_TONE,
   trendSentiment,
 } from '../format';
@@ -25,7 +26,7 @@ const PartDetail = ({ part }: { part: CellPart }) => {
   return (
     <li className="flex flex-col gap-0.5">
       <div className="flex items-center gap-1.5 text-xs">
-        <span className="text-primary">
+        <span className={STATUS_NODE_TONE[part.status]}>
           <StatusNode status={part.status} className="size-3.5" />
         </span>
         <span className="font-medium">
@@ -67,7 +68,7 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
         <span
           className={cn('flex items-center gap-1.5 text-xs font-medium', STATUS_TONE[cell.status])}
         >
-          <span className="text-primary">
+          <span className={STATUS_NODE_TONE[cell.status]}>
             <StatusNode status={cell.status} className="size-4" />
           </span>
           {STATUS_LABELS[cell.status]}

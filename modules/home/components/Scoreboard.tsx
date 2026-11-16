@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import { ArrowRight } from 'lucide-react';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { Link } from '../../../common/components/general/Link';
 import {
@@ -16,20 +17,15 @@ import { cn } from '../../../common/utils/cn';
 import { METRICS, METRIC_ORDER, ROWS } from '../config';
 import type { RowConfig } from '../config';
 import { HEADLINE_LABELS, STATUS_LABELS, heldBackLabel } from '../copy';
-import { formatCell, STATUS_TONE } from '../format';
-import type { Cell, HeadlineKind, MetricId, Row } from '../types';
+import { formatCell, HEADLINE_TONE, STATUS_NODE_TONE } from '../format';
+import type { Cell, MetricId, Row } from '../types';
 import type { HomeState } from '../useHomeData';
 import { CellDetail } from './CellDetail';
 import { Placeholder } from './Placeholder';
+import { StatusLegend } from './StatusLegend';
 import { StatusNode } from './StatusNode';
 
-const HEADLINE_TONE: Record<HeadlineKind, string> = {
-  strong: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
-  good: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
-  room: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
-  needsWork: 'bg-destructive/10 text-destructive dark:bg-destructive/20',
-  limited: 'border-border text-muted-foreground',
-};
+type Layout = 'column' | 'grid';
 
 const HeadlineBadge = ({ row }: { row: Row }) => (
   <span
@@ -48,33 +44,37 @@ interface ScoreboardLine {
   row?: Row;
 }
 
+/** A line with too little data to judge gets one sentence instead of a strip of empty stops. */
+const isLimited = (line: ScoreboardLine) => line.row?.headline.kind === 'limited';
+
 const RowTitle = ({ line: { config, row }, state }: { line: ScoreboardLine; state: HomeState }) => {
   const heldBack =
     row && row.headline.kind !== 'limited' ? heldBackLabel(row.headline.heldBackBy) : undefined;
   return (
     <div className="flex min-w-0 flex-col gap-1">
-      <Link href={config.href} className="flex items-center gap-2 font-semibold hover:underline">
-        <span className="text-primary">
-          <RouteBullet />
-        </span>
-        {config.label}
-      </Link>
-      {/* Fixed heights, so the row doesn't grow when its verdict arrives: room for the held-back
-          line to wrap once in the narrow desktop column, never on the wider mobile card. */}
-      <div className="flex flex-col items-start gap-1">
+      {/* Fixed heights, so the row doesn't grow when its verdict arrives. */}
+      <div className="flex min-h-[22px] flex-wrap items-center gap-x-2 gap-y-1">
+        <Link href={config.href} className="flex items-center gap-2 font-semibold hover:underline">
+          <span className="text-primary">
+            <RouteBullet />
+          </span>
+          {config.label}
+        </Link>
         {row ? (
           <HeadlineBadge row={row} />
         ) : (
           <Placeholder className="h-[22px] w-20" pulse={state === 'loading'} />
         )}
-        <span className="min-h-4 text-xs text-muted-foreground lg:min-h-8">
+      </div>
+      {!isLimited({ config, row }) && (
+        <span className="min-h-4 text-xs text-muted-foreground">
           {row ? (
             heldBack && <span className="tm-fade-in">{heldBack}</span>
           ) : (
             <Placeholder className="h-3 w-28" pulse={state === 'loading'} />
           )}
         </span>
-      </div>
+      )}
     </div>
   );
 };
@@ -84,97 +84,93 @@ const cellLabel = (row: Row, cell: Cell) =>
     cell.status === 'na' ? '' : `, ${formatCell(cell, true)}`
   }. Show details.`;
 
-/** One stop on the strip: the node opens the detail, with the figure and its status beneath. */
-const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 'row' }) => (
-  <Popover>
-    <PopoverTrigger
-      aria-label={cellLabel(row, cell)}
-      className={cn(
-        'group tm-fade-in flex rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        layout === 'column'
-          ? 'w-full flex-col items-center gap-1.5 px-1 py-0.5 text-center'
-          : 'w-full items-center gap-3 py-2 text-left'
-      )}
-    >
-      <span
-        className={cn(
-          'relative z-10 flex text-primary transition-transform group-hover:scale-110',
-          layout === 'row' && 'w-5 justify-center'
-        )}
-      >
-        <StatusNode status={cell.status} />
-      </span>
-      {layout === 'row' && (
-        <span className="flex-1 text-sm font-medium">{METRICS[cell.metric].label}</span>
-      )}
-      <span className={cn('flex flex-col', layout === 'row' ? 'items-end' : 'items-center')}>
-        <span
-          className={cn(
-            'text-sm font-semibold tabular-nums',
-            cell.status === 'na' && 'font-normal text-muted-foreground'
-          )}
-        >
-          {formatCell(cell)}
-        </span>
-        <span className={cn('text-[11px] leading-tight', STATUS_TONE[cell.status])}>
-          {STATUS_LABELS[cell.status]}
-        </span>
-      </span>
-    </PopoverTrigger>
-    <PopoverContent className="w-80" align="center">
-      <CellDetail row={row} cell={cell} />
-    </PopoverContent>
-  </Popover>
+const stopClass = (layout: Layout) =>
+  layout === 'column'
+    ? 'flex w-full justify-center py-1'
+    : 'flex w-full items-center gap-2 py-1.5 text-left text-xs';
+
+/** The metric's name beside the stop, on the narrow layout where there's no column header. */
+const StopLabel = ({ metric, muted }: { metric: MetricId; muted?: boolean }) => (
+  <span className={cn('min-w-0 truncate font-medium', muted && 'text-muted-foreground')}>
+    {METRICS[metric].label}
+  </span>
 );
 
 /**
- * Holds a stop's place until its data lands: an unlit stop on the line, with bars where the figure
- * and status go, laid out like `Stop` so nothing moves when it fills in.
+ * One stop on the strip. The overview shows only its status; the figure, trend and cut-offs are
+ * one tap away. A measure that isn't taken for the line is an unlit, unfocusable gap.
  */
+const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: Layout }) => {
+  if (cell.status === 'na') {
+    return (
+      <span className={cn('tm-fade-in', stopClass(layout))}>
+        {/* On the strip the track simply runs on past it; the narrow layout names it. */}
+        {layout === 'column' ? (
+          <span aria-hidden="true" className="size-6" />
+        ) : (
+          <>
+            <span className="flex w-5 justify-center">
+              <StatusNode status="na" />
+            </span>
+            <StopLabel metric={cell.metric} muted />
+          </>
+        )}
+        <span className="sr-only">
+          {METRICS[cell.metric].label}: {STATUS_LABELS.na}
+        </span>
+      </span>
+    );
+  }
+  return (
+    <Popover>
+      <PopoverTrigger
+        aria-label={cellLabel(row, cell)}
+        className={cn(
+          'group tm-fade-in rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring',
+          stopClass(layout)
+        )}
+      >
+        <span
+          className={cn(
+            'relative z-10 flex transition-transform group-hover:scale-110',
+            STATUS_NODE_TONE[cell.status]
+          )}
+        >
+          <StatusNode status={cell.status} className={layout === 'column' ? 'size-6' : undefined} />
+        </span>
+        {layout === 'grid' && <StopLabel metric={cell.metric} />}
+      </PopoverTrigger>
+      <PopoverContent className="w-80" align="center">
+        <CellDetail row={row} cell={cell} />
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+/** Holds a stop's place until its data lands, laid out like `Stop` so nothing moves. */
 const PendingStop = ({
   metric,
   layout,
   state,
 }: {
   metric: MetricId;
-  layout: 'column' | 'row';
+  layout: Layout;
   state: HomeState;
-}) => {
-  const pulse = state === 'loading';
-  return (
-    <span
-      className={cn(
-        'flex',
-        layout === 'column'
-          ? 'w-full flex-col items-center gap-1.5 px-1 py-0.5'
-          : 'w-full items-center gap-3 py-2'
-      )}
-    >
+}) => (
+  <span className={stopClass(layout)}>
+    <span className="relative z-10 flex text-primary">
       <span
-        className={cn('relative z-10 flex text-primary', layout === 'row' && 'w-5 justify-center')}
-      >
-        <span
-          aria-hidden="true"
-          className={cn(
-            'inline-block size-5 rounded-full border-2 border-current bg-card opacity-40',
-            pulse && 'animate-pulse motion-reduce:animate-none'
-          )}
-        />
-      </span>
-      {layout === 'row' && (
-        <span className="flex-1 text-sm font-medium">{METRICS[metric].label}</span>
-      )}
-      <span className={cn('flex flex-col', layout === 'row' ? 'items-end' : 'items-center')}>
-        <span className="text-sm font-semibold text-muted-foreground">
-          {state === 'error' ? '—' : <Placeholder className="h-3.5 w-12" />}
-        </span>
-        <span className="text-[11px] leading-tight">
-          <Placeholder className="h-2 w-10" pulse={pulse} />
-        </span>
-      </span>
+        aria-hidden="true"
+        className={cn(
+          'inline-block rounded-full border-2 border-current bg-card opacity-40',
+          layout === 'column' ? 'size-6' : 'size-5',
+          state === 'loading' && 'animate-pulse motion-reduce:animate-none'
+        )}
+      />
     </span>
-  );
-};
+    {layout === 'grid' && <StopLabel metric={metric} muted />}
+  </span>
+);
 
 /** Stands in for a cell the published file doesn't have yet. */
 const missingCell = (metric: MetricId): Cell => ({
@@ -194,7 +190,7 @@ const LineStop = ({
 }: {
   line: ScoreboardLine;
   metric: MetricId;
-  layout: 'column' | 'row';
+  layout: Layout;
   state: HomeState;
 }) =>
   row ? (
@@ -202,6 +198,22 @@ const LineStop = ({
   ) : (
     <PendingStop metric={metric} layout={layout} state={state} />
   );
+
+/** What a line with too little data shows in place of its stops. */
+const LimitedNote = ({ line: { config, row } }: { line: ScoreboardLine }) => {
+  const href = row?.cells.service?.href ?? config.href;
+  return (
+    <p className="tm-fade-in text-sm text-muted-foreground">
+      Not enough data to judge yet.{' '}
+      <Link
+        href={href}
+        className="inline-flex items-center gap-1 font-medium text-foreground underline-offset-4 hover:underline"
+      >
+        See what we have <ArrowRight className="size-3" aria-hidden />
+      </Link>
+    </p>
+  );
+};
 
 const GroupHeading = ({ children }: { children: ReactNode }) => (
   <tr>
@@ -223,24 +235,30 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
       className="tm-reveal border-b last:border-0"
       style={{ '--reveal-index': index } as CSSProperties}
     >
-      <th scope="row" className="w-56 py-3 pr-2 pl-6 text-left align-top font-normal">
+      <th scope="row" className="w-64 py-3 pr-2 pl-6 text-left align-middle font-normal">
         <RowTitle line={line} state={state} />
       </th>
-      {METRIC_ORDER.map((metric, i) => (
-        <td key={metric} className="relative px-1 py-3 align-top">
-          {/* The line runs through its stops; it starts and ends at the first and last one. */}
-          <span
-            className={cn(
-              'pointer-events-none absolute top-[22px] text-primary opacity-40',
-              i === 0 ? 'left-1/2' : 'left-0',
-              i === METRIC_ORDER.length - 1 ? 'right-1/2' : 'right-0'
-            )}
-          >
-            <RouteLine />
-          </span>
-          <LineStop line={line} metric={metric} layout="column" state={state} />
+      {isLimited(line) ? (
+        <td colSpan={METRIC_ORDER.length} className="px-4 py-3 align-middle">
+          <LimitedNote line={line} />
         </td>
-      ))}
+      ) : (
+        METRIC_ORDER.map((metric, i) => (
+          <td key={metric} className="relative px-1 py-3 align-middle">
+            {/* The line runs through its stops; it starts and ends at the first and last one. */}
+            <span
+              className={cn(
+                'pointer-events-none absolute top-1/2 -translate-y-1/2 text-primary opacity-40',
+                i === 0 ? 'left-1/2' : 'left-0',
+                i === METRIC_ORDER.length - 1 ? 'right-1/2' : 'right-0'
+              )}
+            >
+              <RouteLine />
+            </span>
+            <LineStop line={line} metric={metric} layout="column" state={state} />
+          </td>
+        ))
+      )}
     </tr>
   );
 
@@ -250,7 +268,7 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
     <table className="hidden w-full table-fixed text-sm lg:table">
       <thead>
         <tr className="border-b">
-          <th scope="col" className="w-56 pb-2 pl-6 text-left">
+          <th scope="col" className="w-64 pb-2 pl-6 text-left">
             <span className="sr-only">Line</span>
           </th>
           {METRIC_ORDER.map((metric) => (
@@ -292,18 +310,19 @@ const MobileStrips = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
         style={{ '--reveal-index': index } as CSSProperties}
       >
         <RowTitle line={line} state={state} />
-        <div className="relative mt-2">
-          <span className="pointer-events-none absolute top-5 bottom-5 left-2.5 -translate-x-1/2 text-primary opacity-40">
-            <RouteLine orientation="vertical" />
-          </span>
-          <ul>
+        {isLimited(line) ? (
+          <div className="mt-2">
+            <LimitedNote line={line} />
+          </div>
+        ) : (
+          <ul className="mt-2 grid grid-cols-2 gap-x-3 min-[380px]:grid-cols-3">
             {METRIC_ORDER.map((metric) => (
-              <li key={metric}>
-                <LineStop line={line} metric={metric} layout="row" state={state} />
+              <li key={metric} className="min-w-0">
+                <LineStop line={line} metric={metric} layout="grid" state={state} />
               </li>
             ))}
           </ul>
-        </div>
+        )}
       </li>,
     ])}
   </ul>
@@ -321,12 +340,15 @@ export const Scoreboard = ({
   const lines = ROWS.map((config) => ({ config, row: rows?.find((r) => r.id === config.id) }));
   return (
     <Card aria-busy={state === 'loading'}>
-      <CardHeader>
-        <CardTitle>Every line, every measure</CardTitle>
-        <CardDescription>
-          Each line is only as good as its weakest measure: there's no averaging. Tap any stop for
-          the numbers behind it.
-        </CardDescription>
+      <CardHeader className="gap-3">
+        <div className="flex flex-col gap-1.5">
+          <CardTitle>Line by line</CardTitle>
+          <CardDescription>
+            Each line is only as good as its weakest measure: there's no averaging. Tap any stop for
+            the numbers behind it.
+          </CardDescription>
+        </div>
+        <StatusLegend />
       </CardHeader>
       <CardContent className="px-3 lg:px-0">
         {state === 'loading' && <p className="sr-only">Loading the latest numbers.</p>}

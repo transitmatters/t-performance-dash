@@ -1,5 +1,6 @@
 import { NEGLIGIBLE_TREND } from './config';
-import type { Cell, Direction, Status, Unit } from './types';
+import { STATUS_LABELS } from './copy';
+import type { Cell, Direction, HeadlineKind, Status, Unit } from './types';
 
 const round = (value: number, digits = 0) => {
   const factor = 10 ** digits;
@@ -43,11 +44,12 @@ export const formatCell = (cell: Cell, withUnit = false) => {
 /** "▲ 5% vs 12 weeks", or points when comparing shares a year apart. */
 export const formatTrend = (cell: Pick<Cell, 'trend' | 'trendBasis'>) => {
   if (cell.trend === null || !Number.isFinite(cell.trend)) return null;
-  const arrow = cell.trend > 0 ? '▲' : cell.trend < 0 ? '▼' : '';
   const amount = Math.abs(Math.round(cell.trend * 100));
+  // From the rounded amount, so a change too small to show doesn't get an arrow ("▼ 0%").
+  const arrow = amount === 0 ? '' : cell.trend > 0 ? '▲' : '▼';
   return cell.trendBasis === 'yearAgo'
-    ? `${arrow} ${amount} pts vs a year ago`
-    : `${arrow} ${amount}% last 2 weeks vs 12`;
+    ? `${arrow} ${amount} pts vs a year ago`.trim()
+    : `${arrow} ${amount}% last 2 weeks vs 12`.trim();
 };
 
 const formatThreshold = (value: number, unit: Unit) =>
@@ -57,7 +59,7 @@ const formatThreshold = (value: number, unit: Unit) =>
       ? `${value} s`
       : `${value} yr`;
 
-/** "Win ≥100% · Good ≥92% · Room to grow ≥80%", or undefined for a cell that isn't judged. */
+/** "Strong ≥100% · Good ≥92% · Room to grow ≥80%", or undefined for a cell that isn't judged. */
 export const formatThresholds = ({
   thresholds,
   direction,
@@ -66,7 +68,7 @@ export const formatThresholds = ({
   if (!thresholds || !direction || !scoreUnit) return undefined;
   const op = direction === 'higher' ? '≥' : '≤';
   const [win, good, room] = thresholds.map((t) => formatThreshold(t, scoreUnit));
-  return `Win ${op}${win} · Good ${op}${good} · Room to grow ${op}${room}`;
+  return `${STATUS_LABELS.win} ${op}${win} · ${STATUS_LABELS.good} ${op}${good} · ${STATUS_LABELS.room} ${op}${room}`;
 };
 
 export type TrendSentiment = 'good' | 'bad' | 'flat';
@@ -83,4 +85,26 @@ export const STATUS_TONE: Record<Status, string> = {
   problem: 'text-destructive',
   insufficient: 'text-muted-foreground',
   na: 'text-muted-foreground',
+};
+
+/**
+ * The color of a stop, by status rather than by line, so red always means "needs work" and green
+ * always means "good". The line's own color stays on its bullet and track. Each is at least 3:1
+ * against the page, as a graphic needs.
+ */
+export const STATUS_NODE_TONE: Record<Status, string> = {
+  win: 'text-green-600 dark:text-green-500',
+  good: 'text-green-600 dark:text-green-500',
+  room: 'text-amber-600 dark:text-amber-500',
+  problem: 'text-red-600 dark:text-red-500',
+  insufficient: 'text-muted-foreground',
+  na: 'text-muted-foreground',
+};
+
+export const HEADLINE_TONE: Record<HeadlineKind, string> = {
+  strong: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
+  good: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
+  room: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
+  needsWork: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
+  limited: 'border-border text-muted-foreground',
 };
