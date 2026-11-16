@@ -23,7 +23,7 @@ export const useHistoricalBaselines = () => {
 
 export const useSpeedBaseline = (line: Line | undefined) => {
   const { data } = useHistoricalBaselines();
-  return getBaseline(data, 'speed', line, PEAK_SPEED[line ?? 'DEFAULT']);
+  return getBaseline(data, 'speed', line, line ? PEAK_SPEED[line] : undefined);
 };
 
 export const useScheduledServiceBaseline = (line: Line | undefined) => {

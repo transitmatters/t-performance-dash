@@ -94,10 +94,8 @@ export const SpeedGraph = ({
                     : null
                 ),
               },
-              // No baseline is established for every line yet (PEAK_SPEED defaults to 0),
-              // so skip the null dataset that produces the baseline's legend entry rather
-              // than show a misleading "Historical Maximum (0 mph)".
-              ...(peak > 0
+              // Lines without a speed baseline (bus) get no legend entry for it.
+              ...(peak
                 ? [
                     {
                       label: `Historical Maximum (${peak} mph)`,
@@ -135,14 +133,13 @@ export const SpeedGraph = ({
                     const color = LINE_COLORS[colorKey ?? 'default'];
                     return {
                       hero: { value: `${mph}`, unit: 'mph', color },
-                      meter:
-                        peak > 0
-                          ? {
-                              fraction: mph / peak,
-                              label: `${((100 * mph) / peak).toFixed(1)}% of historical maximum (${peak} mph)`,
-                              color,
-                            }
-                          : undefined,
+                      meter: peak
+                        ? {
+                            fraction: mph / peak,
+                            label: `${((100 * mph) / peak).toFixed(1)}% of historical maximum (${peak} mph)`,
+                            color,
+                          }
+                        : undefined,
                     };
                   },
                 },
@@ -162,8 +159,8 @@ export const SpeedGraph = ({
                 // Add your annotations here
                 annotations: [
                   // Kept in lockstep with the dataset above: index 1 is only the peak
-                  // dataset when peak > 0 added it.
-                  ...(peak > 0
+                  // dataset when there is a peak.
+                  ...(peak
                     ? [
                         {
                           type: 'line' as const,
