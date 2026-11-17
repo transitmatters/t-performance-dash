@@ -12,8 +12,13 @@ import {
 } from '../ui/dropdown-menu';
 
 /** View options that change how charts draw, not what data they show. Remembered per browser. */
-export const DisplayMenu = () => {
-  const { showEvents, setShowEvents } = useMajorEventsStore();
+export const DisplayMenu = ({
+  showOtherShutdownsToggle,
+}: {
+  showOtherShutdownsToggle: boolean;
+}) => {
+  const { showEvents, setShowEvents, showOtherShutdowns, setShowOtherShutdowns } =
+    useMajorEventsStore();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -42,6 +47,21 @@ export const DisplayMenu = () => {
             </span>
           </span>
         </DropdownMenuCheckboxItem>
+        {showOtherShutdownsToggle && (
+          <DropdownMenuCheckboxItem
+            checked={showOtherShutdowns}
+            onCheckedChange={setShowOtherShutdowns}
+            onSelect={(event) => event.preventDefault()}
+            className="items-start"
+          >
+            <span className="flex flex-col">
+              <span>Shutdowns on other lines</span>
+              <span className="text-xs text-muted-foreground">
+                Subway shuttles and suspensions that can shift riders onto this line
+              </span>
+            </span>
+          </DropdownMenuCheckboxItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

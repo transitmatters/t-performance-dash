@@ -7,6 +7,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { useMajorEvents } from '../../common/utils/majorEvents';
 import type { AggType } from '../speed/constants/speeds';
+import { useOtherLineShutdowns } from '../shutdowns';
 
 interface ScheduledAndDeliveredGraphProps {
   scheduled: Dataset;
@@ -40,6 +41,11 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
   const { line, colorKey } = useDelimitatedRoute();
   const color = LINE_COLORS[colorKey ?? 'default'];
   const events = useMajorEvents(line, startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
+  const allBlocks = useMemo(
+    () => [...(blocks ?? []), ...otherShutdowns.blocks],
+    [blocks, otherShutdowns.blocks]
+  );
 
   return (
     <TimeSeriesChart
@@ -48,7 +54,7 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
       timeAxis={{ agg, from: startDate, to: endDate }}
       style={{ color, stepped: true, fill: true }}
       benchmarks={benchmarks}
-      blocks={blocks}
+      blocks={allBlocks}
       hoverCard={hoverCard}
       fill={fill}
       events={events}

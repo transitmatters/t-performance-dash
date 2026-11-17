@@ -28,8 +28,14 @@ export const BandControls = () => {
 
 /** When and how, on the neutral bar: dates, page-wide filters, and display options. */
 export const BarControls = () => {
-  const { queryType, showTripControls, showDateControl, showPeriodDate, showDisplayMenu } =
-    usePageControls();
+  const {
+    queryType,
+    showTripControls,
+    showDateControl,
+    showPeriodDate,
+    showDisplayMenu,
+    showOtherShutdownsToggle,
+  } = usePageControls();
   return (
     <div className="flex flex-row flex-wrap items-center gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-5 py-2 text-stone-900 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-100">
       {showTripControls && <TripModeToggle />}
@@ -42,7 +48,7 @@ export const BarControls = () => {
         </div>
         {showDisplayMenu && (
           <div className="ml-auto">
-            <DisplayMenu />
+            <DisplayMenu showOtherShutdownsToggle={showOtherShutdownsToggle} />
           </div>
         )}
       </div>

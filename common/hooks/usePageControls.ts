@@ -2,6 +2,7 @@ import type { DateStoreSection } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
 import type { Line } from '../types/lines';
 import { useDelimitatedRoute } from '../utils/router';
+import { otherShutdownLines } from '../../modules/shutdowns';
 
 /** The modes whose pages are per route, so they get a route picker. */
 const ROUTED_LINES: Line[] = ['line-bus', 'line-commuter-rail', 'line-ferry'];
@@ -18,6 +19,7 @@ const SECTIONS_WITH_CONTROLS: DateStoreSection[] = [
 export const usePageControls = () => {
   const {
     line,
+    lineShort,
     colorKey,
     page,
     tab,
@@ -26,6 +28,7 @@ export const usePageControls = () => {
   const config = page ? ALL_PAGES[page] : undefined;
   const section = config?.dateStoreSection;
   const isTrips = section === 'singleTrips' || section === 'multiTrips';
+  const showDisplayMenu = section !== 'singleTrips';
 
   return {
     visible:
@@ -47,6 +50,8 @@ export const usePageControls = () => {
     showDateControl: section !== 'overview' && (line !== undefined || section === 'system'),
     showPeriodDate: Boolean(config?.hasPeriodDate),
     // Events mark dates on a range; a single day has none to mark.
-    showDisplayMenu: section !== 'singleTrips',
+    showDisplayMenu,
+    // Only lines with a subway to compare against: rapid transit and Commuter Rail.
+    showOtherShutdownsToggle: showDisplayMenu && otherShutdownLines(lineShort).length > 0,
   };
 };

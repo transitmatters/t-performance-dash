@@ -16,6 +16,7 @@ import {
 import type { WeatherHourly } from '../../../types/weather';
 import type { OldAlert } from '../../../types/alerts';
 import { ONE_HOUR } from '../../../constants/time';
+import { useOtherLineShutdowns } from '../../../../modules/shutdowns';
 import { alertKey, getAlertAnnotations, serviceDay } from './segments';
 import { chartGeometryPlugin } from './chartGeometryPlugin';
 import type { TrackGeometry } from './chartGeometryPlugin';
@@ -29,6 +30,8 @@ interface UseChartLayersOptions {
   enabled: boolean;
   // Only single-day trip charts have the day's alerts
   withAlerts?: boolean;
+  // Date-range charts can shade other lines' shutdowns, when the reader turns them on
+  withOtherShutdowns?: boolean;
 }
 
 export interface ChartLayers {
@@ -46,8 +49,8 @@ export interface ChartLayers {
 
 /**
  * Everything a chart needs for its context track: the weather and alerts behind it, the shading
- * for whatever is pinned, whether the temperature line is on, and the plugin that reports where
- * the plot sits so the track lines up with it.
+ * for whatever is pinned or for other lines' shutdowns, whether the temperature line is on, and the
+ * plugin that reports where the plot sits so the track lines up with it.
  */
 export const useChartLayers = ({
   startDate,
@@ -55,6 +58,7 @@ export const useChartLayers = ({
   granularity,
   enabled,
   withAlerts = false,
+  withOtherShutdowns = false,
 }: UseChartLayersOptions) => {
   const hourly = granularity === 'hourly';
   const serviceWindow = hourly && startDate ? serviceDay(startDate) : undefined;
@@ -91,6 +95,7 @@ export const useChartLayers = ({
   const isAlertsLoading = useAlertStore((store) => store.isLoading);
   const pinned = useLayerStore((store) => store.pinned);
   const temperatureEnabled = useLayerStore((store) => store.temperature) && enabled;
+  const otherShutdowns = useOtherLineShutdowns(withOtherShutdowns ? startDate : undefined, endDate);
   const [geometry, setGeometry] = useState<TrackGeometry | null>(null);
   // Charts without a track have no use for the plot's position, so don't re-render them with it
   const geometryPlugin: Plugin = useMemo(
@@ -103,7 +108,7 @@ export const useChartLayers = ({
     [weatherRuns, pinned]
   );
   const annotations: AnnotationOptions<keyof AnnotationTypeRegistry>[] = useMemo(() => {
-    if (!enabled) return [];
+    if (!enabled) return otherShutdowns.annotations;
     const pinnedAlerts =
       withAlerts && alerts && startDate
         ? getAlertAnnotations(
@@ -112,8 +117,8 @@ export const useChartLayers = ({
           )
         : [];
     const weatherShading = getWeatherAnnotations(pinnedRuns);
-    return [...pinnedAlerts, ...weatherShading];
-  }, [enabled, withAlerts, alerts, startDate, pinned, pinnedRuns]);
+    return [...pinnedAlerts, ...weatherShading, ...otherShutdowns.annotations];
+  }, [enabled, withAlerts, alerts, startDate, pinned, pinnedRuns, otherShutdowns.annotations]);
 
   const layers: ChartLayers = {
     enabled,

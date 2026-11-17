@@ -59,11 +59,13 @@ export const MobileControlPanel = () => {
     showDateControl,
     showPeriodDate,
     showDisplayMenu,
+    showOtherShutdownsToggle,
   } = usePageControls();
   const { presetName, dates } = useDateSummary(queryType);
   const periodDate = usePeriodDateLabel();
   const { lineName, pageTitle } = usePageHeading();
-  const { showEvents, setShowEvents } = useMajorEventsStore();
+  const { showEvents, setShowEvents, showOtherShutdowns, setShowOtherShutdowns } =
+    useMajorEventsStore();
   const stationProps =
     showTripControls && line ? { line, busRoute, crRoute, ferryRoute } : undefined;
 
@@ -127,11 +129,20 @@ export const MobileControlPanel = () => {
             <PageFilters />
           </div>
           {showDisplayMenu && (
-            <ToggleSwitch
-              enabled={showEvents}
-              setEnabled={setShowEvents}
-              label="Show major events on charts"
-            />
+            <>
+              <ToggleSwitch
+                enabled={showEvents}
+                setEnabled={setShowEvents}
+                label="Show major events on charts"
+              />
+              {showOtherShutdownsToggle && (
+                <ToggleSwitch
+                  enabled={showOtherShutdowns}
+                  setEnabled={setShowOtherShutdowns}
+                  label="Show shutdowns on other lines"
+                />
+              )}
+            </>
           )}
         </div>
         <SheetFooter>
