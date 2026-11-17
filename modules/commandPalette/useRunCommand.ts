@@ -14,6 +14,7 @@ export const useRunCommand = () => {
   const setOpen = useCommandPaletteStore((state) => state.setOpen);
   const addRecent = useRecentCommandsStore((state) => state.add);
   const toggleTheme = useThemeStore((state) => state.toggle);
+  const toggleColorblind = useThemeStore((state) => state.toggleColorblind);
   const { isMobile, setOpenMobile, toggleSidebar } = useSidebar();
 
   return useCallback(
@@ -22,6 +23,7 @@ export const useRunCommand = () => {
       const { target } = command;
       if (target.kind === 'action') {
         if (target.action === 'theme') toggleTheme();
+        if (target.action === 'colorblind') toggleColorblind();
         if (target.action === 'sidebar') toggleSidebar();
         if (target.action === 'copyLink') void navigator.clipboard?.writeText(window.location.href);
         return;
@@ -32,6 +34,16 @@ export const useRunCommand = () => {
       if (isMobile) setOpenMobile(false);
       void navigate({ href: hrefToString(href) });
     },
-    [setOpen, addRecent, resolve, navigate, toggleTheme, toggleSidebar, isMobile, setOpenMobile]
+    [
+      setOpen,
+      addRecent,
+      resolve,
+      navigate,
+      toggleTheme,
+      toggleColorblind,
+      toggleSidebar,
+      isMobile,
+      setOpenMobile,
+    ]
   );
 };

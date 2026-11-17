@@ -2,6 +2,7 @@ import { Link } from '../../common/components/general/Link';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { SidebarSeparator } from '../../common/components/ui/sidebar';
 import { ThemeToggle } from '../../common/components/nav/ThemeToggle';
+import { ColorblindToggle } from '../../common/components/nav/ColorblindToggle';
 
 const LINKS = [
   { name: 'About', href: 'https://transitmatters.org/transitmatters-labs' },
@@ -31,7 +32,10 @@ export const ExtraMenuItems = () => {
           </li>
         ))}
       </ul>
-      <ThemeToggle />
+      <div className="flex flex-col">
+        <ThemeToggle />
+        <ColorblindToggle />
+      </div>
       <DonateButton />
     </div>
   );

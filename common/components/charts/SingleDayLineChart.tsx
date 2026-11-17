@@ -20,6 +20,7 @@ import {
   SEVERITY_COLORS,
   isOnTimeHeadwayRatio,
   severityForRatio,
+  severityPointStyle,
   useChartTheme,
 } from '../../utils/chartTheme';
 import { CHART_COLORS } from '../../constants/colors';
@@ -34,22 +35,18 @@ import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
 import { singleDayAxisBounds } from './contextTrack/segments';
 
-const pointColors = (
+/** Each point's severity against its benchmark, or undefined with no benchmark to judge it by. */
+const pointTones = (
   data: DataPoint[],
   metric_field: string,
-  neutralColor: string,
   effectiveBenchmark: (number | null)[],
   showUnderRatio?: boolean
-) => {
-  return data.map((point: DataPoint, idx: number) => {
+) =>
+  data.map((point: DataPoint, idx: number) => {
     const benchmarkValue = effectiveBenchmark[idx];
-    if (typeof benchmarkValue !== 'number' || !Number.isFinite(benchmarkValue)) {
-      return neutralColor; // no benchmark to judge this point against
-    }
-    const severity = severityForRatio(point[metric_field] / benchmarkValue, showUnderRatio);
-    return severity ? SEVERITY_COLORS[severity.tone] : neutralColor;
+    if (typeof benchmarkValue !== 'number' || !Number.isFinite(benchmarkValue)) return undefined;
+    return severityForRatio(point[metric_field] / benchmarkValue, showUnderRatio)?.tone;
   });
-};
 
 export const SingleDayLineChart = ({
   chartId,
@@ -136,26 +133,18 @@ export const SingleDayLineChart = ({
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
   );
 
+  const tones = pointTones(data, metricField, effectiveBenchmarkData, showUnderRatio);
+  const pointColors = tones.map((tone) => (tone ? SEVERITY_COLORS[tone] : chartTheme.neutralPoint));
+
   const datasets: Array<Record<string, unknown>> = [
     {
       label: `Actual`,
       fill: false,
       borderColor: chartTheme.benchmarkLine,
-      pointBackgroundColor: pointColors(
-        data,
-        metricField,
-        chartTheme.neutralPoint,
-        effectiveBenchmarkData,
-        showUnderRatio
-      ),
+      pointBackgroundColor: pointColors,
       pointHoverRadius: 3,
-      pointHoverBackgroundColor: pointColors(
-        data,
-        metricField,
-        chartTheme.neutralPoint,
-        effectiveBenchmarkData,
-        showUnderRatio
-      ),
+      pointHoverBackgroundColor: pointColors,
+      pointStyle: tones.map(severityPointStyle),
       pointRadius: 3,
       pointHitRadius: 10,
       data: convertedData,

@@ -105,6 +105,7 @@ export interface HeadwayBucket {
 /**
  * Each headway count in ratio order. Colors are the severity ramp the trip charts use for headway
  * dots, so a bucket reads the same on both; which side of the schedule it's on is told by position.
+ * Getters, so colorblind mode's ramp applies.
  */
 export const HEADWAY_BUCKETS: HeadwayBucket[] = [
   {
@@ -112,35 +113,45 @@ export const HEADWAY_BUCKETS: HeadwayBucket[] = [
     label: 'Bunched',
     range: '≤50%',
     side: 'closer',
-    color: SEVERITY_COLORS.off50,
+    get color() {
+      return SEVERITY_COLORS.off50;
+    },
   },
   {
     field: 'headways_50_75',
     label: 'Short',
     range: '50–75%',
     side: 'closer',
-    color: SEVERITY_COLORS.off25,
+    get color() {
+      return SEVERITY_COLORS.off25;
+    },
   },
   {
     field: 'headways_75_125',
     label: 'On time',
     range: '75–125%',
     side: 'on',
-    color: SEVERITY_COLORS.onTime,
+    get color() {
+      return SEVERITY_COLORS.onTime;
+    },
   },
   {
     field: 'headways_125_150',
     label: 'Long',
     range: '125–150%',
     side: 'longer',
-    color: SEVERITY_COLORS.off25,
+    get color() {
+      return SEVERITY_COLORS.off25;
+    },
   },
   {
     field: 'headways_over_150',
     label: 'Long gap',
     range: '≥150%',
     side: 'longer',
-    color: SEVERITY_COLORS.off50,
+    get color() {
+      return SEVERITY_COLORS.off50;
+    },
   },
 ];
 

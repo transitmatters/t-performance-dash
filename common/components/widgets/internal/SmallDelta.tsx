@@ -22,7 +22,7 @@ export const SmallDelta = ({ analysis, widgetValue }: SmallDeltaProps) => {
           {widgetValue.value !== 0 && (
             <FontAwesomeIcon
               icon={widgetValue.value > 0 ? faArrowTrendUp : faArrowTrendDown}
-              className={widgetValue.value > 0 ? 'text-[#e84e3b]' : 'text-[#35c759]'}
+              className={widgetValue.value > 0 ? 'text-red-500' : 'text-green-500'}
             />
           )}
           <p className="flex flex-row">
