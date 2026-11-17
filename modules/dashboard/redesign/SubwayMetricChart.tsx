@@ -8,27 +8,32 @@ import { getRidershipLineId } from '../../../common/utils/ridership';
 import { useSlowzoneDelayTotalData } from '../../../common/api/hooks/slowzones';
 import { TODAY_STRING } from '../../../common/constants/dates';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { getSpeedGraphConfig } from '../../speed/constants/speeds';
+import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { SpeedGraph } from '../../speed/charts/SpeedGraph';
 import { ServiceGraph } from '../../service/ServiceGraph';
 import { TotalSlowTime } from '../../slowzones/charts/TotalSlowTime';
 import { RidershipGraph } from '../../ridership/RidershipGraph';
-import { CHART_FETCH_START, chartWindowStart, trimTrailingEmpty } from './scorecardUtils';
+import {
+  CHART_CONFIG,
+  CHART_FETCH_START,
+  chartWindowStart,
+  hasTrips,
+  trimTrailingEmpty,
+} from './scorecardUtils';
 import type { MetricKey } from './types';
 
 export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
   const { line, lineShort } = useDelimitatedRoute();
   const endDate = TODAY_STRING;
   const startDate = CHART_FETCH_START;
-  const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const enabled = Boolean(line);
 
   const tripMetrics = useDeliveredTripMetrics(
-    { start_date: startDate, end_date: endDate, agg: config.agg, line },
+    { start_date: startDate, end_date: endDate, agg: CHART_CONFIG.agg, line },
     enabled
   );
   const predictedService = useScheduledService(
-    { start_date: startDate, end_date: endDate, route_id: lineShort, agg: config.agg },
+    { start_date: startDate, end_date: endDate, route_id: lineShort, agg: CHART_CONFIG.agg },
     enabled
   );
   const ridership = useRidershipData(
@@ -43,12 +48,14 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
 
   if (metric === 'speed') {
     if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
+    if (!hasTrips(tripMetrics.data))
+      return <NoDataNotice isLineMetric message="No trips recorded in the last 60 days." />;
     const data = trimTrailingEmpty(tripMetrics.data);
     const chartEnd = data[data.length - 1]?.date ?? endDate;
     return (
       <SpeedGraph
         data={data}
-        config={config}
+        config={CHART_CONFIG}
         startDate={chartWindowStart(chartEnd)}
         endDate={chartEnd}
         peakLineDashed
@@ -58,13 +65,15 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
   if (metric === 'service') {
     if (!tripMetrics.data || !predictedService.data)
       return <ChartPlaceHolder query={tripMetrics.isError ? tripMetrics : predictedService} />;
+    if (!hasTrips(tripMetrics.data))
+      return <NoDataNotice isLineMetric message="No trips recorded in the last 60 days." />;
     const data = trimTrailingEmpty(tripMetrics.data);
     const chartEnd = data[data.length - 1]?.date ?? endDate;
     return (
       <ServiceGraph
         data={data}
         predictedData={predictedService.data}
-        config={config}
+        config={CHART_CONFIG}
         startDate={chartWindowStart(chartEnd)}
         endDate={chartEnd}
       />
@@ -75,6 +84,7 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
     if (lineShort === 'Bus' || lineShort === 'Commuter Rail')
       return <ChartPlaceHolder query={delayTotals} />;
     const totals = delayTotals.data.data;
+    if (!totals.length) return <NoDataNotice isLineMetric message="No slow zone data available." />;
     const slowEnd = totals.length ? dayjs.utc(totals[totals.length - 1].date) : dayjs.utc(endDate);
     return (
       <TotalSlowTime
@@ -88,11 +98,13 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
     );
   }
   if (!ridership.data) return <ChartPlaceHolder query={ridership} />;
+  if (!ridership.data.length)
+    return <NoDataNotice isLineMetric message="No ridership counts in the last 60 days." />;
   const ridershipEnd = ridership.data[ridership.data.length - 1]?.date ?? endDate;
   return (
     <RidershipGraph
       data={ridership.data}
-      config={config}
+      config={CHART_CONFIG}
       startDate={chartWindowStart(ridershipEnd)}
       endDate={ridershipEnd}
     />
