@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { useThemeStore } from '../state/themeStore';
 import { SEVERITY_COLORS, severityPointStyle } from '../utils/chartTheme';
 import { colorVisionPalette } from '../utils/colorVision';
-import { contrastRatio } from '../utils/general';
+import { patternFill } from '../utils/chartPatterns';
+import { contrastRatio, hexWithAlpha } from '../utils/general';
 import { WEATHER_BASE_COLORS } from '../../modules/weather/utils/weatherAnnotations';
 import { TEMPERATURE_COLOR_STOPS } from '../../modules/weather/utils/temperatureDataset';
 import { REASON_BY_KEY } from '../../modules/delays/constants/reasons';
@@ -175,5 +176,10 @@ describe('colorblind mode', () => {
     const shapes = (['onTime', 'off25', 'off50', 'off100'] as const).map(severityPointStyle);
     expect(new Set(shapes).size).toBe(4);
     expect(severityPointStyle(undefined)).toBe('circle');
+  });
+
+  it('fades a dimmed solid fill like a patterned one', () => {
+    expect(patternFill('#1d5fb0', 'solid')).toBe('#1d5fb0');
+    expect(patternFill('#1d5fb0', 'solid', 0.3)).toBe(hexWithAlpha('#1d5fb0', 0.3));
   });
 });

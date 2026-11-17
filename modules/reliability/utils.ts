@@ -1,5 +1,6 @@
 import type { DataPoint } from '../../common/components/charts/TimeSeriesChart';
 import { SEVERITY_COLORS } from '../../common/utils/chartTheme';
+import type { PatternShape } from '../../common/utils/chartPatterns';
 import type {
   HeadwayCounts,
   ReliabilityCounts,
@@ -100,7 +101,18 @@ export interface HeadwayBucket {
   /** Which side of the schedule: drawn below the axis, not at all, or above it on the diverging chart. */
   side: 'closer' | 'on' | 'longer';
   color: string;
+  /**
+   * Colorblind mode's texture, by side: the buckets that share a color (Short and Long, Bunched and
+   * Long gap) are told apart by pattern as well as position.
+   */
+  pattern: PatternShape;
 }
+
+const SIDE_PATTERNS: Record<HeadwayBucket['side'], PatternShape> = {
+  closer: 'diagonal',
+  on: 'solid',
+  longer: 'dots',
+};
 
 /**
  * Each headway count in ratio order. Colors are the severity ramp the trip charts use for headway
@@ -113,6 +125,7 @@ export const HEADWAY_BUCKETS: HeadwayBucket[] = [
     label: 'Bunched',
     range: '≤50%',
     side: 'closer',
+    pattern: SIDE_PATTERNS.closer,
     get color() {
       return SEVERITY_COLORS.off50;
     },
@@ -122,6 +135,7 @@ export const HEADWAY_BUCKETS: HeadwayBucket[] = [
     label: 'Short',
     range: '50–75%',
     side: 'closer',
+    pattern: SIDE_PATTERNS.closer,
     get color() {
       return SEVERITY_COLORS.off25;
     },
@@ -131,6 +145,7 @@ export const HEADWAY_BUCKETS: HeadwayBucket[] = [
     label: 'On time',
     range: '75–125%',
     side: 'on',
+    pattern: SIDE_PATTERNS.on,
     get color() {
       return SEVERITY_COLORS.onTime;
     },
@@ -140,6 +155,7 @@ export const HEADWAY_BUCKETS: HeadwayBucket[] = [
     label: 'Long',
     range: '125–150%',
     side: 'longer',
+    pattern: SIDE_PATTERNS.longer,
     get color() {
       return SEVERITY_COLORS.off25;
     },
@@ -149,6 +165,7 @@ export const HEADWAY_BUCKETS: HeadwayBucket[] = [
     label: 'Long gap',
     range: '≥150%',
     side: 'longer',
+    pattern: SIDE_PATTERNS.longer,
     get color() {
       return SEVERITY_COLORS.off50;
     },

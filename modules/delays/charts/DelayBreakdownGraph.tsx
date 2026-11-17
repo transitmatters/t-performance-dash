@@ -99,7 +99,7 @@ export const DelayBreakdownGraph = ({
               label: layer.label,
               borderColor: 'rgba(255,255,255,0.55)',
               borderWidth: 0.75,
-              backgroundColor: layer.color,
+              backgroundColor: layer.fill,
               pointRadius: 0,
               pointHoverRadius: 6,
               pointBorderWidth: 0,

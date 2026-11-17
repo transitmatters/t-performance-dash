@@ -3,6 +3,8 @@ import { Bar } from '@chartjs-components';
 
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { SEVERITY_COLORS, useChartTheme } from '../../../common/utils/chartTheme';
+import { patternFill } from '../../../common/utils/chartPatterns';
+import { isColorblindMode } from '../../../common/utils/colorVision';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartActions } from '../../../common/components/charts/ChartActions';
@@ -36,7 +38,7 @@ const STACK_ORDER = [
 const STACKED = STACK_ORDER.map((field) =>
   OFF_SCHEDULE_BUCKETS.find((bucket) => bucket.field === field)!
 );
-const LEGEND = [
+const legend = () => [
   { text: 'Bunched or long gap', color: SEVERITY_COLORS.off50 },
   { text: 'Short or long', color: SEVERITY_COLORS.off25 },
 ];
@@ -86,7 +88,10 @@ export const OffScheduleDivergingBars = ({
             datasets: datasets.map(({ bucket, values }) => ({
               label: bucket.label,
               data: values,
-              backgroundColor: bucket.color,
+              // Position already says which side; colorblind mode's pattern repeats it
+              backgroundColor: isColorblindMode()
+                ? patternFill(bucket.color, bucket.pattern)
+                : bucket.color,
               barPercentage: 0.9,
               categoryPercentage: 1,
               borderRadius: 2,
@@ -107,7 +112,7 @@ export const OffScheduleDivergingBars = ({
                   color: chartTheme.tick,
                   // Each color is used on both sides of the axis, so name it once
                   generateLabels: () =>
-                    LEGEND.map(({ text, color }) => ({
+                    legend().map(({ text, color }) => ({
                       text,
                       fillStyle: color,
                       strokeStyle: color,

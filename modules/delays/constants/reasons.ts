@@ -1,6 +1,9 @@
 import type { DelayCause } from '../../../common/types/delays';
 import type { Line } from '../../../common/types/lines';
+import { patternFill } from '../../../common/utils/chartPatterns';
+import type { PatternShape } from '../../../common/utils/chartPatterns';
 import { isColorblindMode } from '../../../common/utils/colorVision';
+import { hexWithAlpha } from '../../../common/utils/general';
 
 export type DelayReasonKey = DelayCause;
 export type DelayFamilyId =
@@ -151,6 +154,26 @@ export const REASON_BY_KEY = Object.fromEntries(DELAY_REASONS.map((r) => [r.key,
   DelayReasonKey,
   DelayReason
 >;
+
+/**
+ * Colorblind mode textures each family, so a family reads by pattern even where its hue doesn't;
+ * the reasons within one are told apart by lightness, which survives every kind of color blindness.
+ */
+const FAMILY_PATTERNS: Record<DelayFamilyId, PatternShape> = {
+  vehicle: 'solid',
+  infrastructure: 'diagonal',
+  planned: 'dots',
+  external: 'crosshatch',
+  medical: 'horizontal',
+  unknown: 'vertical',
+};
+
+/** A reason's fill on a chart: its color, plus its family's pattern in colorblind mode. */
+export const reasonFill = (key: DelayReasonKey, alpha = 1): string | CanvasPattern => {
+  const { color, family } = REASON_BY_KEY[key];
+  if (isColorblindMode()) return patternFill(color, FAMILY_PATTERNS[family], alpha);
+  return alpha < 1 ? hexWithAlpha(color, alpha) : color;
+};
 
 // Bus alerts cite disabled buses, not trains
 export const reasonLabel = (reason: DelayReason, line?: Line) =>
