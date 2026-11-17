@@ -47,6 +47,6 @@ export const usePageControls = () => {
     showDateControl: section !== 'overview' && (line !== undefined || section === 'system'),
     showPeriodDate: Boolean(config?.hasPeriodDate),
     // Events mark dates on a range; a single day has none to mark.
-    showDisplayMenu: section !== 'singleTrips',
+    showEventsOption: section !== 'singleTrips',
   };
 };
