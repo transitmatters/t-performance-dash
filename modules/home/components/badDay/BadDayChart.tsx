@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useThemeStore } from '../../../../common/state/themeStore';
 import { cn } from '../../../../common/utils/cn';
 import type { Trip } from './day';
 import {
@@ -10,8 +11,17 @@ import {
   durationText,
   mostCrowding,
 } from './day';
-import type { Frame } from './draw';
-import { STILL, SLOW_MOTION_MS, drawFrame, frameAt, layoutFor, scales } from './draw';
+import type { Frame, Palette } from './draw';
+import {
+  DARK_PALETTE,
+  LIGHT_PALETTE,
+  STILL,
+  SLOW_MOTION_MS,
+  drawFrame,
+  frameAt,
+  layoutFor,
+  scales,
+} from './draw';
 
 const DAY = buildDay();
 /** Shows the whole day first, then plays it from the top. */
@@ -21,9 +31,9 @@ const HOVER_RADIUS = 14;
 const SUMMARY = `An example day, not real data. Orange Line trips from Malden Center to North Station: snow from 7:30 AM, a low of ${DAY.low}°F, a disabled train at 8:20 AM that stops service for 24 minutes, trips of up to ${durationText(DAY.worst.seconds)} against a 12 minute benchmark, standing room only on the trains after it, and back on time by noon.`;
 
 const CAR_TONE = {
-  many: 'border-green-500 bg-green-100',
-  few: 'border-amber-500 bg-amber-100',
-  stand: 'border-red-500 bg-red-100',
+  many: 'border-green-500 bg-green-100 dark:bg-green-900/40',
+  few: 'border-amber-500 bg-amber-100 dark:bg-amber-900/40',
+  stand: 'border-red-500 bg-red-100 dark:bg-red-900/40',
 } as const;
 
 interface Hover {
@@ -37,10 +47,10 @@ const TripCard = ({ hover, width }: { hover: Hover; width: number }) => {
   const diff = trip.seconds - BENCHMARK;
   return (
     <div
-      className="pointer-events-none absolute z-10 w-56 -translate-x-1/2 -translate-y-[calc(100%+14px)] rounded-xl bg-white px-3 py-2.5 text-xs leading-snug text-neutral-900 shadow-[0_8px_30px_rgb(0_0_0/0.35)] sm:w-60"
+      className="pointer-events-none absolute z-10 w-56 -translate-x-1/2 -translate-y-[calc(100%+14px)] rounded-xl border bg-popover px-3 py-2.5 text-xs leading-snug text-popover-foreground shadow-lg sm:w-60"
       style={{ left: Math.min(Math.max(hover.x, 120), width - 120), top: hover.y }}
     >
-      <div className="text-neutral-600">{clockText(trip.minute)} · Orange Line</div>
+      <div className="text-muted-foreground">{clockText(trip.minute)} · Orange Line</div>
       <div className="flex items-center gap-1.5 text-lg font-bold tabular-nums">
         <span
           className="inline-block size-2.5 rounded-full"
@@ -48,11 +58,11 @@ const TripCard = ({ hover, width }: { hover: Hover; width: number }) => {
         />
         {durationText(trip.seconds)}
       </div>
-      <div className="text-neutral-600 tabular-nums">
+      <div className="text-muted-foreground tabular-nums">
         {diff < 0 ? '−' : '+'}
         {durationText(Math.abs(diff))} vs benchmark
       </div>
-      <div className="mt-1.5 border-t border-neutral-200 pt-1.5">
+      <div className="mt-1.5 border-t pt-1.5">
         <b>{CROWDING[mostCrowding(trip)]}</b> · 6 of 6 cars reporting
       </div>
       <div className="mt-1.5 grid grid-cols-6 gap-0.5">
@@ -65,19 +75,22 @@ const TripCard = ({ hover, width }: { hover: Hover; width: number }) => {
             )}
           >
             {car.number}
-            <span className="text-[9px] font-medium text-neutral-600">
+            <span className="text-[9px] font-medium text-muted-foreground">
               {Math.round(car.load * 100)}%
             </span>
           </span>
         ))}
       </div>
-      <div className="mt-1 text-[10px] text-neutral-500">How full each car is</div>
+      <div className="mt-1 text-[10px] text-muted-foreground">How full each car is</div>
     </div>
   );
 };
 
 const LegendDot = ({ color }: { color: string }) => (
-  <span className="inline-block size-2 rounded-full" style={{ backgroundColor: color }} />
+  <span
+    className="inline-block size-2.5 rounded-full ring-1 ring-foreground/25"
+    style={{ backgroundColor: color }}
+  />
 );
 
 /**
@@ -94,6 +107,15 @@ export const BadDayChart = () => {
   const [playState, setPlayState] = useState<'idle' | 'playing' | 'paused'>('idle');
   const [hover, setHover] = useState<Hover | null>(null);
   const [width, setWidth] = useState(0);
+  // The canvas can't read CSS tokens, so it takes the theme's colors as literals.
+  const palette = useThemeStore((state) => state.theme) === 'dark' ? DARK_PALETTE : LIGHT_PALETTE;
+  const paletteRef = useRef<Palette>(palette);
+  const redrawRef = useRef<() => void>(() => {});
+
+  useEffect(() => {
+    paletteRef.current = palette;
+    redrawRef.current();
+  }, [palette]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -122,7 +144,7 @@ export const BadDayChart = () => {
       } else {
         frame = STILL;
       }
-      drawFrame(ctx, layout, DAY, frame, hovered ?? undefined);
+      drawFrame(ctx, layout, DAY, frame, paletteRef.current, hovered ?? undefined);
       if (clockRef.current) clockRef.current.textContent = clockText(frame.minute);
       if (slowRef.current) {
         const e = frame.elapsed;
@@ -160,6 +182,9 @@ export const BadDayChart = () => {
       sync();
     };
 
+    redrawRef.current = () => {
+      if (!raf) render(performance.now());
+    };
     toggleRef.current = () => {
       if (!playing) return start();
       setStopped(() => (userPaused = !userPaused));
@@ -229,8 +254,8 @@ export const BadDayChart = () => {
   return (
     <figure className="m-0 flex flex-col gap-2.5">
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <figcaption className="max-w-[56ch] text-sm text-white/60">
-          <b className="font-semibold text-white">
+        <figcaption className="max-w-[56ch] text-sm text-muted-foreground">
+          <b className="font-semibold text-foreground">
             A bad morning on the Orange Line, made up to show what the charts can do.
           </b>{' '}
           Travel times from Malden Center to North Station, with the alerts, weather and temperature
@@ -240,7 +265,7 @@ export const BadDayChart = () => {
           <span
             ref={slowRef}
             hidden
-            className="rounded-full border border-yellow-400/50 px-2 py-0.5 text-[10px] font-extrabold tracking-widest text-yellow-400 uppercase"
+            className="rounded-full border border-amber-600/50 px-2 py-0.5 text-[10px] font-extrabold tracking-widest text-amber-700 uppercase dark:border-yellow-400/50 dark:text-yellow-400"
           >
             Slow motion
           </span>
@@ -255,7 +280,7 @@ export const BadDayChart = () => {
             type="button"
             onClick={() => toggleRef.current()}
             aria-label={pauseLabel}
-            className="inline-grid size-9 cursor-pointer place-items-center rounded-full border border-white/30 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none"
+            className="inline-grid size-9 cursor-pointer place-items-center rounded-full border hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           >
             <svg viewBox="0 0 16 16" aria-hidden="true" className="size-3.5 fill-current">
               <path
@@ -274,9 +299,9 @@ export const BadDayChart = () => {
         />
         {hover && <TripCard hover={hover} width={width} />}
       </div>
-      <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-white/60">
+      <ul className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
         <li className="flex items-center gap-1.5">
-          <span className="inline-block h-2 w-4 border-t-[1.5px] border-dashed border-white/50 bg-white/10" />
+          <span className="inline-block h-2 w-4 border-t-[1.5px] border-dashed border-muted-foreground bg-muted" />
           TransitMatters benchmark
         </li>
         {/* Spelled out: an object's numeric-looking keys ('25', '50', '100') iterate before 'ok'. */}

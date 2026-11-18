@@ -1,3 +1,5 @@
+import { CHART_COLORS } from '../../../../common/constants/colors';
+
 // A made-up bad morning on the Orange Line, drawn the way the trip charts draw a real day: a
 // normal start, snow from 7:30, a disabled train at 8:20 that stops service for 24 minutes, a crush
 // of crowded trains after it, and back on time by lunch. It's an illustration, not data: the same
@@ -30,11 +32,12 @@ export interface Trip {
   cars: Car[];
 }
 
+/** The trip charts' own severity colors and legend labels, readable in either theme. */
 export const STATUS: Record<TripStatus, { label: string; color: string }> = {
-  ok: { label: 'On time', color: '#4ade80' },
-  '25': { label: '25%+ off', color: '#facc15' },
-  '50': { label: '50%+ off', color: '#f87171' },
-  '100': { label: '100%+ off', color: '#c084fc' },
+  ok: { label: 'On time', color: CHART_COLORS.GREEN },
+  '25': { label: '25%+ off', color: CHART_COLORS.YELLOW },
+  '50': { label: '50%+ off', color: CHART_COLORS.RED },
+  '100': { label: '100%+ off', color: CHART_COLORS.PURPLE },
 };
 
 export const CROWDING: Record<Crowding, string> = {

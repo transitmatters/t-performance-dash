@@ -12,7 +12,7 @@ import {
   temperature,
 } from './day';
 
-// Draws one frame of the made-up day on a dark canvas: trips against the benchmark, then the
+// Draws one frame of the made-up day in the page's theme: trips against the benchmark, then the
 // alert, weather and temperature tracks the dashboard draws under its trip charts.
 
 /** Real time (ms) to time of day: quick through early morning, slow through the bad stretch. */
@@ -40,11 +40,53 @@ const lerp = (v: number, from: 0 | 1, to: 0 | 1) => {
 export const minuteAt = (ms: number) => lerp(ms, 0, 1);
 const msAt = (minute: number) => lerp(minute, 1, 0);
 
-const INK = (alpha: number) => `rgba(243,246,250,${alpha})`;
-const YELLOW = '#facc15';
-const SNOW_BLUE = 'rgba(147,197,253,0.8)';
-const TEMP_ORANGE = '#fb923c';
-const TRAIL = '#ff9a1f';
+/** The colors for one theme. Trip dots use the trip charts' own severity colors in both. */
+export interface Palette {
+  /** The theme's text color at an opacity, for grid, ticks and labels. */
+  ink: (alpha: number) => string;
+  strong: string;
+  benchmarkFill: string;
+  benchmarkLine: string;
+  trail: string;
+  /** The alert band, and the gap bracket that goes with it. */
+  alert: string;
+  alertText: string;
+  snow: string;
+  snowText: string;
+  freezing: string;
+  freezingText: string;
+  temperature: string;
+}
+
+export const LIGHT_PALETTE: Palette = {
+  ink: (alpha) => `rgba(28,25,23,${alpha})`,
+  strong: '#1c1917',
+  benchmarkFill: 'rgba(160,160,160,0.16)',
+  benchmarkLine: 'rgba(87,83,78,0.5)',
+  trail: '#ed8b00',
+  alert: '#facc15',
+  alertText: '#92400e',
+  snow: 'rgba(96,165,250,0.55)',
+  snowText: '#1e3a8a',
+  freezing: 'rgba(37,99,235,0.4)',
+  freezingText: '#2563eb',
+  temperature: '#ea580c',
+};
+
+export const DARK_PALETTE: Palette = {
+  ink: (alpha) => `rgba(243,246,250,${alpha})`,
+  strong: '#f3f6fa',
+  benchmarkFill: 'rgba(232,232,232,0.08)',
+  benchmarkLine: 'rgba(232,232,232,0.4)',
+  trail: '#ff9a1f',
+  alert: '#facc15',
+  alertText: '#facc15',
+  snow: 'rgba(147,197,253,0.8)',
+  snowText: '#0d141d',
+  freezing: 'rgba(147,197,253,0.35)',
+  freezingText: 'rgba(147,197,253,0.7)',
+  temperature: '#fb923c',
+};
 const MONO = "ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace";
 const TOP_SECONDS = 1860;
 const LOW_SECONDS = 420;
@@ -115,6 +157,7 @@ export function drawFrame(
   l: Layout,
   day: Day,
   frame: Frame,
+  p: Palette,
   hover?: { x: number; y: number }
 ) {
   const { x: X, y: Y, plotBottom } = scales(l);
@@ -135,17 +178,17 @@ export function drawFrame(
   c.textAlign = 'right';
   for (const seconds of [600, 1200, 1800]) {
     const y = Y(seconds);
-    c.fillStyle = INK(0.07);
+    c.fillStyle = p.ink(0.07);
     c.fillRect(l.gutter, y, plotWidth, 1);
-    c.fillStyle = INK(0.5);
+    c.fillStyle = p.ink(0.5);
     c.fillText(`${seconds / 60} min`, l.gutter - 8, y);
   }
 
   // The benchmark band and line.
   const benchY = Y(BENCHMARK);
-  c.fillStyle = INK(0.055);
+  c.fillStyle = p.benchmarkFill;
   c.fillRect(X(START), benchY, X(END) - X(START), plotBottom - benchY);
-  c.strokeStyle = INK(0.4);
+  c.strokeStyle = p.benchmarkLine;
   c.setLineDash([4, 4]);
   c.lineWidth = 1;
   c.beginPath();
@@ -158,7 +201,7 @@ export function drawFrame(
   if (play > GAP[1]) {
     const [xa, xb, y] = [X(GAP[0]) + 2, X(GAP[1]) - 2, plotBottom + 6];
     c.globalAlpha = fade;
-    c.strokeStyle = 'rgba(250,204,21,0.8)';
+    c.strokeStyle = p.alertText;
     c.lineWidth = 1.5;
     c.beginPath();
     c.moveTo(xa, y - 4);
@@ -167,7 +210,7 @@ export function drawFrame(
     c.lineTo(xb, y - 4);
     c.stroke();
     c.textAlign = 'left';
-    c.fillStyle = YELLOW;
+    c.fillStyle = p.alertText;
     c.font = font(700, l.phone ? 10.5 : 11.5);
     c.fillText(l.phone ? 'No trains, 24 min' : 'No trains for 24 minutes', xb + 6, y + 1);
     c.globalAlpha = 1;
@@ -176,7 +219,7 @@ export function drawFrame(
   // Trips: a connected trail, like the trip charts, then the dots.
   const shown = day.trips.filter((t) => age(t.minute) >= 0);
   c.globalAlpha = 0.55 * fade;
-  c.strokeStyle = TRAIL;
+  c.strokeStyle = p.trail;
   c.lineWidth = 1.75;
   c.lineJoin = 'round';
   c.beginPath();
@@ -211,11 +254,11 @@ export function drawFrame(
   // Context tracks.
   c.font = font(500, l.phone ? 9.5 : 11);
   c.textAlign = 'right';
-  c.fillStyle = INK(0.6);
+  c.fillStyle = p.ink(0.6);
   c.fillText('Alerts', l.gutter - 8, rows.alerts + 8);
   c.fillText('Weather', l.gutter - 8, rows.weather + 8);
   c.fillText('Temp', l.gutter - 8, rows.temp + 15);
-  c.fillStyle = INK(0.06);
+  c.fillStyle = p.ink(0.06);
   c.fillRect(l.gutter, rows.alerts + 8, plotWidth, 1);
   c.fillRect(l.gutter, rows.weather + 8, plotWidth, 1);
   const band = ([from, to]: [number, number], y: number, color: string) => {
@@ -227,9 +270,9 @@ export function drawFrame(
     c.fill();
     return [xa, xb];
   };
-  const alert = band(ALERT, rows.alerts, 'rgba(250,204,21,0.9)');
+  const alert = band(ALERT, rows.alerts, p.alert);
   if (alert && play > ALERT[0] + 4) {
-    c.fillStyle = YELLOW;
+    c.fillStyle = p.alertText;
     c.font = font(600, l.phone ? 10.5 : 11.5);
     c.textAlign = 'left';
     c.fillText(
@@ -238,16 +281,16 @@ export function drawFrame(
       rows.alerts + 8
     );
   }
-  const snow = band(SNOW, rows.weather, SNOW_BLUE);
+  const snow = band(SNOW, rows.weather, p.snow);
   if (snow && snow[1] - snow[0] > 44) {
-    c.fillStyle = '#0d141d';
+    c.fillStyle = p.snowText;
     c.font = font(700, l.phone ? 10 : 11);
     c.textAlign = 'left';
     c.fillText(play >= SNOW[1] ? 'Snow, 3 in.' : 'Snow', snow[0] + 7, rows.weather + 8);
   }
 
   // Temperature, with freezing marked.
-  c.strokeStyle = 'rgba(147,197,253,0.35)';
+  c.strokeStyle = p.freezing;
   c.setLineDash([3, 3]);
   c.lineWidth = 1;
   c.beginPath();
@@ -255,11 +298,11 @@ export function drawFrame(
   c.lineTo(right, tempY(32));
   c.stroke();
   c.setLineDash([]);
-  c.fillStyle = 'rgba(147,197,253,0.7)';
+  c.fillStyle = p.freezingText;
   c.font = font(500, l.phone ? 9.5 : 10.5, MONO);
   c.textAlign = 'right';
   c.fillText('32°F', l.width - 8, tempY(32) - 7);
-  c.strokeStyle = TEMP_ORANGE;
+  c.strokeStyle = p.temperature;
   c.lineWidth = 2;
   c.beginPath();
   for (let m = START; m <= play; m += 4) {
@@ -269,7 +312,7 @@ export function drawFrame(
   c.stroke();
   if (play > day.lowMinute + 15) {
     const [x, y] = [X(day.lowMinute), tempY(temperature(day.lowMinute))];
-    c.fillStyle = TEMP_ORANGE;
+    c.fillStyle = p.temperature;
     c.beginPath();
     c.arc(x, y, 3.5, 0, Math.PI * 2);
     c.fill();
@@ -279,10 +322,10 @@ export function drawFrame(
   }
 
   // Time axis.
-  c.fillStyle = INK(0.12);
+  c.fillStyle = p.ink(0.12);
   c.fillRect(l.gutter, l.axisY, plotWidth, 1);
   c.font = font(500, l.phone ? 10 : 11, MONO);
-  c.fillStyle = INK(0.55);
+  c.fillStyle = p.ink(0.55);
   c.textAlign = 'center';
   for (let m = 360; m <= 1440; m += l.phone ? 360 : 180) {
     c.fillText(clockText(m).replace(':00', ''), X(m), l.axisY + 13);
@@ -292,18 +335,18 @@ export function drawFrame(
   if (play < END) {
     const x = X(play);
     const glow = c.createLinearGradient(x - 70, 0, x, 0);
-    glow.addColorStop(0, INK(0));
-    glow.addColorStop(1, INK(0.07));
+    glow.addColorStop(0, p.ink(0));
+    glow.addColorStop(1, p.ink(0.07));
     c.fillStyle = glow;
     c.fillRect(x - 70, PLOT_TOP, 70, l.axisY - PLOT_TOP);
-    c.fillStyle = INK(0.75);
+    c.fillStyle = p.ink(0.75);
     c.fillRect(x, PLOT_TOP, 1.5, l.axisY - PLOT_TOP);
   }
 
   // The worst trip, labeled once it has run.
   if (play >= day.worst.minute + 6 && fade > 0.02) {
     c.globalAlpha = fade;
-    c.fillStyle = '#f3f6fa';
+    c.fillStyle = p.strong;
     c.font = font(700, l.phone ? 11 : 12);
     c.textAlign = 'left';
     c.fillText(
@@ -315,7 +358,7 @@ export function drawFrame(
   }
 
   if (hover) {
-    c.strokeStyle = '#fff';
+    c.strokeStyle = p.strong;
     c.lineWidth = 2;
     c.beginPath();
     c.arc(hover.x, hover.y, 6, 0, Math.PI * 2);
