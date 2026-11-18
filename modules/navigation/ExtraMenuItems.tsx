@@ -2,11 +2,15 @@ import { Link } from '../../common/components/general/Link';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { SidebarSeparator } from '../../common/components/ui/sidebar';
 import { ThemeToggle } from '../../common/components/nav/ThemeToggle';
+import { BETA_FEEDBACK_URL, isBetaHost } from '../../common/utils/constants';
 
 const LINKS = [
   { name: 'About', href: 'https://transitmatters.org/transitmatters-labs' },
   { name: 'Join us', href: 'https://transitmatters.org/join' },
-  { name: 'Feedback', href: 'https://forms.gle/SKYtxgKSyCrYxM1v7' },
+  {
+    name: 'Feedback',
+    href: isBetaHost() ? BETA_FEEDBACK_URL : 'https://forms.gle/SKYtxgKSyCrYxM1v7',
+  },
   { name: 'Source', href: 'https://github.com/transitmatters/t-performance-dash' },
   { name: 'Attributions', href: '/opensource' },
 ];
