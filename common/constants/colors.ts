@@ -18,7 +18,9 @@ const CVD_LINE = {
 // `--line-color` (route bullets, the header fill, chart series, sparklines, station nodes), where
 // the color is a fill and contrast isn't a text concern. The AA-adjusted variants used for
 // text/UI/focus roles live in the `[data-line]` token blocks in styles/globals.css — see the
-// note there. Keep these EXACT (brand commitment in PRODUCT.md); adjust only the token variants.
+// note there. Keep these EXACT, as a brand commitment; adjust only the token variants. The one
+// deliberate exception is colorblind mode, which swaps Red, Orange and Green for CVD_LINE above:
+// those are off-brand on purpose, so don't "fix" them back to these.
 export const MBTA_BRAND_COLORS = {
   red: '#da291c',
   mattapan: '#da291c',

@@ -159,6 +159,19 @@ export interface SingleDayLineProps extends LineProps {
   fill?: boolean;
   /** Adds an Embed button that copies an `<iframe>` of this trip chart. */
   embedChart?: TripEmbedChart<'single'>;
+  /** Rings one point and labels it, e.g. the day's longest wait. */
+  callout?: ChartCallout;
+  /** The download, image and embed buttons, which name the page's line and stops. Off where the
+   * chart isn't on a line's page. */
+  actions?: boolean;
+  /** Draws the series in, point by point, the first time the chart appears. */
+  intro?: boolean;
+}
+
+export interface ChartCallout {
+  /** Index into `data`. */
+  index: number;
+  label: string;
 }
 
 export interface HeadwayHistogramProps {
@@ -182,4 +195,8 @@ export interface HeadwaysChartProps {
   date?: string;
   /** Fill the parent's height and leave out the buttons under the chart, as an embed does. */
   fill?: boolean;
+  callout?: ChartCallout;
+  /** Off where the chart isn't on a line's page; see SingleDayLineProps. */
+  actions?: boolean;
+  intro?: boolean;
 }

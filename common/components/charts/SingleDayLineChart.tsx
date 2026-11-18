@@ -34,6 +34,7 @@ import { ChartActions } from './ChartActions';
 import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
 import { singleDayAxisBounds } from './contextTrack/segments';
+import { useIntroAnimation } from './introAnimation';
 
 /** Each point's severity against its benchmark, or undefined with no benchmark to judge it by. */
 const pointTones = (
@@ -65,8 +66,12 @@ export const SingleDayLineChart = ({
   chartTitle,
   fill = false,
   embedChart,
+  callout,
+  actions = true,
+  intro = false,
 }: SingleDayLineProps) => {
   const ref = useRef(null);
+  const { pending: introPending, options: introOptions } = useIntroAnimation(intro, data.length);
   const chartTheme = useChartTheme();
   const {
     layers,
@@ -136,6 +141,37 @@ export const SingleDayLineChart = ({
   const tones = pointTones(data, metricField, effectiveBenchmarkData, showUnderRatio);
   const pointColors = tones.map((tone) => (tone ? SEVERITY_COLORS[tone] : chartTheme.neutralPoint));
 
+  // Ringed and labeled beside the point, on whichever side has room, so it stays inside the plot
+  // Held back while an intro draws the series in, then shown once the last point lands.
+  const calloutValue = callout && !introPending ? Number(convertedData[callout.index]) : NaN;
+  const calloutAnnotations: typeof layerAnnotations =
+    callout && Number.isFinite(calloutValue)
+      ? [
+          {
+            type: 'point',
+            xValue: labels[callout.index] as string,
+            yValue: calloutValue,
+            radius: 8,
+            backgroundColor: 'transparent',
+            borderColor: chartTheme.medianLine,
+            borderWidth: 2,
+          },
+          {
+            type: 'label',
+            xValue: labels[callout.index] as string,
+            yValue: calloutValue,
+            content: callout.label,
+            position: { x: callout.index / data.length > 0.6 ? 'end' : 'start', y: 'center' },
+            xAdjust: callout.index / data.length > 0.6 ? -14 : 14,
+            color: chartTheme.calloutText,
+            backgroundColor: chartTheme.medianLine,
+            borderRadius: 6,
+            padding: { x: 8, y: 4 },
+            font: { size: 12, weight: 'bold' },
+          },
+        ]
+      : [];
+
   const datasets: Array<Record<string, unknown>> = [
     {
       label: `Actual`,
@@ -193,6 +229,7 @@ export const SingleDayLineChart = ({
             datasets,
           }}
           options={{
+            ...introOptions,
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
@@ -300,7 +337,7 @@ export const SingleDayLineChart = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: layerAnnotations,
+                annotations: [...layerAnnotations, ...calloutAnnotations],
               },
             },
             scales: {
@@ -377,17 +414,19 @@ export const SingleDayLineChart = ({
           ) : (
             <div className="w-full" />
           )}
-          <ChartActions
-            datasetName={fname}
-            chartRef={ref}
-            location={location}
-            includeBothStopsForLocation={includeBothStopsForLocation}
-            csv={data}
-            startDate={date}
-            chartTitle={chartTitle}
-            embed={embedChart && <TripEmbedButton page="single" chart={embedChart} />}
-            className="ml-auto shrink-0 whitespace-nowrap"
-          />
+          {actions && (
+            <ChartActions
+              datasetName={fname}
+              chartRef={ref}
+              location={location}
+              includeBothStopsForLocation={includeBothStopsForLocation}
+              csv={data}
+              startDate={date}
+              chartTitle={chartTitle}
+              embed={embedChart && <TripEmbedButton page="single" chart={embedChart} />}
+              className="ml-auto shrink-0 whitespace-nowrap"
+            />
+          )}
         </div>
       </div>
     </ChartStack>

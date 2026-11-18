@@ -73,6 +73,9 @@
   --mbta-green: #00834d;
   --mbta-light-green: #80c1a6;
   --mbta-dark-green: #0e5e3d;
+  /* Widget trend arrows: up is worse, down is better */
+  --delta-up: #e84e3b;
+  --delta-down: #35c759;
   --dark-grey: #353535;
   --subtitle-grey: #808080;
 
@@ -218,6 +221,7 @@
   --mbta-green: #008a64;
   --mbta-light-green: #80c4b1;
   --mbta-dark-green: #026649;
+  --delta-down: oklch(62.3% 0.214 259.815);
 
   /*
     Green utilities here only ever mean "good" (scoreboard tones, deltas, success badges), against

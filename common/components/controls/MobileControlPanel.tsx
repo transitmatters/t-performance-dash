@@ -59,11 +59,15 @@ export const MobileControlPanel = () => {
     showDateControl,
     showPeriodDate,
     showEventsOption,
+    showOtherShutdownsOption,
   } = usePageControls();
   const { presetName, dates } = useDateSummary(queryType);
   const periodDate = usePeriodDateLabel();
   const { lineName, pageTitle } = usePageHeading();
-  const displayOptions = useDisplayOptions(showEventsOption);
+  const displayOptions = useDisplayOptions({
+    withEvents: showEventsOption,
+    withOtherShutdowns: showOtherShutdownsOption,
+  });
   const stationProps =
     showTripControls && line ? { line, busRoute, crRoute, ferryRoute } : undefined;
 

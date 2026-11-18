@@ -25,7 +25,7 @@ import {
   useMajorEvents,
 } from '../../../common/utils/majorEvents';
 import type { ParamsType } from '../../speed/constants/speeds';
-import { explainGaps, usePageShutdowns } from '../../shutdowns';
+import { explainGaps, useOtherLineShutdowns, usePageShutdowns } from '../../shutdowns';
 import { hasFleetMetric, type FleetMetric } from '../constants/fleetTypes';
 
 interface FleetAgeChartProps {
@@ -58,6 +58,7 @@ export const FleetAgeChart = ({
   // service metrics while cars still ran (and were sampled) on the remaining branches.
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
   const shuttlingBlocks = showShuttling
     ? hideGapsExplainedByEvents(
         explainGaps(
@@ -140,6 +141,7 @@ export const FleetAgeChart = ({
                   ...shuttlingBlocks,
                   ...getNoDataSinceLatestAnnotation(labels),
                   ...getMajorEventAnnotations(events),
+                  ...otherShutdowns.annotations,
                 ],
               },
             },

@@ -3,6 +3,8 @@ import dayjs from 'dayjs';
 import type { Block } from '../../../common/components/charts/TimeSeriesChart';
 import { annotationTooltip } from '../../../common/components/charts/annotationTooltip';
 import { CHART_COLORS } from '../../../common/constants/colors';
+import { LINE_OBJECTS } from '../../../common/constants/lines';
+import { hexWithAlpha } from '../../../common/utils/general';
 import { DATE_FORMAT } from '../../../common/constants/dates';
 import { prettyDate, wallClock } from '../../../common/utils/date';
 import { crStations, rtStations } from '../../../common/constants/stations';
@@ -375,3 +377,47 @@ export const explainGapBlocks = (
       };
     });
   });
+
+/** Lines whose shutdowns can be shown on this line's charts: the rest of the subway. */
+export const otherShutdownLines = (lineShort: LineShort | undefined): LineShort[] => {
+  if (lineShort === 'Commuter Rail') return RAPID_TRANSIT_LINES;
+  if (!lineShort || !RAPID_TRANSIT_LINES.includes(lineShort)) return [];
+  return RAPID_TRANSIT_LINES.filter((line) => line !== lineShort);
+};
+
+const OTHER_LINE_BAND_ALPHA = 0.12;
+
+/**
+ * Faint bands in each line's color for the days its shuttles and suspensions ran, to show on
+ * another line's charts. Captions would crowd a long range, so each band explains itself on hover.
+ */
+export const otherLineShutdownBlocks = (
+  viewsByLine: { line: LineShort; views: ShutdownView[] }[]
+): Block[] =>
+  viewsByLine.flatMap(({ line, views }) => {
+    const lineObject = Object.values(LINE_OBJECTS).find((object) => object.short === line);
+    const color = lineObject?.color ?? CHART_COLORS.GREY;
+    return views.filter(isLineWide).flatMap((view) =>
+      view.dayRanges.map(([from, to]) => ({
+        from: noonBefore(from),
+        to: noonAfter(to),
+        label: '',
+        fillColor: hexWithAlpha(color, OTHER_LINE_BAND_ALPHA),
+        tooltip: {
+          title: `${lineObject?.name ?? line} · ${view.label}`,
+          lines: [shutdownDates(view), view.shutdown.header],
+        },
+      }))
+    );
+  });
+
+/** The same bands as Chart.js annotations. They're faint enough to draw over the data, so filled charts don't hide them. */
+export const blocksToBandAnnotations = (blocks: Block[]): Annotation[] =>
+  blocks.map((block) => ({
+    type: 'box',
+    xMin: block.from,
+    xMax: block.to,
+    backgroundColor: block.fillColor,
+    borderWidth: 0,
+    ...(block.tooltip ? annotationTooltip(block.tooltip) : {}),
+  }));

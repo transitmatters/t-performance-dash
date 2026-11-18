@@ -100,7 +100,14 @@ export const AggregateLineChart = ({
     temperatureEnabled: tempEnabled,
     geometryPlugin,
     weatherAt,
-  } = useChartLayers({ startDate, endDate, granularity: 'daily', enabled: !hourly && !fill });
+  } = useChartLayers({
+    startDate,
+    endDate,
+    granularity: 'daily',
+    enabled: !hourly && !fill,
+    // Charts by time of day span many dates at every point, so there's no day to mark.
+    withOtherShutdowns: !hourly && !byTime,
+  });
   const { weather } = layers;
   const temperatureSeries = useMemo(
     () => (!hourly && !fill && tempEnabled && weather ? getDailyTemperatureSeries(weather) : null),

@@ -23,6 +23,7 @@ import { ChartActions } from '../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { getNoDataSinceLatestAnnotation } from '../service/utils/graphUtils';
 import { getMajorEventAnnotations, useMajorEvents } from '../../common/utils/majorEvents';
+import { useOtherLineShutdowns } from '../shutdowns';
 
 interface RidershipGraphProps {
   data: RidershipCount[];
@@ -61,6 +62,7 @@ export const RidershipGraph = ({
   const seasonalMaximumFor = stationName ? undefined : seasonal.maximumFor;
   const seasonalPending = !stationName && seasonal.isPending;
   const events = useMajorEvents(line, startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
@@ -204,6 +206,7 @@ export const RidershipGraph = ({
                     ),
                     ...serviceDateBlocks,
                     ...getMajorEventAnnotations(events),
+                    ...otherShutdowns.annotations,
                   ],
                 },
               },
@@ -295,6 +298,7 @@ export const RidershipGraph = ({
     startDate,
     endDate,
     events,
+    otherShutdowns.annotations,
     unit,
     tooltipFormat,
     serviceEnd,
