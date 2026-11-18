@@ -37,7 +37,6 @@ export const TheRideReliability = ({
           <StatCard label="Completed trips on time" value={formatPercent(stats.onTime)} />
           <StatCard label="Completed trips per day" value={formatCount(stats.tripsPerDay)} />
           <StatCard label="Missed trips" value={formatCount(stats.missed)} />
-          <StatCard label="Rider no-shows" value={formatCount(stats.noShows)} />
         </StatCardGrid>
       )}
       <Widget
