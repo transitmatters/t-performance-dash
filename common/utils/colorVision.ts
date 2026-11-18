@@ -21,7 +21,7 @@ export const colorVisionPalette = <T extends object>(standard: T, colorblind: Pa
 
 /**
  * A React key that changes with colorblind mode. The page, the sidebar's nav, and the command
- * palette take it; the sidebar footer holding the toggle doesn't, so it keeps focus.
+ * palette take it.
  */
 export const useColorVisionKey = () =>
   useThemeStore((state) => (state.colorblind ? 'colorblind' : 'standard'));

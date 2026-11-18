@@ -1,13 +1,15 @@
 import dayjs from 'dayjs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { getWeekStart } from '../../../common/utils/date';
 import {
   WINDOW_START,
   YEAR_OVER_YEAR_START,
   buildRidershipRow,
+  toSlot,
   trailingWindowLabel,
 } from './scorecardUtils';
+import type { SlotQuery } from './scorecardUtils';
 
 /** Weekly ridership from YEAR_OVER_YEAR_START to two weeks ago, like the bus feed. */
 const ridership = (count: (weeksAgo: number) => number): RidershipCount[] => {
@@ -69,5 +71,64 @@ describe('trailingWindowLabel', () => {
   it('names the end date when the data is well behind today', () => {
     const end = dayjs().subtract(60, 'day');
     expect(trailingWindowLabel(end.format('YYYY-MM-DD'))).toBe(`30 days to ${end.format('MMM D')}`);
+  });
+});
+
+describe('toSlot', () => {
+  const meta = { key: 'speed', label: 'Speed', subtitle: 'Average' } as const;
+  const row = buildRidershipRow(
+    ridership(() => 1000),
+    '#000'
+  );
+  const query = (overrides: Partial<SlotQuery> = {}): SlotQuery => ({
+    data: undefined,
+    isError: false,
+    isFetching: false,
+    refetch: vi.fn(),
+    ...overrides,
+  });
+
+  it('is loading until its data arrives', () => {
+    expect(toSlot(meta, [query({ isFetching: true })], () => row).status).toBe('loading');
+  });
+
+  it('waits for every query it needs', () => {
+    const slot = toSlot(meta, [query({ data: [] }), query({ isFetching: true })], () => row);
+    expect(slot.status).toBe('loading');
+  });
+
+  it('waits while asked to, even with its data', () => {
+    expect(toSlot(meta, [query({ data: [] })], () => row, true).status).toBe('loading');
+  });
+
+  it('is ready with the built row', () => {
+    const slot = toSlot(meta, [query({ data: [] })], () => row);
+    expect(slot.status).toBe('ready');
+    expect(slot.row).toBe(row);
+  });
+
+  it('is empty when the data builds no row', () => {
+    expect(toSlot(meta, [query({ data: [] })], () => null).status).toBe('empty');
+  });
+
+  it('keeps data a later refetch failed to replace', () => {
+    expect(toSlot(meta, [query({ data: [], isError: true })], () => row).status).toBe('ready');
+  });
+
+  it('retries only the queries that failed', () => {
+    const loaded = query({ data: [] });
+    const failed = query({ isError: true });
+    const slot = toSlot(meta, [loaded, failed], () => row);
+    expect(slot.status).toBe('error');
+    expect(slot.isRetrying).toBe(false);
+    slot.retry?.();
+    expect(failed.refetch).toHaveBeenCalledOnce();
+    expect(loaded.refetch).not.toHaveBeenCalled();
+  });
+
+  it('shows an error over waiting, and when a retry is under way', () => {
+    const slot = toSlot(meta, [query({ isError: true, isFetching: true })], () => row, true);
+    expect(slot.status).toBe('error');
+    expect(slot.isRetrying).toBe(true);
   });
 });

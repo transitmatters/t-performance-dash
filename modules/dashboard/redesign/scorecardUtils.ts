@@ -3,13 +3,14 @@ import dayjs from 'dayjs';
 import { TODAY_STRING } from '../../../common/constants/dates';
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { getWeekStart } from '../../../common/utils/date';
+import { getSpeedGraphConfig } from '../../speed/constants/speeds';
 import type { DatedValue } from '../../../common/utils/dateAggregation';
 import {
   getTrailingWindowDelta,
   getMonthlyTrend,
   getYearOverYearDelta,
 } from '../../../common/utils/dateAggregation';
-import type { ScorecardRow, DeltaSentiment, MetricKey } from './types';
+import type { ScorecardRow, ScorecardSlot, DeltaSentiment, MetricKey } from './types';
 
 /** The scorecard is calendar-month-shaped, so it fetches its own fixed trailing window
  * independent of the page's Week/Month/Year/All-time selector (which is trailing-N-days
@@ -26,6 +27,9 @@ export const YEAR_OVER_YEAR_START = dayjs()
 /** The chart card shows the last 30 days with data, out of a 60-day fetch so a lagging feed
  * still fills the window. */
 export const CHART_FETCH_START = dayjs(TODAY_STRING).subtract(60, 'day').format('YYYY-MM-DD');
+
+/** The chart card's aggregation for those 60 days: daily. */
+export const CHART_CONFIG = getSpeedGraphConfig(dayjs(CHART_FETCH_START), dayjs(TODAY_STRING));
 
 /** Weekly series are dated by week start, so allow a few weeks before flagging data as old. */
 const STALE_AFTER_DAYS = 21;
@@ -154,6 +158,41 @@ export const buildRidershipRow = (
   };
 };
 
+/** The parts of a React Query result a slot reads. */
+export interface SlotQuery {
+  data: unknown;
+  isError: boolean;
+  isFetching: boolean;
+  refetch: () => unknown;
+}
+
+/**
+ * A row's slot from the queries it needs. A query that has data counts as loaded even if a later
+ * refetch failed. `waiting` holds the row back for a query it can do without but would otherwise
+ * pop in later, such as the ridership peak.
+ */
+export const toSlot = (
+  meta: Pick<ScorecardSlot, 'key' | 'label' | 'subtitle'>,
+  queries: SlotQuery[],
+  build: () => ScorecardRow | null | undefined,
+  waiting = false
+): ScorecardSlot => {
+  const failed = queries.filter((query) => query.data === undefined && query.isError);
+  if (failed.length) {
+    return {
+      ...meta,
+      status: 'error',
+      retry: () => failed.forEach((query) => query.refetch()),
+      isRetrying: failed.some((query) => query.isFetching),
+    };
+  }
+  if (waiting || queries.some((query) => query.data === undefined)) {
+    return { ...meta, status: 'loading' };
+  }
+  const row = build();
+  return row ? { ...meta, status: 'ready', row } : { ...meta, status: 'empty' };
+};
+
 /** Speed from trip metrics: miles covered over hours spent, skipping days with no service. */
 export const toSpeedPoints = (
   data: { date: string; miles_covered: number; total_time: number }[]
@@ -164,6 +203,10 @@ export const toSpeedPoints = (
       date: point.date,
       value: point.miles_covered / (point.total_time / 3600),
     }));
+
+/** Whether any period in trip metrics had service. */
+export const hasTrips = (data: { miles_covered: number }[]) =>
+  data.some((point) => point.miles_covered);
 
 /** Trim trailing days with no data (the feed lags a couple days) so the chart doesn't end in a
  * grey "No data" slab. */

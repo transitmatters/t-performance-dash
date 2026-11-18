@@ -55,6 +55,7 @@ import {
 import { SegmentPopupContent } from './BusSpeedSegmentPopupContent';
 import { BusStopPopupContent, StationPopupContent } from './BusSpeedStopPopupContent';
 import { ResetViewControl } from './ResetViewControl';
+import { findStopBounds } from './stopBounds';
 
 // Registered once at module scope, onto the shared maplibre-gl module. This file is only
 // ever reached through BusSpeedMapDetails' `dynamic(..., { ssr: false })` import, so it
@@ -90,14 +91,14 @@ class ArrayBufferSource implements PMTilesSource {
 }
 
 /**
- * Hands the fetched stops archive to the pmtiles protocol under its real URL, and returns the
- * pmtiles:// URL a Source can point at. The protocol resolves that URL to this in-memory
- * instance instead of opening a fetch-backed one of its own.
+ * Hands the fetched stops archive to the pmtiles protocol under its real URL, and returns that
+ * URL as the key it's registered under. A Source pointed at it with pmtiles:// gets this in-memory
+ * instance instead of a fetch-backed one of its own.
  */
 const registerStopsArchive = (buffer: ArrayBuffer): string => {
   const key = new URL(BUS_SPEED_STOPS_PATH, window.location.origin).toString();
   if (!protocol.get(key)) protocol.add(new PMTiles(new ArrayBufferSource(key, buffer)));
-  return `pmtiles://${key}`;
+  return key;
 };
 
 // CARTO's Positron, and Dark Matter in dark mode. Free to use with attribution, and already the
@@ -456,10 +457,11 @@ export const BusSpeedMapView = ({
   // Undefined until the archive loads, and for good if it's missing or fails -- the stops are
   // context only, so the map carries on without them.
   const { data: stopsArchive } = useBusSpeedStops();
-  const stopsUrl = useMemo(
+  const stopsKey = useMemo(
     () => (stopsArchive ? registerStopsArchive(stopsArchive) : undefined),
     [stopsArchive]
   );
+  const stopsUrl = stopsKey && `pmtiles://${stopsKey}`;
 
   // Which routes' lines are drawn, and which can be hovered. Where every route on a shared stop
   // pair is selected (as they all are with no route picked), the pair's pooled feature is drawn
@@ -716,29 +718,50 @@ export const BusSpeedMapView = ({
       cancelled = true;
     };
 
-    // Bounded to one retry: tiles for the focus may not be loaded yet if the user (or, on
-    // first mount in segment-focus mode, the default view) was somewhere else, so jump (no
-    // animation) out to the whole network -- checked against a real month's tiles, every route
-    // with geometry at zoom 8 still has it at 9-11 -- and try again once those tiles are in. If
-    // the focus still has nothing after that, it's missing at all zooms and there's nothing
-    // sensible left to fly to.
+    // A single segment is often just one short block -- a much tighter maxZoom than a whole
+    // route so the dialog map actually reads at street level instead of stopping at the same
+    // zoom a multi-mile route would.
+    const fitFocus = (bounds: LngLatBounds) =>
+      map.fitBounds(bounds, { padding: 48, duration: 800, maxZoom: segmentStops ? 18 : 15 });
+
+    // A segment in a dense area is thinned out of the tiles below about zoom 12, so the network
+    // view can't find it. Jump to its stops instead, where its tiles are complete, and fit the
+    // segment itself once they're in.
+    const jumpToSegmentStops = async () => {
+      const archive = stopsKey ? protocol.get(stopsKey) : undefined;
+      if (!segmentStops || !routeIds || !archive) return;
+      const stopBounds = await findStopBounds(archive, routeIds, [
+        segmentStops.from,
+        segmentStops.to,
+      ]).catch(() => undefined);
+      if (cancelled || !stopBounds) return;
+      map.once('idle', () => {
+        const bounds = cancelled ? undefined : boundsOfLoadedFocus();
+        if (bounds) fitFocus(bounds);
+      });
+      map.fitBounds(stopBounds, { padding: 48, duration: 0, maxZoom: 16 });
+    };
+
+    // Tiles for the focus may not be loaded yet if the user (or, on first mount in segment-focus
+    // mode, the default view) was somewhere else, so jump (no animation) out to the whole
+    // network -- every route has some geometry there -- and try again once those tiles are in.
+    // A segment still missing then is thinned out at that zoom, so look it up by its stops.
     const attempt = (isRetry: boolean) => {
       if (cancelled) return;
       const bounds = boundsOfLoadedFocus();
       if (bounds) {
-        // A single segment is often just one short block -- a much tighter maxZoom than a
-        // whole route so the dialog map actually reads at street level instead of stopping at
-        // the same zoom a multi-mile route would.
-        map.fitBounds(bounds, { padding: 48, duration: 800, maxZoom: segmentStops ? 18 : 15 });
+        fitFocus(bounds);
       } else if (!isRetry) {
         const view = networkView(map);
         if (!view) return;
         map.once('idle', () => attempt(true));
         map.jumpTo(view);
+      } else {
+        void jumpToSegmentStops();
       }
     };
     attempt(false);
-  }, [routeFilterClause, segmentStops, direction]);
+  }, [routeFilterClause, routeIds, segmentStops, direction, stopsKey]);
 
   // The home button. With nothing selected that's just the network overview, but a focus can't
   // be fitted straight from where the user is: zoomed in, only the tiles on screen are loaded,
@@ -769,9 +792,10 @@ export const BusSpeedMapView = ({
   // down one exact line rather than a whole route's worth of them. Keeping this a plain route
   // id in the ordinary case (rather than always including direction) matters: it means
   // toggling direction on the full map never re-triggers a fly-to, preserving today's
-  // "direction is just a filter, not a fly-to" feel.
+  // "direction is just a filter, not a fly-to" feel. Segment-focus mode also flies again once the
+  // stops archive arrives, which it needs for a segment the network view can't find.
   const focusKey = segmentStops
-    ? `${routeFilter ?? ''}|${direction}|${segmentStops.from}|${segmentStops.to}`
+    ? `${routeFilter ?? ''}|${direction}|${segmentStops.from}|${segmentStops.to}|${Boolean(stopsKey)}`
     : routeFilter;
 
   // Re-runs the fly-to on every focus change, and back out to the network overview when the
@@ -787,7 +811,8 @@ export const BusSpeedMapView = ({
     runFocusFlight();
     return () => cancelPendingFlightRef.current();
     // runFocusFlight is recreated only when focusKey's own inputs (routeFilter, direction,
-    // segmentStops) change, so it's redundant here -- focusKey is the one true dependency.
+    // segmentStops, the stops archive) change, so it's redundant here -- focusKey is the one
+    // true dependency.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusKey]);
 

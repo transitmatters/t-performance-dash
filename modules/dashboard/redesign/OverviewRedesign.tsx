@@ -14,12 +14,11 @@ import type { MetricCopy } from './MetricChartCard';
 import { SubwayMetricChart } from './SubwayMetricChart';
 import { ServiceAlertsCard } from './ServiceAlertsCard';
 import { AccessibilityCard } from './AccessibilityCard';
-import type { MetricKey, ScorecardRow } from './types';
+import type { MetricKey, ScorecardSlot } from './types';
 
 interface OverviewLayoutProps {
-  rows: ScorecardRow[];
-  isLoading: boolean;
-  skeletonRows?: number;
+  slots: ScorecardSlot[];
+  color?: string;
   selectedMetric: MetricKey;
   onSelectMetric: (metric: MetricKey) => void;
   chart: ReactNode;
@@ -41,13 +40,13 @@ const OverviewLayout = ({ chart, chartCopy, cards, ...scorecard }: OverviewLayou
 
 const SubwayOverview = ({ lineShort }: { lineShort: LineShort }) => {
   const { line } = useDelimitatedRoute();
-  const { rows, isLoading } = useSubwayScorecardRows(line, lineShort);
+  const { slots, color } = useSubwayScorecardRows(line, lineShort);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('speed');
 
   return (
     <OverviewLayout
-      rows={rows}
-      isLoading={isLoading}
+      slots={slots}
+      color={color}
       selectedMetric={selectedMetric}
       onSelectMetric={setSelectedMetric}
       chart={<SubwayMetricChart metric={selectedMetric} />}
@@ -71,7 +70,7 @@ const BUS_CHART_COPY: MetricCopy = {
 const BusOverview = () => {
   const { query } = useDelimitatedRoute();
   const busRoute = query.busRoute ?? '1';
-  const { rows, isLoading } = useBusScorecardRows(busRoute);
+  const { slots, color } = useBusScorecardRows(busRoute);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('speed');
   const showsReliability = hasBusReliability(busRoute);
   // The page stays mounted when switching routes, so a route without the Reliability row falls back
@@ -80,9 +79,8 @@ const BusOverview = () => {
 
   return (
     <OverviewLayout
-      rows={rows}
-      isLoading={isLoading}
-      skeletonRows={showsReliability ? 5 : 4}
+      slots={slots}
+      color={color}
       selectedMetric={metric}
       onSelectMetric={setSelectedMetric}
       chart={<BusMetricChart metric={metric} busRoute={busRoute} />}
@@ -95,15 +93,14 @@ const BusOverview = () => {
 const CommuterRailOverview = () => {
   const { query } = useDelimitatedRoute();
   const crRoute = query.crRoute ?? 'CR-Fairmount';
-  const { rows, isLoading } = useCrScorecardRows(crRoute);
+  const { slots, color } = useCrScorecardRows(crRoute);
   const chartCopy = useCrChartCopy(crRoute);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('ridership');
 
   return (
     <OverviewLayout
-      rows={rows}
-      isLoading={isLoading}
-      skeletonRows={2}
+      slots={slots}
+      color={color}
       selectedMetric={selectedMetric}
       onSelectMetric={setSelectedMetric}
       chart={<CrMetricChart metric={selectedMetric} crRoute={crRoute} />}
