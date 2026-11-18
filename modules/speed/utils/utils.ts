@@ -1,4 +1,4 @@
-import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
 
 const halves = <T>(values: T[]): [T[], T[]] => {
   const mid = Math.floor(values.length / 2);
@@ -6,7 +6,7 @@ const halves = <T>(values: T[]): [T[], T[]] => {
 };
 
 /** Total miles over total hours, so a partial week or a holiday counts for only the trips it ran. */
-const weightedMph = (rows: DeliveredTripMetrics[]) => {
+const weightedMph = (rows: SpeedTripMetrics[]) => {
   const miles = rows.reduce((sum, d) => sum + d.miles_covered, 0);
   const hours = rows.reduce((sum, d) => sum + d.total_time, 0) / 3600;
   return hours ? miles / hours : NaN;
@@ -18,7 +18,7 @@ const weightedMph = (rows: DeliveredTripMetrics[]) => {
  * a "trending up/down over this window" signal, not a fresh query. `historicalMax` should be the
  * same baseline the chart draws, so the card and the hover agree.
  */
-export const getSpeedStats = (data: DeliveredTripMetrics[], historicalMax: number | undefined) => {
+export const getSpeedStats = (data: SpeedTripMetrics[], historicalMax: number | undefined) => {
   const rows = data.filter((d) => d.miles_covered && d.total_time);
   const mphs = rows
     .map((d) => d.miles_covered / (d.total_time / 3600))

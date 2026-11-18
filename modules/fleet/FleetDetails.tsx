@@ -153,20 +153,6 @@ export function FleetDetails() {
               />
             </Widget>
           )}
-          <Widget
-            title={metrics.age.title}
-            subtitle={subtitle('Average across the line')}
-            ready={[fleetMetrics]}
-          >
-            <FleetAgeGraphWrapper
-              data={fleetMetrics.data!}
-              metric={metrics.age}
-              showShuttling={shuttling}
-              config={config}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </Widget>
           {fleetTypes && (
             <Widget
               title={metrics.mixTitle}
@@ -187,6 +173,20 @@ export function FleetDetails() {
               />
             </Widget>
           )}
+          <Widget
+            title={metrics.age.title}
+            subtitle={subtitle('Average across the line')}
+            ready={[fleetMetrics]}
+          >
+            <FleetAgeGraphWrapper
+              data={fleetMetrics.data!}
+              metric={metrics.age}
+              showShuttling={shuttling}
+              config={config}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </Widget>
           <p className="text-sm text-muted-foreground">
             {isBus &&
               'Based on the buses seen at one stop per direction on each route, so expect some day-to-day noise. '}

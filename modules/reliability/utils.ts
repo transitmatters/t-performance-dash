@@ -40,26 +40,23 @@ const sumCounts = (counts: (ReliabilityCounts | undefined)[]): ReliabilityCounts
 
 export const getTheRideStats = (data: ReliabilityEntry[]) => {
   const days = sum(data, (e) => e.days);
-  const withNoShows = data.filter((e) => e.noShows != null && e.missed != null);
+  const withMissed = data.filter((e) => e.missed != null);
   return {
     onTime: percent(
       sum(data, (e) => e.onTime),
       sum(data, (e) => e.completed)
     ),
     tripsPerDay: days ? sum(data, (e) => e.completed) / days : undefined,
-    missed: withNoShows.length ? sum(withNoShows, (e) => e.missed) : undefined,
-    noShows: withNoShows.length ? sum(withNoShows, (e) => e.noShows) : undefined,
+    missed: withMissed.length ? sum(withMissed, (e) => e.missed) : undefined,
   };
 };
 
 export const getCommuterRailStats = (data: ReliabilityEntry[]) => {
   const total = sumCounts(data.map((e) => e as ReliabilityCounts));
   const peak = sumCounts(data.map((e) => e.peak));
-  const offPeak = sumCounts(data.map((e) => e.offPeak));
   return {
     onTime: percent(total.otpNumerator, total.otpDenominator),
     peakOnTime: percent(peak.otpNumerator, peak.otpDenominator),
-    offPeakOnTime: percent(offPeak.otpNumerator, offPeak.otpDenominator),
     cancelled: total.cancelled,
   };
 };

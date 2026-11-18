@@ -136,12 +136,25 @@ export function ReliabilityDetails() {
               </p>
             </>
           ) : (
-            <p>
-              Daily on-time and cancellation counts by line, published by the MBTA on its open data
-              portal, split into peak and off-peak service. Branches that share a line, such as Fall
-              River and New Bedford or trains running via the Fairmount Line, are counted under
-              their line. The data is updated monthly, so the latest weeks may be missing.
-            </p>
+            <>
+              <p>
+                Daily on-time and cancellation counts by line, published by the MBTA on its open
+                data portal. Branches that share a line, such as Fall River and New Bedford or
+                trains running via the Fairmount Line, are counted under their line. The data is
+                updated monthly, so the latest weeks may be missing.
+              </p>
+              <p>
+                A train is on time if it reaches its last stop no more than 5 minutes after the
+                scheduled time, the standard in the MBTA&apos;s Service Delivery Policy. Only the
+                last stop is checked, so a train that runs late along the way but makes up the time
+                still counts as on time. A cancelled train counts as not on time.
+              </p>
+              <p>
+                Peak trains are weekday trains that reach their Boston terminal between 6 and 10 AM,
+                or leave Boston between 3:30 and 7 PM. Every other train, including all weekend
+                trains, is off-peak.
+              </p>
+            </>
           )}
         </DataNotes>
       </ChartPageDiv>
