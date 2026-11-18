@@ -6,7 +6,7 @@ import { PeriodDateControl } from '../../../modules/busspeedmap/controls/PeriodD
 import { usePeriodDateLabel } from '../../../modules/busspeedmap/useBusSpeedParams';
 import { usePageControls } from '../../hooks/usePageControls';
 import { usePageHeading } from '../../hooks/usePageHeading';
-import { useMajorEventsStore } from '../../state/majorEventsStore';
+import { useDisplayOptions } from '../../state/displayStore';
 import { FOCUS_RING_ON_SURFACE, lineColorBackground, textOnLineColor } from '../../styles/general';
 import { ToggleSwitch } from '../inputs/ToggleSwitch';
 import { DateSelection } from '../inputs/DateSelection/DateSelection';
@@ -58,12 +58,16 @@ export const MobileControlPanel = () => {
     showTripControls,
     showDateControl,
     showPeriodDate,
-    showDisplayMenu,
+    showEventsOption,
+    showOtherShutdownsOption,
   } = usePageControls();
   const { presetName, dates } = useDateSummary(queryType);
   const periodDate = usePeriodDateLabel();
   const { lineName, pageTitle } = usePageHeading();
-  const { showEvents, setShowEvents } = useMajorEventsStore();
+  const displayOptions = useDisplayOptions({
+    withEvents: showEventsOption,
+    withOtherShutdowns: showOtherShutdownsOption,
+  });
   const stationProps =
     showTripControls && line ? { line, busRoute, crRoute, ferryRoute } : undefined;
 
@@ -126,13 +130,13 @@ export const MobileControlPanel = () => {
           <div className="flex flex-col gap-4 empty:hidden">
             <PageFilters />
           </div>
-          {showDisplayMenu && (
-            <ToggleSwitch
-              enabled={showEvents}
-              setEnabled={setShowEvents}
-              label="Show major events on charts"
-            />
-          )}
+          <LabeledControl label="Show on charts">
+            <div className="flex flex-col gap-3">
+              {displayOptions.map(({ key, label, checked, setChecked }) => (
+                <ToggleSwitch key={key} enabled={checked} setEnabled={setChecked} label={label} />
+              ))}
+            </div>
+          </LabeledControl>
         </div>
         <SheetFooter>
           <SheetClose className={classNames('h-11', lineButton)}>Done</SheetClose>

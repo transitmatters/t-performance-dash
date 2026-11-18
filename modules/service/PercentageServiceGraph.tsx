@@ -14,7 +14,7 @@ import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import type { ParamsType } from '../speed/constants/speeds';
-import { explainGaps, usePageShutdowns } from '../shutdowns';
+import { explainGaps, useOtherLineShutdowns, usePageShutdowns } from '../shutdowns';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../common/components/charts/ChartDiv';
 import { ChartActions } from '../../common/components/charts/ChartActions';
@@ -57,6 +57,8 @@ export const PercentageServiceGraph = ({
   const shutdowns = usePageShutdowns('line', startDate, endDate);
 
   const events = useMajorEvents(line, startDate, endDate);
+
+  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
@@ -158,6 +160,7 @@ export const PercentageServiceGraph = ({
                     ...shuttlingBlocks,
                     ...getNoDataSinceLatestAnnotation(labels),
                     ...getMajorEventAnnotations(events),
+                    ...otherShutdowns.annotations,
                   ],
                 },
               },
@@ -244,6 +247,7 @@ export const PercentageServiceGraph = ({
     startDate,
     endDate,
     events,
+    otherShutdowns,
     unit,
     tooltipFormat,
   ]);

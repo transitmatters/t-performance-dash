@@ -26,7 +26,7 @@ import {
 } from '../../../common/utils/majorEvents';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
 import type { ParamsType } from '../constants/speeds';
-import { explainGaps, usePageShutdowns } from '../../shutdowns';
+import { explainGaps, useOtherLineShutdowns, usePageShutdowns } from '../../shutdowns';
 
 interface SpeedGraphProps {
   data: SpeedTripMetrics[];
@@ -53,6 +53,7 @@ export const SpeedGraph = ({
   const labels = data.map((point) => point.date);
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
   const shuttlingBlocks = hideGapsExplainedByEvents(
     explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
       startDate,
@@ -177,6 +178,7 @@ export const SpeedGraph = ({
                   ...shuttlingBlocks,
                   ...getNoDataSinceLatestAnnotation(labels),
                   ...getMajorEventAnnotations(events),
+                  ...otherShutdowns.annotations,
                 ],
               },
             },

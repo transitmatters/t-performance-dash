@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { DeliveredTripMetricsBus } from '../../../common/types/dataPoints';
 import {
   DEFAULT_VISIBLE_BANDS,
+  bandExtremes,
   bandMph,
   flattenBandsForCsv,
   parseVisibleBands,
@@ -30,8 +31,9 @@ const row = (overrides: Partial<DeliveredTripMetricsBus> = {}): DeliveredTripMet
 });
 
 describe('parseVisibleBands', () => {
-  it('shows every line when the param is missing', () => {
+  it('shows All day and the rush hours when the param is missing', () => {
     expect(parseVisibleBands(undefined)).toEqual(DEFAULT_VISIBLE_BANDS);
+    expect(DEFAULT_VISIBLE_BANDS).toEqual(['all_day', 'am_peak', 'pm_peak']);
   });
 
   it('keeps known keys in chronological order and drops the rest', () => {
@@ -83,5 +85,32 @@ describe('flattenBandsForCsv', () => {
       midday_mph: '',
       late_night_mph: '',
     });
+  });
+});
+
+describe('bandExtremes', () => {
+  const band = (miles_covered: number, total_time: number) => ({
+    count: 1,
+    n_traversals: 1,
+    n_interpolated: 0,
+    miles_covered,
+    total_time,
+  });
+
+  it('weights each band by its miles and hours across every row', () => {
+    const extremes = bandExtremes([
+      row({ time_bands: { am_peak: band(10, 3600), pm_peak: band(6, 3600) } }),
+      row({ time_bands: { am_peak: band(30, 3600), early_am: band(12, 3600) } }),
+    ]);
+    expect(extremes?.slowest).toEqual({ band: 'pm_peak', mph: 6 });
+    expect(extremes?.fastest).toEqual({ band: 'am_peak', mph: 20 });
+  });
+
+  it('skips bands with no miles, and is undefined with no breakdown at all', () => {
+    expect(bandExtremes([row()])).toEqual({
+      slowest: { band: 'am_peak', mph: 8 },
+      fastest: { band: 'am_peak', mph: 8 },
+    });
+    expect(bandExtremes([row({ time_bands: undefined })])).toBeUndefined();
   });
 });

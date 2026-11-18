@@ -36,7 +36,6 @@ export const CommuterRailReliability = ({
         <StatCardGrid>
           <StatCard label="Trains on time" value={formatPercent(stats.onTime)} />
           <StatCard label="Peak on time" value={formatPercent(stats.peakOnTime)} />
-          <StatCard label="Off-peak on time" value={formatPercent(stats.offPeakOnTime)} />
           <StatCard label="Cancelled trains" value={formatCount(stats.cancelled)} />
         </StatCardGrid>
       )}
