@@ -7,13 +7,22 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { Widget } from '../../common/components/widgets';
+import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { DAY_FILTER_OPTIONS, useChartToggle } from '../../common/hooks/useChartToggle';
+import { halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { useDelimitatedRoute, useSetQueryParam } from '../../common/utils/router';
+import { TIME_BANDS } from '../busspeedmap/constants';
 import type { DayType, TimeBand } from '../busspeedmap/types';
 import { BusSpeedGraph } from './charts/BusSpeedGraph';
 import { getSpeedGraphConfig } from './constants/speeds';
-import { BAND_DATA_START, parseVisibleBands, serializeVisibleBands } from './utils/busSpeedBands';
+import {
+  bandExtremes,
+  BUS_SPEED_DATA_START,
+  parseVisibleBands,
+  serializeVisibleBands,
+} from './utils/busSpeedBands';
+import { getSpeedStats } from './utils/utils';
 
 // Split by the day_type each daily row carries, from MBTA's holiday calendar -- the same split
 // the Speed Map's weekly/monthly tiles use.
@@ -22,6 +31,9 @@ const DAY_TYPE_PARAM: Record<(typeof DAY_FILTER_OPTIONS)[number][0], DayType | u
   weekday: 'business_day',
   weekend: 'weekend_or_holiday',
 };
+
+const mph = (value: number) => `${value.toFixed(1)} mph`;
+const bandLabel = (band: TimeBand) => TIME_BANDS.find(({ key }) => key === band)?.label ?? band;
 
 export function BusSpeedDetails() {
   const {
@@ -67,12 +79,9 @@ export function BusSpeedDetails() {
 
   const subtitle = dayType ? DAY_FILTER_OPTIONS.find(([key]) => key === dayFilter)?.[1] : undefined;
   const hasData = speeds.data?.some((row) => row.miles_covered);
-  const bandsShown = visible.some((key) => key !== 'all_day');
-  // Days with an all-day figure but no breakdown: the band lines are blank there while All day isn't.
-  const hasUnbandedDays = Boolean(speeds.data?.some((row) => row.miles_covered && !row.time_bands));
-  // day_type is recorded from the same date as the bands, so a weekday or weekend filter can't
-  // include anything earlier.
-  const dayTypeCutsRange = Boolean(dayType && startDate && startDate < BAND_DATA_START);
+  const stats = hasData ? getSpeedStats(speeds.data!, undefined) : undefined;
+  const extremes = hasData ? bandExtremes(speeds.data!) : undefined;
+  const startsBeforeData = Boolean(startDate && startDate < BUS_SPEED_DATA_START);
 
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
@@ -82,6 +91,32 @@ export function BusSpeedDetails() {
     <>
       <ChartPageDiv>
         <BusDataNotice />
+        {stats && Number.isFinite(stats.avgSpeed) && (
+          <StatCardGrid>
+            <StatCard
+              label="Average speed"
+              value={stats.avgSpeed.toFixed(1)}
+              unit="mph"
+              delta={statDelta({
+                delta: stats.avgSpeedDelta,
+                negligible: 0.2,
+                magnitude: `${stats.avgSpeedDelta > 0 ? '+' : ''}${mph(stats.avgSpeedDelta)}`,
+                words: ['faster', 'slower'],
+                detail: halvesDetail(stats.avgSpeedBefore, stats.avgSpeedAfter, mph),
+              })}
+            />
+            <StatCard
+              label="Slowest time of day"
+              value={extremes ? bandLabel(extremes.slowest.band) : '—'}
+              unit={extremes && mph(extremes.slowest.mph)}
+            />
+            <StatCard
+              label="Fastest time of day"
+              value={extremes ? bandLabel(extremes.fastest.band) : '—'}
+              unit={extremes && mph(extremes.fastest.mph)}
+            />
+          </StatCardGrid>
+        )}
         <Widget
           title="Speed"
           subtitle={subtitle}
@@ -93,21 +128,14 @@ export function BusSpeedDetails() {
               <BusSpeedGraph
                 data={speeds.data!}
                 config={config}
-                startDate={startDate}
+                startDate={startsBeforeData ? BUS_SPEED_DATA_START : startDate}
                 endDate={endDate}
                 visible={visible}
                 onVisibleChange={setVisible}
               />
-              {bandsShown && hasUnbandedDays && (
+              {startsBeforeData && (
                 <p className="text-xs text-muted-foreground">
-                  Time-of-day lines start on {dayjs(BAND_DATA_START).format('MMMM D, YYYY')}, when
-                  the per-band breakdown begins. Before that, only All day is available.
-                </p>
-              )}
-              {dayTypeCutsRange && (
-                <p className="text-xs text-muted-foreground">
-                  The weekday and weekend split starts on{' '}
-                  {dayjs(BAND_DATA_START).format('MMMM D, YYYY')}. Earlier days aren&apos;t shown.
+                  Bus speed data starts on {dayjs(BUS_SPEED_DATA_START).format('MMMM D, YYYY')}.
                 </p>
               )}
             </>

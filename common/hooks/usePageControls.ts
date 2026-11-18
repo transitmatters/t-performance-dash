@@ -28,7 +28,7 @@ export const usePageControls = () => {
   const config = page ? ALL_PAGES[page] : undefined;
   const section = config?.dateStoreSection;
   const isTrips = section === 'singleTrips' || section === 'multiTrips';
-  const showDisplayMenu = section !== 'singleTrips';
+  const showEventsOption = section !== 'singleTrips';
 
   return {
     visible:
@@ -50,8 +50,8 @@ export const usePageControls = () => {
     showDateControl: section !== 'overview' && (line !== undefined || section === 'system'),
     showPeriodDate: Boolean(config?.hasPeriodDate),
     // Events mark dates on a range; a single day has none to mark.
-    showDisplayMenu,
+    showEventsOption,
     // Only lines with a subway to compare against: rapid transit and Commuter Rail.
-    showOtherShutdownsToggle: showDisplayMenu && otherShutdownLines(lineShort).length > 0,
+    showOtherShutdownsOption: showEventsOption && otherShutdownLines(lineShort).length > 0,
   };
 };

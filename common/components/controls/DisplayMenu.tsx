@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faSliders } from '@fortawesome/free-solid-svg-icons';
-import { useMajorEventsStore } from '../../state/majorEventsStore';
+import { useDisplayOptions } from '../../state/displayStore';
 import { FOCUS_RING_ON_SURFACE } from '../../styles/general';
 import {
   DropdownMenu,
@@ -12,13 +12,8 @@ import {
 } from '../ui/dropdown-menu';
 
 /** View options that change how charts draw, not what data they show. Remembered per browser. */
-export const DisplayMenu = ({
-  showOtherShutdownsToggle,
-}: {
-  showOtherShutdownsToggle: boolean;
-}) => {
-  const { showEvents, setShowEvents, showOtherShutdowns, setShowOtherShutdowns } =
-    useMajorEventsStore();
+export const DisplayMenu = (pageOptions: { withEvents: boolean; withOtherShutdowns: boolean }) => {
+  const options = useDisplayOptions(pageOptions);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -33,35 +28,21 @@ export const DisplayMenu = ({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel>Show on charts</DropdownMenuLabel>
-        <DropdownMenuCheckboxItem
-          checked={showEvents}
-          onCheckedChange={setShowEvents}
-          // Keep the menu open so the change can be seen on the charts behind it.
-          onSelect={(event) => event.preventDefault()}
-          className="items-start"
-        >
-          <span className="flex flex-col">
-            <span>Major events</span>
-            <span className="text-xs text-muted-foreground">
-              Shutdowns, diversions and other big service changes
-            </span>
-          </span>
-        </DropdownMenuCheckboxItem>
-        {showOtherShutdownsToggle && (
+        {options.map(({ key, label, description, checked, setChecked }) => (
           <DropdownMenuCheckboxItem
-            checked={showOtherShutdowns}
-            onCheckedChange={setShowOtherShutdowns}
+            key={key}
+            checked={checked}
+            onCheckedChange={setChecked}
+            // Keep the menu open so the change can be seen on the charts behind it.
             onSelect={(event) => event.preventDefault()}
             className="items-start"
           >
             <span className="flex flex-col">
-              <span>Shutdowns on other lines</span>
-              <span className="text-xs text-muted-foreground">
-                Subway shuttles and suspensions that can shift riders onto this line
-              </span>
+              <span>{label}</span>
+              <span className="text-xs text-muted-foreground">{description}</span>
             </span>
           </DropdownMenuCheckboxItem>
-        )}
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -50,7 +50,7 @@ export const FERRY_ARRIVALS_START_DATE = '2026-10-12';
 const FERRY_ROUTE_TRIPS_MIN_DATES: Partial<Record<FerryRoute, string>> = {
   'Boat-F10': FERRY_LIVE_START_DATE,
 };
-export const BUS_MAX_DATE = '2026-06-30';
+export const BUS_MAX_DATE = '2026-09-30';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 /**
  * The per-segment speed dataset behind the speed map and leaderboard starts here. It's built

@@ -17,6 +17,7 @@ import type { WeatherHourly } from '../../../types/weather';
 import type { OldAlert } from '../../../types/alerts';
 import { ONE_HOUR } from '../../../constants/time';
 import { useOtherLineShutdowns } from '../../../../modules/shutdowns';
+import { useDisplayStore } from '../../../state/displayStore';
 import { alertKey, getAlertAnnotations, serviceDay } from './segments';
 import { chartGeometryPlugin } from './chartGeometryPlugin';
 import type { TrackGeometry } from './chartGeometryPlugin';
@@ -36,6 +37,8 @@ interface UseChartLayersOptions {
 
 export interface ChartLayers {
   enabled: boolean;
+  showWeather: boolean;
+  showTemperature: boolean;
   granularity: WeatherGranularity;
   weather: WeatherHourly[] | undefined;
   weatherRuns: PlacedWeatherRun[];
@@ -60,6 +63,8 @@ export const useChartLayers = ({
   withAlerts = false,
   withOtherShutdowns = false,
 }: UseChartLayersOptions) => {
+  const showWeather = useDisplayStore((store) => store.showWeather);
+  const showTemperature = useDisplayStore((store) => store.showTemperature);
   const hourly = granularity === 'hourly';
   const serviceWindow = hourly && startDate ? serviceDay(startDate) : undefined;
   const { data, isLoading: isWeatherLoading } = useWeatherData(
@@ -68,7 +73,7 @@ export const useChartLayers = ({
       // A day's service runs past midnight
       end_date: serviceWindow ? serviceWindow.close.format('YYYY-MM-DD') : endDate,
     },
-    enabled && Boolean(startDate && endDate)
+    enabled && (showWeather || showTemperature) && Boolean(startDate && endDate)
   );
   const windowStart = serviceWindow?.open.valueOf();
   const windowEnd = serviceWindow?.close.valueOf();
@@ -82,19 +87,22 @@ export const useChartLayers = ({
   }, [data, windowStart, windowEnd]);
   const weatherRuns = useMemo(
     () =>
-      placeWeatherRuns(
-        weather ?? [],
-        granularity,
-        windowStart === undefined || windowEnd === undefined
-          ? undefined
-          : { start: windowStart, end: windowEnd }
-      ),
-    [weather, granularity, windowStart, windowEnd]
+      showWeather
+        ? placeWeatherRuns(
+            weather ?? [],
+            granularity,
+            windowStart === undefined || windowEnd === undefined
+              ? undefined
+              : { start: windowStart, end: windowEnd }
+          )
+        : [],
+    [showWeather, weather, granularity, windowStart, windowEnd]
   );
   const alerts = useAlertStore((store) => store.alerts);
   const isAlertsLoading = useAlertStore((store) => store.isLoading);
   const pinned = useLayerStore((store) => store.pinned);
-  const temperatureEnabled = useLayerStore((store) => store.temperature) && enabled;
+  const temperatureEnabled =
+    useLayerStore((store) => store.temperature) && enabled && showTemperature;
   const otherShutdowns = useOtherLineShutdowns(withOtherShutdowns ? startDate : undefined, endDate);
   const [geometry, setGeometry] = useState<TrackGeometry | null>(null);
   // Charts without a track have no use for the plot's position, so don't re-render them with it
@@ -122,6 +130,8 @@ export const useChartLayers = ({
 
   const layers: ChartLayers = {
     enabled,
+    showWeather,
+    showTemperature,
     granularity,
     weather,
     weatherRuns,

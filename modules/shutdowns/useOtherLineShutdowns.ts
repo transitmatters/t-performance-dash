@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useShutdownsForLines } from '../../common/api/hooks/shutdowns';
-import { useMajorEventsStore } from '../../common/state/majorEventsStore';
+import { useDisplayStore } from '../../common/state/displayStore';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import {
   blocksToBandAnnotations,
@@ -14,7 +14,7 @@ import {
  * line's charts. Nothing is fetched until the reader turns them on in the Display menu.
  */
 export const useOtherLineShutdowns = (startDate?: string, endDate?: string) => {
-  const show = useMajorEventsStore((state) => state.showOtherShutdowns);
+  const show = useDisplayStore((state) => state.showOtherShutdowns);
   const { lineShort } = useDelimitatedRoute();
   const lines = useMemo(() => (show ? otherShutdownLines(lineShort) : []), [show, lineShort]);
   const data = useShutdownsForLines(lines, startDate, endDate, show);

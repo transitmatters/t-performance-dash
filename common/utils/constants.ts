@@ -14,6 +14,9 @@ export const APP_DATA_BASE_PATH = FRONTEND_TO_BACKEND_MAP[domain] || '';
 
 export const isBetaHost = () => domain === BETA;
 
+export const BETA_FEEDBACK_URL =
+  'https://app.datadoghq.com/forms/share/500971f495a535f040a9400bf23a02e759e5a77cc9ce51bbe91e71af31d5acd5';
+
 // Datadog RUM runs on beta only. Prod uses GoatCounter so it needs no cookie notice.
 // deploy.sh sets these for beta builds.
 export const DD_RUM = {
