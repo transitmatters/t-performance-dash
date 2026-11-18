@@ -3,7 +3,9 @@ export type StatSentiment = 'good' | 'bad' | 'flat';
 export interface StatDelta {
   label: string;
   sentiment: StatSentiment;
-  /** What the change compares, shown in a popover on the badge. */
+  /** What the change is measured against, shown under the badge, e.g. "vs. first half of range". */
+  versus?: string;
+  /** Both values, shown in a popover on the badge. */
   detail?: string;
 }
 
@@ -19,11 +21,21 @@ export const formatPercent = (value: number) => `${Math.round(value * 100)}%`;
 export const formatPercentChange = (delta: number, { signed = true } = {}) =>
   `${signed ? sign(delta) : ''}${formatPercent(delta)}`;
 
-/** Every page's change badge compares the averages of the two halves of the selected dates. */
-export const halvesDetail = (before: number, after: number, format: (value: number) => string) =>
-  Number.isFinite(before) && Number.isFinite(after)
-    ? `${format(before)} → ${format(after)}, first half vs. second half of the selected dates`
-    : undefined;
+export const VS_FIRST_HALF = 'vs. first half of range';
+export const VS_RANGE_START = 'vs. start of range';
+
+/** Most change badges compare the averages of the two halves of the selected dates. */
+export const halvesComparison = (
+  before: number,
+  after: number,
+  format: (value: number) => string
+) => ({
+  versus: VS_FIRST_HALF,
+  detail:
+    Number.isFinite(before) && Number.isFinite(after)
+      ? `${format(before)} → ${format(after)}, first half vs. second half of the selected dates`
+      : undefined,
+});
 
 interface StatDeltaOptions {
   delta: number;
@@ -34,6 +46,7 @@ interface StatDeltaOptions {
   /** Words for a good and a bad change, e.g. ['faster', 'slower']. */
   words?: [good: string, bad: string];
   higherIsBetter?: boolean;
+  versus?: string;
   detail?: string;
 }
 
@@ -43,6 +56,7 @@ export const statDelta = ({
   magnitude,
   words,
   higherIsBetter = true,
+  versus,
   detail,
 }: StatDeltaOptions): StatDelta | undefined => {
   if (!Number.isFinite(delta)) return undefined;
@@ -53,5 +67,5 @@ export const statDelta = ({
     : sentiment === 'flat'
       ? 'flat'
       : words[sentiment === 'good' ? 0 : 1];
-  return { label: word ? `${magnitude} · ${word}` : magnitude, sentiment, detail };
+  return { label: word ? `${magnitude} · ${word}` : magnitude, sentiment, versus, detail };
 };

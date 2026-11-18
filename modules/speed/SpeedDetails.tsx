@@ -10,7 +10,7 @@ import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard
 import {
   formatPercent,
   formatPercentChange,
-  halvesDetail,
+  halvesComparison,
   statDelta,
 } from '../../common/utils/statDelta';
 import { getSpeedGraphConfig } from './constants/speeds';
@@ -58,7 +58,7 @@ export function SpeedDetails() {
                 negligible: 0.2,
                 magnitude: `${stats.avgSpeedDelta > 0 ? '+' : ''}${mph(stats.avgSpeedDelta)}`,
                 words,
-                detail: halvesDetail(stats.avgSpeedBefore, stats.avgSpeedAfter, mph),
+                ...halvesComparison(stats.avgSpeedBefore, stats.avgSpeedAfter, mph),
               })}
             />
             <StatCard
@@ -78,7 +78,7 @@ export function SpeedDetails() {
                 negligible: 0.005,
                 magnitude: formatPercentChange(stats.percentOfMaxDelta),
                 words,
-                detail: halvesDetail(
+                ...halvesComparison(
                   stats.percentOfMaxBefore,
                   stats.percentOfMaxAfter,
                   formatPercent

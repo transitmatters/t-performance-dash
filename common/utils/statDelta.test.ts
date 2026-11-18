@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatPercent, formatPercentChange, halvesDetail, statDelta } from './statDelta';
+import { formatPercent, formatPercentChange, halvesComparison, statDelta } from './statDelta';
 
 describe('formatPercentChange', () => {
   it('shows a share difference as a signed whole percentage', () => {
@@ -17,15 +17,19 @@ describe('formatPercentChange', () => {
   });
 });
 
-describe('halvesDetail', () => {
+describe('halvesComparison', () => {
   it('names both values and what they compare', () => {
-    expect(halvesDetail(0.2, 0.33, formatPercent)).toBe(
-      '20% → 33%, first half vs. second half of the selected dates'
-    );
+    expect(halvesComparison(0.2, 0.33, formatPercent)).toEqual({
+      versus: 'vs. first half of range',
+      detail: '20% → 33%, first half vs. second half of the selected dates',
+    });
   });
 
-  it('is empty when either half is missing', () => {
-    expect(halvesDetail(NaN, 0.33, formatPercent)).toBeUndefined();
+  it('still names the comparison when either half is missing', () => {
+    expect(halvesComparison(NaN, 0.33, formatPercent)).toEqual({
+      versus: 'vs. first half of range',
+      detail: undefined,
+    });
   });
 });
 
@@ -36,6 +40,7 @@ describe('statDelta', () => {
     expect(statDelta({ ...base, delta: 0.13, magnitude: '+13%' })).toEqual({
       label: '+13% · better',
       sentiment: 'good',
+      versus: undefined,
       detail: undefined,
     });
   });

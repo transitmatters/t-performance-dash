@@ -11,6 +11,8 @@ import {
   getWorstSlowZoneSegment,
   isSlowZoneActiveAsOf,
 } from '../../common/utils/slowZoneUtils';
+import { type StatDelta, type StatSentiment, VS_RANGE_START } from '../../common/utils/statDelta';
+import { getFormattedTimeString } from '../../common/utils/time';
 
 dayjs.extend(utc);
 dayjs.extend(isSameOrAfter);
@@ -55,4 +57,26 @@ export const getSlowZoneStats = (
     : null;
 
   return { currentSlowTime, slowTimeDelta, activeZones, zonesDelta, worstSegment };
+};
+
+/** Change badge for total slow time, first vs. last day of the range. */
+export const slowTimeBadge = (deltaSeconds: number): StatDelta | undefined => {
+  if (!Number.isFinite(deltaSeconds)) return undefined;
+  const sentiment: StatSentiment =
+    Math.abs(deltaSeconds) < 60 ? 'flat' : deltaSeconds < 0 ? 'good' : 'bad';
+  const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
+  const sign = deltaSeconds > 0 ? '+' : deltaSeconds < 0 ? '−' : '';
+  return {
+    label: `${sign}${getFormattedTimeString(Math.abs(deltaSeconds))} · ${word}`,
+    sentiment,
+    versus: VS_RANGE_START,
+  };
+};
+
+/** Change badge for the active slow zone count, start vs. end of the range. */
+export const zonesBadge = (delta: number): StatDelta | undefined => {
+  if (!Number.isFinite(delta)) return undefined;
+  const sentiment: StatSentiment = delta === 0 ? 'flat' : delta < 0 ? 'good' : 'bad';
+  const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
+  return { label: `${delta > 0 ? '+' : ''}${delta} · ${word}`, sentiment, versus: VS_RANGE_START };
 };

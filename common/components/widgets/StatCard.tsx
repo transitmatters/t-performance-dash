@@ -55,8 +55,13 @@ export const StatCard = ({ label, value, unit, delta }: StatCardProps) => (
         {unit && <span className="text-sm font-normal text-muted-foreground"> {unit}</span>}
       </CardTitle>
       {delta && (
-        <CardAction>
+        <CardAction className="flex flex-col items-end gap-1">
           <DeltaBadge delta={delta} />
+          {delta.versus && (
+            <span className="text-xs text-muted-foreground" aria-hidden={Boolean(delta.detail)}>
+              {delta.versus}
+            </span>
+          )}
         </CardAction>
       )}
     </CardHeader>
