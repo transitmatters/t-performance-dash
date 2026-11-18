@@ -14,11 +14,17 @@ interface LineNameInput {
   ferryRoute?: FerryRoute;
 }
 
-/** A route is named before its line: "Route 1" rather than "Buses". */
-const getLineName = ({ line, tab, busRoute, crRoute, ferryRoute }: LineNameInput) => {
+const getRouteName = ({ busRoute, crRoute, ferryRoute }: Omit<LineNameInput, 'line' | 'tab'>) => {
   if (busRoute) return `Route ${busRoute}`;
   if (crRoute) return COMMUTER_RAIL_LINE_NAMES[crRoute];
   if (ferryRoute) return FERRY_LINE_NAMES[ferryRoute];
+  return undefined;
+};
+
+/** A route is named before its line: "Route 1" rather than "Buses". */
+const getLineName = ({ line, tab, busRoute, crRoute, ferryRoute }: LineNameInput) => {
+  const routeName = getRouteName({ busRoute, crRoute, ferryRoute });
+  if (routeName) return routeName;
   if (line) return LINE_OBJECTS[line]?.name;
   if (tab === 'System') return 'System';
   return undefined;
@@ -35,6 +41,7 @@ export const usePageHeading = () => {
 
   return {
     lineName: getLineName({ line, tab, busRoute, crRoute, ferryRoute }),
+    routeName: getRouteName({ busRoute, crRoute, ferryRoute }),
     pageTitle: ALL_PAGES[page]?.title ?? ALL_PAGES[page]?.name,
   };
 };

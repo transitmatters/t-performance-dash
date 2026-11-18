@@ -7,6 +7,7 @@ import { usePageControls } from '../hooks/usePageControls';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
 import { CIPBanner } from '../components/CIPBanner';
 import { usePageTitle } from '../hooks/usePageHeading';
+import { SiteFooter } from '../../modules/navigation/SiteFooter';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -30,6 +31,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
         </div>
       </div>
+      <SiteFooter />
       {isMobile && showControls && <MobileControlPanel />}
     </div>
   );

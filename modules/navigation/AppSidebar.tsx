@@ -9,7 +9,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from '../../common/components/ui/sidebar';
-import { isBetaHost } from '../../common/utils/constants';
 import { SidebarCommandTrigger } from '../commandPalette/CommandPaletteTrigger';
 import { NavLines } from './NavLines';
 import { NavSystem } from './NavSystem';
@@ -48,11 +47,6 @@ export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
         <NavLines close={close} />
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:hidden">
-        {isBetaHost() && (
-          <p className="px-2 text-xs text-sidebar-foreground/60">
-            Beta: usage data collected via Datadog
-          </p>
-        )}
         <ExtraMenuItems />
       </SidebarFooter>
     </Sidebar>
