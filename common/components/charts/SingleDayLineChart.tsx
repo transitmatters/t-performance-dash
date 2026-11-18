@@ -163,7 +163,10 @@ export const SingleDayLineChart = ({
             content: callout.label,
             position: { x: callout.index / data.length > 0.6 ? 'end' : 'start', y: 'center' },
             xAdjust: callout.index / data.length > 0.6 ? -14 : 14,
-            color: chartTheme.medianLine,
+            color: chartTheme.calloutText,
+            backgroundColor: chartTheme.medianLine,
+            borderRadius: 6,
+            padding: { x: 8, y: 4 },
             font: { size: 12, weight: 'bold' },
           },
         ]

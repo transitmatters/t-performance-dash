@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { SingleDayDataPoint } from '../../common/types/charts';
-import { HERO_STATIONS, pickHero, worstLabel } from './heroChart';
+import { HERO_STATIONS, minutesText, pickHero, worstLabel } from './heroChart';
 
 const trip = (headwayMin: number, scheduledMin = 5, at = '2026-11-16T08:00:00') =>
   ({
@@ -58,7 +58,8 @@ describe('pickHero', () => {
     ];
     const pick = pickHero([{ station: red, rows }]);
     expect(pick?.worst).toBe(31);
-    expect(worstLabel(rows[31])).toBe('14-min wait at 6:05 PM, scheduled every 2.5');
+    expect(worstLabel(rows[31])).toBe('14-min wait at 6:05 PM');
+    expect(minutesText(rows[31].benchmark_headway_time_sec ?? 0)).toBe('2.5');
   });
 
   it('has nothing to show without data', () => {

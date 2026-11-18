@@ -98,16 +98,14 @@ export const pickHero = (
 };
 
 /** Whole minutes, or tenths under 3 so a short scheduled gap doesn't round to 1 or 0. */
-const minutes = (seconds: number) => {
+export const minutesText = (seconds: number) => {
   const value = seconds / 60;
   return value < 3 ? `${Math.round(value * 10) / 10}` : `${Math.round(value)}`;
 };
 
-/** "14-min wait at 6:05 PM, scheduled every 2.5" */
-export const worstLabel = (row: SingleDayDataPoint) => {
-  const time = dayjs(row.current_dep_dt).format('h:mm A');
-  const scheduled = row.benchmark_headway_time_sec
-    ? `, scheduled every ${minutes(row.benchmark_headway_time_sec)}`
-    : '';
-  return `${minutes(row.headway_time_sec ?? 0)}-min wait at ${time}${scheduled}`;
-};
+/** "6:03 PM" */
+export const timeText = (row: SingleDayDataPoint) => dayjs(row.current_dep_dt).format('h:mm A');
+
+/** "14-min wait at 6:03 PM", for the chart's callout. */
+export const worstLabel = (row: SingleDayDataPoint) =>
+  `${minutesText(row.headway_time_sec ?? 0)}-min wait at ${timeText(row)}`;
