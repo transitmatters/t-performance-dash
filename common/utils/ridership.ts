@@ -22,7 +22,8 @@ export const getRidershipLineId = (
       case 'SL4/SL5':
         return 'line-SLWashington';
       default:
-        return `line-${busRoute.replaceAll('/', '')}`;
+        // A retired route's counts are filed under its route_id, which its replacement now uses.
+        return `line-${busRoute.replace(/-legacy$/, '').replaceAll('/', '')}`;
     }
   } else if (line === 'line-commuter-rail' && crRoute) {
     return `line-${crRoute.substring(3)}`;

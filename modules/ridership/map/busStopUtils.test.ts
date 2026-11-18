@@ -5,6 +5,7 @@ import {
   getBusStopRidershipRouteIds,
   getStopComparisons,
   resolveBusStopRidershipSelection,
+  withSeasonsBefore,
 } from './busStopUtils';
 
 const stop = (stop_id: string, boardings: number) => ({ stop_id, boardings, alightings: 0 });
@@ -121,5 +122,21 @@ describe('abbreviateBusStopName', () => {
     expect(
       abbreviateBusStopName({ stationName: 'Massachusetts Ave @ Massachusetts Ave Station' })
     ).toBe('Mass Ave @ Mass Ave');
+  });
+});
+
+describe('withSeasonsBefore', () => {
+  const seasonsOf = (routes: BusStopRidership[]) => routes[0].seasons.map(({ season }) => season);
+
+  it("drops seasons counted after a retired route's last day", () => {
+    expect(seasonsOf(withSeasonsBefore([route28], '2024-12-14'))).toEqual([
+      'Fall 2018',
+      'Fall 2019',
+      'Fall 2024',
+    ]);
+  });
+
+  it('keeps every season for a route still running', () => {
+    expect(withSeasonsBefore([route28], undefined)).toEqual([route28]);
   });
 });

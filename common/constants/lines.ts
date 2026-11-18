@@ -127,10 +127,14 @@ const BUS_DISPLAY_NAME_TO_ROUTE_ID: Record<string, string> = Object.fromEntries(
 
 /**
  * Raw GTFS route_ids behind a curated BusRoute label, e.g. '114/116/117' -> ['114', '116', '117']
- * and 'SL1/SL2/SL3/SLW' -> ['741', '742', '743', '746']. Trip-metrics data is keyed by these.
+ * and 'SL1/SL2/SL3/SLW' -> ['741', '742', '743', '746']. Trip-metrics data is keyed by these. A
+ * retired route kept the route_id its replacement now runs under, so '60/65-legacy' -> ['60', '65'].
  */
 export const getBusRouteIds = (busRoute: string): string[] =>
-  busRoute.split('/').map((name) => BUS_DISPLAY_NAME_TO_ROUTE_ID[name] ?? name);
+  busRoute
+    .replace(/-legacy$/, '')
+    .split('/')
+    .map((name) => BUS_DISPLAY_NAME_TO_ROUTE_ID[name] ?? name);
 
 /** The route_ids behind a curated label that are Frequent Bus Routes: all of SL4/SL5, but only 116
  * of 114/116/117. Empty for a route that isn't frequent. */

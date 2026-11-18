@@ -7,13 +7,16 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getLineColorKey, LINE_COLORS } from '../../common/constants/colors';
 import { getBusRouteDisplayName } from '../../common/constants/lines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { getMinMaxDatesForRoute } from '../../common/utils/stations';
 import type { BusStopRidership as BusStopRidershipData } from '../../common/types/dataPoints';
+import type { BusRoute } from '../../common/types/lines';
 import { BusStopRidershipMap } from './map/BusStopRidershipMap';
 import {
   DIRECTION_LABELS,
   getBusStopRidershipRouteIds,
   getStopComparisons,
   resolveBusStopRidershipSelection,
+  withSeasonsBefore,
 } from './map/busStopUtils';
 
 const formatChange = (change: number) =>
@@ -61,17 +64,22 @@ const StopComparisons = ({
  * Average weekday boardings at each stop of a bus route, one season at a time. The MBTA counts
  * these once a year, so unlike the rest of the page this doesn't follow the date range.
  */
-export const BusStopRidership = ({ busRoute }: { busRoute: string }) => {
+export const BusStopRidership = ({ busRoute }: { busRoute: BusRoute }) => {
   const routeIds = useMemo(() => getBusStopRidershipRouteIds(busRoute), [busRoute]);
   const ridership = useBusStopRidershipData(routeIds, true);
+  const serviceEnd = getMinMaxDatesForRoute('Bus', busRoute).maxDate;
+  const routes = useMemo(
+    () => ridership.data && withSeasonsBefore(ridership.data, serviceEnd),
+    [ridership.data, serviceEnd]
+  );
   const isDesktop = useBreakpoint('lg');
 
   const [routeId, setRouteId] = useState<string>('');
   const [season, setSeason] = useState<string>('');
   const [directionKey, setDirectionKey] = useState<string>('');
 
-  const view = ridership.data
-    ? resolveBusStopRidershipSelection(ridership.data, {
+  const view = routes
+    ? resolveBusStopRidershipSelection(routes, {
         routeId,
         season,
         directionId: directionKey === '' ? undefined : Number(directionKey),

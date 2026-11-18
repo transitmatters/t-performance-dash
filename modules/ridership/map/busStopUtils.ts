@@ -11,6 +11,31 @@ const EXTRA_ROUTE_IDS: Record<string, string[]> = {
 export const getBusStopRidershipRouteIds = (busRoute: string) =>
   EXTRA_ROUTE_IDS[busRoute] ?? getBusRouteIds(busRoute);
 
+// The last month of each season's counts
+const SEASON_END_MONTHS: Record<string, string> = {
+  Winter: '02',
+  Spring: '05',
+  Summer: '08',
+  Fall: '11',
+};
+
+/**
+ * Drops seasons counted after a retired route stopped running: its route_ids now belong to its
+ * replacement, so those counts are the new route's stops.
+ */
+export const withSeasonsBefore = (
+  routes: BusStopRidership[],
+  serviceEnd: string | undefined
+): BusStopRidership[] => {
+  if (!serviceEnd) return routes;
+  const endedBefore = ({ season }: { season: string }) => {
+    const [name, year] = season.split(' ');
+    const month = SEASON_END_MONTHS[name];
+    return !month || `${year}-${month}-01` <= serviceEnd;
+  };
+  return routes.map((route) => ({ ...route, seasons: route.seasons.filter(endedBefore) }));
+};
+
 /** The last fall before the pandemic */
 export const BASELINE_SEASON = 'Fall 2019';
 
