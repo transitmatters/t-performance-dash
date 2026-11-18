@@ -12,15 +12,16 @@ ONE_DAY = 86400
 THREE_MONTHS = 7776000  # 90 days
 
 
-def get_cache_max_age(query_params: dict) -> int:
+def get_cache_max_age(query_params: dict, yesterday_max_age: int = FIFTEEN_MINUTES) -> int:
     """Determine cache duration based on the date range in query parameters.
 
     Looks for a date in the query params (checking ``end_date``, ``date``, and
     ``to_date`` in that order) and selects a cache lifetime based on how recent
     that date is relative to today in Eastern time:
 
-    - **Today or yesterday**: 15 minutes — today's data is still arriving, and
-      yesterday's lands overnight, so neither should sit in a shared cache for long.
+    - **Today**: 15 minutes — today's data is still arriving.
+    - **Yesterday**: ``yesterday_max_age`` (15 minutes by default) — yesterday's
+      data lands overnight, so it may still change in the morning.
     - **Within the last 6 months**: 1 hour — data is settled but corrections
       may still arrive.
     - **Older than 6 months**: 90 days — historical data that is unlikely to
@@ -33,6 +34,9 @@ def get_cache_max_age(query_params: dict) -> int:
       query_params: Dictionary of query parameters from the request.  Expected
           to contain one of ``end_date``, ``date``, or ``to_date`` with a
           value in ``YYYY-MM-DD`` format.
+      yesterday_max_age: Cache max-age for yesterday's data. Trip event routes
+          (headways, dwells, travel times) pass ``ONE_HOUR``, since yesterday's
+          trips are almost always complete by the time anyone asks for them.
 
     Returns:
       int: Cache max-age in seconds.
@@ -48,11 +52,14 @@ def get_cache_max_age(query_params: dict) -> int:
         try:
             end_date = datetime.strptime(end_date_str, "%Y-%m-%d").replace(tzinfo=EASTERN_TIME)
             now = datetime.now(EASTERN_TIME)
-            yesterday = now.replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=1)
+            today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            yesterday = today - timedelta(days=1)
             six_months_ago = now - timedelta(days=180)
 
-            if end_date >= yesterday:
+            if end_date >= today:
                 cache_max_age = FIFTEEN_MINUTES
+            elif end_date >= yesterday:
+                cache_max_age = yesterday_max_age
             # If data is from more than 6 months ago, it's historical and won't change much
             elif end_date < six_months_ago:
                 cache_max_age = THREE_MONTHS

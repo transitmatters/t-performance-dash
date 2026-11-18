@@ -22,3 +22,16 @@ def days_ago(n: int) -> str:
 )
 def test_get_cache_max_age(params, expected):
     assert cache.get_cache_max_age(params) == expected
+
+
+@pytest.mark.parametrize(
+    "days, expected",
+    [
+        (0, cache.FIFTEEN_MINUTES),
+        (1, cache.ONE_HOUR),
+        (2, cache.ONE_HOUR),
+        (400, cache.THREE_MONTHS),
+    ],
+)
+def test_get_cache_max_age_yesterday_override(days, expected):
+    assert cache.get_cache_max_age({"date": days_ago(days)}, yesterday_max_age=cache.ONE_HOUR) == expected

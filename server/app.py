@@ -215,7 +215,7 @@ def headways_route(user_date):
     """
     qp = app.current_request.query_params
     stops = qp.getlist("stop") if qp else []
-    cache_max_age = cache.get_cache_max_age({"date": user_date})
+    cache_max_age = cache.get_cache_max_age({"date": user_date}, yesterday_max_age=cache.ONE_HOUR)
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_headways(user_date, stops)
@@ -251,7 +251,7 @@ def dwells_route(user_date):
     """
     qp = app.current_request.query_params
     stops = qp.getlist("stop") if qp else []
-    cache_max_age = cache.get_cache_max_age({"date": user_date})
+    cache_max_age = cache.get_cache_max_age({"date": user_date}, yesterday_max_age=cache.ONE_HOUR)
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_dwells(user_date, stops)
@@ -289,7 +289,7 @@ def traveltime_route(user_date):
     qp = app.current_request.query_params
     from_stops = qp.getlist("from_stop") if qp else []
     to_stops = qp.getlist("to_stop") if qp else []
-    cache_max_age = cache.get_cache_max_age({"date": user_date})
+    cache_max_age = cache.get_cache_max_age({"date": user_date}, yesterday_max_age=cache.ONE_HOUR)
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_traveltimes(user_date, from_stops, to_stops)
@@ -359,7 +359,7 @@ def traveltime_aggregate_route():
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
     start_date, end_date = parse_date_range(query_params)
-    cache_max_age = cache.get_cache_max_age(query_params)
+    cache_max_age = cache.get_cache_max_age(query_params, yesterday_max_age=cache.ONE_HOUR)
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_aggregate_traveltimes(query_params)
@@ -393,7 +393,7 @@ def traveltime_aggregate_route_2():
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
     start_date, end_date = parse_date_range(query_params)
-    cache_max_age = cache.get_cache_max_age(query_params)
+    cache_max_age = cache.get_cache_max_age(query_params, yesterday_max_age=cache.ONE_HOUR)
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_aggregate_traveltimes(query_params)
@@ -427,7 +427,7 @@ def headways_aggregate_route():
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
     start_date, end_date = parse_date_range(query_params)
-    cache_max_age = cache.get_cache_max_age(query_params)
+    cache_max_age = cache.get_cache_max_age(query_params, yesterday_max_age=cache.ONE_HOUR)
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_aggregate_headways(query_params)
@@ -457,7 +457,7 @@ def dwells_aggregate_route():
     query_params = app.current_request.query_params or {}
     validate_query_params(query_params, ["start_date", "end_date"])
     start_date, end_date = parse_date_range(query_params)
-    cache_max_age = cache.get_cache_max_age(query_params)
+    cache_max_age = cache.get_cache_max_age(query_params, yesterday_max_age=cache.ONE_HOUR)
 
     if config.BACKEND_SOURCE == "static":
         data = static_data.get_aggregate_dwells(query_params)
