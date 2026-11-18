@@ -78,37 +78,63 @@ const reader = (data: HomeData) => {
 
 type Reader = ReturnType<typeof reader>;
 
+/** Rows judged on how evenly vehicles are spaced. Commuter Rail is judged on time instead. */
+const SPACING_ROWS = [...SUBWAY, 'frequent-bus', 'all-bus'];
+const isBus = (id: string) => ['frequentBus', 'bus'].includes(rowConfig(id)?.mode ?? '');
+/** Where a row's bunching happens, to start a sentence: "On the Red Line", "Across all bus routes". */
+const PLACE: Record<string, string> = {
+  'frequent-bus': 'On Frequent Bus routes',
+  'all-bus': 'Across all bus routes',
+};
+
+/**
+ * How many of the rows with headway data keep their vehicles evenly spaced, and the words for
+ * them: "subway lines" and "trains" for the subway alone, "lines" and "trains and buses" once
+ * buses are in. Undefined unless every subway line has a figure.
+ */
+const spacing = (cell: Reader['cell']) => {
+  const lines = SPACING_ROWS.map((id) => ({ id, cell: cell(id, 'reliability') })).filter((l) =>
+    isNumber(l.cell?.value)
+  );
+  if (!SUBWAY.every((id) => lines.some((l) => l.id === id))) return undefined;
+  const buses = lines.some((l) => isBus(l.id));
+  return {
+    lines,
+    evenly: lines.filter((l) => isGood(l.cell)).length,
+    line: buses ? 'line' : 'subway line',
+    vehicles: buses ? 'trains and buses' : 'trains',
+    /** For "no line keeps its trains or buses evenly spaced". */
+    anyVehicles: buses ? 'trains or buses' : 'trains',
+  };
+};
+
+const spacingSentence = (s: NonNullable<ReturnType<typeof spacing>>) =>
+  s.evenly === 0
+    ? `No ${s.line} keeps its ${s.anyVehicles} evenly spaced.`
+    : s.evenly === s.lines.length
+      ? `Every ${s.line} keeps its ${s.vehicles} evenly spaced.`
+      : `${s.evenly} of ${s.lines.length} ${s.line}s keep their ${s.vehicles} evenly spaced.`;
+
 function reliability({ cell, mark, link }: Reader): Statement | undefined {
-  const lines = SUBWAY.map((id) => ({ id, cell: cell(id, 'reliability') }));
-  if (!lines.every((l) => isNumber(l.cell?.value))) return undefined;
-  const thresholds = lines[0].cell?.thresholds;
-  if (!thresholds) return undefined;
+  const s = spacing(cell);
+  const thresholds = s?.lines[0].cell?.thresholds;
+  if (!s || !thresholds) return undefined;
   const [win, good] = thresholds;
-  const values = lines.map((l) => l.cell?.value as number);
-  const evenly = lines.filter((l) => isGood(l.cell)).length;
-  const worst = lines.reduce((a, b) => ((b.cell?.value ?? 1) < (a.cell?.value ?? 1) ? b : a));
+  const values = s.lines.map((l) => l.cell?.value as number);
+  const worst = s.lines.reduce((a, b) => ((b.cell?.value ?? 1) < (a.cell?.value ?? 1) ? b : a));
   const bunched = worst.cell?.bunched;
 
-  const head =
-    evenly === 0
-      ? 'No subway line keeps its trains evenly spaced.'
-      : evenly === SUBWAY.length
-        ? 'Every subway line keeps its trains evenly spaced.'
-        : `${evenly} of ${SUBWAY.length} subway lines keep their trains evenly spaced.`;
   const bunchedText = isNumber(bunched)
-    ? ` On the ${labelOf(worst.id)}, ${pct(bunched)} of trains come bunched up behind the one ahead.`
+    ? ` ${PLACE[worst.id] ?? `On the ${labelOf(worst.id)}`}, ${pct(bunched)} of ${isBus(worst.id) ? 'buses' : 'trains'} come bunched up behind the one ahead.`
     : '';
   return {
     id: 'reliability',
     kicker: 'Reliability',
-    head,
-    body: `Between ${pct(Math.min(...values))} and ${pct(Math.max(...values))} of the gaps between trains are on schedule, and Good starts at ${pct(good)}.${bunchedText}`,
+    head: spacingSentence(s),
+    body: `Between ${pct(Math.min(...values))} and ${pct(Math.max(...values))} of the gaps between ${s.vehicles} are on schedule, and Good starts at ${pct(good)}.${bunchedText}`,
     viz: {
       kind: 'dots',
-      marks: [...SUBWAY, 'frequent-bus', 'all-bus'].flatMap((id) => {
-        const value = cell(id, 'reliability')?.value;
-        return isNumber(value) ? [mark(id, value)] : [];
-      }),
+      marks: s.lines.map((l) => mark(l.id, l.cell?.value as number)),
       rules: [
         { value: good, label: 'Good' },
         { value: win, label: 'Win' },
@@ -276,14 +302,13 @@ export const buildLede = (data?: HomeData): { lead: string; rest?: string } | un
       ? 'The T is running close to its best service.'
       : `${atBest} of ${service.length} lines run close to their best service.`;
 
-  const reliability = SUBWAY.map((id) => cell(id, 'reliability'));
-  if (!reliability.every((c) => isNumber(c?.value))) return { lead };
-  const evenly = reliability.filter(isGood).length;
+  const s = spacing(cell);
+  if (!s) return { lead };
   const rest =
-    evenly === 0
-      ? 'Keeping trains evenly spaced is where it falls short.'
-      : evenly < SUBWAY.length
-        ? `Only ${evenly} of ${SUBWAY.length} subway lines keep their trains evenly spaced.`
-        : 'Every subway line keeps its trains evenly spaced.';
+    s.evenly === 0
+      ? `Keeping ${s.vehicles} evenly spaced is where it falls short.`
+      : s.evenly < s.lines.length
+        ? `Only ${spacingSentence(s)}`
+        : spacingSentence(s);
   return { lead, rest };
 };

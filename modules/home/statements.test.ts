@@ -107,13 +107,45 @@ describe('buildStatements', () => {
 
   it('says how evenly trains are spaced and where they bunch most', () => {
     const { reliability } = byId(DATA);
-    expect(reliability.head).toBe('No subway line keeps its trains evenly spaced.');
+    expect(reliability.head).toBe('No line keeps its trains or buses evenly spaced.');
     expect(reliability.body).toBe(
-      'Between 36% and 63% of the gaps between trains are on schedule, and Good starts at 65%. On the Green Line, 13% of trains come bunched up behind the one ahead.'
+      'Between 36% and 63% of the gaps between trains and buses are on schedule, and Good starts at 65%. On the Green Line, 13% of trains come bunched up behind the one ahead.'
     );
     expect(reliability.link.href).toBe('/reliability');
     // The four subway lines and both bus rows.
     expect(reliability.viz.kind === 'dots' && reliability.viz.marks).toHaveLength(6);
+  });
+
+  it('talks about the subway alone when no bus has headway data', () => {
+    const subwayOnly: HomeData = {
+      ...DATA,
+      rows: DATA.rows.map((r) =>
+        r.id.includes('bus') ? { ...r, cells: { ...r.cells, reliability: undefined } } : r
+      ),
+    };
+    expect(byId(subwayOnly).reliability.head).toBe(
+      'No subway line keeps its trains evenly spaced.'
+    );
+    expect(buildLede(subwayOnly)?.rest).toBe(
+      'Keeping trains evenly spaced is where it falls short.'
+    );
+  });
+
+  it('says where buses bunch when a bus row is furthest off', () => {
+    const rows = DATA.rows.map((r) =>
+      r.id === 'all-bus'
+        ? {
+            ...r,
+            cells: {
+              ...r.cells,
+              reliability: cell('reliability', 'problem', 0.2, { bunched: 0.3 }),
+            },
+          }
+        : r
+    );
+    expect(byId({ ...DATA, rows }).reliability.body).toContain(
+      'Across all bus routes, 30% of buses come bunched up behind the one ahead.'
+    );
   });
 
   it('gives the range of delay alert minutes and which way they moved', () => {
@@ -177,7 +209,7 @@ describe('buildLede', () => {
   it('leads with service and follows with spacing', () => {
     expect(buildLede(DATA)).toEqual({
       lead: 'The T is running close to its best service.',
-      rest: 'Keeping trains evenly spaced is where it falls short.',
+      rest: 'Keeping trains and buses evenly spaced is where it falls short.',
     });
   });
 
@@ -194,7 +226,7 @@ describe('buildLede', () => {
     }));
     expect(buildLede({ ...DATA, rows })).toEqual({
       lead: '0 of 7 lines run close to their best service.',
-      rest: 'Every subway line keeps its trains evenly spaced.',
+      rest: 'Every line keeps its trains and buses evenly spaced.',
     });
   });
 });
@@ -226,7 +258,9 @@ describe('a great day', () => {
   const statements = byId(GREAT_DAY);
 
   it('says so in every statement', () => {
-    expect(statements.reliability.head).toBe('Every subway line keeps its trains evenly spaced.');
+    expect(statements.reliability.head).toBe(
+      'Every line keeps its trains and buses evenly spaced.'
+    );
     expect(statements.delays.head).toBe(
       'No subway line has had a delay alert in the last four weeks.'
     );
@@ -246,7 +280,7 @@ describe('a great day', () => {
   it('leads with it under the title', () => {
     expect(buildLede(GREAT_DAY)).toEqual({
       lead: 'The T is running at or above its best service.',
-      rest: 'Every subway line keeps its trains evenly spaced.',
+      rest: 'Every line keeps its trains and buses evenly spaced.',
     });
   });
 });
