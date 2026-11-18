@@ -181,7 +181,7 @@ describe('buildLede', () => {
     });
   });
 
-  it('counts lines when fewer are near their best, and drops spacing once every line is even', () => {
+  it('counts lines when fewer are near their best, and praises spacing once every line is even', () => {
     const rows = DATA.rows.map((r) => ({
       ...r,
       cells: {
@@ -194,7 +194,59 @@ describe('buildLede', () => {
     }));
     expect(buildLede({ ...DATA, rows })).toEqual({
       lead: '0 of 7 lines run close to their best service.',
-      rest: undefined,
+      rest: 'Every subway line keeps its trains evenly spaced.',
+    });
+  });
+});
+
+/** Every number at its best: no slow zones, no alerts, every line past its best and evenly spaced. */
+const GREAT_DAY: HomeData = {
+  ...DATA,
+  rows: DATA.rows.map((r) => ({
+    ...r,
+    cells: Object.fromEntries(
+      Object.entries(r.cells).map(([metric, c]) => [
+        metric,
+        metric === 'service'
+          ? { ...c, status: 'win', score: 1.05, value: 1.05 }
+          : metric === 'reliability'
+            ? { ...c, status: 'win', value: 0.85, score: 0.85, bunched: 0.02 }
+            : metric === 'delays'
+              ? { ...c, status: 'win', minutesPerDay: 0, trend: -0.5 }
+              : metric === 'frequency'
+                ? { ...c, status: 'win', value: 1, score: 1 }
+                : c,
+      ])
+    ),
+  })),
+  hero: DATA.hero.map((h) => ({ ...h, value: h.id === 'slowZones' ? 0 : 1 })),
+};
+
+describe('a great day', () => {
+  const statements = byId(GREAT_DAY);
+
+  it('says so in every statement', () => {
+    expect(statements.reliability.head).toBe('Every subway line keeps its trains evenly spaced.');
+    expect(statements.delays.head).toBe(
+      'No subway line has had a delay alert in the last four weeks.'
+    );
+    expect(statements.delays.body).toBe('That went down on all 4 lines in the last two weeks.');
+    expect(statements.frequency.body).toContain(
+      'Frequent Bus routes match that, at 100% of their hours.'
+    );
+    expect(statements.service.head).toBe(
+      'Every line runs as many trips as it did at its best, or more.'
+    );
+    expect(statements.service.body).not.toContain('behind');
+    expect(statements.slowZones.head).toBe(
+      'There are no slow zones on the subway right now. In April 2023 they added 2 hours.'
+    );
+  });
+
+  it('leads with it under the title', () => {
+    expect(buildLede(GREAT_DAY)).toEqual({
+      lead: 'The T is running at or above its best service.',
+      rest: 'Every subway line keeps its trains evenly spaced.',
     });
   });
 });

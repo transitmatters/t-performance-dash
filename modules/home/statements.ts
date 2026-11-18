@@ -145,9 +145,11 @@ function delays({ cell, mark, link }: Reader): Statement | undefined {
     id: 'delays',
     kicker: 'Delays',
     head:
-      low === high
-        ? `Each subway line spends about ${low} minutes a day under a delay alert.`
-        : `Each subway line spends ${low} to ${high} minutes a day under a delay alert.`,
+      high === 0
+        ? 'No subway line has had a delay alert in the last four weeks.'
+        : low === high
+          ? `Each subway line spends about ${low} minutes a day under a delay alert.`
+          : `Each subway line spends ${low} to ${high} minutes a day under a delay alert.`,
     body: change + exception,
     viz: {
       kind: 'bars',
@@ -168,11 +170,17 @@ function frequency({ cell, hero, mark, link }: Reader): Statement | undefined {
   const bus = cell('all-bus', 'frequency')?.value;
   const frequent = cell('frequent-bus', 'frequency')?.value;
   if (!isNumber(subway) || !isNumber(bus) || !isNumber(frequent)) return undefined;
+  const frequentText =
+    pct(frequent) === pct(bus)
+      ? `Frequent Bus routes match that, at ${pct(frequent)} of their hours.`
+      : frequent > bus
+        ? `Frequent Bus routes do better, at ${pct(frequent)} of their hours.`
+        : `Frequent Bus routes manage ${pct(frequent)} of their hours.`;
   return {
     id: 'frequency',
     kicker: 'Frequency',
     head: `On the subway, a train comes every ${FREQUENCY_GOALS.subway} minutes or better for ${pct(subway)} of the service day. Across all bus routes, a bus comes every ${FREQUENCY_GOALS.bus} minutes for ${pct(bus)}.`,
-    body: `${frequent > bus ? 'Frequent Bus routes do better, at' : 'Frequent Bus routes manage'} ${pct(frequent)} of their hours. Commuter Rail isn't judged on frequency, since the MBTA hasn't set a goal for it.`,
+    body: `${frequentText} Commuter Rail isn't judged on frequency, since the MBTA hasn't set a goal for it.`,
     viz: {
       kind: 'meters',
       cap: 1,
@@ -195,20 +203,26 @@ function service({ cell, hero, mark, link }: Reader): Statement | undefined {
   if (lines.length < 5 || !isNumber(good)) return undefined;
   const atBest = lines.filter((l) => isGood(l.cell)).length;
   const furthest = lines.reduce((a, b) => ((b.cell?.score ?? 0) < (a.cell?.score ?? 0) ? b : a));
+  const furthestScore = furthest.cell?.score as number;
   const system = hero('service')?.value;
 
   return {
     id: 'service',
     kicker: 'Service',
     head:
-      atBest === lines.length
-        ? `Every line runs at least ${pct(good)} of the trips it ran at its best.`
-        : `${atBest} of ${lines.length} lines run at least ${pct(good)} of the trips they ran at their best.`,
+      furthestScore >= 1
+        ? 'Every line runs as many trips as it did at its best, or more.'
+        : atBest === lines.length
+          ? `Every line runs at least ${pct(good)} of the trips it ran at its best.`
+          : `${atBest} of ${lines.length} lines run at least ${pct(good)} of the trips they ran at their best.`,
     body: [
       isNumber(system)
         ? `Across the system the T is scheduling ${pct(system)} of the most trips it has ever scheduled.`
         : '',
-      `${labelOf(furthest.id)} is the furthest behind, at ${pct(furthest.cell?.score as number)}.`,
+      // Nobody is behind once every line has matched its best.
+      furthestScore < 1
+        ? `${labelOf(furthest.id)} is the furthest behind, at ${pct(furthestScore)}.`
+        : '',
     ]
       .filter(Boolean)
       .join(' '),
@@ -227,10 +241,15 @@ function slowZones({ hero }: Reader): Statement | undefined {
   const series = stat?.history ?? [];
   if (!isNumber(stat?.value) || series.length < 12) return undefined;
   const peak = series.reduce((a, b) => (b[1] > a[1] ? b : a));
+  const then = `In ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')} they added ${formatMinutes(peak[1])}.`;
   return {
     id: 'slowZones',
     kicker: 'Slow zones',
-    head: `Slow zones add ${formatMinutes(stat.value)} a day across the subway. In ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')} they added ${formatMinutes(peak[1])}.`,
+    // Under 3 seconds a day rounds to "0.0 minutes", so call it none.
+    head:
+      stat.value < 0.05
+        ? `There are no slow zones on the subway right now. ${then}`
+        : `Slow zones add ${formatMinutes(stat.value)} a day across the subway. ${then}`,
     body: "That's the extra time slow zones put on trips each day, added up across every line. Most were cleared during the MBTA's 2024 track work.",
     viz: { kind: 'area', series, peak, now: stat.value },
     link: { href: '/slowzones', label: 'Slow zones' },
@@ -251,8 +270,9 @@ export const buildLede = (data?: HomeData): { lead: string; rest?: string } | un
   const service = SERVICE_ROWS.map((id) => cell(id, 'service')).filter((c) => isNumber(c?.score));
   if (service.length < 5) return undefined;
   const atBest = service.filter(isGood).length;
-  const lead =
-    atBest / service.length >= 0.7
+  const lead = service.every((c) => (c?.score as number) >= 1)
+    ? 'The T is running at or above its best service.'
+    : atBest / service.length >= 0.7
       ? 'The T is running close to its best service.'
       : `${atBest} of ${service.length} lines run close to their best service.`;
 
@@ -264,6 +284,6 @@ export const buildLede = (data?: HomeData): { lead: string; rest?: string } | un
       ? 'Keeping trains evenly spaced is where it falls short.'
       : evenly < SUBWAY.length
         ? `Only ${evenly} of ${SUBWAY.length} subway lines keep their trains evenly spaced.`
-        : undefined;
+        : 'Every subway line keeps its trains evenly spaced.';
   return { lead, rest };
 };
