@@ -1,6 +1,6 @@
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import type { Line } from '../../common/types/lines';
-import { halvesComparison, statDelta } from '../../common/utils/statDelta';
+import { halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { type DelayAgg, AGG_PERIOD, formatDelay } from './format';
 import type { RangeRow } from './range';
 import { getDelayStats } from './utils';
@@ -20,7 +20,7 @@ const deltaFor = (before: number, after: number) => {
     magnitude: `${delta > 0 ? '+' : delta < 0 ? '-' : ''}${formatDelay(delta)}`,
     words: ['better', 'worse'],
     higherIsBetter: false,
-    ...halvesComparison(before, after, formatDelay),
+    detail: halvesDetail(before, after, formatDelay),
   });
 };
 

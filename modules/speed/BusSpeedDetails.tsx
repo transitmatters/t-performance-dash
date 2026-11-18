@@ -10,7 +10,7 @@ import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { DAY_FILTER_OPTIONS, useChartToggle } from '../../common/hooks/useChartToggle';
-import { halvesComparison, statDelta } from '../../common/utils/statDelta';
+import { halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { useDelimitatedRoute, useSetQueryParam } from '../../common/utils/router';
 import { TIME_BANDS } from '../busspeedmap/constants';
 import type { DayType, TimeBand } from '../busspeedmap/types';
@@ -102,7 +102,7 @@ export function BusSpeedDetails() {
                 negligible: 0.2,
                 magnitude: `${stats.avgSpeedDelta > 0 ? '+' : ''}${mph(stats.avgSpeedDelta)}`,
                 words: ['faster', 'slower'],
-                ...halvesComparison(stats.avgSpeedBefore, stats.avgSpeedAfter, mph),
+                detail: halvesDetail(stats.avgSpeedBefore, stats.avgSpeedAfter, mph),
               })}
             />
             <StatCard

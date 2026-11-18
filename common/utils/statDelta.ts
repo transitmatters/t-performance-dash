@@ -3,9 +3,7 @@ export type StatSentiment = 'good' | 'bad' | 'flat';
 export interface StatDelta {
   label: string;
   sentiment: StatSentiment;
-  /** What the change is measured against, shown under the badge, e.g. "vs. first half of range". */
-  versus?: string;
-  /** Both values, shown in a popover on the badge. */
+  /** What the change compares, shown in a popover on the badge. */
   detail?: string;
 }
 
@@ -21,21 +19,23 @@ export const formatPercent = (value: number) => `${Math.round(value * 100)}%`;
 export const formatPercentChange = (delta: number, { signed = true } = {}) =>
   `${signed ? sign(delta) : ''}${formatPercent(delta)}`;
 
-export const VS_FIRST_HALF = 'vs. first half of range';
-export const VS_RANGE_START = 'vs. start of range';
-
-/** Most change badges compare the averages of the two halves of the selected dates. */
-export const halvesComparison = (
+const beforeAfter = (
   before: number,
   after: number,
-  format: (value: number) => string
-) => ({
-  versus: VS_FIRST_HALF,
-  detail:
-    Number.isFinite(before) && Number.isFinite(after)
-      ? `${format(before)} → ${format(after)}, first half vs. second half of the selected dates`
-      : undefined,
-});
+  format: (value: number) => string,
+  compared: string
+) =>
+  Number.isFinite(before) && Number.isFinite(after)
+    ? `${format(before)} → ${format(after)}, ${compared}`
+    : undefined;
+
+/** Most change badges compare the averages of the two halves of the selected dates. */
+export const halvesDetail = (before: number, after: number, format: (value: number) => string) =>
+  beforeAfter(before, after, format, 'first half vs. second half of the selected dates');
+
+/** Slow zone badges compare the first and last day of the selected dates. */
+export const rangeEndsDetail = (before: number, after: number, format: (value: number) => string) =>
+  beforeAfter(before, after, format, 'start vs. end of the selected dates');
 
 interface StatDeltaOptions {
   delta: number;
@@ -46,7 +46,6 @@ interface StatDeltaOptions {
   /** Words for a good and a bad change, e.g. ['faster', 'slower']. */
   words?: [good: string, bad: string];
   higherIsBetter?: boolean;
-  versus?: string;
   detail?: string;
 }
 
@@ -56,7 +55,6 @@ export const statDelta = ({
   magnitude,
   words,
   higherIsBetter = true,
-  versus,
   detail,
 }: StatDeltaOptions): StatDelta | undefined => {
   if (!Number.isFinite(delta)) return undefined;
@@ -67,5 +65,5 @@ export const statDelta = ({
     : sentiment === 'flat'
       ? 'flat'
       : words[sentiment === 'good' ? 0 : 1];
-  return { label: word ? `${magnitude} · ${word}` : magnitude, sentiment, versus, detail };
+  return { label: word ? `${magnitude} · ${word}` : magnitude, sentiment, detail };
 };

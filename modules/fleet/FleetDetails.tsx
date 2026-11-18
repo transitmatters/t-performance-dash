@@ -8,7 +8,7 @@ import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
 import { useCrTripMetrics } from '../../common/api/hooks/crTripMetrics';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
-import { formatPercentChange, halvesComparison, statDelta } from '../../common/utils/statDelta';
+import { formatPercentChange, halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { getBusRouteIds } from '../../common/constants/lines';
 import { useFleetScope } from '../../common/hooks/usePageFilters';
 import { SelectedBusRouteScope } from '../../common/hooks/useChartBusRoute';
@@ -85,7 +85,7 @@ export function FleetDetails() {
       delta: stat.delta / 100,
       negligible: 0.005,
       magnitude: formatPercentChange(stat.delta / 100),
-      ...halvesComparison(stat.before, stat.after, percent),
+      detail: halvesDetail(stat.before, stat.after, percent),
     });
   const years = (value: number) => `${value.toFixed(1)} yrs`;
   // Younger is better, so a falling average age reads as good.
@@ -96,7 +96,7 @@ export function FleetDetails() {
       magnitude: `${stat.delta > 0 ? '+' : ''}${years(stat.delta)}`,
       words: ['newer', 'older'],
       higherIsBetter: false,
-      ...halvesComparison(stat.before, stat.after, years),
+      detail: halvesDetail(stat.before, stat.after, years),
     });
   const shareStat = stats?.share ?? stats?.newestType;
   const shareLabel = metrics.share

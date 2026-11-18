@@ -12,7 +12,7 @@ import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard
 import {
   formatPercent,
   formatPercentChange,
-  halvesComparison,
+  halvesDetail,
   statDelta,
 } from '../../common/utils/statDelta';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
@@ -109,7 +109,7 @@ export function ServiceDetails() {
                 negligible: 1,
                 magnitude: `${stats.roundTripsDelta > 0 ? '+' : ''}${Math.round(stats.roundTripsDelta)}`,
                 words,
-                ...halvesComparison(
+                detail: halvesDetail(
                   stats.roundTripsBefore,
                   stats.roundTripsAfter,
                   (value) => `${Math.round(value)}/day`
@@ -124,7 +124,7 @@ export function ServiceDetails() {
                 negligible: 0.005,
                 magnitude: formatPercentChange(stats.percentDeliveredDelta),
                 words,
-                ...halvesComparison(
+                detail: halvesDetail(
                   stats.percentDeliveredBefore,
                   stats.percentDeliveredAfter,
                   formatPercent

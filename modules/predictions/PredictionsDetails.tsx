@@ -11,7 +11,7 @@ import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard
 import {
   formatPercent,
   formatPercentChange,
-  halvesComparison,
+  halvesDetail,
   statDelta,
 } from '../../common/utils/statDelta';
 import { DataNotes } from '../../common/components/notices/DataNotes';
@@ -61,7 +61,7 @@ export function PredictionsDetails() {
                 negligible: 0.005,
                 magnitude: formatPercentChange(stats.accuracyDelta),
                 words: ['better', 'worse'],
-                ...halvesComparison(stats.accuracyBefore, stats.accuracyAfter, formatPercent),
+                detail: halvesDetail(stats.accuracyBefore, stats.accuracyAfter, formatPercent),
               })}
             />
             <StatCard

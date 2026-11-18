@@ -81,13 +81,13 @@ export function SlowZonesDetails() {
             <StatCard
               label="Current slow time"
               value={getFormattedTimeString(stats.currentSlowTime)}
-              delta={slowTimeBadge(stats.slowTimeDelta)}
+              delta={slowTimeBadge(stats)}
             />
             <StatCard
               label="Active slow zones"
               value={`${stats.activeZones}`}
               unit="zones"
-              delta={zonesBadge(stats.zonesDelta)}
+              delta={zonesBadge(stats)}
             />
             <StatCard
               label="Worst segment"

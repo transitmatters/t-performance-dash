@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatPercent, formatPercentChange, halvesComparison, statDelta } from './statDelta';
+import {
+  formatPercent,
+  formatPercentChange,
+  halvesDetail,
+  rangeEndsDetail,
+  statDelta,
+} from './statDelta';
 
 describe('formatPercentChange', () => {
   it('shows a share difference as a signed whole percentage', () => {
@@ -17,19 +23,21 @@ describe('formatPercentChange', () => {
   });
 });
 
-describe('halvesComparison', () => {
+describe('halvesDetail', () => {
   it('names both values and what they compare', () => {
-    expect(halvesComparison(0.2, 0.33, formatPercent)).toEqual({
-      versus: 'vs. first half of range',
-      detail: '20% → 33%, first half vs. second half of the selected dates',
-    });
+    expect(halvesDetail(0.2, 0.33, formatPercent)).toBe(
+      '20% → 33%, first half vs. second half of the selected dates'
+    );
   });
 
-  it('still names the comparison when either half is missing', () => {
-    expect(halvesComparison(NaN, 0.33, formatPercent)).toEqual({
-      versus: 'vs. first half of range',
-      detail: undefined,
-    });
+  it('is empty when either half is missing', () => {
+    expect(halvesDetail(NaN, 0.33, formatPercent)).toBeUndefined();
+  });
+});
+
+describe('rangeEndsDetail', () => {
+  it('names both values and what they compare', () => {
+    expect(rangeEndsDetail(3, 5, String)).toBe('3 → 5, start vs. end of the selected dates');
   });
 });
 
@@ -40,7 +48,6 @@ describe('statDelta', () => {
     expect(statDelta({ ...base, delta: 0.13, magnitude: '+13%' })).toEqual({
       label: '+13% · better',
       sentiment: 'good',
-      versus: undefined,
       detail: undefined,
     });
   });

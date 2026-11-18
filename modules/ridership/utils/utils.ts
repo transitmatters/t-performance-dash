@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { PRETTY_DATE_FORMAT } from '../../../common/constants/dates';
 import type { SeasonalMaximum } from '../../../common/utils/seasonalRidership';
-import { halvesComparison, statDelta } from '../../../common/utils/statDelta';
+import { halvesDetail, statDelta } from '../../../common/utils/statDelta';
 
 const mean = (values: number[]) =>
   values.length ? values.reduce((sum, v) => sum + v, 0) / values.length : NaN;
@@ -56,7 +56,7 @@ export const ridershipDelta = (before: number, after: number) =>
     negligible: 1,
     magnitude: `${after > before ? '+' : ''}${riders(after - before)}`,
     words: ['up', 'down'],
-    ...halvesComparison(before, after, riders),
+    detail: halvesDetail(before, after, riders),
   });
 
 export const getOutOfServiceMessage = (
