@@ -19,6 +19,7 @@ import { getFormattedTimeString } from '../../../common/utils/time';
 import type { SlowZonesEmbedLine } from '../embed';
 import { TotalSlowTimeActions } from '../TotalSlowTimeActions';
 import { getMajorEventAnnotations, useMajorEvents } from '../../../common/utils/majorEvents';
+import { useOtherLineShutdowns } from '../../shutdowns';
 
 dayjs.extend(utc);
 dayjs.extend(duration);
@@ -54,6 +55,10 @@ export const TotalSlowTime = ({
   const isLinePage = line !== undefined && lineShort !== undefined;
   const events = useMajorEvents(
     isLinePage ? line : SUBWAY_LINES,
+    startDateUTC?.format('YYYY-MM-DD'),
+    endDateUTC?.format('YYYY-MM-DD')
+  );
+  const otherShutdowns = useOtherLineShutdowns(
     startDateUTC?.format('YYYY-MM-DD'),
     endDateUTC?.format('YYYY-MM-DD')
   );
@@ -197,7 +202,7 @@ export const TotalSlowTime = ({
                 display: false,
               },
               annotation: {
-                annotations: getMajorEventAnnotations(events),
+                annotations: [...getMajorEventAnnotations(events), ...otherShutdowns.annotations],
               },
             },
           }}
