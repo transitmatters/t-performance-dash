@@ -11,7 +11,7 @@ import {
   getWorstSlowZoneSegment,
   isSlowZoneActiveAsOf,
 } from '../../common/utils/slowZoneUtils';
-import { type StatDelta, type StatSentiment, rangeEndsDetail } from '../../common/utils/statDelta';
+import { rangeEndsDetail, statDelta } from '../../common/utils/statDelta';
 import { getFormattedTimeString } from '../../common/utils/time';
 
 dayjs.extend(utc);
@@ -60,34 +60,27 @@ export const getSlowZoneStats = (
 };
 
 /** Change badge for total slow time, first vs. last day of the range. */
-export const slowTimeBadge = ({
-  currentSlowTime,
-  slowTimeDelta,
-}: SlowZoneStats): StatDelta | undefined => {
-  if (!Number.isFinite(slowTimeDelta)) return undefined;
-  const sentiment: StatSentiment =
-    Math.abs(slowTimeDelta) < 60 ? 'flat' : slowTimeDelta < 0 ? 'good' : 'bad';
-  const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
-  const sign = slowTimeDelta > 0 ? '+' : slowTimeDelta < 0 ? '−' : '';
-  return {
-    label: `${sign}${getFormattedTimeString(Math.abs(slowTimeDelta))} · ${word}`,
-    sentiment,
+export const slowTimeBadge = ({ currentSlowTime, slowTimeDelta }: SlowZoneStats) =>
+  statDelta({
+    delta: slowTimeDelta,
+    negligible: 60,
+    magnitude: `${slowTimeDelta > 0 ? '+' : slowTimeDelta < 0 ? '−' : ''}${getFormattedTimeString(slowTimeDelta)}`,
+    words: ['better', 'worse'],
+    higherIsBetter: false,
     detail: rangeEndsDetail(
       currentSlowTime - slowTimeDelta,
       currentSlowTime,
       getFormattedTimeString
     ),
-  };
-};
+  });
 
 /** Change badge for the active slow zone count, start vs. end of the range. */
-export const zonesBadge = ({ activeZones, zonesDelta }: SlowZoneStats): StatDelta | undefined => {
-  if (!Number.isFinite(zonesDelta)) return undefined;
-  const sentiment: StatSentiment = zonesDelta === 0 ? 'flat' : zonesDelta < 0 ? 'good' : 'bad';
-  const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
-  return {
-    label: `${zonesDelta > 0 ? '+' : ''}${zonesDelta} · ${word}`,
-    sentiment,
+export const zonesBadge = ({ activeZones, zonesDelta }: SlowZoneStats) =>
+  statDelta({
+    delta: zonesDelta,
+    negligible: 0,
+    magnitude: `${zonesDelta > 0 ? '+' : ''}${zonesDelta}`,
+    words: ['better', 'worse'],
+    higherIsBetter: false,
     detail: rangeEndsDetail(activeZones - zonesDelta, activeZones, String),
-  };
-};
+  });
