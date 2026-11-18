@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { BadDayChart } from './badDay/BadDayChart';
+import { HeroChart } from './HeroChart';
 import { Placeholder } from './Placeholder';
 
 // The strip across the top: one segment per mode, in the T's own colors.
@@ -15,11 +15,11 @@ interface HomeHeroProps {
 }
 
 /**
- * The top of the page: the title, a one-line answer from the report card, and a made-up bad day
- * that shows off the charts. The title and chart render before the data.
+ * The top of the page: the title, a one-line answer from the report card, and yesterday's
+ * headways on the line that ran the most unevenly.
  */
 export const HomeHero = ({ lede, generatedAt, failed }: HomeHeroProps) => (
-  <header className="flex flex-col gap-6 rounded-2xl border bg-card px-4 py-6 text-card-foreground sm:px-6 sm:py-7 lg:px-8">
+  <header className="flex flex-col gap-6">
     <div className="flex h-1.5 overflow-hidden rounded-full" aria-hidden="true">
       {STRIPE.map((color) => (
         <span key={color} className="flex-1" style={{ backgroundColor: color }} />
@@ -85,6 +85,6 @@ export const HomeHero = ({ lede, generatedAt, failed }: HomeHeroProps) => (
         </a>
       </div>
     </div>
-    <BadDayChart />
+    <HeroChart />
   </header>
 );
