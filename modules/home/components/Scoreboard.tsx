@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties } from 'react';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { Link } from '../../../common/components/general/Link';
 import {
@@ -203,18 +203,6 @@ const LineStop = ({
     <PendingStop metric={metric} layout={layout} state={state} />
   );
 
-const GroupHeading = ({ children }: { children: ReactNode }) => (
-  <tr>
-    <th
-      colSpan={METRIC_ORDER.length + 1}
-      scope="colgroup"
-      className="px-6 pt-5 pb-1 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase"
-    >
-      {children}
-    </th>
-  </tr>
-);
-
 const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeState }) => {
   const renderRow = (line: ScoreboardLine, index: number) => (
     <tr
@@ -244,8 +232,6 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
     </tr>
   );
 
-  const core = lines.filter((l) => l.config.group === 'core');
-  const also = lines.filter((l) => l.config.group === 'also');
   return (
     <table className="hidden w-full table-fixed text-sm lg:table">
       <thead>
@@ -263,28 +249,14 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
           ))}
         </tr>
       </thead>
-      <tbody>
-        {core.map(renderRow)}
-        {also.length > 0 && <GroupHeading>Also running</GroupHeading>}
-        {also.map((line, i) => renderRow(line, core.length + i))}
-      </tbody>
+      <tbody>{lines.map(renderRow)}</tbody>
     </table>
   );
 };
 
 const MobileStrips = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeState }) => (
   <ul className="flex flex-col gap-3 lg:hidden">
-    {lines.flatMap((line, index) => [
-      ...(index > 0 && line.config.group === 'also' && lines[index - 1].config.group === 'core'
-        ? [
-            <li
-              key="also-running"
-              className="px-1 pt-2 text-xs font-medium tracking-wide text-muted-foreground uppercase"
-            >
-              Also running
-            </li>,
-          ]
-        : []),
+    {lines.map((line, index) => (
       <li
         key={line.config.id}
         data-line={line.config.line}
@@ -304,8 +276,8 @@ const MobileStrips = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
             ))}
           </ul>
         </div>
-      </li>,
-    ])}
+      </li>
+    ))}
   </ul>
 );
 
@@ -325,7 +297,7 @@ export const Scoreboard = ({
     return { config, row: row && { ...row, label: config.label } };
   });
   return (
-    <Card aria-busy={state === 'loading'}>
+    <Card id="card" aria-busy={state === 'loading'} className="scroll-mt-6">
       <CardHeader>
         <CardTitle>Every line, every measure</CardTitle>
         <CardDescription>

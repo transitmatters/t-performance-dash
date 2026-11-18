@@ -1,12 +1,14 @@
 import type { Line } from '../../common/types/lines';
-import type { HeroStat, MetricId } from './types';
+import type { MetricId } from './types';
 
-/** Headway goals in minutes. */
+/**
+ * Headway goals in minutes. Commuter Rail has none: the MBTA hasn't committed to one for the whole
+ * system, only for "the inner core" and "key corridors with higher ridership" in Full T Ahead.
+ */
 export const FREQUENCY_GOALS = {
   subway: 10,
   frequentBus: 15,
   bus: 15,
-  commuterRail: 30,
 } as const;
 
 /** What a row measures against; each measure explains itself per mode. */
@@ -19,8 +21,6 @@ const BUS_DELIVERED =
   'Also shows the share of scheduled trips delivered over the last 4 complete weeks; a trip with no bus location data counts as missed.';
 const frequencyDefinition = (vehicle: string, minutes: number) =>
   `Share of scheduled service hours, first trip to last, with a ${vehicle} at least every ${minutes} minutes. ${WEEKDAY_WEIGHTING}`;
-const BUS_FLEET =
-  'Share of bus trips run by battery-electric or hybrid buses over the last 4 weeks.';
 const reliabilityDefinition = (where: string) =>
   `Share of headways (the wait between one vehicle and the next) within 75–125% of the scheduled headway, at ${where}, over the last 4 complete weeks.`;
 const DELAYS_DEFINITION =
@@ -55,10 +55,9 @@ export const METRICS: Record<MetricId, MetricMethod> = {
   frequency: {
     id: 'frequency',
     label: 'Frequency',
-    summary: `Share of scheduled service hours with a train or bus at least every ${FREQUENCY_GOALS.subway} minutes on the subway, ${FREQUENCY_GOALS.bus} on buses, and ${FREQUENCY_GOALS.commuterRail} on Commuter Rail.`,
+    summary: `Share of scheduled service hours with a train or bus at least every ${FREQUENCY_GOALS.subway} minutes on the subway and ${FREQUENCY_GOALS.bus} on buses. Commuter Rail isn't judged on this: the MBTA hasn't set a frequency goal for it.`,
     definitions: {
       subway: frequencyDefinition('train', FREQUENCY_GOALS.subway),
-      commuterRail: frequencyDefinition('train', FREQUENCY_GOALS.commuterRail),
       frequentBus: frequencyDefinition('bus', FREQUENCY_GOALS.frequentBus),
       bus: `${frequencyDefinition('bus', FREQUENCY_GOALS.bus)} Each route counts by its riders.`,
     },
@@ -96,34 +95,13 @@ export const METRICS: Record<MetricId, MetricMethod> = {
         'The worse of two measures. Speed: median weekly average speed over 12 weeks, end to end including stops, compared with the fastest 4-week stretch at least 3 years ago. Slow zones: average extra time per day that slow zones add to a trip, over the last 12 weeks.',
     },
   },
-  fleet: {
-    id: 'fleet',
-    label: 'Vehicles',
-    summary:
-      'Subway: age of the oldest cars still in regular service. Bus: share of trips on battery-electric or hybrid buses. Commuter Rail: share of service run electric.',
-    definitions: {
-      subway:
-        'Age of the oldest cars still in regular service (at least 1% of cars over the last 4 weeks), counted from when that type was first built. Riders feel the oldest trains, not the average.',
-      commuterRail: 'Share of Commuter Rail service run with electric trains.',
-      frequentBus: BUS_FLEET,
-      bus: BUS_FLEET,
-    },
-  },
 };
 
-export const METRIC_ORDER: MetricId[] = [
-  'service',
-  'frequency',
-  'reliability',
-  'delays',
-  'speed',
-  'fleet',
-];
+export const METRIC_ORDER: MetricId[] = ['service', 'frequency', 'reliability', 'delays', 'speed'];
 
 export interface RowConfig {
   id: string;
   label: string;
-  group: 'core' | 'also';
   line: Line;
   mode: RowMode;
   href: string;
@@ -133,7 +111,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'red',
     label: 'Red Line',
-    group: 'core',
     line: 'line-red',
     mode: 'subway',
     href: '/red',
@@ -141,7 +118,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'orange',
     label: 'Orange Line',
-    group: 'core',
     line: 'line-orange',
     mode: 'subway',
     href: '/orange',
@@ -149,7 +125,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'blue',
     label: 'Blue Line',
-    group: 'core',
     line: 'line-blue',
     mode: 'subway',
     href: '/blue',
@@ -157,7 +132,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'green',
     label: 'Green Line',
-    group: 'core',
     line: 'line-green',
     mode: 'subway',
     href: '/green',
@@ -165,7 +139,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'commuter-rail',
     label: 'Commuter Rail',
-    group: 'core',
     line: 'line-commuter-rail',
     mode: 'commuterRail',
     href: '/commuter-rail',
@@ -173,7 +146,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'frequent-bus',
     label: 'Frequent Bus',
-    group: 'core',
     line: 'line-bus',
     mode: 'frequentBus',
     href: '/bus',
@@ -181,7 +153,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'all-bus',
     label: 'All Buses',
-    group: 'core',
     line: 'line-bus',
     mode: 'bus',
     href: '/bus',
@@ -189,7 +160,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'mattapan',
     label: 'Mattapan Line',
-    group: 'also',
     line: 'line-mattapan',
     mode: 'subway',
     href: '/mattapan',
@@ -197,7 +167,6 @@ export const ROWS: RowConfig[] = [
   {
     id: 'ferry',
     label: 'Ferry',
-    group: 'also',
     line: 'line-ferry',
     mode: 'ferry',
     href: '/ferry/ridership',
@@ -212,44 +181,3 @@ export const definitionFor = (metric: MetricId, rowId: string) => {
 
 /** A trend smaller than this reads as flat. */
 export const NEGLIGIBLE_TREND = 0.02;
-
-export type HeroConfig = Omit<HeroStat, 'value' | 'trend' | 'note'>;
-
-/** The tiles across the top, known before any data loads. */
-export const HERO: HeroConfig[] = [
-  {
-    id: 'subwayFrequency',
-    label: 'Subway',
-    unit: 'pct',
-    detail: `of service hours at every ${FREQUENCY_GOALS.subway} min or better`,
-    direction: 'higher',
-  },
-  {
-    id: 'service',
-    label: 'Scheduled service',
-    unit: 'pct',
-    detail: 'of the most trips ever scheduled',
-    direction: 'higher',
-  },
-  {
-    id: 'slowZones',
-    label: 'Slow zone delay',
-    unit: 'minutes',
-    detail: 'added per day across the subway, last week',
-    direction: 'lower',
-  },
-  {
-    id: 'frequentBus',
-    label: 'Frequent Bus',
-    unit: 'pct',
-    detail: `of service hours at every ${FREQUENCY_GOALS.frequentBus} min or better`,
-    direction: 'higher',
-  },
-  {
-    id: 'crHeadway',
-    label: 'Commuter Rail midday',
-    unit: 'minutes',
-    detail: 'between trains on weekdays',
-    direction: 'lower',
-  },
-];

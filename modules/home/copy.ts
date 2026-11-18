@@ -18,8 +18,10 @@ export const HEADLINE_LABELS: Record<HeadlineKind, string> = {
   limited: 'Limited data',
 };
 
-export const heldBackLabel = (metrics: MetricId[]) => {
+const isMetric = (metric: string): metric is MetricId => metric in METRICS;
+
+export const heldBackLabel = (metrics: string[]) => {
   // Skips measures the page no longer shows, which older data can still list.
-  const labels = metrics.filter((m) => m in METRICS).map((m) => METRICS[m].label.toLowerCase());
+  const labels = metrics.filter(isMetric).map((m) => METRICS[m].label.toLowerCase());
   return labels.length ? `Held back by ${labels.slice(0, 2).join(' and ')}` : undefined;
 };
