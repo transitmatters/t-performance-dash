@@ -30,7 +30,7 @@ export const AggregateChartWrapper = ({
   peakTime,
   type,
   dayFilter,
-  ...chartProps
+  ...props
 }: AggregateChartWrapperProps) => {
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
@@ -58,6 +58,7 @@ export const AggregateChartWrapper = ({
     );
   }
 
+  const chartProps = { ...props, loadingRanges: query.chunks?.pendingRanges };
   switch (type) {
     case 'traveltimes':
       return (

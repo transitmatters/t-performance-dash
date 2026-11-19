@@ -3,8 +3,9 @@ import { AggregateLineChart } from '../../../common/components/charts/AggregateL
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type {
   AggregateDataResponse,
-  TravelTimesUnit,
+  AggregateLineProps,
   DayFilter,
+  TravelTimesUnit,
 } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
@@ -23,6 +24,7 @@ interface TravelTimesAggregateChartProps {
   endDate?: string;
   fill?: boolean;
   trendline?: boolean;
+  loadingRanges?: AggregateLineProps['loadingRanges'];
 }
 
 export const TravelTimesAggregateChart = ({
@@ -36,6 +38,7 @@ export const TravelTimesAggregateChart = ({
   endDate: endDateProp,
   fill = false,
   trendline = false,
+  loadingRanges,
 }: TravelTimesAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -77,6 +80,7 @@ export const TravelTimesAggregateChart = ({
         yUnit="Minutes"
         fill={fill}
         trendline={trendline}
+        loadingRanges={loadingRanges}
         embedChart={timeUnitByDate ? 'traveltimes' : 'traveltimes-by-hour'}
       />
     );
@@ -91,6 +95,7 @@ export const TravelTimesAggregateChart = ({
     dayFilter,
     fill,
     trendline,
+    loadingRanges,
   ]);
 
   return chart;

@@ -52,6 +52,7 @@ export const TravelTimesAggregateWrapper = ({
           fromStation={fromStation}
           timeUnit={'by_date'}
           dayFilter={dayFilter}
+          loadingRanges={query.chunks?.pendingRanges}
         />
         {!query.chunks?.pending && <StatStrip widgetObjects={widgetObjects} />}
         <PartialDataNotice query={query} />

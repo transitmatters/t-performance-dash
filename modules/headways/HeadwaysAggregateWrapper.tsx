@@ -55,6 +55,7 @@ export const HeadwaysAggregateWrapper = ({
           toStation={toStation}
           fromStation={fromStation}
           dayFilter={dayFilter}
+          loadingRanges={query.chunks?.pendingRanges}
         />
         {!query.chunks?.pending && <StatStrip widgetObjects={widgetObjects} />}
         <PartialDataNotice query={query} />
