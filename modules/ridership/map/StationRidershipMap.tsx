@@ -7,7 +7,11 @@ import '@transitmatters/stripmap/dist/style.css';
 
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { useThemeStore } from '../../../common/state/themeStore';
-import { abbreviateStationName, getStripMapWatermark } from '../../../common/utils/stripmap';
+import {
+  abbreviateStationName,
+  getMinHorizontalScale,
+  getStripMapWatermark,
+} from '../../../common/utils/stripmap';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { SvgChart } from '../../../common/components/charts/SvgChart';
 import { StationRidershipTooltip } from './StationRidershipTooltip';
@@ -109,6 +113,7 @@ export const StationRidershipMap = ({
         strokeOptions={{ stroke: line.color }}
         direction={direction}
         getStationLabel={abbreviateStationName}
+        minHorizontalScale={getMinHorizontalScale(lineName)}
         getStations={getStations}
         stationTooltip={{ render: renderStationTooltip }}
         onStationClick={(stationId) => {
