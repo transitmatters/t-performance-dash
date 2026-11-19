@@ -10,12 +10,7 @@ const StatementText = ({ statement, lead }: { statement: Statement; lead: boolea
     <span className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
       {statement.kicker}
     </span>
-    <h3
-      className={cn(
-        'font-bold tracking-tight text-balance',
-        lead ? 'text-2xl md:text-3xl' : 'text-xl'
-      )}
-    >
+    <h3 className={cn('font-bold tracking-tight text-balance', lead ? 'text-2xl' : 'text-xl')}>
       {statement.head}
     </h3>
     <p className="max-w-[60ch] text-muted-foreground">{statement.body}</p>

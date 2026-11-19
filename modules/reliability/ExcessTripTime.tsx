@@ -70,7 +70,7 @@ export const ExcessTripTime = ({ line, agg, startDate, endDate }: ExcessTripTime
   return (
     <>
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-semibold text-foreground">Excess trip time</h2>
+        <h2 className="text-base font-medium text-foreground">Excess trip time</h2>
         <p className="text-sm text-muted-foreground">
           How much longer riders&apos; trips took than the MBTA&apos;s baseline, from its fare and
           train data. The MBTA publishes it monthly, about five weeks behind.

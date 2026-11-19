@@ -167,7 +167,7 @@ export const SingleDayLineChart = ({
             backgroundColor: chartTheme.medianLine,
             borderRadius: 6,
             padding: { x: 8, y: 4 },
-            font: { size: 12, weight: 'bold' },
+            font: { size: 12, weight: 600 },
           },
         ]
       : [];

@@ -28,7 +28,7 @@ const STAT_CELL = 'w-[4.5rem] shrink-0 whitespace-nowrap tabular-nums sm:w-20';
 
 /** Hour labels over the grid, and the stats' column headings. */
 export const HourGridHeader = ({ stats }: { stats: string[] }) => (
-  <div aria-hidden className={cn(ROW, 'text-[11px] leading-tight text-muted-foreground')}>
+  <div aria-hidden className={cn(ROW, 'text-xs leading-tight text-muted-foreground')}>
     <div className={LABEL} />
     <div className={STATS}>
       {stats.map((stat) => (
@@ -88,7 +88,7 @@ export const HourGridRow = ({ label, hours, describe, stats }: HourGridRowProps)
             aria-label={description}
             title={description}
             className={cn(
-              'flex h-7 items-center justify-center rounded-[3px] text-[11px] font-medium tabular-nums',
+              'flex h-7 items-center justify-center rounded-[3px] text-xs font-medium tabular-nums',
               LEVEL_CLASS[level]
             )}
           >
@@ -109,7 +109,7 @@ export const HourGridLegend = ({ children }: { children?: ReactNode }) => (
         <span
           key={level}
           className={cn(
-            'flex h-5 min-w-6 items-center justify-center rounded-[3px] px-1 text-[11px] font-medium',
+            'flex h-5 min-w-6 items-center justify-center rounded-[3px] px-1 text-xs font-medium',
             LEVEL_CLASS[level]
           )}
         >
