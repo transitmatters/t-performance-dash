@@ -9,7 +9,7 @@ interface HeadwayBreakdownProps {
 /**
  * Every headway in the range, split by its ratio to the scheduled headway: one bar that adds up
  * to 100%, with the share and count of each bucket listed underneath. The list carries the values,
- * so the two yellow (and two red) buckets are told apart by position and label, not color.
+ * so the two yellow buckets are told apart by position and label, not color.
  */
 export const HeadwayBreakdown = ({ counts }: HeadwayBreakdownProps) => {
   const total = HEADWAY_BUCKETS.reduce((sum, { field }) => sum + counts[field], 0);

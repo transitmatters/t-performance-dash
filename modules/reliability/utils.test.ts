@@ -1,9 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
 import {
-  divergingShares,
   getHeadwayTotals,
-  HEADWAY_BUCKETS,
   headwayShare,
   ON_TIME,
   toCsvRows,
@@ -29,8 +27,6 @@ const data: ReliabilityEntry[] = [
   { date: '2026-10-12', days: 7, ...counts(0, 0, 0, 0, 0) },
 ];
 
-const bucket = (field: string) => HEADWAY_BUCKETS.find((b) => b.field === field)!;
-
 describe('toHeadwayRows', () => {
   it('uses the totals for both directions', () => {
     expect(headwayShare(toHeadwayRows(data, 'both')[0].counts, ON_TIME)).toBe(40);
@@ -49,19 +45,6 @@ describe('toHeadwayRows', () => {
 describe('getHeadwayTotals', () => {
   it('adds up counts across periods', () => {
     expect(getHeadwayTotals(toHeadwayRows(data, '0'))).toEqual(counts(4, 6, 30, 5, 5));
-  });
-});
-
-describe('divergingShares', () => {
-  const rows = toHeadwayRows(data, 'both');
-
-  it('puts headways shorter than scheduled below zero', () => {
-    expect(divergingShares(rows, bucket('headways_under_50'))).toEqual([-10, null]);
-    expect(divergingShares(rows, bucket('headways_50_75'))).toEqual([-20, null]);
-  });
-
-  it('puts headways longer than scheduled above zero', () => {
-    expect(divergingShares(rows, bucket('headways_over_150'))).toEqual([20, null]);
   });
 });
 
