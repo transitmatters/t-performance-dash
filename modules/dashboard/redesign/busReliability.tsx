@@ -4,7 +4,6 @@ import { useBusTripMetrics } from '../../../common/api/hooks/busTripMetrics';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import { TODAY_STRING } from '../../../common/constants/dates';
 import {
   getBusRouteDisplayName,
   getBusRouteIds,
@@ -16,14 +15,8 @@ import type { DatedValue } from '../../../common/utils/dateAggregation';
 import type { AggType } from '../../speed/constants/speeds';
 import { ReliabilityGraph } from '../../reliability/charts/ReliabilityGraph';
 import { BUNCHED, headwayShare, ON_TIME } from '../../reliability/utils';
-import {
-  CHART_CONFIG,
-  CHART_FETCH_START,
-  WINDOW_START,
-  buildRow,
-  chartWindowStart,
-  toSlot,
-} from './scorecardUtils';
+import { CHART_CONFIG, buildRow, chartWindowStart, toSlot } from './scorecardUtils';
+import type { OverviewWindow } from './scorecardUtils';
 
 /**
  * Headway reliability is for routes people turn up for without a schedule, so it's shown only for
@@ -49,11 +42,17 @@ const toHeadwayPoints = (data: DeliveredTripMetricsBus[], fields: typeof ON_TIME
   });
 
 /** When every route_id is frequent, this is the same query as the speed row, so it's fetched once. */
-const useFrequentTripMetrics = (busRoute: BusRoute, startDate: string, agg: AggType) => {
+const useFrequentTripMetrics = (
+  busRoute: BusRoute,
+  startDate: string,
+  endDate: string,
+  agg: AggType,
+  enabled = true
+) => {
   const frequentIds = getFrequentBusRouteIds(busRoute);
   return useBusTripMetrics(
-    { start_date: startDate, end_date: TODAY_STRING, route: frequentIds.join(','), agg },
-    frequentIds.length > 0
+    { start_date: startDate, end_date: endDate, route: frequentIds.join(','), agg },
+    enabled && frequentIds.length > 0
   );
 };
 
@@ -64,9 +63,23 @@ const reliabilityMeta = (subset: string | undefined) =>
     subtitle: `Headways within 75–125% of schedule${subset ? `, Route ${subset} only` : ''}`,
   }) as const;
 
-/** The Reliability slot, or null for a route that isn't frequent and so has no such row. */
-export const useBusReliabilitySlot = (busRoute: BusRoute, color: string) => {
-  const tripMetrics = useFrequentTripMetrics(busRoute, WINDOW_START, 'weekly');
+/**
+ * The Reliability slot, or null for a route that isn't frequent, or has no trip metrics (`enabled`),
+ * and so has no such row.
+ */
+export const useBusReliabilitySlot = (
+  busRoute: BusRoute,
+  color: string,
+  span: OverviewWindow,
+  enabled: boolean
+) => {
+  const tripMetrics = useFrequentTripMetrics(
+    busRoute,
+    span.windowStart,
+    span.end,
+    'weekly',
+    enabled
+  );
   const subset = frequentSubset(busRoute);
   const row = useMemo(
     () =>
@@ -86,7 +99,7 @@ export const useBusReliabilitySlot = (busRoute: BusRoute, color: string) => {
         : null,
     [tripMetrics.data, subset, color]
   );
-  return hasBusReliability(busRoute)
+  return enabled && hasBusReliability(busRoute)
     ? toSlot(reliabilityMeta(subset), [tripMetrics], () => row)
     : null;
 };
@@ -107,14 +120,25 @@ const ReliabilityNote = ({ busRoute }: { busRoute: BusRoute }) => {
   );
 };
 
-export const BusReliabilityChart = ({ busRoute }: { busRoute: BusRoute }) => {
-  const tripMetrics = useFrequentTripMetrics(busRoute, CHART_FETCH_START, CHART_CONFIG.agg);
+export const BusReliabilityChart = ({
+  busRoute,
+  span,
+}: {
+  busRoute: BusRoute;
+  span: OverviewWindow;
+}) => {
+  const tripMetrics = useFrequentTripMetrics(
+    busRoute,
+    span.chartFetchStart,
+    span.end,
+    CHART_CONFIG.agg
+  );
 
   if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
   const within = toHeadwayPoints(tripMetrics.data, ON_TIME);
   if (!within.length)
     return <NoDataNotice isLineMetric message="No headways recorded in the last 60 days." />;
-  const chartEnd = within[within.length - 1]?.date ?? TODAY_STRING;
+  const chartEnd = within[within.length - 1]?.date ?? span.end;
   return (
     <div className="flex flex-col gap-3">
       <ReliabilityGraph

@@ -6,6 +6,7 @@ import {
   WINDOW_START,
   YEAR_OVER_YEAR_START,
   buildRidershipRow,
+  getOverviewWindow,
   toSlot,
   trailingWindowLabel,
 } from './scorecardUtils';
@@ -58,6 +59,40 @@ describe('buildRidershipRow', () => {
     expect(buildRidershipRow(data, '#000', { yearOverYear: true })?.trend).toEqual(
       buildRidershipRow(windowOnly, '#000')?.trend
     );
+  });
+});
+
+describe('buildRidershipRow for a retired route', () => {
+  it("keeps the route's final year in the sparkline", () => {
+    const { windowStart } = getOverviewWindow('2024-12-14');
+    const data = Array.from({ length: 70 }, (_, i) => ({
+      date: dayjs('2024-12-09').subtract(i, 'week').format('YYYY-MM-DD'),
+      count: 3000,
+    })).reverse();
+    expect(buildRidershipRow(data, '#000')).toBeNull();
+    const row = buildRidershipRow(data, '#000', { yearOverYear: true, windowStart });
+    expect(row?.formattedCurrent).toBe('3.0k');
+    expect(row?.yearOverYear?.label).toBe('0% vs a year ago');
+  });
+});
+
+describe('getOverviewWindow', () => {
+  it('ends on the given day', () => {
+    expect(getOverviewWindow('2024-12-14')).toEqual({
+      end: '2024-12-14',
+      windowStart: '2023-11-10',
+      yearOverYearStart: '2023-10-05',
+      chartFetchStart: '2024-10-15',
+    });
+  });
+
+  it("starts no earlier than the route's first day", () => {
+    expect(getOverviewWindow('2026-11-18', '2026-09-06')).toEqual({
+      end: '2026-11-18',
+      windowStart: '2026-09-06',
+      yearOverYearStart: '2026-09-06',
+      chartFetchStart: '2026-09-19',
+    });
   });
 });
 
