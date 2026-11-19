@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import type { Line } from '../../common/types/lines';
-import { FREQUENCY_GOALS, NEGLIGIBLE_TREND, ROWS } from './config';
+import { FREQUENCY_GOALS, ROWS } from './config';
 import type { Cell, HomeData, MetricId } from './types';
 
 // The "Across the system" statements and the line under the page title: sentences filled in from
@@ -28,14 +28,12 @@ export interface Rule {
 export type Viz =
   | { kind: 'dots'; marks: Mark[]; rules: Rule[] }
   | { kind: 'bars'; unit: string; marks: Mark[] }
-  | { kind: 'meters'; marks: Mark[]; cap: number; rule?: Rule; note?: string }
+  | { kind: 'meters'; marks: Mark[]; cap: number; rule?: Rule }
   | { kind: 'area'; series: [string, number][]; peak: [string, number]; now: number };
 
 export interface Statement {
   id: 'reliability' | 'delays' | 'frequency' | 'service' | 'slowZones';
-  kicker: string;
   head: string;
-  body: string;
   viz: Viz;
   link: { href: string; label: string };
 }
@@ -55,8 +53,6 @@ const formatMinutes = (minutes: number) => {
     ? `${Math.round(minutes * 10) / 10} minutes`
     : `${Math.round(minutes)} minutes`;
 };
-
-const countOf = (n: number, total: number) => (n === total ? `all ${total}` : `${n} of ${total}`);
 
 const reader = (data: HomeData) => {
   const cell = (row: string, metric: MetricId) =>
@@ -81,11 +77,6 @@ type Reader = ReturnType<typeof reader>;
 /** Rows judged on how evenly vehicles are spaced. Commuter Rail is judged on time instead. */
 const SPACING_ROWS = [...SUBWAY, 'frequent-bus', 'all-bus'];
 const isBus = (id: string) => ['frequentBus', 'bus'].includes(rowConfig(id)?.mode ?? '');
-/** Where a row's bunching happens, to start a sentence: "On the Red Line", "Across all bus routes". */
-const PLACE: Record<string, string> = {
-  'frequent-bus': 'On Frequent Bus routes',
-  'all-bus': 'Across all bus routes',
-};
 
 /**
  * How many of the rows with headway data keep their vehicles evenly spaced, and the words for
@@ -120,18 +111,10 @@ function reliability({ cell, mark, link }: Reader): Statement | undefined {
   const thresholds = s?.lines[0].cell?.thresholds;
   if (!s || !thresholds) return undefined;
   const [win, good] = thresholds;
-  const values = s.lines.map((l) => l.cell?.value as number);
   const worst = s.lines.reduce((a, b) => ((b.cell?.value ?? 1) < (a.cell?.value ?? 1) ? b : a));
-  const bunched = worst.cell?.bunched;
-
-  const bunchedText = isNumber(bunched)
-    ? ` ${PLACE[worst.id] ?? `On the ${labelOf(worst.id)}`}, ${pct(bunched)} of ${isBus(worst.id) ? 'buses' : 'trains'} come bunched up behind the one ahead.`
-    : '';
   return {
     id: 'reliability',
-    kicker: 'Reliability',
     head: spacingSentence(s),
-    body: `Between ${pct(Math.min(...values))} and ${pct(Math.max(...values))} of the gaps between ${s.vehicles} are on schedule, and Good starts at ${pct(good)}.${bunchedText}`,
     viz: {
       kind: 'dots',
       marks: s.lines.map((l) => mark(l.id, l.cell?.value as number)),
@@ -150,33 +133,18 @@ function delays({ cell, mark, link }: Reader): Statement | undefined {
   const minutes = lines.map((l) => Math.round(l.cell?.minutesPerDay as number));
   const [low, high] = [Math.min(...minutes), Math.max(...minutes)];
   const worst = lines[minutes.indexOf(high)];
-  const up = lines.filter((l) => (l.cell?.trend ?? 0) > NEGLIGIBLE_TREND).length;
-  const down = lines.filter((l) => (l.cell?.trend ?? 0) < -NEGLIGIBLE_TREND).length;
   const mattapan = cell('mattapan', 'delays');
   const mattapanMinutes = isNumber(mattapan?.minutesPerDay)
     ? Math.round(mattapan.minutesPerDay)
     : undefined;
-
-  const change =
-    up > 0
-      ? `That went up on ${countOf(up, SUBWAY.length)} lines in the last two weeks.`
-      : down > 0
-        ? `That went down on ${countOf(down, SUBWAY.length)} lines in the last two weeks.`
-        : 'That has held steady over the last two weeks.';
-  const exception =
-    mattapanMinutes !== undefined && mattapanMinutes < low
-      ? ` Mattapan, at ${mattapanMinutes} minutes, is the exception.`
-      : '';
   return {
     id: 'delays',
-    kicker: 'Delays',
     head:
       high === 0
         ? 'No subway line has had a delay alert in the last four weeks.'
         : low === high
           ? `Each subway line spends about ${low} minutes a day under a delay alert.`
           : `Each subway line spends ${low} to ${high} minutes a day under a delay alert.`,
-    body: change + exception,
     viz: {
       kind: 'bars',
       unit: 'min',
@@ -196,17 +164,9 @@ function frequency({ cell, hero, mark, link }: Reader): Statement | undefined {
   const bus = cell('all-bus', 'frequency')?.value;
   const frequent = cell('frequent-bus', 'frequency')?.value;
   if (!isNumber(subway) || !isNumber(bus) || !isNumber(frequent)) return undefined;
-  const frequentText =
-    pct(frequent) === pct(bus)
-      ? `Frequent Bus routes match that, at ${pct(frequent)} of their hours.`
-      : frequent > bus
-        ? `Frequent Bus routes do better, at ${pct(frequent)} of their hours.`
-        : `Frequent Bus routes manage ${pct(frequent)} of their hours.`;
   return {
     id: 'frequency',
-    kicker: 'Frequency',
-    head: `On the subway, a train comes every ${FREQUENCY_GOALS.subway} minutes or better for ${pct(subway)} of the service day. Across all bus routes, a bus comes every ${FREQUENCY_GOALS.bus} minutes for ${pct(bus)}.`,
-    body: `${frequentText} Commuter Rail isn't judged on frequency, since the MBTA hasn't set a goal for it.`,
+    head: `A subway train comes every ${FREQUENCY_GOALS.subway} minutes or better for ${pct(subway)} of the service day; a bus, every ${FREQUENCY_GOALS.bus}, for ${pct(bus)}.`,
     viz: {
       kind: 'meters',
       cap: 1,
@@ -215,13 +175,12 @@ function frequency({ cell, hero, mark, link }: Reader): Statement | undefined {
         mark('frequent-bus', frequent),
         mark('all-bus', bus),
       ],
-      note: `Share of service hours with a train at least every ${FREQUENCY_GOALS.subway} minutes, or a bus every ${FREQUENCY_GOALS.bus}.`,
     },
     link: link('frequent-bus', 'frequency', 'frequency'),
   };
 }
 
-function service({ cell, hero, mark, link }: Reader): Statement | undefined {
+function service({ cell, mark, link }: Reader): Statement | undefined {
   const lines = SERVICE_ROWS.map((id) => ({ id, cell: cell(id, 'service') })).filter((l) =>
     isNumber(l.cell?.score)
   );
@@ -230,28 +189,15 @@ function service({ cell, hero, mark, link }: Reader): Statement | undefined {
   const atBest = lines.filter((l) => isGood(l.cell)).length;
   const furthest = lines.reduce((a, b) => ((b.cell?.score ?? 0) < (a.cell?.score ?? 0) ? b : a));
   const furthestScore = furthest.cell?.score as number;
-  const system = hero('service')?.value;
 
   return {
     id: 'service',
-    kicker: 'Service',
     head:
       furthestScore >= 1
         ? 'Every line runs as many trips as it did at its best, or more.'
         : atBest === lines.length
           ? `Every line runs at least ${pct(good)} of the trips it ran at its best.`
           : `${atBest} of ${lines.length} lines run at least ${pct(good)} of the trips they ran at their best.`,
-    body: [
-      isNumber(system)
-        ? `Across the system the T is scheduling ${pct(system)} of the most trips it has ever scheduled.`
-        : '',
-      // Nobody is behind once every line has matched its best.
-      furthestScore < 1
-        ? `${labelOf(furthest.id)} is the furthest behind, at ${pct(furthestScore)}.`
-        : '',
-    ]
-      .filter(Boolean)
-      .join(' '),
     viz: {
       kind: 'meters',
       cap: 1.2,
@@ -267,16 +213,14 @@ function slowZones({ hero }: Reader): Statement | undefined {
   const series = stat?.history ?? [];
   if (!isNumber(stat?.value) || series.length < 12) return undefined;
   const peak = series.reduce((a, b) => (b[1] > a[1] ? b : a));
-  const then = `In ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')} they added ${formatMinutes(peak[1])}.`;
+  const then = `down from ${formatMinutes(peak[1])} a day in ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')}.`;
   return {
     id: 'slowZones',
-    kicker: 'Slow zones',
     // Under 3 seconds a day rounds to "0.0 minutes", so call it none.
     head:
       stat.value < 0.05
-        ? `There are no slow zones on the subway right now. ${then}`
-        : `Slow zones add ${formatMinutes(stat.value)} a day across the subway. ${then}`,
-    body: "That's the extra time slow zones put on trips each day, added up across every line. Most were cleared during the MBTA's 2024 track work.",
+        ? `There are no slow zones on the subway right now, ${then}`
+        : `Slow zones add ${formatMinutes(stat.value)} a day across the subway, ${then}`,
     viz: { kind: 'area', series, peak, now: stat.value },
     link: { href: '/slowzones', label: 'Slow zones' },
   };
