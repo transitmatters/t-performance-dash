@@ -38,7 +38,8 @@ export const getDelayStats = (data: RangeRow[], agg: DelayAgg, line?: Line) => {
   return {
     totalDelay: sum(data.map((row) => row.total_delay_time)), // total minutes delayed across the window
     avgDelay: perPeriod(data, periodDays), // minutes delayed per period (day, week or month)
-    avgDelayDelta: perPeriod(trailing, periodDays) - perPeriod(leading, periodDays), // minutes, trailing minus leading half
+    avgDelayBefore: perPeriod(leading, periodDays),
+    avgDelayAfter: perPeriod(trailing, periodDays),
     agg,
     topReasonLabel: topReason?.label ?? null,
     topReasonShare: topReason?.share ?? null,
