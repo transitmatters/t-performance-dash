@@ -1,13 +1,7 @@
 import type { CSSProperties } from 'react';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { Link } from '../../../common/components/general/Link';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '../../../common/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '../../../common/components/ui/card';
 import { Button } from '../../../common/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '../../../common/components/ui/popover';
 import { RouteBullet } from '../../../common/components/transit/RouteBullet';
@@ -15,8 +9,8 @@ import { RouteLine } from '../../../common/components/transit/RouteLine';
 import { cn } from '../../../common/utils/cn';
 import { METRICS, METRIC_ORDER, ROWS } from '../config';
 import type { RowConfig } from '../config';
-import { HEADLINE_LABELS, STATUS_LABELS, heldBackLabel } from '../copy';
-import { formatCell, STATUS_TONE } from '../format';
+import { HEADLINE_LABELS, STATUS_LABELS } from '../copy';
+import { formatCell } from '../format';
 import type { Cell, HeadlineKind, MetricId, Row } from '../types';
 import type { HomeState } from '../useHomeData';
 import { CellDetail } from './CellDetail';
@@ -27,7 +21,7 @@ const HEADLINE_TONE: Record<HeadlineKind, string> = {
   strong: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
   good: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',
   room: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300',
-  needsWork: 'bg-destructive/10 text-destructive dark:bg-destructive/20',
+  needsWork: 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300',
   limited: 'border-border text-muted-foreground',
 };
 
@@ -48,36 +42,21 @@ interface ScoreboardLine {
   row?: Row;
 }
 
-const RowTitle = ({ line: { config, row }, state }: { line: ScoreboardLine; state: HomeState }) => {
-  const heldBack =
-    row && row.headline.kind !== 'limited' ? heldBackLabel(row.headline.heldBackBy) : undefined;
-  return (
-    <div className="flex min-w-0 flex-col gap-1">
-      <Link href={config.href} className="flex items-center gap-2 font-semibold hover:underline">
-        <span className="text-primary">
-          <RouteBullet />
-        </span>
-        {config.label}
-      </Link>
-      {/* Fixed heights, so the row doesn't grow when its verdict arrives: room for the held-back
-          line to wrap once in the narrow desktop column, never on the wider mobile card. */}
-      <div className="flex flex-col items-start gap-1">
-        {row ? (
-          <HeadlineBadge row={row} />
-        ) : (
-          <Placeholder className="h-[22px] w-20" pulse={state === 'loading'} />
-        )}
-        <span className="min-h-4 text-xs text-muted-foreground lg:min-h-8">
-          {row ? (
-            heldBack && <span className="tm-fade-in">{heldBack}</span>
-          ) : (
-            <Placeholder className="h-3 w-28" pulse={state === 'loading'} />
-          )}
-        </span>
-      </div>
-    </div>
-  );
-};
+const RowTitle = ({ line: { config, row }, state }: { line: ScoreboardLine; state: HomeState }) => (
+  <div className="flex min-w-0 flex-col gap-1">
+    <Link href={config.href} className="flex items-center gap-2 font-semibold hover:underline">
+      <span className="text-primary">
+        <RouteBullet />
+      </span>
+      {config.label}
+    </Link>
+    {row ? (
+      <HeadlineBadge row={row} />
+    ) : (
+      <Placeholder className="h-[22px] w-20" pulse={state === 'loading'} />
+    )}
+  </div>
+);
 
 const cellLabel = (row: Row, cell: Cell) =>
   `${row.label} ${METRICS[cell.metric].label}: ${STATUS_LABELS[cell.status]}${
@@ -107,18 +86,14 @@ const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 
       {layout === 'row' && (
         <span className="flex-1 text-sm font-medium">{METRICS[cell.metric].label}</span>
       )}
-      <span className={cn('flex flex-col', layout === 'row' ? 'items-end' : 'items-center')}>
-        <span
-          className={cn(
-            'text-sm font-semibold tabular-nums',
-            cell.status === 'na' && 'font-normal text-muted-foreground'
-          )}
-        >
-          {formatCell(cell)}
-        </span>
-        <span className={cn('text-[11px] leading-tight', STATUS_TONE[cell.status])}>
-          {STATUS_LABELS[cell.status]}
-        </span>
+      {/* The node's shape carries the status (see the legend); the label names it in words. */}
+      <span
+        className={cn(
+          'text-sm font-semibold tabular-nums',
+          cell.status === 'na' && 'font-normal text-muted-foreground'
+        )}
+      >
+        {formatCell(cell)}
       </span>
     </PopoverTrigger>
     <PopoverContent className="w-80" align="center">
@@ -164,13 +139,8 @@ const PendingStop = ({
       {layout === 'row' && (
         <span className="flex-1 text-sm font-medium">{METRICS[metric].label}</span>
       )}
-      <span className={cn('flex flex-col', layout === 'row' ? 'items-end' : 'items-center')}>
-        <span className="text-sm font-semibold text-muted-foreground">
-          {state === 'error' ? '—' : <Placeholder className="h-3.5 w-12" />}
-        </span>
-        <span className="text-[11px] leading-tight">
-          <Placeholder className="h-2 w-10" pulse={pulse} />
-        </span>
+      <span className="text-sm font-semibold text-muted-foreground">
+        {state === 'error' ? '—' : <Placeholder className="h-3.5 w-12" pulse={pulse} />}
       </span>
     </span>
   );
@@ -300,10 +270,6 @@ export const Scoreboard = ({
     <Card id="card" aria-busy={state === 'loading'} className="scroll-mt-6">
       <CardHeader>
         <CardTitle>Every line, every measure</CardTitle>
-        <CardDescription>
-          Each line is only as good as its weakest measure: there's no averaging. Tap any stop for
-          the numbers behind it.
-        </CardDescription>
       </CardHeader>
       <CardContent className="px-3 lg:px-0">
         {state === 'loading' && <p className="sr-only">Loading the latest numbers.</p>}

@@ -26,6 +26,7 @@ const DismissibleNotice = ({
   </Notice>
 );
 
+/** One notice, not a stack: two cards at the bottom of the screen covered the homepage chart. */
 export const BetaNotices = () => {
   const { rumNoticeDismissed, feedbackNoticeDismissed, dismissRumNotice, dismissFeedbackNotice } =
     useBetaNoticeStore();
@@ -33,19 +34,24 @@ export const BetaNotices = () => {
   if (!isBetaHost() || (rumNoticeDismissed && feedbackNoticeDismissed)) return null;
 
   return (
-    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto flex max-w-xl flex-col gap-2">
-      {!feedbackNoticeDismissed && (
-        <DismissibleNotice onDismiss={dismissFeedbackNotice}>
-          Help us improve the new dashboard. Found a bug or have an idea?{' '}
-          <a href={BETA_FEEDBACK_URL} target="_blank" rel="noreferrer">
-            {/* The global `a` reset beats Tailwind's underline on the anchor itself. */}
-            <span className="underline underline-offset-2">Share feedback</span>
-          </a>
-        </DismissibleNotice>
-      )}
-      {!rumNoticeDismissed && (
-        <DismissibleNotice onDismiss={dismissRumNotice}>{BETA_RUM_TEXT}</DismissibleNotice>
-      )}
+    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-xl">
+      <DismissibleNotice
+        onDismiss={() => {
+          dismissRumNotice();
+          dismissFeedbackNotice();
+        }}
+      >
+        {!rumNoticeDismissed && `${BETA_RUM_TEXT} `}
+        {!feedbackNoticeDismissed && (
+          <>
+            Found a bug or have an idea?{' '}
+            <a href={BETA_FEEDBACK_URL} target="_blank" rel="noreferrer">
+              {/* The global `a` reset beats Tailwind's underline on the anchor itself. */}
+              <span className="underline underline-offset-2">Share feedback</span>
+            </a>
+          </>
+        )}
+      </DismissibleNotice>
     </div>
   );
 };

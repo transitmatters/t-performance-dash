@@ -5,9 +5,6 @@ import { Placeholder } from './Placeholder';
 // The strip across the top: one segment per mode, in the T's own colors.
 const STRIPE = ['#da291c', '#ed8b00', '#003da5', '#00843d', '#80276c', '#ffc72c', '#008eaa'];
 
-const LINK =
-  'inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none';
-
 interface HomeHeroProps {
   lede?: { lead: string; rest?: string };
   generatedAt?: string;
@@ -70,20 +67,6 @@ export const HomeHero = ({ lede, generatedAt, failed }: HomeHeroProps) => (
           <Placeholder className="h-3.5 w-36" pulse={!failed} />
         )}
       </p>
-      <div className="mt-4 flex flex-wrap gap-2.5">
-        {/* The global `a { color: inherit }` beats a text color on the link itself. */}
-        <a
-          href="#card"
-          className={`${LINK} border-transparent bg-foreground hover:bg-foreground/90`}
-        >
-          <span className="text-background">
-            See every line <span aria-hidden="true">↓</span>
-          </span>
-        </a>
-        <a href="#system" className={`${LINK} hover:bg-muted`}>
-          Across the system
-        </a>
-      </div>
     </div>
     <HeroChart />
   </header>

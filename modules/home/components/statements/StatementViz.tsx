@@ -46,7 +46,7 @@ const RuleLabels = ({
 }) => (
   <div className={LABEL_COLUMN}>
     <span />
-    <span className="relative h-4 text-[11px] text-muted-foreground">
+    <span className="relative h-4 text-xs text-muted-foreground">
       {rules.map((rule, i) => (
         <span
           key={rule.label}
@@ -127,8 +127,10 @@ const Bars = ({ viz }: { viz: Extract<Viz, { kind: 'bars' }> }) => {
               {Math.abs(trend) >= NEGLIGIBLE_TREND && (
                 <span
                   className={cn(
-                    'ml-1 text-[11px] font-semibold tabular-nums',
-                    trend > 0 ? 'text-destructive' : 'text-green-700 dark:text-green-400'
+                    'ml-1 text-xs font-semibold tabular-nums',
+                    trend > 0
+                      ? 'text-red-700 dark:text-red-400'
+                      : 'text-green-700 dark:text-green-400'
                   )}
                 >
                   {trend > 0 ? '▲' : '▼'}
@@ -163,11 +165,10 @@ const Meters = ({ viz }: { viz: Extract<Viz, { kind: 'meters' }> }) => (
     ))}
     {viz.rule && (
       <RuleLabels
-        rules={[{ ...viz.rule, label: `Dashed line: each line's ${viz.rule.label.toLowerCase()}` }]}
+        rules={[{ ...viz.rule, label: `Each line's ${viz.rule.label.toLowerCase()}` }]}
         cap={viz.cap}
       />
     )}
-    {viz.note && <p className="text-xs text-muted-foreground">{viz.note}</p>}
   </>
 );
 
@@ -233,7 +234,7 @@ const SlowZoneArea = ({ viz }: { viz: Extract<Viz, { kind: 'area' }> }) => {
         <br />
         <span className="text-muted-foreground">last week</span>
       </span>
-      <div className="relative h-[18px] text-[11px] text-muted-foreground" aria-hidden="true">
+      <div className="relative h-[18px] text-xs text-muted-foreground" aria-hidden="true">
         {years.map(({ year, at }) => (
           <span key={year} className="absolute -translate-x-1/2" style={{ left: `${at * 100}%` }}>
             {year}
