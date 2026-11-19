@@ -19,7 +19,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const title = usePageTitle();
 
   return (
-    <div className="flex flex-1 flex-col pb-24 md:pb-0">
+    <div className="flex flex-1 flex-col">
       <title>{title}</title>
       <CIPBanner />
       <div className="flex-1">

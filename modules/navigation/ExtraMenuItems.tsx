@@ -1,40 +1,12 @@
-import { Link } from '../../common/components/general/Link';
 import { DonateButton } from '../../common/components/buttons/DonateButton';
 import { SidebarSeparator } from '../../common/components/ui/sidebar';
 import { ThemeToggle } from '../../common/components/nav/ThemeToggle';
-import { BETA_FEEDBACK_URL, isBetaHost } from '../../common/utils/constants';
 
-const LINKS = [
-  { name: 'About', href: 'https://transitmatters.org/transitmatters-labs' },
-  { name: 'Join us', href: 'https://transitmatters.org/join' },
-  {
-    name: 'Feedback',
-    href: isBetaHost() ? BETA_FEEDBACK_URL : 'https://forms.gle/SKYtxgKSyCrYxM1v7',
-  },
-  { name: 'Source', href: 'https://github.com/transitmatters/t-performance-dash' },
-  { name: 'Attributions', href: '/opensource' },
-];
-
-/**
- * Utility links are secondary to the nav, so they wrap inline rather than taking a row each —
- * stacked, they cost enough vertical space to push lines below the fold.
- */
+/** Kept short so lines stay above the fold; the utility links are in SiteFooter. */
 export const ExtraMenuItems = () => {
   return (
     <div className="flex flex-col gap-2 pb-1">
       <SidebarSeparator className="mx-0" />
-      <ul className="flex flex-wrap gap-x-3 gap-y-1 px-2 text-xs">
-        {LINKS.map((link) => (
-          <li key={link.name}>
-            <Link
-              href={link.href}
-              className="text-sidebar-foreground/60 hover:text-sidebar-foreground hover:underline"
-            >
-              {link.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
       <ThemeToggle />
       <DonateButton />
     </div>

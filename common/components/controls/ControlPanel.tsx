@@ -4,24 +4,20 @@ import { DateSelection } from '../inputs/DateSelection/DateSelection';
 import { StationSelectorWidget } from '../widgets/StationSelectorWidget';
 import { DisplayMenu } from './DisplayMenu';
 import { PageFilters } from './PageFilters';
-import { RouteSelector } from './RouteSelector';
 import { TripModeToggle } from './TripModeToggle';
 
-/** What the page is about, on the line-colored band: the route and the stops. */
+/** The stops, on the line-colored band beside the heading. Only trip pages have them. */
 export const BandControls = () => {
-  const { line, busRoute, crRoute, ferryRoute, showRouteSelector, showTripControls } =
-    usePageControls();
+  const { line, busRoute, crRoute, ferryRoute } = usePageControls();
+  if (!line) return null;
   return (
     <div className="flex min-w-0 flex-row flex-wrap items-center justify-end gap-2">
-      {showRouteSelector && <RouteSelector />}
-      {showTripControls && line && (
-        <StationSelectorWidget
-          line={line}
-          busRoute={busRoute}
-          crRoute={crRoute}
-          ferryRoute={ferryRoute}
-        />
-      )}
+      <StationSelectorWidget
+        line={line}
+        busRoute={busRoute}
+        crRoute={crRoute}
+        ferryRoute={ferryRoute}
+      />
     </div>
   );
 };
