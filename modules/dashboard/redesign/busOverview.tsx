@@ -7,14 +7,13 @@ import { useRidershipData } from '../../../common/api/hooks/ridership';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { getLineColorKey, LINE_COLORS } from '../../../common/constants/colors';
-import { getBusRouteIds } from '../../../common/constants/lines';
+import { getBusRouteDataIds } from '../../../common/constants/lines';
 import type {
   FetchAlertDelaysByLineOptions,
   FetchBusTripMetricsOptions,
 } from '../../../common/types/api';
 import type { BusRoute } from '../../../common/types/lines';
 import { getRidershipLineId } from '../../../common/utils/ridership';
-import { getMinMaxDatesForRoute } from '../../../common/utils/stations';
 import { SpeedGraph } from '../../speed/charts/SpeedGraph';
 import { RidershipGraph } from '../../ridership/RidershipGraph';
 import { TotalDelayGraph } from '../../delays/charts/TotalDelayGraph';
@@ -24,42 +23,33 @@ import {
   buildRidershipRow,
   buildRow,
   chartWindowStart,
-  getOverviewWindow,
   hasTrips,
   toSlot,
   toSpeedPoints,
   trimTrailingEmpty,
 } from './scorecardUtils';
+import type { OverviewWindow } from './scorecardUtils';
 import { BusReliabilityChart, useBusReliabilitySlot } from './busReliability';
 import { BusServiceChart, buildBusServiceRow, summarizeBusService } from './busService';
 import type { MetricKey, ScorecardSlot } from './types';
 
-type OverviewWindow = ReturnType<typeof getOverviewWindow>;
-
-/** A retired route's last day of service, or undefined for a route still running. */
-export const getBusServiceEnd = (busRoute: BusRoute) =>
-  getMinMaxDatesForRoute('Bus', busRoute).maxDate;
-
-/** A retired route's overview ends on its last day of service, rather than showing an empty year. */
-const getBusOverviewWindow = (busRoute: BusRoute) => getOverviewWindow(getBusServiceEnd(busRoute));
-
 // From yearOverYearStart so the row can compare with a year ago. The chart makes the same
 // request, so it's already cached.
-const ridershipOptions = (busRoute: BusRoute, window: OverviewWindow) => ({
+const ridershipOptions = (busRoute: BusRoute, span: OverviewWindow) => ({
   line_id: getRidershipLineId('line-bus', busRoute, undefined, undefined),
-  start_date: window.yearOverYearStart,
-  end_date: window.end,
+  start_date: span.yearOverYearStart,
+  end_date: span.end,
 });
 
 // Grouped routes (e.g. SL1/SL2/SL3/SLW) are summed per route server-side, so an alert posted on
 // several of them counts once for each.
 const delaysOptions = (
   busRoute: BusRoute,
-  window: OverviewWindow
+  span: OverviewWindow
 ): FetchAlertDelaysByLineOptions => ({
-  start_date: window.windowStart,
-  end_date: window.end,
-  line: getBusRouteIds(busRoute).join(','),
+  start_date: span.windowStart,
+  end_date: span.end,
+  line: getBusRouteDataIds(busRoute).join(','),
   agg: 'daily',
 });
 
@@ -67,11 +57,11 @@ const delaysOptions = (
 // fetches them on page load with the speed chart, so the row costs no extra request.
 const dailyTripMetricsOptions = (
   busRoute: BusRoute,
-  window: OverviewWindow
+  span: OverviewWindow
 ): FetchBusTripMetricsOptions => ({
-  start_date: window.chartFetchStart,
-  end_date: window.end,
-  route: getBusRouteIds(busRoute).join(','),
+  start_date: span.chartFetchStart,
+  end_date: span.end,
+  route: getBusRouteDataIds(busRoute).join(','),
   agg: 'daily',
 });
 
@@ -92,24 +82,35 @@ const DELAYS = {
   subtitle: 'Minutes a delay alert was up, daily average',
 } as const;
 
-export const useBusScorecardRows = (busRoute: BusRoute) => {
-  const window = getBusOverviewWindow(busRoute);
-  const tripMetrics = useBusTripMetrics({
-    start_date: window.windowStart,
-    end_date: window.end,
-    route: getBusRouteIds(busRoute).join(','),
-    agg: 'weekly',
-  });
-  const ridership = useRidershipData(ridershipOptions(busRoute, window));
+/**
+ * `span` is the window to show, which ends on a retired route's last day of service. Without
+ * `hasTripData` (a route retired before bus trip metrics start), the rows from trip metrics are left
+ * out rather than fetched.
+ */
+export const useBusScorecardRows = (
+  busRoute: BusRoute,
+  span: OverviewWindow,
+  hasTripData: boolean
+) => {
+  const tripMetrics = useBusTripMetrics(
+    {
+      start_date: span.windowStart,
+      end_date: span.end,
+      route: getBusRouteDataIds(busRoute).join(','),
+      agg: 'weekly',
+    },
+    hasTripData
+  );
+  const ridership = useRidershipData(ridershipOptions(busRoute, span));
   // The same peak as the Ridership page. It falls back to a hard-coded figure until baselines.json
   // loads, and some of those are inflated by stray mid-week records (data-ingestion#198), so wait.
   const baselines = useHistoricalBaselines();
   const ridershipPeak = useRidershipBaseline('line-bus', busRoute);
   const peak = baselines.isPending ? undefined : ridershipPeak;
-  const dailyTripMetrics = useBusTripMetrics(dailyTripMetricsOptions(busRoute, window));
-  const delays = useAlertDelays(delaysOptions(busRoute, window));
+  const dailyTripMetrics = useBusTripMetrics(dailyTripMetricsOptions(busRoute, span), hasTripData);
+  const delays = useAlertDelays(delaysOptions(busRoute, span));
   const color = LINE_COLORS[getLineColorKey('line-bus', busRoute)];
-  const reliability = useBusReliabilitySlot(busRoute, color, window);
+  const reliability = useBusReliabilitySlot(busRoute, color, span, hasTripData);
 
   const speedRow = useMemo(
     () =>
@@ -139,10 +140,10 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
         ? buildRidershipRow(ridership.data, color, {
             yearOverYear: true,
             peak,
-            windowStart: window.windowStart,
+            windowStart: span.windowStart,
           })
         : null,
-    [ridership.data, peak, color, window.windowStart]
+    [ridership.data, peak, color, span.windowStart]
   );
 
   const delaysRow = useMemo(
@@ -171,9 +172,13 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
   // Service and Ridership wait for the weekly trend and the ridership peak, which they can do
   // without, so those don't pop in after the row.
   const slots: ScorecardSlot[] = [
-    toSlot(SPEED, [tripMetrics], () => speedRow),
-    ...(reliability ? [reliability] : []),
-    toSlot(SERVICE, [dailyTripMetrics], () => serviceRow, tripMetrics.isPending),
+    ...(hasTripData
+      ? [
+          toSlot(SPEED, [tripMetrics], () => speedRow),
+          ...(reliability ? [reliability] : []),
+          toSlot(SERVICE, [dailyTripMetrics], () => serviceRow, tripMetrics.isPending),
+        ]
+      : []),
     toSlot(RIDERSHIP, [ridership], () => ridershipRow, baselines.isPending),
     toSlot(DELAYS, [delays], () => delaysRow),
   ];
@@ -181,19 +186,25 @@ export const useBusScorecardRows = (busRoute: BusRoute) => {
   return { slots, color };
 };
 
-export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRoute: BusRoute }) => {
-  const window = getBusOverviewWindow(busRoute);
-  const retired = Boolean(getBusServiceEnd(busRoute));
+interface BusMetricChartProps {
+  metric: MetricKey;
+  busRoute: BusRoute;
+  span: OverviewWindow;
+  /** Whether the route no longer runs, so `span` ends on its last day of service */
+  retired: boolean;
+}
+
+export const BusMetricChart = ({ metric, busRoute, span, retired }: BusMetricChartProps) => {
   // CHART_CONFIG is daily, so this is the speed chart's query too
   const tripMetrics = useBusTripMetrics(
-    dailyTripMetricsOptions(busRoute, window),
+    dailyTripMetricsOptions(busRoute, span),
     metric === 'speed' || metric === 'service'
   );
   // Ridership is weekly and can lag.
-  const ridership = useRidershipData(ridershipOptions(busRoute, window), metric === 'ridership');
-  const delays = useAlertDelays(delaysOptions(busRoute, window), metric === 'delays');
+  const ridership = useRidershipData(ridershipOptions(busRoute, span), metric === 'ridership');
+  const delays = useAlertDelays(delaysOptions(busRoute, span), metric === 'delays');
 
-  if (metric === 'reliability') return <BusReliabilityChart busRoute={busRoute} window={window} />;
+  if (metric === 'reliability') return <BusReliabilityChart busRoute={busRoute} span={span} />;
   if (metric === 'speed') {
     if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
     if (!hasTrips(tripMetrics.data))
@@ -208,7 +219,7 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
         />
       );
     const data = trimTrailingEmpty(tripMetrics.data);
-    const chartEnd = data[data.length - 1]?.date ?? window.end;
+    const chartEnd = data[data.length - 1]?.date ?? span.end;
     return (
       <SpeedGraph
         data={data}
@@ -242,7 +253,7 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
         />
       );
     const { delays: displayed, isActual } = toDisplayedDelays(delays.data);
-    const delaysEnd = delays.data[delays.data.length - 1]?.date ?? window.end;
+    const delaysEnd = delays.data[delays.data.length - 1]?.date ?? span.end;
     return (
       <TotalDelayGraph
         data={displayed}
@@ -265,7 +276,7 @@ export const BusMetricChart = ({ metric, busRoute }: { metric: MetricKey; busRou
         }
       />
     );
-  const ridershipEnd = ridership.data[ridership.data.length - 1]?.date ?? window.end;
+  const ridershipEnd = ridership.data[ridership.data.length - 1]?.date ?? span.end;
   return (
     <RidershipGraph
       data={ridership.data}

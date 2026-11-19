@@ -12,11 +12,16 @@ import {
 } from '../../../common/utils/dateAggregation';
 import type { ScorecardRow, ScorecardSlot, DeltaSentiment, MetricKey } from './types';
 
-const daysBefore = (date: string, days: number) =>
-  dayjs(date).subtract(days, 'day').format('YYYY-MM-DD');
+/** `days` before `date`, but no earlier than `earliest` */
+const daysBefore = (date: string, days: number, earliest = '') => {
+  const start = dayjs(date).subtract(days, 'day').format('YYYY-MM-DD');
+  return start < earliest ? earliest : start;
+};
 
 /**
  * The windows the overview fetches, ending on `end`: today, or the last day a retired route ran.
+ * None start before `earliest`, the day a route started, so a route that took over a retired
+ * route's route_ids doesn't count the old route's history as its own.
  *
  * The scorecard is calendar-month-shaped, so it fetches its own fixed trailing window (`windowStart`)
  * independent of the page's Week/Month/Year/All-time selector (which is trailing-N-days and isn't
@@ -29,11 +34,11 @@ const daysBefore = (date: string, days: number) =>
  * The chart card shows the last 30 days with data, out of a 60-day fetch (`chartFetchStart`) so a
  * lagging feed still fills the window.
  */
-export const getOverviewWindow = (end = TODAY_STRING) => ({
+export const getOverviewWindow = (end = TODAY_STRING, earliest?: string) => ({
   end,
-  windowStart: daysBefore(end, 400),
-  yearOverYearStart: daysBefore(end, 52 * 7 + 30 + 42),
-  chartFetchStart: daysBefore(end, 60),
+  windowStart: daysBefore(end, 400, earliest),
+  yearOverYearStart: daysBefore(end, 52 * 7 + 30 + 42, earliest),
+  chartFetchStart: daysBefore(end, 60, earliest),
 });
 
 export type OverviewWindow = ReturnType<typeof getOverviewWindow>;

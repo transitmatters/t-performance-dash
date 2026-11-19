@@ -4,7 +4,6 @@ import { useBusTripMetrics } from '../../../common/api/hooks/busTripMetrics';
 import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import { TODAY_STRING } from '../../../common/constants/dates';
 import {
   getBusRouteDisplayName,
   getBusRouteIds,
@@ -13,7 +12,6 @@ import {
 import type { DeliveredTripMetricsBus } from '../../../common/types/dataPoints';
 import type { BusRoute } from '../../../common/types/lines';
 import type { DatedValue } from '../../../common/utils/dateAggregation';
-import { getMinMaxDatesForRoute } from '../../../common/utils/stations';
 import type { AggType } from '../../speed/constants/speeds';
 import { ReliabilityGraph } from '../../reliability/charts/ReliabilityGraph';
 import { BUNCHED, headwayShare, ON_TIME } from '../../reliability/utils';
@@ -23,17 +21,14 @@ import type { OverviewWindow } from './scorecardUtils';
 /**
  * Headway reliability is for routes people turn up for without a schedule, so it's shown only for
  * MBTA Frequent Bus Routes. A curated label mixing frequent and other routes (114/116/117) counts
- * only its frequent ones, rather than pooling in the others' longer, timetabled headways. That list
- * is today's, so a retired route whose route_id is frequent now (pre-BNRD 110) doesn't count.
+ * only its frequent ones, rather than pooling in the others' longer, timetabled headways.
  */
-const frequentIdsFor = (busRoute: BusRoute) =>
-  getMinMaxDatesForRoute('Bus', busRoute).maxDate ? [] : getFrequentBusRouteIds(busRoute);
-
-export const hasBusReliability = (busRoute: BusRoute) => frequentIdsFor(busRoute).length > 0;
+export const hasBusReliability = (busRoute: BusRoute) =>
+  getFrequentBusRouteIds(busRoute).length > 0;
 
 /** The frequent route names when they're only some of the label's, e.g. "116" for 114/116/117. */
 const frequentSubset = (busRoute: BusRoute) => {
-  const frequentIds = frequentIdsFor(busRoute);
+  const frequentIds = getFrequentBusRouteIds(busRoute);
   return frequentIds.length < getBusRouteIds(busRoute).length
     ? frequentIds.map(getBusRouteDisplayName).join('/')
     : undefined;
@@ -51,12 +46,13 @@ const useFrequentTripMetrics = (
   busRoute: BusRoute,
   startDate: string,
   endDate: string,
-  agg: AggType
+  agg: AggType,
+  enabled = true
 ) => {
-  const frequentIds = frequentIdsFor(busRoute);
+  const frequentIds = getFrequentBusRouteIds(busRoute);
   return useBusTripMetrics(
     { start_date: startDate, end_date: endDate, route: frequentIds.join(','), agg },
-    frequentIds.length > 0
+    enabled && frequentIds.length > 0
   );
 };
 
@@ -67,13 +63,23 @@ const reliabilityMeta = (subset: string | undefined) =>
     subtitle: `Headways within 75–125% of schedule${subset ? `, Route ${subset} only` : ''}`,
   }) as const;
 
-/** The Reliability slot, or null for a route that isn't frequent and so has no such row. */
+/**
+ * The Reliability slot, or null for a route that isn't frequent, or has no trip metrics (`enabled`),
+ * and so has no such row.
+ */
 export const useBusReliabilitySlot = (
   busRoute: BusRoute,
   color: string,
-  window: OverviewWindow
+  span: OverviewWindow,
+  enabled: boolean
 ) => {
-  const tripMetrics = useFrequentTripMetrics(busRoute, window.windowStart, window.end, 'weekly');
+  const tripMetrics = useFrequentTripMetrics(
+    busRoute,
+    span.windowStart,
+    span.end,
+    'weekly',
+    enabled
+  );
   const subset = frequentSubset(busRoute);
   const row = useMemo(
     () =>
@@ -93,7 +99,7 @@ export const useBusReliabilitySlot = (
         : null,
     [tripMetrics.data, subset, color]
   );
-  return hasBusReliability(busRoute)
+  return enabled && hasBusReliability(busRoute)
     ? toSlot(reliabilityMeta(subset), [tripMetrics], () => row)
     : null;
 };
@@ -116,32 +122,23 @@ const ReliabilityNote = ({ busRoute }: { busRoute: BusRoute }) => {
 
 export const BusReliabilityChart = ({
   busRoute,
-  window,
+  span,
 }: {
   busRoute: BusRoute;
-  window: OverviewWindow;
+  span: OverviewWindow;
 }) => {
   const tripMetrics = useFrequentTripMetrics(
     busRoute,
-    window.chartFetchStart,
-    window.end,
+    span.chartFetchStart,
+    span.end,
     CHART_CONFIG.agg
   );
 
   if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
   const within = toHeadwayPoints(tripMetrics.data, ON_TIME);
   if (!within.length)
-    return (
-      <NoDataNotice
-        isLineMetric
-        message={
-          window.end < TODAY_STRING
-            ? 'No headways recorded in its last 60 days of service.'
-            : 'No headways recorded in the last 60 days.'
-        }
-      />
-    );
-  const chartEnd = within[within.length - 1]?.date ?? window.end;
+    return <NoDataNotice isLineMetric message="No headways recorded in the last 60 days." />;
+  const chartEnd = within[within.length - 1]?.date ?? span.end;
   return (
     <div className="flex flex-col gap-3">
       <ReliabilityGraph

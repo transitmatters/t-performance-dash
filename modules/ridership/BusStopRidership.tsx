@@ -7,7 +7,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getLineColorKey, LINE_COLORS } from '../../common/constants/colors';
 import { getBusRouteDisplayName } from '../../common/constants/lines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { getMinMaxDatesForRoute } from '../../common/utils/stations';
+import { getBusRouteService } from '../../common/constants/dates';
 import type { BusStopRidership as BusStopRidershipData } from '../../common/types/dataPoints';
 import type { BusRoute } from '../../common/types/lines';
 import { BusStopRidershipMap } from './map/BusStopRidershipMap';
@@ -67,7 +67,8 @@ const StopComparisons = ({
 export const BusStopRidership = ({ busRoute }: { busRoute: BusRoute }) => {
   const routeIds = useMemo(() => getBusStopRidershipRouteIds(busRoute), [busRoute]);
   const ridership = useBusStopRidershipData(routeIds, true);
-  const serviceEnd = getMinMaxDatesForRoute('Bus', busRoute).maxDate;
+  const { end, retired } = getBusRouteService(busRoute);
+  const serviceEnd = retired ? end : undefined;
   const routes = useMemo(
     () => ridership.data && withSeasonsBefore(ridership.data, serviceEnd),
     [ridership.data, serviceEnd]

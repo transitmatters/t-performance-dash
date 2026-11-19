@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getBusRouteIds } from '../constants/lines';
+import { getBusRouteDataIds, getBusRouteIds, stripLegacySuffix } from '../constants/lines';
 import { getRidershipLineId } from './ridership';
 
 describe('retired bus routes', () => {
@@ -10,7 +10,12 @@ describe('retired bus routes', () => {
   });
 
   it('read trip data filed under their route_ids', () => {
-    expect(getBusRouteIds('86-legacy')).toEqual(['86']);
-    expect(getBusRouteIds('220/221/222-legacy')).toEqual(['220', '221', '222']);
+    expect(stripLegacySuffix('60/65-legacy')).toBe('60/65');
+    expect(getBusRouteDataIds('86-legacy')).toEqual(['86']);
+    expect(getBusRouteDataIds('220/221/222-legacy')).toEqual(['220', '221', '222']);
+  });
+
+  it("keep their label elsewhere, so pages without date bounds don't show the replacement", () => {
+    expect(getBusRouteIds('110-legacy')).toEqual(['110-legacy']);
   });
 });

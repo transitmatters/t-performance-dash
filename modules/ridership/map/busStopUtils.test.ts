@@ -136,6 +136,11 @@ describe('withSeasonsBefore', () => {
     ]);
   });
 
+  it('drops a season whose counts ran past the last day', () => {
+    expect(seasonsOf(withSeasonsBefore([route28], '2025-11-15'))).not.toContain('Fall 2025');
+    expect(seasonsOf(withSeasonsBefore([route28], '2025-11-30'))).toContain('Fall 2025');
+  });
+
   it('keeps every season for a route still running', () => {
     expect(withSeasonsBefore([route28], undefined)).toEqual([route28]);
   });

@@ -4,14 +4,19 @@ import dayjs from 'dayjs';
 
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { Notice } from '../../../common/components/notices/Notice';
-import { PRETTY_DATE_FORMAT } from '../../../common/constants/dates';
+import {
+  BUS_TRIP_METRICS_MIN_DATE,
+  PRETTY_DATE_FORMAT,
+  getBusRouteService,
+} from '../../../common/constants/dates';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
 import type { LineShort } from '../../../common/types/lines';
 import { useSubwayScorecardRows } from './scorecardRows';
-import { useBusScorecardRows, BusMetricChart, getBusServiceEnd } from './busOverview';
+import { useBusScorecardRows, BusMetricChart } from './busOverview';
 import { hasBusReliability } from './busReliability';
 import { useCrScorecardRows, useCrChartCopy, CrMetricChart } from './crOverview';
 import { MetricsScorecard } from './MetricsScorecard';
+import { getOverviewWindow } from './scorecardUtils';
 import { MetricChartCard } from './MetricChartCard';
 import type { MetricCopy } from './MetricChartCard';
 import { SubwayMetricChart } from './SubwayMetricChart';
@@ -76,19 +81,21 @@ const RETIRED_BUS_CHART_COPY: MetricCopy = {
   service: { title: 'Service delivered', subtitle: 'Trips dropped per day (est.), final 30 days' },
   ridership: { title: 'Ridership', subtitle: 'Fare validations, final 30 days' },
   delays: { title: 'Delays', subtitle: 'Minutes a delay alert was up per day, final 30 days' },
-  reliability: { title: 'Reliability', subtitle: 'Share of headways, final 30 days' },
 };
 
 const BusOverview = () => {
   const { query } = useDelimitatedRoute();
   const busRoute = query.busRoute ?? '1';
-  const serviceEnd = getBusServiceEnd(busRoute);
-  const { slots, color } = useBusScorecardRows(busRoute);
-  // Bus trip data starts in July 2025, so routes retired before then have only ridership and delays.
+  const service = getBusRouteService(busRoute);
+  // A retired route's figures end on its last day of service, and none start before its first.
+  const span = getOverviewWindow(service.retired ? service.end : undefined, service.start);
+  // Routes retired before bus trip metrics start have only ridership and delays.
+  const hasTripData = !service.retired || span.end >= BUS_TRIP_METRICS_MIN_DATE;
+  const { slots, color } = useBusScorecardRows(busRoute, span, hasTripData);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>(
-    serviceEnd ? 'ridership' : 'speed'
+    hasTripData ? 'speed' : 'ridership'
   );
-  const showsReliability = hasBusReliability(busRoute);
+  const showsReliability = hasTripData && hasBusReliability(busRoute);
   // The page stays mounted when switching routes, so a route without the Reliability row falls back
   // to Speed rather than charting nothing.
   const metric = selectedMetric === 'reliability' && !showsReliability ? 'speed' : selectedMetric;
@@ -99,22 +106,26 @@ const BusOverview = () => {
       color={color}
       selectedMetric={metric}
       onSelectMetric={setSelectedMetric}
-      chart={<BusMetricChart metric={metric} busRoute={busRoute} />}
-      chartCopy={serviceEnd ? RETIRED_BUS_CHART_COPY : BUS_CHART_COPY}
+      chart={
+        <BusMetricChart metric={metric} busRoute={busRoute} span={span} retired={service.retired} />
+      }
+      chartCopy={service.retired ? RETIRED_BUS_CHART_COPY : BUS_CHART_COPY}
       // A retired route has no alerts of its own; its route_ids' alerts are its replacement's.
       cards={
-        !serviceEnd && (
+        !service.retired && (
           <ServiceAlertsCard lineShort="Bus" busRoute={busRoute} label={`Route ${busRoute}`} />
         )
       }
     />
   );
-  if (!serviceEnd) return layout;
+  if (!service.retired) return layout;
   return (
     <div className="flex w-full flex-col gap-4">
       <Notice title="This route no longer runs">
-        Its last day of service was {dayjs(serviceEnd).format(PRETTY_DATE_FORMAT)}, so these figures
+        Its last day of service was {dayjs(span.end).format(PRETTY_DATE_FORMAT)}, so these figures
         cover its final weeks rather than the last 30 days.
+        {!hasTripData &&
+          ` Our bus speed and service data start in ${dayjs(BUS_TRIP_METRICS_MIN_DATE).format('MMMM YYYY')}, so only ridership and delays are shown.`}
       </Notice>
       {layout}
     </div>

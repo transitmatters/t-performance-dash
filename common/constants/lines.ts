@@ -127,14 +127,21 @@ const BUS_DISPLAY_NAME_TO_ROUTE_ID: Record<string, string> = Object.fromEntries(
 
 /**
  * Raw GTFS route_ids behind a curated BusRoute label, e.g. '114/116/117' -> ['114', '116', '117']
- * and 'SL1/SL2/SL3/SLW' -> ['741', '742', '743', '746']. Trip-metrics data is keyed by these. A
- * retired route kept the route_id its replacement now runs under, so '60/65-legacy' -> ['60', '65'].
+ * and 'SL1/SL2/SL3/SLW' -> ['741', '742', '743', '746']. Trip-metrics data is keyed by these.
  */
 export const getBusRouteIds = (busRoute: string): string[] =>
-  busRoute
-    .replace(/-legacy$/, '')
-    .split('/')
-    .map((name) => BUS_DISPLAY_NAME_TO_ROUTE_ID[name] ?? name);
+  busRoute.split('/').map((name) => BUS_DISPLAY_NAME_TO_ROUTE_ID[name] ?? name);
+
+/** A retired route's label without its suffix, e.g. '60/65-legacy' -> '60/65'. */
+export const stripLegacySuffix = (busRoute: string) => busRoute.replace(/-legacy$/, '');
+
+/**
+ * The route_ids a route's data is filed under. A retired route kept the route_id its replacement
+ * now runs under, so '60/65-legacy' -> ['60', '65']. Callers must keep their dates within the
+ * route's service window, or they'll get the replacement's data too.
+ */
+export const getBusRouteDataIds = (busRoute: string): string[] =>
+  getBusRouteIds(stripLegacySuffix(busRoute));
 
 /** The route_ids behind a curated label that are Frequent Bus Routes: all of SL4/SL5, but only 116
  * of 114/116/117. Empty for a route that isn't frequent. */

@@ -85,6 +85,15 @@ describe('getOverviewWindow', () => {
       chartFetchStart: '2024-10-15',
     });
   });
+
+  it("starts no earlier than the route's first day", () => {
+    expect(getOverviewWindow('2026-11-18', '2026-09-06')).toEqual({
+      end: '2026-11-18',
+      windowStart: '2026-09-06',
+      yearOverYearStart: '2026-09-06',
+      chartFetchStart: '2026-09-19',
+    });
+  });
 });
 
 describe('trailingWindowLabel', () => {
