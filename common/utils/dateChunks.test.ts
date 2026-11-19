@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitDateRange } from './dateChunks';
+import { isLongRange, splitDateRange } from './dateChunks';
 
 describe('splitDateRange', () => {
   it('leaves ranges of a year or less as one chunk', () => {
@@ -42,5 +42,12 @@ describe('splitDateRange', () => {
       { startDate: '2025-01-01', endDate: '2025-06-30' },
       { startDate: '2024-09-10', endDate: '2024-12-31' },
     ]);
+  });
+});
+
+describe('isLongRange', () => {
+  it('is true only past a year', () => {
+    expect(isLongRange('2025-01-01', '2026-01-01')).toBe(false);
+    expect(isLongRange('2025-01-01', '2026-01-02')).toBe(true);
   });
 });
