@@ -7,7 +7,7 @@ import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
-import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
+import { getChartTitle } from '../../../common/utils/chartTitles';
 import type { AggType } from '../../speed/constants/speeds';
 import type { HeadwayRow } from '../utils';
 import {
@@ -43,10 +43,13 @@ const LEGEND = [
 // Hover rows read top to bottom, the way the bar is drawn
 const HOVER_ORDER = [...HEADWAY_BUCKETS].reverse();
 
+const TITLE = getChartTitle('reliability-off-schedule');
+
 /**
  * Each period's off-schedule headways as one bar split at zero: longer than scheduled above the
  * axis, shorter than scheduled (bunching) below it. Comparing the two halves shows which problem a
- * line has, and how it changed.
+ * line has, and how it changed. It sits under the range's headway breakdown, in the same card, so
+ * it carries its own heading, which its image export uses in place of the card's.
  */
 export const OffScheduleDivergingBars = ({
   rows,
@@ -67,7 +70,9 @@ export const OffScheduleDivergingBars = ({
     datasets.reduce((t, { values }) => t - Math.min(0, values[i] ?? 0), 0)
   );
   const extent = Math.max(0, ...above, ...below);
-  if (!extent) return <NoDataNotice isLineMetric />;
+  // Nothing off schedule, or nothing measured, which the breakdown above already says
+  if (!extent) return null;
+  const subtitle = `Each ${periodName(agg)}: headways longer than scheduled above the line, shorter (bunching) below it`;
   // The same scale both ways, so a taller half means more of that problem
   // and a whole number of steps each way, so zero is always a tick
   const step = extent > 40 ? 20 : 10;
@@ -75,6 +80,11 @@ export const OffScheduleDivergingBars = ({
 
   return (
     <ChartStack>
+      {/* A step below the card's own title and subtitle */}
+      <div className="flex flex-col gap-0.5">
+        <h3 className="font-heading text-sm leading-snug font-medium text-foreground">{TITLE}</h3>
+        <p className="text-[13px] leading-tight text-muted-foreground">{subtitle}</p>
+      </div>
       <ChartDiv isMobile={isMobile}>
         <Bar
           id={`reliabilityDiverging-${linePath}`}
@@ -161,6 +171,8 @@ export const OffScheduleDivergingBars = ({
       <ChartActions
         datasetName="reliability-off-schedule"
         chartRef={ref}
+        chartTitle={TITLE}
+        chartSubtitle={subtitle}
         startDate={startDate}
         endDate={endDate}
       />
