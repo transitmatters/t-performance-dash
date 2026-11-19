@@ -12,30 +12,37 @@ const EXTRA_ROUTE_IDS: Record<string, string[]> = {
 export const getBusStopRidershipRouteIds = (busRoute: string) =>
   EXTRA_ROUTE_IDS[busRoute] ?? getBusRouteDataIds(busRoute);
 
-// The last month of each season's counts. Only Fall appears in the data so far.
-const SEASON_END_MONTHS: Record<string, string> = {
-  Winter: '02',
-  Spring: '05',
-  Summer: '08',
-  Fall: '11',
+// The first and last month of each season's counts. Only Fall appears in the data so far.
+const SEASON_MONTHS: Record<string, [string, string]> = {
+  Winter: ['01', '02'],
+  Spring: ['03', '05'],
+  Summer: ['06', '08'],
+  Fall: ['09', '11'],
 };
 
 /**
- * Drops seasons whose counts ran past a retired route's last day: its route_ids now belong to its
- * replacement, so those counts include the new route's stops.
+ * Keeps the seasons counted while a route ran. A retired route and its replacement share
+ * route_ids, so counts from after the old route's last day are the new route's, and counts from
+ * before the new route's first day are the old route's. Seasons begin with a schedule change, a
+ * few days into their first month, so a route that started that month keeps that season.
  */
-export const withSeasonsBefore = (
+export const withSeasonsDuring = (
   routes: BusStopRidership[],
+  serviceStart: string | undefined,
   serviceEnd: string | undefined
 ): BusStopRidership[] => {
-  if (!serviceEnd) return routes;
-  const endedBefore = ({ season }: { season: string }) => {
+  if (!serviceStart && !serviceEnd) return routes;
+  const duringService = ({ season }: { season: string }) => {
     const [name, year] = season.split(' ');
-    const month = SEASON_END_MONTHS[name];
-    if (!month) return true;
-    return dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD') <= serviceEnd;
+    const months = SEASON_MONTHS[name];
+    if (!months) return true;
+    const [firstMonth, lastMonth] = months.map((month) => dayjs(`${year}-${month}-01`));
+    return (
+      (!serviceStart || !firstMonth.isBefore(serviceStart, 'month')) &&
+      (!serviceEnd || lastMonth.endOf('month').format('YYYY-MM-DD') <= serviceEnd)
+    );
   };
-  return routes.map((route) => ({ ...route, seasons: route.seasons.filter(endedBefore) }));
+  return routes.map((route) => ({ ...route, seasons: route.seasons.filter(duringService) }));
 };
 
 /** The last fall before the pandemic */

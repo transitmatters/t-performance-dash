@@ -16,7 +16,7 @@ import {
   getBusStopRidershipRouteIds,
   getStopComparisons,
   resolveBusStopRidershipSelection,
-  withSeasonsBefore,
+  withSeasonsDuring,
 } from './map/busStopUtils';
 
 const formatChange = (change: number) =>
@@ -67,11 +67,11 @@ const StopComparisons = ({
 export const BusStopRidership = ({ busRoute }: { busRoute: BusRoute }) => {
   const routeIds = useMemo(() => getBusStopRidershipRouteIds(busRoute), [busRoute]);
   const ridership = useBusStopRidershipData(routeIds, true);
-  const { end, retired } = getBusRouteService(busRoute);
+  const { start, end, retired } = getBusRouteService(busRoute);
   const serviceEnd = retired ? end : undefined;
   const routes = useMemo(
-    () => ridership.data && withSeasonsBefore(ridership.data, serviceEnd),
-    [ridership.data, serviceEnd]
+    () => ridership.data && withSeasonsDuring(ridership.data, start, serviceEnd),
+    [ridership.data, start, serviceEnd]
   );
   const isDesktop = useBreakpoint('lg');
 
