@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatCell, formatThresholds, formatTrend, formatValue, trendSentiment } from './format';
+import {
+  formatCell,
+  formatThresholds,
+  formatTrend,
+  formatValue,
+  topCauseLabel,
+  trendSentiment,
+} from './format';
 import type { Cell } from './types';
 
 describe('formatTrend', () => {
@@ -22,6 +29,26 @@ describe('formatTrend', () => {
     expect(formatTrend({ trend: 0.004 })).toBe('0% last 2 weeks vs 12');
     expect(formatTrend({ trend: -0.004 })).toBe('0% last 2 weeks vs 12');
     expect(formatTrend({ trend: 0.004, trendBasis: 'yearAgo' })).toBe('0 pts vs a year ago');
+  });
+});
+
+describe('topCauseLabel', () => {
+  it('names the cause as the Delays page does', () => {
+    expect(topCauseLabel({ topCause: { cause: 'signal_problem', share: 0.3 } }, 'line-red')).toBe(
+      'Signal problem'
+    );
+  });
+
+  it('says bus for a disabled vehicle on a bus row', () => {
+    const topCause = { cause: 'disabled_vehicle', share: 0.5 } as const;
+    expect(topCauseLabel({ topCause }, 'line-red')).toBe('Disabled train');
+    expect(topCauseLabel({ topCause }, 'line-bus')).toBe('Disabled bus');
+  });
+
+  it('is empty without a cause, or with one it does not know', () => {
+    expect(topCauseLabel({}, 'line-red')).toBeUndefined();
+    const unknown = { cause: 'gremlins', share: 0.5 } as unknown as Cell['topCause'];
+    expect(topCauseLabel({ topCause: unknown }, 'line-red')).toBeUndefined();
   });
 });
 

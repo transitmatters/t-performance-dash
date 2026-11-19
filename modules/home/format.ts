@@ -1,3 +1,5 @@
+import type { Line } from '../../common/types/lines';
+import { REASON_BY_KEY, reasonLabel } from '../delays/constants/reasons';
 import { NEGLIGIBLE_TREND } from './config';
 import type { Cell, Direction, Status, Unit } from './types';
 
@@ -74,6 +76,12 @@ export const formatThresholds = ({
   const op = direction === 'higher' ? '≥' : '≤';
   const [win, good, room] = thresholds.map((t) => formatThreshold(t, scoreUnit));
   return `Win ${op}${win} · Good ${op}${good} · Room to grow ${op}${room}`;
+};
+
+/** The top delay cause as the Delays page names it, or undefined without one it knows. */
+export const topCauseLabel = ({ topCause }: Pick<Cell, 'topCause'>, line: Line) => {
+  const reason = topCause && REASON_BY_KEY[topCause.cause];
+  return reason ? reasonLabel(reason, line) : undefined;
 };
 
 export type TrendSentiment = 'good' | 'bad' | 'flat';
