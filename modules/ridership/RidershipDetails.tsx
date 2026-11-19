@@ -8,11 +8,7 @@ import {
 } from '../../common/api/hooks/baselines';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
-import {
-  StatCard,
-  StatCardGrid,
-  type StatSentiment,
-} from '../../common/components/widgets/StatCard';
+import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import { SPEED_RANGE_PARAM_MAP } from '../speed/constants/speeds';
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
 import { getRidershipLineId } from '../../common/utils/ridership';
@@ -21,7 +17,7 @@ import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { Button } from '../../common/components/inputs/Button';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { RidershipGraphWrapper } from './RidershipGraphWrapper';
-import { getRidershipStats } from './utils/utils';
+import { getRidershipStats, ridershipDelta } from './utils/utils';
 import { StationRidershipMap } from './map';
 import { BusStopRidership } from './BusStopRidership';
 import { getStationAverages, getStationSeries, isStationRidershipLine } from './map/utils';
@@ -76,16 +72,6 @@ export function RidershipDetails() {
   const stats = ridership.data
     ? getRidershipStats(ridership.data, peakRidership, seasonal.maximumFor)
     : null;
-  const deltaFor = (delta: number, negligible: number) => {
-    if (!Number.isFinite(delta)) return undefined;
-    const sentiment: StatSentiment =
-      Math.abs(delta) <= negligible ? 'flat' : delta > 0 ? 'good' : 'bad';
-    const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'up' : 'down';
-    return {
-      label: `${delta > 0 ? '+' : ''}${Math.round(delta).toLocaleString('en-us')} · ${word}`,
-      sentiment,
-    };
-  };
 
   return (
     <>
@@ -95,7 +81,7 @@ export function RidershipDetails() {
             <StatCard
               label="Average weekday riders"
               value={`${Math.round(stats.average).toLocaleString('en-us')}`}
-              delta={deltaFor(stats.averageDelta, 1)}
+              delta={ridershipDelta(stats.averageBefore, stats.averageAfter)}
             />
             <StatCard
               label={

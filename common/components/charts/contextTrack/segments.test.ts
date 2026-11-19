@@ -198,6 +198,21 @@ describe('getWeatherRuns', () => {
     ]);
   });
 
+  it('joins back-to-back days with the same worst condition', () => {
+    const days = [
+      hour('2026-11-05T07:00:00', 'rain'),
+      hour('2026-11-06T09:00:00', 'rain'),
+      hour('2026-11-07T09:00:00', 'rain'),
+      hour('2026-11-08T09:00:00', 'snow'),
+      hour('2026-11-10T09:00:00', 'snow'),
+    ];
+    expect(getWeatherRuns(days, 'daily')).toEqual([
+      { start: '2026-11-05', end: '2026-11-08', condition: 'rain' },
+      { start: '2026-11-08', end: '2026-11-09', condition: 'snow' },
+      { start: '2026-11-10', end: '2026-11-11', condition: 'snow' },
+    ]);
+  });
+
   it('clips runs to the window and drops those outside it', () => {
     const window = {
       start: new Date('2026-11-05T07:30:00').valueOf(),

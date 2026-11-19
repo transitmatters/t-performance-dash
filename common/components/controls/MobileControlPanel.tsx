@@ -25,7 +25,6 @@ import {
 } from '../ui/sheet';
 import { LabeledControl } from './LabeledControl';
 import { PageFilters } from './PageFilters';
-import { RouteSelector } from './RouteSelector';
 import { TripModeToggle } from './TripModeToggle';
 
 const DETAIL_TEXT = 'truncate text-xs text-stone-600 dark:text-stone-400';
@@ -54,7 +53,6 @@ export const MobileControlPanel = () => {
     crRoute,
     ferryRoute,
     queryType,
-    showRouteSelector,
     showTripControls,
     showDateControl,
     showPeriodDate,
@@ -107,11 +105,6 @@ export const MobileControlPanel = () => {
           <SheetDescription className="sr-only">Change what this page shows.</SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 px-4">
-          {showRouteSelector && (
-            <LabeledControl label="Route">
-              <RouteSelector />
-            </LabeledControl>
-          )}
           {stationProps && (
             <>
               <LabeledControl label="Stations">

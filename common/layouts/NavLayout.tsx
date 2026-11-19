@@ -7,6 +7,7 @@ import { HeaderCommandTrigger } from '../../modules/commandPalette/CommandPalett
 import { useCommandPaletteShortcut } from '../../modules/commandPalette/useCommandPaletteShortcut';
 import { useDelimitatedRoute } from '../utils/router';
 import { useColorVisionKey } from '../utils/colorVision';
+import { SiteFooter } from '../../modules/navigation/SiteFooter';
 
 interface NavLayoutProps {
   children: ReactNode;
@@ -35,7 +36,8 @@ export const NavLayout = ({ children }: NavLayoutProps) => {
           </Link>
           <HeaderCommandTrigger />
         </header>
-        {children}
+        <main className="flex flex-1 flex-col">{children}</main>
+        <SiteFooter />
         <CommandPalette key={colorVisionKey} />
       </SidebarInset>
     </SidebarProvider>

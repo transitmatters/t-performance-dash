@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatPercent, formatPercentChange, halvesDetail, statDelta } from './statDelta';
+import {
+  formatPercent,
+  formatPercentChange,
+  halvesDetail,
+  rangeEndsDetail,
+  statDelta,
+} from './statDelta';
 
 describe('formatPercentChange', () => {
   it('shows a share difference as a signed whole percentage', () => {
@@ -26,6 +32,12 @@ describe('halvesDetail', () => {
 
   it('is empty when either half is missing', () => {
     expect(halvesDetail(NaN, 0.33, formatPercent)).toBeUndefined();
+  });
+});
+
+describe('rangeEndsDetail', () => {
+  it('names both values and what they compare', () => {
+    expect(rangeEndsDetail(3, 5, String)).toBe('3 → 5, start vs. end of the selected dates');
   });
 });
 

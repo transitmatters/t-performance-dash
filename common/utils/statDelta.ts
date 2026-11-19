@@ -19,11 +19,23 @@ export const formatPercent = (value: number) => `${Math.round(value * 100)}%`;
 export const formatPercentChange = (delta: number, { signed = true } = {}) =>
   `${signed ? sign(delta) : ''}${formatPercent(delta)}`;
 
-/** Every page's change badge compares the averages of the two halves of the selected dates. */
-export const halvesDetail = (before: number, after: number, format: (value: number) => string) =>
+const beforeAfter = (
+  before: number,
+  after: number,
+  format: (value: number) => string,
+  compared: string
+) =>
   Number.isFinite(before) && Number.isFinite(after)
-    ? `${format(before)} → ${format(after)}, first half vs. second half of the selected dates`
+    ? `${format(before)} → ${format(after)}, ${compared}`
     : undefined;
+
+/** Most change badges compare the averages of the two halves of the selected dates. */
+export const halvesDetail = (before: number, after: number, format: (value: number) => string) =>
+  beforeAfter(before, after, format, 'first half vs. second half of the selected dates');
+
+/** Slow zone badges compare the first and last day of the selected dates. */
+export const rangeEndsDetail = (before: number, after: number, format: (value: number) => string) =>
+  beforeAfter(before, after, format, 'start vs. end of the selected dates');
 
 interface StatDeltaOptions {
   delta: number;

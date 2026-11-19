@@ -1,4 +1,5 @@
-import { getBusRouteIds } from '../../../common/constants/lines';
+import dayjs from 'dayjs';
+import { getBusRouteDataIds } from '../../../common/constants/lines';
 import type { BusStopRidership, BusStopRidershipStop } from '../../../common/types/dataPoints';
 
 /** Routes the MBTA counts under more GTFS IDs than their label names, as in getRidershipLineId */
@@ -9,7 +10,33 @@ const EXTRA_ROUTE_IDS: Record<string, string[]> = {
 };
 
 export const getBusStopRidershipRouteIds = (busRoute: string) =>
-  EXTRA_ROUTE_IDS[busRoute] ?? getBusRouteIds(busRoute);
+  EXTRA_ROUTE_IDS[busRoute] ?? getBusRouteDataIds(busRoute);
+
+// The last month of each season's counts. Only Fall appears in the data so far.
+const SEASON_END_MONTHS: Record<string, string> = {
+  Winter: '02',
+  Spring: '05',
+  Summer: '08',
+  Fall: '11',
+};
+
+/**
+ * Drops seasons whose counts ran past a retired route's last day: its route_ids now belong to its
+ * replacement, so those counts include the new route's stops.
+ */
+export const withSeasonsBefore = (
+  routes: BusStopRidership[],
+  serviceEnd: string | undefined
+): BusStopRidership[] => {
+  if (!serviceEnd) return routes;
+  const endedBefore = ({ season }: { season: string }) => {
+    const [name, year] = season.split(' ');
+    const month = SEASON_END_MONTHS[name];
+    if (!month) return true;
+    return dayjs(`${year}-${month}-01`).endOf('month').format('YYYY-MM-DD') <= serviceEnd;
+  };
+  return routes.map((route) => ({ ...route, seasons: route.seasons.filter(endedBefore) }));
+};
 
 /** The last fall before the pandemic */
 export const BASELINE_SEASON = 'Fall 2019';

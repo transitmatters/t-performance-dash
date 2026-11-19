@@ -13,6 +13,13 @@ export const DEFAULT_CHUNK_MONTHS = 12;
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 
+/** Whether a range runs past `chunkMonths`, and so is fetched in chunks. */
+export const isLongRange = (
+  startDate: string,
+  endDate: string,
+  chunkMonths: number = DEFAULT_CHUNK_MONTHS
+) => dayjs(endDate).isAfter(dayjs(startDate).add(chunkMonths, 'month'));
+
 /**
  * Splits a date range into chunks aligned to calendar boundaries (Jan 1 for 12-month chunks,
  * Jan 1 / Jul 1 for 6-month chunks), newest first. Aligned chunks keep the same URL whichever
@@ -24,9 +31,9 @@ export const splitDateRange = (
   endDate: string,
   chunkMonths: number = DEFAULT_CHUNK_MONTHS
 ): DateChunk[] => {
+  if (!isLongRange(startDate, endDate, chunkMonths)) return [{ startDate, endDate }];
   const start = dayjs(startDate);
   const end = dayjs(endDate);
-  if (!end.isAfter(start.add(chunkMonths, 'month'))) return [{ startDate, endDate }];
 
   const chunks: DateChunk[] = [];
   const yearStart = start.startOf('year');

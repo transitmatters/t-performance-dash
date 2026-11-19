@@ -12,21 +12,41 @@ import {
 } from '../../../common/utils/dateAggregation';
 import type { ScorecardRow, ScorecardSlot, DeltaSentiment, MetricKey } from './types';
 
-/** The scorecard is calendar-month-shaped, so it fetches its own fixed trailing window
- * independent of the page's Week/Month/Year/All-time selector (which is trailing-N-days
- * and isn't guaranteed to contain a full prior calendar month). */
-export const WINDOW_START = dayjs().subtract(400, 'day').format('YYYY-MM-DD');
+/** `days` before `date`, but no earlier than `earliest` */
+const daysBefore = (date: string, days: number, earliest = '') => {
+  const start = dayjs(date).subtract(days, 'day').format('YYYY-MM-DD');
+  return start < earliest ? earliest : start;
+};
 
-/** A row with a year-over-year change compares the latest 30 days with the same 30 days 52 weeks
- * earlier, and ridership runs a couple of weeks behind today, so it fetches from here instead: 52
- * weeks and 30 days back, plus six weeks for that lag. */
-export const YEAR_OVER_YEAR_START = dayjs()
-  .subtract(52 * 7 + 30 + 42, 'day')
-  .format('YYYY-MM-DD');
+/**
+ * The windows the overview fetches, ending on `end`: today, or the last day a retired route ran.
+ * None start before `earliest`, the day a route started, so a route that took over a retired
+ * route's route_ids doesn't count the old route's history as its own.
+ *
+ * The scorecard is calendar-month-shaped, so it fetches its own fixed trailing window (`windowStart`)
+ * independent of the page's Week/Month/Year/All-time selector (which is trailing-N-days and isn't
+ * guaranteed to contain a full prior calendar month).
+ *
+ * A row with a year-over-year change compares the latest 30 days with the same 30 days 52 weeks
+ * earlier, and ridership runs a couple of weeks behind, so it fetches from `yearOverYearStart`
+ * instead: 52 weeks and 30 days back, plus six weeks for that lag.
+ *
+ * The chart card shows the last 30 days with data, out of a 60-day fetch (`chartFetchStart`) so a
+ * lagging feed still fills the window.
+ */
+export const getOverviewWindow = (end = TODAY_STRING, earliest?: string) => ({
+  end,
+  windowStart: daysBefore(end, 400, earliest),
+  yearOverYearStart: daysBefore(end, 52 * 7 + 30 + 42, earliest),
+  chartFetchStart: daysBefore(end, 60, earliest),
+});
 
-/** The chart card shows the last 30 days with data, out of a 60-day fetch so a lagging feed
- * still fills the window. */
-export const CHART_FETCH_START = dayjs(TODAY_STRING).subtract(60, 'day').format('YYYY-MM-DD');
+export type OverviewWindow = ReturnType<typeof getOverviewWindow>;
+
+const TODAY_WINDOW = getOverviewWindow();
+export const WINDOW_START = TODAY_WINDOW.windowStart;
+export const YEAR_OVER_YEAR_START = TODAY_WINDOW.yearOverYearStart;
+export const CHART_FETCH_START = TODAY_WINDOW.chartFetchStart;
 
 /** The chart card's aggregation for those 60 days: daily. */
 export const CHART_CONFIG = getSpeedGraphConfig(dayjs(CHART_FETCH_START), dayjs(TODAY_STRING));
@@ -123,8 +143,10 @@ const yearOverYearFor = (points: DatedValue[]): ScorecardRow['yearOverYear'] => 
 };
 
 interface RidershipRowOptions {
-  /** Add the change from a year earlier. The data has to start at YEAR_OVER_YEAR_START. */
+  /** Add the change from a year earlier. The data has to start at the window's yearOverYearStart. */
   yearOverYear?: boolean;
+  /** Where the sparkline starts, if the window doesn't end today (see getOverviewWindow). */
+  windowStart?: string;
   /** The historical peak (useRidershipBaseline), to show the 30-day average as a share of it. */
   peak?: number;
 }
@@ -132,17 +154,17 @@ interface RidershipRowOptions {
 export const buildRidershipRow = (
   data: RidershipCount[],
   color: string,
-  { yearOverYear = false, peak }: RidershipRowOptions = {}
+  { yearOverYear = false, peak, windowStart = WINDOW_START }: RidershipRowOptions = {}
 ): ScorecardRow | null => {
   const points = data.map((point) => ({ date: point.date, value: point.count }));
-  // Only the year-over-year change uses history from before WINDOW_START, so the sparkline still
+  // Only the year-over-year change uses history from before windowStart, so the sparkline still
   // covers the same months as the other rows.
-  const windowStart = getWeekStart(WINDOW_START);
+  const sparklineStart = getWeekStart(windowStart);
   const row = buildRow({
     key: 'ridership',
     label: 'Ridership',
     subtitle: 'Fare validations, daily average',
-    points: points.filter((point) => point.date >= windowStart),
+    points: points.filter((point) => point.date >= sparklineStart),
     reducer: 'avg',
     unit: '/day',
     formatValue: formatCompact,
