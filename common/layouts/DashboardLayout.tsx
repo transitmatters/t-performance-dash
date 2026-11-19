@@ -7,7 +7,6 @@ import { usePageControls } from '../hooks/usePageControls';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
 import { CIPBanner } from '../components/CIPBanner';
 import { usePageTitle } from '../hooks/usePageHeading';
-import { SiteFooter } from '../../modules/navigation/SiteFooter';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -20,7 +19,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const title = usePageTitle();
 
   return (
-    <div className="flex flex-1 flex-col pb-24 md:pb-0">
+    <div className="flex flex-1 flex-col">
       <title>{title}</title>
       <CIPBanner />
       <div className="flex-1">
@@ -31,7 +30,6 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </div>
         </div>
       </div>
-      <SiteFooter />
       {isMobile && showControls && <MobileControlPanel />}
     </div>
   );

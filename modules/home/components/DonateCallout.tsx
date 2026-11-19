@@ -1,4 +1,5 @@
 import { Heart } from 'lucide-react';
+import { DONATE_URL } from '../../../common/utils/constants';
 
 export const DonateCallout = () => (
   <section
@@ -15,7 +16,7 @@ export const DonateCallout = () => (
       </p>
     </div>
     <a
-      href="https://transitmatters.org/donate"
+      href={DONATE_URL}
       className="inline-flex shrink-0 items-center justify-center rounded-lg bg-white px-5 py-3 text-base font-semibold shadow-sm transition-transform hover:scale-105 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent focus-visible:outline-none motion-reduce:hover:scale-100"
     >
       {/* Colored on the span: the global `a { color: inherit }` beats utility classes on links. */}

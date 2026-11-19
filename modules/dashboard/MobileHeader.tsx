@@ -1,13 +1,12 @@
 import classNames from 'classnames';
-import { RouteSelector } from '../../common/components/controls/RouteSelector';
 import { usePageControls } from '../../common/hooks/usePageControls';
-import { lineColorBackground, textOnLineColor } from '../../common/styles/general';
 import { usePageHeading } from '../../common/hooks/usePageHeading';
-import { LineSwitcher } from '../navigation/LineSwitcher';
+import { lineColorBackground, textOnLineColor } from '../../common/styles/general';
+import { HeadingSwitchers } from './HeadingSwitchers';
 
 export const MobileHeader = () => {
-  const { colorKey, line, showRouteSelector } = usePageControls();
-  const { lineName, routeName, pageTitle } = usePageHeading();
+  const { colorKey } = usePageControls();
+  const { pageTitle } = usePageHeading();
 
   return (
     <div
@@ -18,16 +17,7 @@ export const MobileHeader = () => {
       )}
     >
       <h1 className="flex min-w-0 flex-row items-center gap-2 text-base">
-        {line ? (
-          <LineSwitcher compact={showRouteSelector} className="h-8 shrink-0 font-semibold" />
-        ) : (
-          <span className="font-semibold">{lineName}</span>
-        )}
-        {showRouteSelector ? (
-          <RouteSelector className="h-8 font-semibold" />
-        ) : (
-          line && routeName && <span className="font-semibold">{routeName}</span>
-        )}
+        <HeadingSwitchers compact className="font-semibold" pillClassName="h-8" />
         {/* The route name truncates first; the page title always shows in full. */}
         <span className="shrink-0 whitespace-nowrap select-none">
           <span className="pr-2 opacity-70" aria-hidden>

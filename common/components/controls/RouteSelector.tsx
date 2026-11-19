@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import { useNavigate } from '@tanstack/react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,6 +9,7 @@ import { getBusRoutes, getCommuterRailRoutes, getFerryRoutes } from '../../const
 import type { Line } from '../../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../../types/lines';
 import { headingMenuTrigger } from '../../styles/general';
+import { usePageHeading } from '../../hooks/usePageHeading';
 import {
   getBusRouteSelectionItemHref,
   getCommuterRailRouteSelectionItemHref,
@@ -46,6 +47,9 @@ const optionsForLine = (line: Line): { key: string; label: string }[] => {
  */
 export const RouteSelector = ({ className }: { className?: string }) => {
   const route = useDelimitatedRoute();
+  // Some pages take routes outside the station files, like the speed map's route 117.
+  const { routeName } = usePageHeading();
+  const descriptionId = useId();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -71,13 +75,17 @@ export const RouteSelector = ({ className }: { className?: string }) => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        {/* No aria-label: it would replace the route's name in the page heading for screen readers. */}
+        {/* Described rather than labelled: a label would replace the route's name in the heading. */}
         <button
           type="button"
           aria-expanded={open}
+          aria-describedby={descriptionId}
           className={classNames(headingMenuTrigger(route.colorKey), 'min-w-0', className)}
         >
-          <span className="truncate">{selected?.label ?? 'Select route'}</span>
+          <span className="truncate">{selected?.label ?? routeName ?? 'Select route'}</span>
+          <span id={descriptionId} hidden>
+            Change route
+          </span>
           <FontAwesomeIcon
             icon={faChevronDown}
             className="size-3 shrink-0 opacity-70"

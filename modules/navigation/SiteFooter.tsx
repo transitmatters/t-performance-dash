@@ -1,7 +1,9 @@
+import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { Link } from '../../common/components/general/Link';
-import { BETA_FEEDBACK_URL, isBetaHost } from '../../common/utils/constants';
+import { usePageControls } from '../../common/hooks/usePageControls';
+import { BETA_FEEDBACK_URL, DONATE_URL, isBetaHost } from '../../common/utils/constants';
 
 const LINKS = [
   { name: 'About', href: 'https://transitmatters.org/transitmatters-labs' },
@@ -14,18 +16,28 @@ const LINKS = [
   { name: 'Attributions', href: '/opensource' },
 ];
 
-/** Utility links live here rather than in the sidebar, where they pushed lines below the fold. */
+/**
+ * Utility links live here rather than in the sidebar, where they pushed lines below the fold.
+ * Link colors go on inner spans: the global `a { color: inherit }` beats utilities on the link.
+ */
 export const SiteFooter = () => {
+  // On phones, dashboard pages pin their controls to the bottom of the screen; clear them.
+  const { visible: hasMobileControls } = usePageControls();
+
   return (
-    <footer className="flex flex-row flex-wrap items-center gap-x-4 gap-y-1 border-t border-stone-200 px-4 py-3 text-xs text-stone-500 md:px-6 dark:border-stone-800 dark:text-stone-400">
+    <footer
+      className={classNames(
+        'flex flex-row flex-wrap items-center gap-x-4 gap-y-1 border-t border-stone-200 px-4 pt-3 text-xs text-stone-600 md:px-6 md:pb-3 dark:border-stone-800 dark:text-stone-400',
+        hasMobileControls ? 'pb-24' : 'pb-3'
+      )}
+    >
       <ul className="flex flex-row flex-wrap gap-x-4 gap-y-1">
         {LINKS.map((link) => (
           <li key={link.name}>
-            <Link
-              href={link.href}
-              className="hover:text-stone-900 hover:underline dark:hover:text-stone-100"
-            >
-              {link.name}
+            <Link href={link.href} className="group">
+              <span className="group-hover:text-stone-900 group-hover:underline dark:group-hover:text-stone-100">
+                {link.name}
+              </span>
             </Link>
           </li>
         ))}
@@ -33,10 +45,9 @@ export const SiteFooter = () => {
       <div className="ml-auto flex flex-row flex-wrap items-center gap-x-4 gap-y-1">
         {isBetaHost() && <p>Beta: usage data collected via Datadog</p>}
         <Link
-          href="https://transitmatters.org/donate"
+          href={DONATE_URL}
           className="flex items-center rounded-md bg-tm-red px-3 py-1.5 font-semibold hover:bg-tm-red/85"
         >
-          {/* The global `a { color: inherit }` beats a text color set on the link itself. */}
           <span className="flex items-center gap-x-1.5 text-white">
             <FontAwesomeIcon icon={faHeart} className="size-3" aria-hidden />
             Donate

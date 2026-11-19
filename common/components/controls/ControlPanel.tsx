@@ -6,19 +6,18 @@ import { DisplayMenu } from './DisplayMenu';
 import { PageFilters } from './PageFilters';
 import { TripModeToggle } from './TripModeToggle';
 
-/** What the page is about, on the line-colored band: the stops. The route is in the heading. */
+/** The stops, on the line-colored band beside the heading. Only trip pages have them. */
 export const BandControls = () => {
-  const { line, busRoute, crRoute, ferryRoute, showTripControls } = usePageControls();
+  const { line, busRoute, crRoute, ferryRoute } = usePageControls();
+  if (!line) return null;
   return (
     <div className="flex min-w-0 flex-row flex-wrap items-center justify-end gap-2">
-      {showTripControls && line && (
-        <StationSelectorWidget
-          line={line}
-          busRoute={busRoute}
-          crRoute={crRoute}
-          ferryRoute={ferryRoute}
-        />
-      )}
+      <StationSelectorWidget
+        line={line}
+        busRoute={busRoute}
+        crRoute={crRoute}
+        ferryRoute={ferryRoute}
+      />
     </div>
   );
 };

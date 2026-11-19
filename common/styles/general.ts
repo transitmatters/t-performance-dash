@@ -118,10 +118,15 @@ export const buttonHighlightFocus: DefaultStyleMap = {
 export const FOCUS_RING_ON_SURFACE =
   'focus-visible:ring-2 focus-visible:ring-stone-900 dark:focus-visible:ring-stone-100 focus-visible:outline-hidden';
 
-/** A menu button in the line-colored page header, like the line and route switchers. */
+/**
+ * A menu button in the line-colored page header, like the line and route switchers. The ring
+ * follows the text color, since a fixed one drops under 3:1 on some line colors.
+ */
 export const headingMenuTrigger = (line?: LineColorKey | null) =>
-  `inline-flex items-center gap-x-1.5 rounded-md px-1.5 py-0.5 ${FOCUS_RING_ON_SURFACE} ${
-    needsDarkTextOn(line) ? 'bg-black/5 hover:bg-black/15' : 'bg-white/10 hover:bg-white/20'
+  `inline-flex items-center gap-x-1.5 rounded-md px-1.5 py-0.5 focus-visible:ring-2 focus-visible:outline-hidden ${
+    needsDarkTextOn(line)
+      ? 'bg-black/5 hover:bg-black/15 focus-visible:ring-stone-900'
+      : 'bg-white/10 hover:bg-white/20 focus-visible:ring-white'
   }`;
 
 /**
