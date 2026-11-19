@@ -54,7 +54,7 @@ export const HeadwayBreakdown = ({ counts }: HeadwayBreakdownProps) => {
               {label}
               <span className="text-muted-foreground">{range}</span>
             </span>
-            <span className="text-lg font-semibold text-foreground tabular-nums">
+            <span className="text-xl font-semibold text-foreground tabular-nums">
               {formatPercent(share)}
             </span>
             <span className="text-xs text-muted-foreground tabular-nums">

@@ -45,10 +45,10 @@ export const HomeHero = ({ lede, generatedAt, failed }: HomeHeroProps) => (
           Data Dashboard
         </span>
       </h1>
-      <p className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+      <p className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
         How is the T doing?
       </p>
-      <p className="mt-2 max-w-[48ch] text-lg leading-snug tracking-tight text-pretty sm:text-2xl">
+      <p className="mt-2 max-w-[48ch] text-lg leading-snug tracking-tight text-pretty sm:text-xl">
         {lede ? (
           <span className="tm-fade-in">
             {lede.lead}

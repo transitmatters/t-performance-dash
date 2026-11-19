@@ -20,7 +20,12 @@ export const BigDelta = ({ delta, sentimentDirection = 'negativeOnIncrease' }: B
         delta ? bgColor : 'bg-gray-200'
       )}
     >
-      <p className={classNames('sm:xl text-2xl', delta ? textColor : 'text-rb-600')}>
+      <p
+        className={classNames(
+          'text-2xl font-semibold tabular-nums',
+          delta ? textColor : 'text-rb-600'
+        )}
+      >
         {isNaN(delta) ? '...' : Math.abs(delta)}%
       </p>
     </div>

@@ -241,7 +241,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
           position: 'start' as const,
           backgroundColor: 'transparent',
           color,
-          font: { size: 11, weight: 'bold' as const },
+          font: { size: 12, weight: 600 },
           // Just under the line, so it stays inside the plot when the target is the axis max
           yAdjust: 10,
         },

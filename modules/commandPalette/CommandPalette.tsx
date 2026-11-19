@@ -57,7 +57,7 @@ const emptySections = (line: Line | undefined, recentIds: string[]): Section[] =
 const LineBadge = ({ line, text }: { line?: Line; text: string }) => {
   if (!line) {
     return (
-      <span className="shrink-0 rounded-full bg-muted px-1.5 py-px text-[11px] font-semibold text-muted-foreground">
+      <span className="shrink-0 rounded-full bg-muted px-1.5 py-px text-xs font-semibold text-muted-foreground">
         {text}
       </span>
     );
@@ -67,7 +67,7 @@ const LineBadge = ({ line, text }: { line?: Line; text: string }) => {
     <span
       style={{ backgroundColor: color }}
       className={classNames(
-        'max-w-40 shrink-0 truncate rounded-full px-1.5 py-px text-[11px] font-semibold',
+        'max-w-40 shrink-0 truncate rounded-full px-1.5 py-px text-xs font-semibold',
         readableOn(color) === 'dark' ? 'text-stone-900' : 'text-white'
       )}
     >
@@ -99,7 +99,7 @@ const CommandRow = ({ command, value, hideBadge, onSelect }: CommandRowProps) =>
         <CommandShortcut
           className={classNames(
             'shrink-0 pl-2 tracking-normal max-sm:hidden',
-            command.hint.startsWith('/') && 'font-mono text-[11px]'
+            command.hint.startsWith('/') && 'font-mono text-xs'
           )}
         >
           {command.hint}
@@ -110,7 +110,7 @@ const CommandRow = ({ command, value, hideBadge, onSelect }: CommandRowProps) =>
 };
 
 const Kbd = ({ children }: { children: string }) => (
-  <kbd className="inline-flex h-4.5 min-w-4.5 items-center justify-center rounded border border-border px-1 font-sans text-[11px]">
+  <kbd className="inline-flex h-4.5 min-w-4.5 items-center justify-center rounded border border-border px-1 font-sans text-xs">
     {children}
   </kbd>
 );

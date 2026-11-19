@@ -91,7 +91,7 @@ export const hideBlocksExplainedByEvents = (blocks: Block[], events: MajorEvent[
       : block
   );
 
-const LABEL_FONT_SIZE = 11;
+const LABEL_FONT_SIZE = 12;
 const LABEL_LINE_HEIGHT = 1.2; // Chart.js's default
 const LABEL_PADDING = 4;
 const LABEL_GAP = 3;

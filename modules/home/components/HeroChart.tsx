@@ -38,7 +38,9 @@ const useDayLayers = (pick: HeroPick | undefined, date: string) => {
 
 const Stat = ({ value, label, detail }: { value: string; label: string; detail: string }) => (
   <div className="flex flex-col">
-    <dd className="order-1 text-3xl font-bold tracking-tight text-primary tabular-nums">{value}</dd>
+    <dd className="order-1 text-2xl font-semibold tracking-tight text-primary tabular-nums">
+      {value}
+    </dd>
     <dt className="order-2 text-sm font-medium">{label}</dt>
     <span className="order-3 text-xs text-muted-foreground tabular-nums">{detail}</span>
   </div>
@@ -77,7 +79,7 @@ export const HeroChart = () => {
       <div aria-hidden className="-mx-4 h-1 bg-primary sm:-mx-5" />
       <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
         <div className="flex max-w-xl flex-col gap-1.5">
-          <h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
+          <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight">
             <span className="text-primary">
               <RouteBullet size="lg" />
             </span>

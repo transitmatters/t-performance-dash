@@ -74,7 +74,7 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
         </span>
       </div>
       {cell.status !== 'na' && (
-        <div className="text-2xl font-semibold tabular-nums">{formatCell(cell, true)}</div>
+        <div className="text-xl font-semibold tabular-nums">{formatCell(cell, true)}</div>
       )}
       <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
         {cell.secondary && <p>{cell.secondary}</p>}

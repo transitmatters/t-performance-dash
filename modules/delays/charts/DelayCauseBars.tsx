@@ -165,7 +165,7 @@ export const DelayCauseBars = ({
               y: {
                 grid: { display: false },
                 border: { display: false },
-                ticks: { color: chartTheme.tick, font: { size: 13 } },
+                ticks: { color: chartTheme.tick, font: { size: LABEL_FONT_SIZE } },
               },
             },
           }}

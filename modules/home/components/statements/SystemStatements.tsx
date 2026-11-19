@@ -7,12 +7,7 @@ import { StatementViz } from './StatementViz';
 
 const StatementText = ({ statement, lead }: { statement: Statement; lead: boolean }) => (
   <div className="flex flex-col gap-3">
-    <h3
-      className={cn(
-        'font-bold tracking-tight text-balance',
-        lead ? 'text-2xl md:text-3xl' : 'text-xl'
-      )}
-    >
+    <h3 className={cn('font-bold tracking-tight text-balance', lead ? 'text-2xl' : 'text-xl')}>
       {statement.head}
     </h3>
     <Link

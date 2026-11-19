@@ -58,7 +58,7 @@ export const TrackRow = ({
   return (
     <div role="group" aria-label={label} className="flex items-center">
       <div
-        className="flex shrink-0 justify-end pr-2 text-[11px] leading-none text-muted-foreground"
+        className="flex shrink-0 justify-end pr-2 text-xs leading-none text-muted-foreground"
         style={{ width: geometry.left }}
       >
         <span className="flex min-w-0 items-center gap-1" title={showText ? undefined : label}>
@@ -71,7 +71,7 @@ export const TrackRow = ({
           <Skeleton className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2" />
         )}
         {status === 'empty' && (
-          <p className="absolute inset-0 flex items-center text-[11px] leading-none text-muted-foreground/80">
+          <p className="absolute inset-0 flex items-center text-xs leading-none text-muted-foreground/80">
             {emptyText}
           </p>
         )}
