@@ -100,7 +100,7 @@ describe('getDelayStats', () => {
 
     expect(stats.totalDelay).toBe(230);
     expect(stats.avgDelay).toBeCloseTo(70);
-    expect(stats.avgDelayDelta).toBeCloseTo(0);
+    expect(stats.avgDelayAfter - stats.avgDelayBefore).toBeCloseTo(0);
   });
 
   it('gives the monthly view a month of average length', () => {
@@ -119,6 +119,7 @@ describe('getDelayStats', () => {
 
     expect(stats.avgDelay).toBe(30);
     // Leading half is the first two days (15 a day), trailing the last three (40 a day)
-    expect(stats.avgDelayDelta).toBe(25);
+    expect(stats.avgDelayBefore).toBe(15);
+    expect(stats.avgDelayAfter).toBe(40);
   });
 });
