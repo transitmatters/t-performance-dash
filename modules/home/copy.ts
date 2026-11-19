@@ -1,5 +1,4 @@
-import { METRICS } from './config';
-import type { HeadlineKind, MetricId, Status } from './types';
+import type { HeadlineKind, Status } from './types';
 
 export const STATUS_LABELS: Record<Status, string> = {
   win: 'Win',
@@ -16,12 +15,4 @@ export const HEADLINE_LABELS: Record<HeadlineKind, string> = {
   room: 'Room to grow',
   needsWork: 'Needs work',
   limited: 'Limited data',
-};
-
-const isMetric = (metric: string): metric is MetricId => metric in METRICS;
-
-export const heldBackLabel = (metrics: string[]) => {
-  // Skips measures the page no longer shows, which older data can still list.
-  const labels = metrics.filter(isMetric).map((m) => METRICS[m].label.toLowerCase());
-  return labels.length ? `Held back by ${labels.slice(0, 2).join(' and ')}` : undefined;
 };

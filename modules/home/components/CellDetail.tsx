@@ -45,7 +45,7 @@ const PartDetail = ({ part }: { part: CellPart }) => {
           {STATUS_LABELS[part.status]}
         </span>
       </div>
-      {thresholds && <p className="pl-5 text-[11px] text-muted-foreground">{thresholds}</p>}
+      {thresholds && <p className="pl-5 text-xs text-muted-foreground">{thresholds}</p>}
     </li>
   );
 };
@@ -83,7 +83,7 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
           <p
             className={cn(
               sentiment === 'good' && 'text-green-700 dark:text-green-400',
-              sentiment === 'bad' && 'text-destructive'
+              sentiment === 'bad' && 'text-red-700 dark:text-red-400'
             )}
           >
             {trend}

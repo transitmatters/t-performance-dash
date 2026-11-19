@@ -105,12 +105,10 @@ describe('buildStatements', () => {
     ]);
   });
 
-  it('says how evenly trains are spaced and where they bunch most', () => {
+  it('says how evenly trains are spaced and links to the line furthest off', () => {
     const { reliability } = byId(DATA);
     expect(reliability.head).toBe('No line keeps its trains or buses evenly spaced.');
-    expect(reliability.body).toBe(
-      'Between 36% and 63% of the gaps between trains and buses are on schedule, and Good starts at 65%. On the Green Line, 13% of trains come bunched up behind the one ahead.'
-    );
+    expect(reliability.link.label).toBe('Green Line reliability');
     expect(reliability.link.href).toBe('/reliability');
     // The four subway lines and both bus rows.
     expect(reliability.viz.kind === 'dots' && reliability.viz.marks).toHaveLength(6);
@@ -131,53 +129,35 @@ describe('buildStatements', () => {
     );
   });
 
-  it('says where buses bunch when a bus row is furthest off', () => {
-    const rows = DATA.rows.map((r) =>
-      r.id === 'all-bus'
-        ? {
-            ...r,
-            cells: {
-              ...r.cells,
-              reliability: cell('reliability', 'problem', 0.2, { bunched: 0.3 }),
-            },
-          }
-        : r
-    );
-    expect(byId({ ...DATA, rows }).reliability.body).toContain(
-      'Across all bus routes, 30% of buses come bunched up behind the one ahead.'
-    );
-  });
-
-  it('gives the range of delay alert minutes and which way they moved', () => {
+  it('gives the range of delay alert minutes, with Mattapan charted beside the subway', () => {
     const { delays } = byId(DATA);
     expect(delays.head).toBe(
       'Each subway line spends 44 to 102 minutes a day under a delay alert.'
     );
-    expect(delays.body).toBe(
-      'That went up on 1 of 4 lines in the last two weeks. Mattapan, at 5 minutes, is the exception.'
-    );
+    expect(delays.viz.kind === 'bars' && delays.viz.marks.map((m) => m.row)).toContain('mattapan');
   });
 
-  it('leaves Commuter Rail out of frequency and says why', () => {
+  it('leaves Commuter Rail out of frequency', () => {
     const { frequency } = byId(DATA);
     expect(frequency.head).toBe(
-      'On the subway, a train comes every 10 minutes or better for 93% of the service day. Across all bus routes, a bus comes every 15 minutes for 54%.'
+      'A subway train comes every 10 minutes or better for 93% of the service day; a bus, every 15, for 54%.'
     );
-    expect(frequency.body).toContain('Frequent Bus routes do better, at 89% of their hours.');
-    expect(frequency.body).toContain("Commuter Rail isn't judged on frequency");
+    expect(frequency.viz.kind === 'meters' && frequency.viz.marks.map((m) => m.row)).toEqual([
+      'subway',
+      'frequent-bus',
+      'all-bus',
+    ]);
   });
 
-  it('counts the lines near their best service and names the furthest behind', () => {
+  it('counts the lines near their best service and links to the furthest behind', () => {
     const { service } = byId(DATA);
     expect(service.head).toBe('6 of 7 lines run at least 92% of the trips they ran at their best.');
-    expect(service.body).toBe(
-      'Across the system the T is scheduling 97% of the most trips it has ever scheduled. Frequent Bus is the furthest behind, at 87%.'
-    );
+    expect(service.link.label).toBe('Frequent Bus service');
   });
 
   it('compares slow zones now with their peak', () => {
     expect(byId(DATA).slowZones.head).toBe(
-      'Slow zones add 1.3 minutes a day across the subway. In April 2023 they added 2 hours.'
+      'Slow zones add 1.3 minutes a day across the subway, down from 2 hours a day in April 2023.'
     );
   });
 
@@ -197,7 +177,6 @@ describe('buildStatements', () => {
     };
     const statements = byId(older);
     expect(Object.keys(statements)).toEqual(['reliability', 'frequency', 'service']);
-    expect(statements.reliability.body).not.toContain('bunched');
   });
 
   it('is empty before the data loads', () => {
@@ -264,16 +243,11 @@ describe('a great day', () => {
     expect(statements.delays.head).toBe(
       'No subway line has had a delay alert in the last four weeks.'
     );
-    expect(statements.delays.body).toBe('That went down on all 4 lines in the last two weeks.');
-    expect(statements.frequency.body).toContain(
-      'Frequent Bus routes match that, at 100% of their hours.'
-    );
     expect(statements.service.head).toBe(
       'Every line runs as many trips as it did at its best, or more.'
     );
-    expect(statements.service.body).not.toContain('behind');
     expect(statements.slowZones.head).toBe(
-      'There are no slow zones on the subway right now. In April 2023 they added 2 hours.'
+      'There are no slow zones on the subway right now, down from 2 hours a day in April 2023.'
     );
   });
 

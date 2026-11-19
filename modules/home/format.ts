@@ -87,7 +87,8 @@ export const STATUS_TONE: Record<Status, string> = {
   win: 'text-green-700 dark:text-green-400',
   good: 'text-green-700 dark:text-green-400',
   room: 'text-amber-700 dark:text-amber-400',
-  problem: 'text-destructive',
+  // Not `text-destructive`: that red falls short of 4.5:1 on the stone ground.
+  problem: 'text-red-700 dark:text-red-400',
   insufficient: 'text-muted-foreground',
   na: 'text-muted-foreground',
 };
