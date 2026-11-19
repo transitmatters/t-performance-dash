@@ -4,11 +4,12 @@ import { RouteBullet } from '../../common/components/transit/RouteBullet';
 import { usePageControls } from '../../common/hooks/usePageControls';
 import { usePageHeading } from '../../common/hooks/usePageHeading';
 import { lineColorBackground, needsDarkTextOn, textOnLineColor } from '../../common/styles/general';
+import { RouteSelector } from '../../common/components/controls/RouteSelector';
 import { LineSwitcher } from '../navigation/LineSwitcher';
 
 export const DesktopHeader = () => {
   const { lineName, routeName, pageTitle } = usePageHeading();
-  const { visible: showControls, colorKey, line } = usePageControls();
+  const { visible: showControls, colorKey, line, showRouteSelector } = usePageControls();
 
   return (
     <div className="sticky top-0 z-10 mb-2 shadow-md">
@@ -19,19 +20,20 @@ export const DesktopHeader = () => {
           lineColorBackground[colorKey ?? 'DEFAULT']
         )}
       >
-        <h1 className="flex shrink-0 flex-row items-baseline gap-x-2 text-xl">
+        <h1 className="flex shrink-0 flex-row items-center gap-x-2 text-xl">
           {line ? (
-            <LineSwitcher className="-ml-1.5 self-center font-bold" />
+            <LineSwitcher className="-ml-1.5 font-bold" />
           ) : (
             <span className="font-bold">{lineName}</span>
           )}
-          {line && routeName && <span className="font-bold">{routeName}</span>}
+          {showRouteSelector ? (
+            <RouteSelector className="font-bold" />
+          ) : (
+            line && routeName && <span className="font-bold">{routeName}</span>
+          )}
           <RouteBullet
             size="sm"
-            className={classNames(
-              'self-center',
-              needsDarkTextOn(colorKey) ? 'text-stone-900/60' : 'text-white/70'
-            )}
+            className={needsDarkTextOn(colorKey) ? 'text-stone-900/60' : 'text-white/70'}
           />
           <span className="font-normal select-none">{pageTitle}</span>
         </h1>

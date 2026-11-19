@@ -8,7 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { getBusRoutes, getCommuterRailRoutes, getFerryRoutes } from '../../constants/stations';
 import type { Line } from '../../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../../types/lines';
-import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../styles/general';
+import { headingMenuTrigger } from '../../styles/general';
 import {
   getBusRouteSelectionItemHref,
   getCommuterRailRouteSelectionItemHref,
@@ -34,8 +34,8 @@ const optionsForLine = (line: Line): { key: string; label: string }[] => {
 };
 
 /**
- * Route selection for the modes that have one. It sits with the other page controls rather than in
- * the nav: picking a route parameterizes the current page, it doesn't navigate somewhere new.
+ * Route selection for the modes that have one, in the page heading after the line switcher. Unlike
+ * the nav, picking a route parameterizes the current page rather than going somewhere new.
  *
  * Built on Popover + Command (same pattern as StationSelector) rather than the base-ui Combobox
  * primitive: the Combobox's own positioner had a real bug — with collision-avoidance flipping
@@ -44,7 +44,7 @@ const optionsForLine = (line: Line): { key: string; label: string }[] => {
  * dropdown in this app already relies on without issue, and Command's list is a plain fixed-height
  * cmdk list with no positioning logic of its own — nothing here for either to fight over.
  */
-export const RouteSelector = () => {
+export const RouteSelector = ({ className }: { className?: string }) => {
   const route = useDelimitatedRoute();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -71,20 +71,17 @@ export const RouteSelector = () => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
+        {/* No aria-label: it would replace the route's name in the page heading for screen readers. */}
         <button
           type="button"
           aria-expanded={open}
-          aria-label="Select route"
-          className={classNames(
-            'flex h-10 w-full min-w-0 items-center justify-between gap-x-2 rounded-md px-3 text-sm focus-visible:ring-offset-1 md:h-8 md:w-48',
-            CONTROL_SURFACE,
-            FOCUS_RING_ON_SURFACE
-          )}
+          className={classNames(headingMenuTrigger(route.colorKey), 'min-w-0', className)}
         >
           <span className="truncate">{selected?.label ?? 'Select route'}</span>
           <FontAwesomeIcon
             icon={faChevronDown}
-            className="size-3 shrink-0 text-stone-500 dark:text-stone-400"
+            className="size-3 shrink-0 opacity-70"
+            aria-hidden
           />
         </button>
       </PopoverTrigger>

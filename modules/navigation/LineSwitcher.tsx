@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '../../common/components/ui/dropdown-menu';
 import { LINE_OBJECTS } from '../../common/constants/lines';
-import { FOCUS_RING_ON_SURFACE, lineColorVar, needsDarkTextOn } from '../../common/styles/general';
+import { headingMenuTrigger, lineColorVar } from '../../common/styles/general';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { NAV_LINES, hrefForLine, lineIcon } from './lineNav';
 
@@ -25,9 +25,9 @@ const RAPID_TRANSIT = new Set([
 /**
  * The line name in the page header, as a menu of every line. The sidebar lists lines too, but on a
  * short screen the open line's pages push the rest below the fold, and on phones it's behind the
- * menu button.
+ * menu button. `compact` drops the name for the icon alone, for a phone header that also has a route.
  */
-export const LineSwitcher = ({ className }: { className?: string }) => {
+export const LineSwitcher = ({ className, compact }: { className?: string; compact?: boolean }) => {
   const route = useDelimitatedRoute();
   const { line, colorKey } = route;
   if (!line) return null;
@@ -35,17 +35,9 @@ export const LineSwitcher = ({ className }: { className?: string }) => {
   return (
     <DropdownMenu>
       {/* No aria-label: it would replace the line's name in the page heading for screen readers. */}
-      <DropdownMenuTrigger
-        className={classNames(
-          'inline-flex items-center gap-x-1.5 rounded-md px-1.5 py-0.5',
-          needsDarkTextOn(colorKey)
-            ? 'bg-black/5 hover:bg-black/15'
-            : 'bg-white/10 hover:bg-white/20',
-          FOCUS_RING_ON_SURFACE,
-          className
-        )}
-      >
-        {LINE_OBJECTS[line].name}
+      <DropdownMenuTrigger className={classNames(headingMenuTrigger(colorKey), className)}>
+        <FontAwesomeIcon icon={lineIcon(line)} className="size-4" aria-hidden />
+        <span className={classNames(compact && 'sr-only')}>{LINE_OBJECTS[line].name}</span>
         <FontAwesomeIcon icon={faChevronDown} className="size-3 opacity-70" aria-hidden />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-52">
