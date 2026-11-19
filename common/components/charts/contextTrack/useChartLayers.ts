@@ -18,6 +18,7 @@ import type { OldAlert } from '../../../types/alerts';
 import { ONE_HOUR } from '../../../constants/time';
 import { useOtherLineShutdowns } from '../../../../modules/shutdowns';
 import { useDisplayStore } from '../../../state/displayStore';
+import { isLongRange } from '../../../utils/dateChunks';
 import { alertKey, getAlertAnnotations, serviceDay } from './segments';
 import { chartGeometryPlugin } from './chartGeometryPlugin';
 import type { TrackGeometry } from './chartGeometryPlugin';
@@ -63,9 +64,11 @@ export const useChartLayers = ({
   withAlerts = false,
   withOtherShutdowns = false,
 }: UseChartLayersOptions) => {
-  const showWeather = useDisplayStore((store) => store.showWeather);
   const showTemperature = useDisplayStore((store) => store.showTemperature);
   const hourly = granularity === 'hourly';
+  // Past a year the days' weather runs together into a solid bar, so only temperature shows
+  const longRange = !hourly && Boolean(startDate && endDate && isLongRange(startDate, endDate));
+  const showWeather = useDisplayStore((store) => store.showWeather) && !longRange;
   const serviceWindow = hourly && startDate ? serviceDay(startDate) : undefined;
   const { data, isLoading: isWeatherLoading } = useWeatherData(
     {

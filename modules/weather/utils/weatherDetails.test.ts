@@ -78,6 +78,13 @@ describe('weatherRowAt', () => {
     expect(weatherRowAt(runs, at('2026-02-07T16:30:00'), 'hourly')).toBeUndefined();
   });
 
+  it('describes only the hovered day of a run spanning several', () => {
+    const days = [...hours, rainHour('2026-02-08T09:00:00', 65)];
+    const runs = placeWeatherRuns(days, 'daily');
+    expect(runs).toHaveLength(1);
+    expect(weatherRowAt(runs, at('2026-02-08T00:00:00'), 'daily')?.value).toBe('Heavy rain');
+  });
+
   it("summarizes the day on daily charts, plotted at the day's midnight", () => {
     const runs = placeWeatherRuns(hours, 'daily');
     expect(weatherRowAt(runs, at('2026-02-07T00:00:00'), 'daily')?.value).toBe(
