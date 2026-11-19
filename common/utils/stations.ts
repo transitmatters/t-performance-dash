@@ -315,6 +315,17 @@ export const findNextValidStation = (
       s.stops[station.stops['1']?.length ? '1' : '0']?.length > 0
   );
 
+/**
+ * The GTFS stop_ids our station list has for a bus route, e.g. '29005' from '747-1-29005'. They
+ * outlast the route itself, which drops out of MBTA's current feed once it's retired.
+ */
+export const getBusRouteStopIds = (busRoute: string): string[] =>
+  (stations.Bus[busRoute as BusRoute]?.stations ?? []).flatMap(({ stops }) =>
+    [...(stops['0'] ?? []), ...(stops['1'] ?? [])].map(
+      (stopId) => stopId.split('-').pop() ?? stopId
+    )
+  );
+
 export const getMinMaxDatesForRoute = (
   tab: Tab,
   route?: BusRoute | CommuterRailRoute

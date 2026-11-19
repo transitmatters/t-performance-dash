@@ -104,8 +104,8 @@ export const FREQUENT_BUS_ROUTE_IDS: string[] = [
 ];
 
 /**
- * Silver Line raw GTFS route_ids don't carry their rider-facing "SL#" names -- the MBTA
- * V3 API/GTFS feed identifies them by legacy numeric ids. Bus trip-metrics data (e.g. the
+ * Silver Line and CT raw GTFS route_ids don't carry their rider-facing "SL#"/"CT#" names -- the
+ * MBTA V3 API/GTFS feed identifies them by legacy numeric ids. Bus trip-metrics data (e.g. the
  * speed leaderboard) is keyed by these ids, so map them to the branded names for display.
  */
 export const BUS_ROUTE_ID_TO_DISPLAY_NAME: Record<string, string> = {
@@ -115,6 +115,7 @@ export const BUS_ROUTE_ID_TO_DISPLAY_NAME: Record<string, string> = {
   '751': 'SL4',
   '749': 'SL5',
   '746': 'SLW',
+  '747': 'CT2',
   '708': 'CT3',
 };
 
