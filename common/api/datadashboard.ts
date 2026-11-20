@@ -20,7 +20,7 @@ import type {
 import { ONE_MINUTE } from '../constants/time';
 import { hasReliableCommuterRailBenchmarks } from '../constants/dates';
 import type { DateChunk } from '../utils/dateChunks';
-import { splitDateRange } from '../utils/dateChunks';
+import { joinAdjacentChunks, splitDateRange } from '../utils/dateChunks';
 import { fetchOrThrow } from './utils/ApiError';
 
 // Fetch data for all single day charts.
@@ -136,6 +136,9 @@ const mergeChunks = (
       loaded: loaded.length,
       failed: failed.length,
       pending: pending.length,
+      pendingRanges: joinAdjacentChunks(
+        chunks.filter((_, i) => !results[i].data && !results[i].isError)
+      ),
       byTimeRange: chunks[0],
       byTimeStatus: newest.data ? 'success' : newest.isError ? 'error' : 'pending',
     },

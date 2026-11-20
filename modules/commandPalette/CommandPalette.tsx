@@ -86,10 +86,13 @@ interface CommandRowProps {
 
 const CommandRow = ({ command, value, hideBadge, onSelect }: CommandRowProps) => {
   const theme = useThemeStore((state) => state.theme);
+  const colorblind = useThemeStore((state) => state.colorblind);
   const label =
     command.id === 'action:theme'
       ? `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`
-      : command.label;
+      : command.id === 'action:colorblind'
+        ? `Turn colorblind mode ${colorblind ? 'off' : 'on'}`
+        : command.label;
   return (
     <CommandItem value={value} onSelect={onSelect} className="gap-2.5 py-2">
       <FontAwesomeIcon icon={command.icon} className="size-3.5! text-muted-foreground" />

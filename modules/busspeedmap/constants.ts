@@ -175,14 +175,40 @@ export const BUS_STOPS_SOURCE_LAYER = 'bus_stops';
 
 /**
  * Every value a station's `lines` can hold, keyed as the tileset spells it. Drives both the
- * station dot colours on the map and the line list in the station hover popup.
+ * station dot colours on the map and the line list in the station hover popup. Colors are getters
+ * so colorblind mode applies.
  */
 export const STATION_LINES: Record<string, { label: string; color: string }> = {
-  Red: { label: 'Red Line', color: COLORS.mbta.red },
-  Mattapan: { label: 'Mattapan Line', color: COLORS.mbta.mattapan },
-  Orange: { label: 'Orange Line', color: COLORS.mbta.orange },
-  Blue: { label: 'Blue Line', color: COLORS.mbta.blue },
-  Green: { label: 'Green Line', color: COLORS.mbta.green },
+  Red: {
+    label: 'Red Line',
+    get color() {
+      return COLORS.mbta.red;
+    },
+  },
+  Mattapan: {
+    label: 'Mattapan Line',
+    get color() {
+      return COLORS.mbta.mattapan;
+    },
+  },
+  Orange: {
+    label: 'Orange Line',
+    get color() {
+      return COLORS.mbta.orange;
+    },
+  },
+  Blue: {
+    label: 'Blue Line',
+    get color() {
+      return COLORS.mbta.blue;
+    },
+  },
+  Green: {
+    label: 'Green Line',
+    get color() {
+      return COLORS.mbta.green;
+    },
+  },
 };
 
 export const BOSTON_CENTER: { longitude: number; latitude: number; zoom: number } = {

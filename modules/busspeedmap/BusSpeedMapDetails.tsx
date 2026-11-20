@@ -19,6 +19,7 @@ import { ALL_ROUTES, DAY_TYPES, DIRECTIONS, TIME_BANDS } from './constants';
 import { InProgressBadge } from './InProgressBadge';
 import { BusSpeedLegend } from './map/BusSpeedLegend';
 import { BusSpeedMapViewLazy as BusSpeedMapView } from './map/BusSpeedMapViewLazy';
+import { RetiredRouteNotice, serviceEndBefore } from './RetiredRouteNotice';
 import {
   useDayType,
   useDirection,
@@ -61,6 +62,8 @@ export function BusSpeedMapDetails() {
 
   const renderBody = () => {
     if (!date) return <p>Select a date to load the bus speed map.</p>;
+    const serviceEnd = serviceEndBefore(busRoute, date, period);
+    if (serviceEnd) return <RetiredRouteNotice serviceEnd={serviceEnd} period={period} />;
     if (segments.isLoading) return <Skeleton className={mapBox} />;
     // A date with no published file isn't a failure, it's just outside coverage.
     if (segments.error instanceof BusSpeedDataUnavailableError)

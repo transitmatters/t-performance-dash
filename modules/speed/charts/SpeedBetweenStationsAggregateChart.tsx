@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { AggregateDataResponse, TravelTimesUnit } from '../../../common/types/charts';
+import type {
+  AggregateDataResponse,
+  AggregateLineProps,
+  TravelTimesUnit,
+} from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -19,6 +23,7 @@ interface SpeedBetweenStationsAggregateChartProps {
   endDate?: string;
   fill?: boolean;
   trendline?: boolean;
+  loadingRanges?: AggregateLineProps['loadingRanges'];
 }
 
 export const SpeedBetweenStationsAggregateChart = ({
@@ -31,6 +36,7 @@ export const SpeedBetweenStationsAggregateChart = ({
   endDate: endDateProp,
   fill = false,
   trendline = false,
+  loadingRanges,
 }: SpeedBetweenStationsAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -70,6 +76,7 @@ export const SpeedBetweenStationsAggregateChart = ({
         fill={fill}
         trendline={trendline}
         slowZonesTrip={slowZonesTrip}
+        loadingRanges={loadingRanges}
         embedChart={timeUnitByDate ? 'speeds' : undefined}
       />
     );
@@ -84,6 +91,7 @@ export const SpeedBetweenStationsAggregateChart = ({
     fill,
     trendline,
     slowZonesTrip,
+    loadingRanges,
   ]);
 
   return chart;

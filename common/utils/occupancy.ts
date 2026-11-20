@@ -4,14 +4,44 @@ import type { SingleDayDataPoint } from '../types/charts';
 
 // GTFS-RT OccupancyStatus values that describe how full a car is, from emptiest to fullest.
 // MBTA percentages stay low even on crowded cars (standing room starts around 12%), so the
-// status leads and the percentage is only a detail.
+// status leads and the percentage is only a detail. Colors are getters so colorblind mode applies.
 const LEVELS = {
-  EMPTY: { label: 'Empty', color: CHART_COLORS.GREEN },
-  MANY_SEATS_AVAILABLE: { label: 'Many seats', color: CHART_COLORS.GREEN },
-  FEW_SEATS_AVAILABLE: { label: 'Few seats', color: CHART_COLORS.YELLOW },
-  STANDING_ROOM_ONLY: { label: 'Standing room', color: CHART_COLORS.RED },
-  CRUSHED_STANDING_ROOM_ONLY: { label: 'Crushed', color: CHART_COLORS.PURPLE },
-  FULL: { label: 'Full', color: CHART_COLORS.PURPLE },
+  EMPTY: {
+    label: 'Empty',
+    get color() {
+      return CHART_COLORS.GREEN;
+    },
+  },
+  MANY_SEATS_AVAILABLE: {
+    label: 'Many seats',
+    get color() {
+      return CHART_COLORS.GREEN;
+    },
+  },
+  FEW_SEATS_AVAILABLE: {
+    label: 'Few seats',
+    get color() {
+      return CHART_COLORS.YELLOW;
+    },
+  },
+  STANDING_ROOM_ONLY: {
+    label: 'Standing room',
+    get color() {
+      return CHART_COLORS.RED;
+    },
+  },
+  CRUSHED_STANDING_ROOM_ONLY: {
+    label: 'Crushed',
+    get color() {
+      return CHART_COLORS.PURPLE;
+    },
+  },
+  FULL: {
+    label: 'Full',
+    get color() {
+      return CHART_COLORS.PURPLE;
+    },
+  },
 } as const;
 
 type OccupancyLevel = keyof typeof LEVELS;

@@ -63,7 +63,9 @@ export const ServicePattern = ({
           />
         ))}
         <HourGridLegend>
-          <span>Regional Rail runs a train at least every 30 minutes, from 5am to 1am</span>
+          <span>
+            Regional Rail runs 2+ trains an hour, at least every 30 minutes, from 5am to 1am
+          </span>
         </HourGridLegend>
       </HourGrid>
       {stats && (

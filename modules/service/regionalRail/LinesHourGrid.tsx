@@ -100,7 +100,9 @@ export const LinesHourGrid = ({ data, dayLabel, startDate, endDate }: LinesHourG
           );
         })}
         <HourGridLegend>
-          <span>Weaker direction · Regional Rail runs a train at least every 30 minutes</span>
+          <span>
+            Weaker direction · Regional Rail runs 2+ trains an hour, at least every 30 minutes
+          </span>
         </HourGridLegend>
       </HourGrid>
       <ChartActions

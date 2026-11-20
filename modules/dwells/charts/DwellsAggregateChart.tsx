@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
+import type {
+  AggregateDataResponse,
+  AggregateLineProps,
+  DayFilter,
+} from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { useDelimitatedRoute } from '../../../common/utils/router';
@@ -17,6 +21,7 @@ interface DwellsAggregateChartProps {
   endDate?: string;
   fill?: boolean;
   trendline?: boolean;
+  loadingRanges?: AggregateLineProps['loadingRanges'];
 }
 
 export const DwellsAggregateChart = ({
@@ -28,6 +33,7 @@ export const DwellsAggregateChart = ({
   endDate: endDateProp,
   fill = false,
   trendline = false,
+  loadingRanges,
 }: DwellsAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -63,10 +69,21 @@ export const DwellsAggregateChart = ({
         yUnit="Minutes"
         fill={fill}
         trendline={trendline}
+        loadingRanges={loadingRanges}
         embedChart={'dwells'}
       />
     );
-  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline]);
+  }, [
+    dwells.by_date,
+    startDate,
+    endDate,
+    fromStation,
+    toStation,
+    dayFilter,
+    fill,
+    trendline,
+    loadingRanges,
+  ]);
 
   return chart;
 };

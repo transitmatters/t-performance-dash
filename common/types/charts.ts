@@ -57,6 +57,8 @@ export interface AggregateChunkProgress {
   failed: number;
   /** Chunks with neither data nor an error yet. */
   pending: number;
+  /** The date spans those pending chunks cover, joined where they touch, oldest first. */
+  pendingRanges: { startDate: string; endDate: string }[];
   /** by_time is taken from the newest chunk only, since percentiles can't be merged across chunks. */
   byTimeRange: { startDate: string; endDate: string };
   byTimeStatus: 'pending' | 'error' | 'success';
@@ -148,6 +150,8 @@ export interface AggregateLineProps extends LineProps {
   trendline?: boolean;
   /** A subway trip whose slow zones go in the chart's context track. */
   slowZonesTrip?: { fromStation: Station; toStation: Station };
+  /** Set when the range loads in chunks: the spans still loading, shaded until they arrive. */
+  loadingRanges?: { startDate: string; endDate: string }[];
 }
 
 export interface SingleDayLineProps extends LineProps {

@@ -28,6 +28,7 @@ import { ChartActions } from './ChartActions';
 import { ChartDiv } from './ChartDiv';
 import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
+import { loadingAnnotations } from './loadingAnnotations';
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   if (hourly) {
@@ -91,6 +92,7 @@ export const AggregateLineChart = ({
   embedChart,
   trendline = false,
   slowZonesTrip,
+  loadingRanges,
 }: AggregateLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -288,6 +290,9 @@ export const AggregateLineChart = ({
             },
             responsive: true,
             maintainAspectRatio: false,
+            // Each chunk that arrives rebuilds the chart; replaying the grow-in every time made it
+            // jump.
+            animation: loadingRanges ? false : undefined,
             // Make the tooltip display all 3 datapoints for each x axis entry.
             interaction: {
               mode: 'index',
@@ -295,7 +300,11 @@ export const AggregateLineChart = ({
             },
             plugins: {
               annotation: {
-                annotations: [...weatherBlocks, ...getMajorEventAnnotations(events)],
+                annotations: [
+                  ...weatherBlocks,
+                  ...getMajorEventAnnotations(events),
+                  ...(hourly ? [] : loadingAnnotations(loadingRanges ?? [], chartTheme)),
+                ],
               },
               legend: {
                 display: false,

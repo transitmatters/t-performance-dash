@@ -4,6 +4,13 @@ import { useBusStopRidershipData } from '../../common/api/hooks/ridership';
 import { Widget } from '../../common/components/widgets';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../common/components/ui/select';
 import { getLineColorKey, LINE_COLORS } from '../../common/constants/colors';
 import { getBusRouteDisplayName } from '../../common/constants/lines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -16,7 +23,7 @@ import {
   getBusStopRidershipRouteIds,
   getStopComparisons,
   resolveBusStopRidershipSelection,
-  withSeasonsBefore,
+  withSeasonsDuring,
 } from './map/busStopUtils';
 
 const formatChange = (change: number) =>
@@ -67,11 +74,11 @@ const StopComparisons = ({
 export const BusStopRidership = ({ busRoute }: { busRoute: BusRoute }) => {
   const routeIds = useMemo(() => getBusStopRidershipRouteIds(busRoute), [busRoute]);
   const ridership = useBusStopRidershipData(routeIds, true);
-  const { end, retired } = getBusRouteService(busRoute);
+  const { start, end, retired } = getBusRouteService(busRoute);
   const serviceEnd = retired ? end : undefined;
   const routes = useMemo(
-    () => ridership.data && withSeasonsBefore(ridership.data, serviceEnd),
-    [ridership.data, serviceEnd]
+    () => ridership.data && withSeasonsDuring(ridership.data, start, serviceEnd),
+    [ridership.data, start, serviceEnd]
   );
   const isDesktop = useBreakpoint('lg');
 
@@ -133,17 +140,18 @@ export const BusStopRidership = ({ busRoute }: { busRoute: BusRoute }) => {
             )}
             <label className="flex items-center gap-2 text-sm">
               <span className="text-stone-600 dark:text-stone-300">Season</span>
-              <select
-                className="rounded-md border border-stone-300 bg-white px-2 py-1.5 text-sm dark:border-stone-600 dark:bg-stone-800"
-                value={view.season}
-                onChange={(event) => setSeason(event.target.value)}
-              >
-                {[...view.seasons].reverse().map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              <Select value={view.season} onValueChange={setSeason}>
+                <SelectTrigger size="sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[...view.seasons].reverse().map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </label>
           </div>
           <BusStopRidershipMap

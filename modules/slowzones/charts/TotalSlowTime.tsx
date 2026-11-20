@@ -112,6 +112,8 @@ export const TotalSlowTime = ({
           data: data?.map((d) => (d['Mattapan'] / 60).toFixed(2)),
           borderColor: LINE_COLORS['line-mattapan'],
           backgroundColor: LINE_COLORS['line-mattapan'],
+          // Mattapan shares the Red Line's color, so it's dashed to tell the two apart
+          borderDash: [6, 4],
           pointRadius: 0,
           tension: 0.1,
         },
@@ -198,8 +200,11 @@ export const TotalSlowTime = ({
                 display: showTitle,
                 text: '',
               },
+              // The system view draws every line at once, so name them rather than rely on color
               legend: {
-                display: false,
+                display: !isLinePage,
+                position: 'bottom',
+                labels: { usePointStyle: true, pointStyle: 'line', boxWidth: 24 },
               },
               annotation: {
                 annotations: [...getMajorEventAnnotations(events), ...otherShutdowns.annotations],

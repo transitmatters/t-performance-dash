@@ -12,12 +12,11 @@ import type { AggType } from '../../speed/constants/speeds';
 import type { HeadwayRow } from '../utils';
 import {
   BUNCHED,
-  BUNCHED_COLOR,
+  bucketColor,
   formatPercent,
   HEADWAY_BUCKETS,
   headwayShare,
   LONG_GAP,
-  LONG_GAP_COLOR,
 } from '../utils';
 import { periodName, periodTimeScale, periodTitle } from './timeAxis';
 
@@ -30,8 +29,22 @@ interface BunchingAndGapsLinesProps {
 
 // The dash is for those who can't tell red from purple
 const SERIES = [
-  { label: 'Long gaps (≥150%)', fields: LONG_GAP, color: LONG_GAP_COLOR, dash: [] },
-  { label: 'Bunched (≤50%)', fields: BUNCHED, color: BUNCHED_COLOR, dash: [6, 4] },
+  {
+    label: 'Long gaps (≥150%)',
+    fields: LONG_GAP,
+    get color() {
+      return bucketColor('headways_over_150');
+    },
+    dash: [],
+  },
+  {
+    label: 'Bunched (≤50%)',
+    fields: BUNCHED,
+    get color() {
+      return bucketColor('headways_under_50');
+    },
+    dash: [6, 4],
+  },
 ];
 
 /** Each period's share of headways that were long gaps, and the share bunched, as two lines. */

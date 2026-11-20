@@ -23,7 +23,7 @@ import {
   formatDelay,
 } from '../format';
 import type { DelayReasonKey } from '../constants/reasons';
-import { REASON_BY_KEY, reasonLabel } from '../constants/reasons';
+import { REASON_BY_KEY, reasonFill, reasonLabel } from '../constants/reasons';
 import { hideZeroUnlessAllZero } from '../../../common/components/charts/hoverCard/external';
 import { DelaysEmbedButton } from '../DelaysEmbedButton';
 
@@ -63,7 +63,7 @@ export const DelayTotalBars = ({
         {
           ...bar,
           label: reasonLabel(reason, line),
-          backgroundColor: reason.color,
+          backgroundColor: reasonFill(reason.key),
           data: data.map((point) => point[reason.key]),
         },
         {
