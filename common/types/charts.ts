@@ -146,6 +146,8 @@ export interface AggregateLineProps extends LineProps {
   embedChart?: TripEmbedChart<'multi'>;
   /** Start with the trendline drawn. */
   trendline?: boolean;
+  /** A subway trip whose slow zones go in the chart's context track. */
+  slowZonesTrip?: { fromStation: Station; toStation: Station };
 }
 
 export interface SingleDayLineProps extends LineProps {

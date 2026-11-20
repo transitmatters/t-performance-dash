@@ -319,3 +319,68 @@ export const getTripSlowZoneSummary = (
     peakDate,
   };
 };
+
+export interface TripSlowZoneRun {
+  /** First day of the run. */
+  start: string;
+  /** Last day of the run, inclusive. */
+  end: string;
+  /** Seconds the run's zones added to the trip, summing each zone's median delay. */
+  total: number;
+  zones: { title: string; delay: number }[];
+}
+
+/**
+ * The stretches of days from `startDate` to `endDate` when the same slow zones were active on a
+ * trip, longest delay first within each. Days with none are left out.
+ */
+export const getTripSlowZoneRuns = (
+  data: SlowZoneResponse[],
+  from: Station,
+  to: Station,
+  lineShort: LineShort,
+  startDate: string,
+  endDate: string
+): TripSlowZoneRun[] => {
+  const zones = data
+    .filter((zone) => isZoneOnTrip(zone, from, to, lineShort))
+    .map((zone) => ({
+      start: zone.start.slice(0, 10),
+      end: zone.end.slice(0, 10),
+      delay: zone.delay,
+      title: getStationPairName(
+        getParentStationForStopId(zone.fr_id, lineShort),
+        getParentStationForStopId(zone.to_id, lineShort),
+        true
+      ),
+    }))
+    .filter((zone) => zone.start <= endDate && zone.end >= startDate);
+  if (!zones.length) return [];
+
+  const dayAfter = (date: string) => dayjs(date).add(1, 'day').format(DATE_FORMAT);
+  const afterEnd = dayAfter(endDate);
+  // Each day the set of active zones can change: the window's start, a zone's first day, or the
+  // day after its last.
+  const changes = [
+    ...new Set([startDate, ...zones.flatMap((zone) => [zone.start, dayAfter(zone.end)])]),
+  ]
+    .filter((date) => date >= startDate && date < afterEnd)
+    .sort();
+
+  return changes.flatMap((start, i) => {
+    const active = zones
+      .filter((zone) => zone.start <= start && zone.end >= start)
+      .sort((a, b) => b.delay - a.delay);
+    const total = active.reduce((sum, zone) => sum + zone.delay, 0);
+    if (total <= 0) return [];
+    const next = changes[i + 1] ?? afterEnd;
+    return [
+      {
+        start,
+        end: dayjs(next).subtract(1, 'day').format(DATE_FORMAT),
+        total,
+        zones: active.map(({ title, delay }) => ({ title, delay })),
+      },
+    ];
+  });
+};

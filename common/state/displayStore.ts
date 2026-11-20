@@ -11,10 +11,13 @@ interface DisplayStore {
   showTemperature: boolean;
   /** Other lines' shuttles and suspensions, shaded in their line color. Off by default. */
   showOtherShutdowns: boolean;
+  /** The time slow zones added to a trip, under its travel time and speed charts. Off by default. */
+  showSlowZones: boolean;
   setShowEvents: (showEvents: boolean) => void;
   setShowWeather: (showWeather: boolean) => void;
   setShowTemperature: (showTemperature: boolean) => void;
   setShowOtherShutdowns: (showOtherShutdowns: boolean) => void;
+  setShowSlowZones: (showSlowZones: boolean) => void;
 }
 
 export const useDisplayStore = create<DisplayStore>()(
@@ -24,10 +27,12 @@ export const useDisplayStore = create<DisplayStore>()(
       showWeather: true,
       showTemperature: true,
       showOtherShutdowns: false,
+      showSlowZones: false,
       setShowEvents: (showEvents) => set({ showEvents }),
       setShowWeather: (showWeather) => set({ showWeather }),
       setShowTemperature: (showTemperature) => set({ showTemperature }),
       setShowOtherShutdowns: (showOtherShutdowns) => set({ showOtherShutdowns }),
+      setShowSlowZones: (showSlowZones) => set({ showSlowZones }),
     }),
     // A browser that blocks storage just starts with the defaults each visit.
     { name: 'display-options', storage: createJSONStorage(() => localStorage) }
@@ -35,7 +40,7 @@ export const useDisplayStore = create<DisplayStore>()(
 );
 
 interface DisplayOption {
-  key: 'events' | 'otherShutdowns' | 'weather' | 'temperature';
+  key: 'events' | 'otherShutdowns' | 'slowZones' | 'weather' | 'temperature';
   label: string;
   description: string;
   checked: boolean;
@@ -44,14 +49,16 @@ interface DisplayOption {
 
 /**
  * The display store as a list of toggles, in the order the page controls show them. Pages with
- * no major events to mark, or no subway to compare against, leave those toggles out.
+ * no major events to mark, no subway to compare against, or no slow zone trip leave those out.
  */
 export const useDisplayOptions = ({
   withEvents,
   withOtherShutdowns,
+  withSlowZones,
 }: {
   withEvents: boolean;
   withOtherShutdowns: boolean;
+  withSlowZones: boolean;
 }): DisplayOption[] => {
   const store = useDisplayStore();
   const options: DisplayOption[] = [
@@ -70,6 +77,13 @@ export const useDisplayOptions = ({
       setChecked: store.setShowOtherShutdowns,
     },
     {
+      key: 'slowZones',
+      label: 'Slow zones',
+      description: 'Time slow zones added to this trip',
+      checked: store.showSlowZones,
+      setChecked: store.setShowSlowZones,
+    },
+    {
       key: 'weather',
       label: 'Weather',
       description: 'Rain, snow, fog and storms',
@@ -86,6 +100,8 @@ export const useDisplayOptions = ({
   ];
   return options.filter(
     ({ key }) =>
-      (key !== 'events' || withEvents) && (key !== 'otherShutdowns' || withOtherShutdowns)
+      (key !== 'events' || withEvents) &&
+      (key !== 'otherShutdowns' || withOtherShutdowns) &&
+      (key !== 'slowZones' || withSlowZones)
   );
 };

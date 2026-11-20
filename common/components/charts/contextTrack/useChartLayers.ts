@@ -19,10 +19,14 @@ import { ONE_HOUR } from '../../../constants/time';
 import { useOtherLineShutdowns } from '../../../../modules/shutdowns';
 import { useDisplayStore } from '../../../state/displayStore';
 import { isLongRange } from '../../../utils/dateChunks';
+import { useTripSlowZones } from '../../../../modules/slowzones/useTripSlowZones';
+import type { Station } from '../../../types/stations';
 import { alertKey, getAlertAnnotations, serviceDay } from './segments';
 import { chartGeometryPlugin } from './chartGeometryPlugin';
 import type { TrackGeometry } from './chartGeometryPlugin';
 import { useLayerStore } from './layerStore';
+import type { PlacedSlowZoneRun } from './slowZones';
+import { getSlowZoneAnnotations, placeSlowZoneRuns, slowZoneRowAt } from './slowZones';
 
 interface UseChartLayersOptions {
   startDate?: string;
@@ -34,6 +38,8 @@ interface UseChartLayersOptions {
   withAlerts?: boolean;
   // Date-range charts can shade other lines' shutdowns, when the reader turns them on
   withOtherShutdowns?: boolean;
+  // A subway trip, whose slow zones get a row on its travel time and speed charts
+  slowZonesTrip?: { fromStation: Station; toStation: Station };
 }
 
 export interface ChartLayers {
@@ -49,6 +55,7 @@ export interface ChartLayers {
   withAlerts: boolean;
   date: string | undefined;
   geometry: TrackGeometry | null;
+  slowZones?: { runs: PlacedSlowZoneRun[]; isLoading: boolean; color: string };
 }
 
 /**
@@ -63,6 +70,7 @@ export const useChartLayers = ({
   enabled,
   withAlerts = false,
   withOtherShutdowns = false,
+  slowZonesTrip,
 }: UseChartLayersOptions) => {
   const showTemperature = useDisplayStore((store) => store.showTemperature);
   const hourly = granularity === 'hourly';
@@ -106,6 +114,14 @@ export const useChartLayers = ({
   const pinned = useLayerStore((store) => store.pinned);
   const temperatureEnabled =
     useLayerStore((store) => store.temperature) && enabled && showTemperature;
+  const slowZones = useTripSlowZones(enabled ? slowZonesTrip : undefined, startDate, endDate);
+  const slowZonesPinned = useLayerStore((store) => store.slowZones);
+  const slowZoneRuns = slowZones?.runs;
+  const placedSlowZones = useMemo(
+    () => (slowZoneRuns ? placeSlowZoneRuns(slowZoneRuns) : undefined),
+    [slowZoneRuns]
+  );
+  const slowZoneColor = slowZones?.color;
   const otherShutdowns = useOtherLineShutdowns(withOtherShutdowns ? startDate : undefined, endDate);
   const [geometry, setGeometry] = useState<TrackGeometry | null>(null);
   // Charts without a track have no use for the plot's position, so don't re-render them with it
@@ -128,8 +144,23 @@ export const useChartLayers = ({
           )
         : [];
     const weatherShading = getWeatherAnnotations(pinnedRuns);
-    return [...pinnedAlerts, ...weatherShading, ...otherShutdowns.annotations];
-  }, [enabled, withAlerts, alerts, startDate, pinned, pinnedRuns, otherShutdowns.annotations]);
+    const slowZoneShading =
+      slowZonesPinned && placedSlowZones && slowZoneColor
+        ? getSlowZoneAnnotations(placedSlowZones, slowZoneColor)
+        : [];
+    return [...pinnedAlerts, ...slowZoneShading, ...weatherShading, ...otherShutdowns.annotations];
+  }, [
+    enabled,
+    withAlerts,
+    alerts,
+    startDate,
+    pinned,
+    pinnedRuns,
+    slowZonesPinned,
+    placedSlowZones,
+    slowZoneColor,
+    otherShutdowns.annotations,
+  ]);
 
   const layers: ChartLayers = {
     enabled,
@@ -144,11 +175,21 @@ export const useChartLayers = ({
     withAlerts,
     date: startDate,
     geometry,
+    slowZones:
+      placedSlowZones && slowZones
+        ? { runs: placedSlowZones, isLoading: slowZones.isLoading, color: slowZones.color }
+        : undefined,
   };
 
   /** The pinned weather at a hovered time, as a row for the chart's popover. */
   const weatherAt = (time: number) =>
     enabled ? weatherRowAt(pinnedRuns, time, granularity) : undefined;
 
-  return { layers, annotations, temperatureEnabled, geometryPlugin, weatherAt };
+  /** The slow zone time on a hovered day, as a row for the chart's popover. */
+  const slowZonesAt = (time: number) =>
+    placedSlowZones && slowZoneColor
+      ? slowZoneRowAt(placedSlowZones, time, slowZoneColor)
+      : undefined;
+
+  return { layers, annotations, temperatureEnabled, geometryPlugin, weatherAt, slowZonesAt };
 };

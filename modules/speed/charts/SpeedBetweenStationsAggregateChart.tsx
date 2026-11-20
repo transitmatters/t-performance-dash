@@ -36,6 +36,8 @@ export const SpeedBetweenStationsAggregateChart = ({
   const startDate = startDateProp ?? query.startDate;
   const endDate = endDateProp ?? query.endDate;
 
+  const slowZonesTrip = useMemo(() => ({ fromStation, toStation }), [fromStation, toStation]);
+
   const chart = useMemo(() => {
     const timeUnitByDate = timeUnit === 'by_date';
 
@@ -67,6 +69,7 @@ export const SpeedBetweenStationsAggregateChart = ({
         yUnit="MPH"
         fill={fill}
         trendline={trendline}
+        slowZonesTrip={slowZonesTrip}
         embedChart={timeUnitByDate ? 'speeds' : undefined}
       />
     );
@@ -80,6 +83,7 @@ export const SpeedBetweenStationsAggregateChart = ({
     peakTime,
     fill,
     trendline,
+    slowZonesTrip,
   ]);
 
   return chart;
