@@ -31,6 +31,8 @@ export const hideTrackCard = (element: HTMLElement) => hideHoverCard('annotation
 
 interface TrackRowProps {
   label: string;
+  // Shown in place of the label, for labels too long for the y axis's width
+  shortLabel?: string;
   icon: IconDefinition;
   geometry: TrackGeometry;
   status: 'loading' | 'empty' | 'ready';
@@ -43,6 +45,7 @@ interface TrackRowProps {
 
 export const TrackRow = ({
   label,
+  shortLabel,
   icon,
   geometry,
   status,
@@ -61,9 +64,12 @@ export const TrackRow = ({
         className="flex shrink-0 justify-end pr-2 text-xs leading-none text-muted-foreground"
         style={{ width: geometry.left }}
       >
-        <span className="flex min-w-0 items-center gap-1" title={showText ? undefined : label}>
+        <span
+          className="flex min-w-0 items-center gap-1"
+          title={showText && !shortLabel ? undefined : label}
+        >
           <FontAwesomeIcon icon={icon} className="size-3 shrink-0" aria-hidden />
-          {showText && <span className="truncate">{label}</span>}
+          {showText && <span className="truncate">{shortLabel ?? label}</span>}
         </span>
       </div>
       <div className="relative shrink-0" style={{ width: geometry.right - geometry.left, height }}>

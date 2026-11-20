@@ -4,8 +4,8 @@ import { ONE_HOUR } from '../../constants/time';
 import type { FetchSpeedRestrictionsOptions } from '../../types/api';
 import type { SpeedRestriction } from '../../types/dataPoints';
 
-export const useSlowzoneAllData = () => {
-  return useQuery({ queryKey: ['allSlow'], queryFn: fetchAllSlow, staleTime: ONE_HOUR });
+export const useSlowzoneAllData = (enabled = true) => {
+  return useQuery({ queryKey: ['allSlow'], queryFn: fetchAllSlow, staleTime: ONE_HOUR, enabled });
 };
 
 export const slowzoneDelayTotalsQuery = queryOptions({
