@@ -36,6 +36,7 @@ export const SpeedBetweenStationsAggregateWrapper = ({
         toStation={toStation}
         fromStation={fromStation}
         timeUnit={'by_date'}
+        loadingRanges={query.chunks?.pendingRanges}
       />
       {!query.chunks?.pending && <StatStrip widgetObjects={widgetObjects} />}
       <PartialDataNotice query={query} />

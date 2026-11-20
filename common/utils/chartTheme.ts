@@ -20,6 +20,10 @@ export interface ChartTheme {
   medianLine: string;
   /** Text on a callout pill, which is filled with `medianLine`. */
   calloutText: string;
+  /** Stripes over the part of a long date range still loading. */
+  pendingHatch: string;
+  /** The card behind the plot, for labels that sit over busy parts of it. */
+  surface: string;
 }
 
 const LIGHT: ChartTheme = {
@@ -31,6 +35,8 @@ const LIGHT: ChartTheme = {
   neutralPoint: '#1c1c1c',
   medianLine: '#000000',
   calloutText: '#ffffff',
+  pendingHatch: 'rgba(0,0,0,0.08)',
+  surface: '#ffffff',
 };
 
 const DARK: ChartTheme = {
@@ -42,6 +48,8 @@ const DARK: ChartTheme = {
   neutralPoint: '#d6d3d1',
   medianLine: '#e7e5e4',
   calloutText: '#1c1917',
+  pendingHatch: 'rgba(255,255,255,0.10)',
+  surface: '#171717',
 };
 
 /**

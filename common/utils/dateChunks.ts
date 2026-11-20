@@ -51,6 +51,20 @@ export const splitDateRange = (
   return chunks.reverse();
 };
 
+/** Joins chunks that run day-to-day into single spans, oldest first. */
+export const joinAdjacentChunks = (chunks: DateChunk[]): DateChunk[] =>
+  [...chunks]
+    .sort((a, b) => a.startDate.localeCompare(b.startDate))
+    .reduce<DateChunk[]>((spans, chunk) => {
+      const last = spans.at(-1);
+      if (last && dayjs(last.endDate).add(1, 'day').format(DATE_FORMAT) === chunk.startDate) {
+        last.endDate = chunk.endDate;
+      } else {
+        spans.push({ ...chunk });
+      }
+      return spans;
+    }, []);
+
 /** Subtitle for charts drawn from the newest chunk only, naming the window they cover. */
 export const newestChunkSubtitle = (chunks?: AggregateChunkProgress) =>
   chunks

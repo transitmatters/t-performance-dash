@@ -5,6 +5,7 @@ import type { HoverCardRow } from '../../../common/components/charts/hoverCard/t
 import type {
   AggregateDataPoint,
   AggregateDataResponse,
+  AggregateLineProps,
   DayFilter,
 } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
@@ -43,6 +44,7 @@ interface HeadwaysAggregateChartProps {
   endDate?: string;
   fill?: boolean;
   trendline?: boolean;
+  loadingRanges?: AggregateLineProps['loadingRanges'];
 }
 
 export const HeadwaysAggregateChart = ({
@@ -54,6 +56,7 @@ export const HeadwaysAggregateChart = ({
   endDate: endDateProp,
   fill = false,
   trendline = false,
+  loadingRanges,
 }: HeadwaysAggregateChartProps) => {
   const { query } = useDelimitatedRoute();
   const startDate = startDateProp ?? query.startDate;
@@ -90,10 +93,21 @@ export const HeadwaysAggregateChart = ({
         hoverRows={bunchingRows}
         fill={fill}
         trendline={trendline}
+        loadingRanges={loadingRanges}
         embedChart={'headways'}
       />
     );
-  }, [headways.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline]);
+  }, [
+    headways.by_date,
+    startDate,
+    endDate,
+    fromStation,
+    toStation,
+    dayFilter,
+    fill,
+    trendline,
+    loadingRanges,
+  ]);
 
   return chart;
 };
