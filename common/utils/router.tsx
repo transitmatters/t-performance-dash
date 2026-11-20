@@ -17,7 +17,7 @@ import {
 import type { StationStore } from '../state/stationStore';
 import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
-import type { DateStore } from '../state/dateStore';
+import type { DateStore, TripPage } from '../state/dateStore';
 import { getLineColorKey, LINE_COLORS } from '../constants/colors';
 import type { SearchObject } from './searchParams';
 import { validateAnySearch } from './searchSchemas';
@@ -478,6 +478,15 @@ export const getQueryParams = (
   };
 };
 
+/**
+ * Where the sidebar's Trips item goes: the trip view already open, or else the one last used, so a
+ * picked date range is still there on the way back.
+ */
+export const getNavTripPage = (currentPage: Page | string, tripPage: TripPage): PageMetadata =>
+  currentPage === 'singleTrips' || currentPage === 'multiTrips'
+    ? ALL_PAGES[currentPage]
+    : ALL_PAGES[tripPage];
+
 const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
   return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
 };
@@ -492,6 +501,12 @@ const savePageConfigIfNecessary = (
 ) => {
   if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
     saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
+  }
+  if (
+    TRIP_SECTIONS.includes(currentPage.dateStoreSection) &&
+    !TRIP_SECTIONS.includes(newPage.dateStoreSection)
+  ) {
+    dateStore.setTripPage(currentPage.key as TripPage);
   }
   if (!(currentPage.hasStationStore === newPage.hasStationStore)) {
     stationStore.setStationStore({

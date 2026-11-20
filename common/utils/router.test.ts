@@ -7,6 +7,7 @@ import {
   getBusRouteSelectionItemHref,
   getBusSpeedMapRouteHref,
   getLineSelectionItemHref,
+  getNavTripPage,
   getQueryParams,
   parseRoutePath,
   stationScope,
@@ -43,6 +44,32 @@ describe('getQueryParams stations', () => {
     const busStore = { ...orangeStore, scope: stationScope('line-bus', { busRoute: '1' }) };
     expect(toTrips({ busRoute: '1' }, 'line-bus', busStore)).toMatchObject({ from: '70034' });
     expect(toTrips({ busRoute: '28' }, 'line-bus', busStore)).not.toHaveProperty('from');
+  });
+});
+
+describe('returning to trips', () => {
+  it('keeps the open trip view and otherwise reopens the last one used', () => {
+    expect(getNavTripPage('multiTrips', 'singleTrips')).toBe(ALL_PAGES.multiTrips);
+    expect(getNavTripPage('singleTrips', 'multiTrips')).toBe(ALL_PAGES.singleTrips);
+    expect(getNavTripPage('speed', 'multiTrips')).toBe(ALL_PAGES.multiTrips);
+    expect(getNavTripPage('speed', 'singleTrips')).toBe(ALL_PAGES.singleTrips);
+  });
+
+  it('restores the saved range when coming back to the date range view', () => {
+    const dateStore = {
+      ...useDateStore.getState(),
+      multiTripConfig: { startDate: '2026-03-01', endDate: '2026-03-31' },
+    };
+    const stationStore: StationStore = { setStationStore: () => {} };
+    const query = getQueryParams(
+      ALL_PAGES.speed,
+      ALL_PAGES.multiTrips,
+      { busRoute: '1', startDate: '2026-01-01', endDate: '2026-11-01' },
+      dateStore,
+      stationStore,
+      'line-bus'
+    );
+    expect(query).toMatchObject({ startDate: '2026-03-01', endDate: '2026-03-31', busRoute: '1' });
   });
 });
 
