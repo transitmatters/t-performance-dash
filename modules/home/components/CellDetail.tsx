@@ -8,6 +8,7 @@ import {
   formatTrend,
   formatValue,
   STATUS_TONE,
+  topCauseLabel,
   trendSentiment,
 } from '../format';
 import { cn } from '../../../common/utils/cn';
@@ -57,6 +58,7 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
   const definition = definitionFor(cell.metric, row.id);
   const sentiment = cell.direction ? trendSentiment(cell.trend, cell.direction) : 'flat';
   const thresholds = formatThresholds(cell);
+  const topCause = topCauseLabel(cell, row.line);
 
   return (
     <div className="flex flex-col gap-2" data-line={row.line}>
@@ -96,6 +98,15 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
             <PartDetail key={part.label} part={part} />
           ))}
         </ul>
+      )}
+      {topCause && cell.topCause && (
+        <p className="flex items-center gap-1.5 rounded-md border px-2 py-1.5 text-xs">
+          <span className="text-muted-foreground">Top cause</span>
+          <span className="font-medium">{topCause}</span>
+          <span className="ml-auto text-muted-foreground tabular-nums">
+            {formatValue(cell.topCause.share, 'pct')} of alert time
+          </span>
+        </p>
       )}
       {cell.notes?.map((note) => (
         <p key={note} className="text-xs">

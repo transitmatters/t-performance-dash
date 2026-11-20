@@ -1,3 +1,4 @@
+import type { DelayCause } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
 
 // The shape of static/landing/overview.json (schemaVersion 1), built daily by data-ingestion
@@ -59,6 +60,11 @@ export interface Cell {
   minutesPerDay?: number;
   /** Reliability: share of headways half the scheduled gap or less. */
   bunched?: number;
+  /**
+   * Delays: the cause with the most alert time over the last 4 weeks, leaving out alerts that give
+   * no reason, and its share of all the alert time.
+   */
+  topCause?: { cause: DelayCause; share: number };
 }
 
 export type HeadlineKind = 'strong' | 'good' | 'room' | 'needsWork' | 'limited';
