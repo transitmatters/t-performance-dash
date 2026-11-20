@@ -9,7 +9,7 @@ import { useCrTripMetrics } from '../../common/api/hooks/crTripMetrics';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import { formatPercentChange, halvesDetail, statDelta } from '../../common/utils/statDelta';
-import { getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds } from '../../common/constants/lines';
 import { useFleetScope } from '../../common/hooks/usePageFilters';
 import { SelectedBusRouteScope } from '../../common/hooks/useChartBusRoute';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
@@ -50,7 +50,7 @@ export function FleetDetails() {
       start_date: startDate,
       end_date: endDate,
       agg: config.agg,
-      route: byRoute && busRoute ? getBusRouteIds(busRoute).join(',') : route,
+      route: byRoute && busRoute ? getBusRouteDataIds(busRoute).join(',') : route,
     },
     enabled && isBus
   );

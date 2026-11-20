@@ -8,7 +8,7 @@ import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Notice } from '../../common/components/notices/Notice';
-import { FREQUENT_BUS_ROUTE_IDS, getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds, getFrequentBusRouteIds } from '../../common/constants/lines';
 import { SUBWAY_LINES } from '../../common/types/lines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { TheRideReliability } from './TheRideReliability';
@@ -29,7 +29,7 @@ export function ReliabilityDetails() {
   const isBus = line === 'line-bus';
   const isSubway = line !== undefined && SUBWAY_LINES.includes(line);
   // Grouped labels (e.g. 114/116/117) are summed server-side across their route_ids
-  const busRouteIds = isBus && busRoute ? getBusRouteIds(busRoute) : [];
+  const busRouteIds = isBus && busRoute ? getBusRouteDataIds(busRoute) : [];
   const routeId = isRide
     ? 'RIDE'
     : isSubway
@@ -37,7 +37,8 @@ export function ReliabilityDetails() {
       : isBus
         ? busRouteIds.join(',')
         : (crRoute ?? ALL_COMMUTER_RAIL);
-  const isFrequentBus = busRouteIds.some((id) => FREQUENT_BUS_ROUTE_IDS.includes(id));
+  // By label, as on the Overview, so 110-legacy isn't counted as frequent because 110 is now.
+  const isFrequentBus = busRoute ? getFrequentBusRouteIds(busRoute).length > 0 : false;
   const { agg } = useMemo(
     () => getSpeedGraphConfig(dayjs(startDate), dayjs(endDate)),
     [startDate, endDate]
