@@ -162,8 +162,11 @@ export const LineSegments = ({
             : stationAxisConfig,
         },
         plugins: {
+          // System mode mixes lines, so name them rather than rely on color
           legend: {
-            display: false,
+            display: Object.keys(lineSegmentDataByColor).length > 1,
+            position: isMobile ? 'bottom' : 'top',
+            labels: { boxWidth: 12, boxHeight: 12 },
           },
           tooltip: {
             callbacks: {

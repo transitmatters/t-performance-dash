@@ -6,6 +6,7 @@ import { CommandPalette } from '../../modules/commandPalette/CommandPalette';
 import { HeaderCommandTrigger } from '../../modules/commandPalette/CommandPaletteTrigger';
 import { useCommandPaletteShortcut } from '../../modules/commandPalette/useCommandPaletteShortcut';
 import { useDelimitatedRoute } from '../utils/router';
+import { useColorVisionKey } from '../utils/colorVision';
 import { SiteFooter } from '../../modules/navigation/SiteFooter';
 
 interface NavLayoutProps {
@@ -16,6 +17,7 @@ export const NavLayout = ({ children }: NavLayoutProps) => {
   // "The Living Map": the active line themes the whole shell (see [data-line] in globals.css).
   const { colorKey } = useDelimitatedRoute();
   useCommandPaletteShortcut();
+  const colorVisionKey = useColorVisionKey();
   return (
     <SidebarProvider data-line={colorKey}>
       <AppSidebar />
@@ -36,7 +38,7 @@ export const NavLayout = ({ children }: NavLayoutProps) => {
         </header>
         <main className="flex flex-1 flex-col">{children}</main>
         <SiteFooter />
-        <CommandPalette />
+        <CommandPalette key={colorVisionKey} />
       </SidebarInset>
     </SidebarProvider>
   );

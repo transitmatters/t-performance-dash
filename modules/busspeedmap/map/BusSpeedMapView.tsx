@@ -256,17 +256,18 @@ const addArrowImage = (map: MaplibreMap) => {
  * comma-joined, e.g. "Red,Green") are drawn white with a dark ring, the usual map convention
  * for a transfer.
  */
-const stationColor: DataDrivenPropertyValueSpecification<string> = [
-  'case',
-  ['in', ',', ['get', 'lines']],
-  '#ffffff',
+const stationColor = (): DataDrivenPropertyValueSpecification<string> =>
   [
-    'match',
-    ['get', 'lines'],
-    ...Object.entries(STATION_LINES).flatMap(([line, { color }]) => [line, color]),
-    '#6b7280',
-  ],
-] as unknown as DataDrivenPropertyValueSpecification<string>;
+    'case',
+    ['in', ',', ['get', 'lines']],
+    '#ffffff',
+    [
+      'match',
+      ['get', 'lines'],
+      ...Object.entries(STATION_LINES).flatMap(([line, { color }]) => [line, color]),
+      '#6b7280',
+    ],
+  ] as unknown as DataDrivenPropertyValueSpecification<string>;
 
 const stationStrokeColor: DataDrivenPropertyValueSpecification<string> = [
   'case',
@@ -1111,7 +1112,7 @@ export const BusSpeedMapView = ({
             source-layer={STATIONS_SOURCE_LAYER}
             beforeId={ROUTE_LAYER_IDS.casing}
             paint={{
-              'circle-color': stationColor,
+              'circle-color': stationColor(),
               'circle-radius': stationRadius,
               'circle-stroke-color': stationStrokeColor,
               'circle-stroke-width': 1.5,
@@ -1157,7 +1158,7 @@ export const BusSpeedMapView = ({
               }
               filter={['==', ['get', 'stop_id'], hoveredStopId]}
               paint={{
-                'circle-color': hovered?.kind === 'station' ? stationColor : '#ffffff',
+                'circle-color': hovered?.kind === 'station' ? stationColor() : '#ffffff',
                 'circle-radius':
                   hovered?.kind === 'station' ? hoveredStationRadius : hoveredBusStopRadius,
                 'circle-stroke-color': HOVER_HALO_COLOR,

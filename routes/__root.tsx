@@ -12,6 +12,7 @@ import { useGoatCounter } from '../common/hooks/useGoatCounter';
 import { BetaNotices } from '../common/components/notices/BetaNotices';
 import { initBetaRum } from '../common/utils/rum';
 import { redirectToCanonicalSearch } from '../common/utils/dateParams';
+import { useColorVisionKey } from '../common/utils/colorVision';
 
 const PassThroughLayout = ({ children }: { children?: ReactNode }) => <>{children}</>;
 
@@ -24,6 +25,8 @@ const RootComponent = () => {
   // An embed's host page picks its theme (light unless `?theme=dark`), not the visitor's preference.
   const { theme } = useDelimitatedRoute().query;
   useApplyTheme(embed ? (theme === 'dark' ? 'dark' : 'light') : undefined);
+  // Remount the page when colorblind mode flips, so charts redraw in its palette
+  const colorVisionKey = useColorVisionKey();
   useGoatCounter();
   useEffect(() => {
     initBetaRum();
@@ -32,7 +35,7 @@ const RootComponent = () => {
   if (embed && !notFound) {
     return (
       <Layout>
-        <Outlet />
+        <Outlet key={colorVisionKey} />
       </Layout>
     );
   }
@@ -44,7 +47,7 @@ const RootComponent = () => {
       <DynamicMetaTags />
       <LoadPresetsLayout>
         <NavLayout>
-          <SecondaryLayout>
+          <SecondaryLayout key={colorVisionKey}>
             <Outlet />
           </SecondaryLayout>
           <BetaNotices />

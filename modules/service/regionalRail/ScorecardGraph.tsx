@@ -25,7 +25,12 @@ export const DIRECTION_STYLES = {
   },
 };
 
-export const REVERSE_PEAK_STYLE = { color: CHART_COLORS.YELLOW, width: 1 };
+export const REVERSE_PEAK_STYLE = {
+  get color() {
+    return CHART_COLORS.YELLOW;
+  },
+  width: 1,
+};
 
 interface ScorecardGraphProps {
   data: Dataset[];
