@@ -214,6 +214,11 @@ describe('bus speed map links', () => {
     expect(getBusRouteSelectionItemHref('9', from)).toBe('/bus/speedmap?band=pm_peak&busRoute=9');
   });
 
+  it('opens the route itself from Rankings, which has no per-route view', () => {
+    const from = route('leaderboard', { date: '2026-11-05', rank: 'dropped' });
+    expect(getBusRouteSelectionItemHref('28', from)).toBe('/bus/trips/single?busRoute=28');
+  });
+
   it('opens the map on the period Rankings shows, without Rankings-only params', () => {
     const from = route('leaderboard', { date: '2026-11-05', rank: 'dropped', rankView: 'segment' });
     expect(getBusSpeedMapRouteHref('9', from, 'daily')).toBe(
