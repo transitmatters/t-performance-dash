@@ -99,13 +99,6 @@ export interface SlowZoneDayTotalsResponse {
   updated_on: string;
 }
 
-export interface SpeedDataPoint {
-  count: number;
-  date: string;
-  line: Line;
-  value: number;
-}
-
 /** Fleet stats from data-ingestion. Each mode fills in its own share and age fields. */
 export interface FleetMetrics {
   date: string;
