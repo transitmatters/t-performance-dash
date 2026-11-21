@@ -1,7 +1,6 @@
 import type { Diagram, SegmentLocation } from '@transitmatters/stripmap';
 
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
 import { DATE_FORMAT } from '../../../common/constants/dates';
 import type {
   SlowZoneAllSlowResponse,
@@ -11,9 +10,8 @@ import type {
 } from '../../../common/types/dataPoints';
 import type { LineShort } from '../../../common/types/lines';
 import type { Station } from '../../../common/types/stations';
+import { getSlowZoneDataEndDate } from '../../../common/utils/slowZoneUtils';
 import { getParentStationForStopId, getStationById } from '../../../common/utils/stations';
-
-dayjs.extend(utc);
 
 export const DIRECTIONS = ['1', '0'] as const;
 
@@ -61,9 +59,7 @@ type WithSegmentLocation<T> = {
  * the day before west of UTC.
  */
 const getEffectiveDate = (desiredDate: string, slowZones: SlowZoneAllSlowResponse) => {
-  // The pipeline covers service through the day before its run, which `updated_on` timestamps.
-  const runDate = dayjs.utc(slowZones.updated_on).format(DATE_FORMAT);
-  const lastDataDate = dayjs(runDate).subtract(1, 'day');
+  const lastDataDate = dayjs(getSlowZoneDataEndDate(slowZones.updated_on).format(DATE_FORMAT));
   const desired = dayjs(desiredDate);
   return (desired.isAfter(lastDataDate) ? lastDataDate : desired).toDate();
 };
