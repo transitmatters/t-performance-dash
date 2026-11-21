@@ -479,19 +479,24 @@ export const getQueryParams = (
 };
 
 /**
+ * The speed map and Rankings share the single-day trips date section without being trip views, so
+ * the section alone can't say whether a page is one.
+ */
+const isTripPage = (page: Page | string): page is TripPage =>
+  page === 'singleTrips' || page === 'multiTrips';
+
+/**
  * Where the sidebar's Trips item goes: the trip view already open, or else the one last used, so a
  * picked date range is still there on the way back.
  */
 export const getNavTripPage = (currentPage: Page | string, tripPage: TripPage): PageMetadata =>
-  currentPage === 'singleTrips' || currentPage === 'multiTrips'
-    ? ALL_PAGES[currentPage]
-    : ALL_PAGES[tripPage];
+  isTripPage(currentPage) ? ALL_PAGES[currentPage] : ALL_PAGES[tripPage];
 
 const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
   return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
 };
 
-const savePageConfigIfNecessary = (
+export const savePageConfigIfNecessary = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
@@ -502,11 +507,8 @@ const savePageConfigIfNecessary = (
   if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
     saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
   }
-  if (
-    TRIP_SECTIONS.includes(currentPage.dateStoreSection) &&
-    !TRIP_SECTIONS.includes(newPage.dateStoreSection)
-  ) {
-    dateStore.setTripPage(currentPage.key as TripPage);
+  if (isTripPage(currentPage.key) && !isTripPage(newPage.key)) {
+    dateStore.setTripPage(currentPage.key);
   }
   if (!(currentPage.hasStationStore === newPage.hasStationStore)) {
     stationStore.setStationStore({
