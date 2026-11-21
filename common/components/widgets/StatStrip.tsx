@@ -25,8 +25,10 @@ export const StatCell = ({ label, description, children, valueClassName }: StatC
       {description && <InfoTooltip info={description} className="leading-none normal-case" />}
     </span>
     <span
+      // A figure never breaks inside itself ("13m" over "22s"); cells that hold more than one
+      // figure opt into wrapping between them with `flex-wrap`.
       className={classNames(
-        'text-card-foreground flex flex-row items-baseline gap-x-1 text-xl leading-none font-semibold tabular-nums',
+        'text-card-foreground flex flex-row items-baseline gap-x-1 text-xl leading-none font-semibold whitespace-nowrap tabular-nums',
         valueClassName
       )}
     >
@@ -80,9 +82,13 @@ export const StatStrip = ({ widgetObjects }: StatStripProps) => {
 
     if (widget.text === '10%' && next?.text === '90%') {
       cells.push(
-        <StatCell key={widget.text} label="10th – 90th pctl">
-          {widget.widgetValue.getFormattedValue()}
-          <span className="text-muted-foreground">–</span>
+        // Long trips don't fit "13m 22s – 17m 41s" on one line in a narrow cell, so the range
+        // wraps at the dash. The dash stays with the first figure so no line starts with it.
+        <StatCell key={widget.text} label="10th – 90th pctl" valueClassName="flex-wrap">
+          <span className="flex items-baseline gap-x-1">
+            {widget.widgetValue.getFormattedValue()}
+            <span className="text-muted-foreground">–</span>
+          </span>
           {next.widgetValue.getFormattedValue()}
         </StatCell>
       );
