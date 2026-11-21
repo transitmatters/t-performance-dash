@@ -28,12 +28,10 @@ export const useSpeedBaseline = (line: Line | undefined) => {
 
 export const useScheduledServiceBaseline = (line: Line | undefined) => {
   const { data } = useHistoricalBaselines();
-  return getBaseline(
-    data,
-    'scheduledService',
-    lineSeriesId(line),
-    PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT']
-  );
+  const peak = PEAK_SCHEDULED_SERVICE[line ?? 'DEFAULT'];
+  // The Green Line is held back because the published series counts branch trips differently from
+  // the dashboard's service metric. The hard-coded peak counts them the dashboard's way, so keep it.
+  return getBaseline(data, 'scheduledService', lineSeriesId(line), peak, peak);
 };
 
 export const useRidershipBaseline = (
@@ -57,8 +55,9 @@ export const useRidershipBaseline = (
 /**
  * Looks up the most riders in a date's week of the year (see getSeasonalMaximums), over the same
  * history the published ridership baseline searched. `maximumFor` is undefined for series without
- * a published baseline (held back, or too little history), where callers keep useRidershipBaseline,
- * and until `isPending` clears, so a chart doesn't draw the flat maximum and then swap it out.
+ * a published baseline (held back, or too little history), where callers keep useRidershipBaseline
+ * (which has no maximum for a held-back series), and until `isPending` clears, so a chart doesn't
+ * draw the flat maximum and then swap it out.
  *
  * Costs one extra /api/ridership request per line. It ends at the baseline's cutoff, three years
  * back, so the API marks it cacheable for months and the edge cache serves it to every visitor
