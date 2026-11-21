@@ -6,8 +6,10 @@ import {
   faTrainSubway,
   faTrainTram,
 } from '@fortawesome/free-solid-svg-icons';
+import { pickBy } from '@lodash-utils';
 import type { PageMetadata } from '../../common/constants/pages';
 import {
+  ALL_PAGES,
   BUS_OVERVIEW,
   COMMUTER_RAIL_OVERVIEW,
   FERRY_OVERVIEW,
@@ -18,7 +20,14 @@ import {
 import { FERRY_DEFAULTS } from '../../common/state/defaults/dateDefaults';
 import type { Line } from '../../common/types/lines';
 import type { Route } from '../../common/types/router';
-import { getLineSelectionItemHref } from '../../common/utils/router';
+import {
+  DEFAULT_ROUTE_FOR_LINE,
+  ROUTE_PARAMS,
+  getBusRouteSelectionItemHref,
+  getCommuterRailRouteSelectionItemHref,
+  getFerryRouteSelectionItemHref,
+  getLineSelectionItemHref,
+} from '../../common/utils/router';
 
 export const NAV_LINES: Line[] = [
   'line-red',
@@ -79,7 +88,32 @@ export const LINE_ENTRY_PATHS: Partial<Record<Line, string>> = {
   'line-RIDE': RIDE_ENTRY_PATH,
 };
 
+const ROUTE_HREF_FOR_LINE: Partial<Record<Line, (newRoute: string, route: Route) => string>> = {
+  'line-bus': getBusRouteSelectionItemHref,
+  'line-commuter-rail': getCommuterRailRouteSelectionItemHref,
+  'line-ferry': getFerryRouteSelectionItemHref,
+};
+
+/**
+ * Params that only mean something on the line they were picked on: its route, a bus route's
+ * branch (`routeId`), and the Overview's date preset (`view`, dropped by getLineSelectionItemHref
+ * too).
+ */
+const LINE_SCOPED_PARAMS = [...ROUTE_PARAMS, 'routeId', 'view'];
+
+/**
+ * Where a line's link goes: another line's version of the current page when it has one, on the
+ * mode's default route, and the line's entry page otherwise. The current line's own link always
+ * goes to its entry page.
+ */
 export const hrefForLine = (line: Line, route: Route) => {
+  const keepsPage = line !== route.line && !!ALL_PAGES[route.page]?.lines.includes(line);
+  const routeHref = ROUTE_HREF_FOR_LINE[line];
+  const defaultRoute = DEFAULT_ROUTE_FOR_LINE[line];
+  if (keepsPage && routeHref && defaultRoute) {
+    const query = pickBy(route.query, (_, key) => !LINE_SCOPED_PARAMS.includes(key));
+    return routeHref(defaultRoute, { ...route, query });
+  }
   switch (line) {
     case 'line-bus':
       return '/bus/?busRoute=1';
@@ -88,7 +122,7 @@ export const hrefForLine = (line: Line, route: Route) => {
     case 'line-ferry':
       return `${FERRY_ENTRY_PATH}?ferryRoute=Boat-F6&date=${FERRY_DEFAULTS.singleTripConfig.date}`;
     case 'line-RIDE':
-      return RIDE_ENTRY_PATH;
+      return keepsPage ? getLineSelectionItemHref(line, route) : RIDE_ENTRY_PATH;
     default:
       return getLineSelectionItemHref(line, route);
   }
