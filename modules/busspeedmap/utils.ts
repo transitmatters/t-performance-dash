@@ -88,6 +88,20 @@ export const isPeriodInProgress = (date: string | undefined, period: Period): bo
 };
 
 /**
+ * The last day an in-progress week or month's file covers: the newest published day, which is the
+ * day before yesterday until yesterday's ingest has run. Undefined for a finished period, and for
+ * one with no published day yet (all of the 1st of a month, or the 2nd before the 1st is out).
+ */
+export const inProgressThrough = (
+  date: string | undefined,
+  period: Period,
+  latestDate: string | undefined
+): string | undefined => {
+  if (!date || !latestDate || !isPeriodInProgress(date, period)) return undefined;
+  return latestDate >= periodStart(date, period) ? latestDate : undefined;
+};
+
+/**
  * The route leaderboard's API takes an arbitrary [start_date, end_date] range; the merged
  * leaderboard page derives one from the single selected date the same way the segment
  * leaderboard's file layout already carves up service -- a calendar day, an ISO week

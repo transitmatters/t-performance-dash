@@ -17,6 +17,7 @@ import {
   dwellShare,
   formatSegmentSpeed,
   groupLeaderboardByBusRoute,
+  inProgressThrough,
   isPeriodInProgress,
   isPooledSegment,
   noSpeedReason,
@@ -701,6 +702,34 @@ describe('period dates', () => {
       expect(isPeriodInProgress('2026-11-05', 'monthly')).toBe(true);
       expect(isPeriodInProgress('2026-10-05', 'monthly')).toBe(false);
       expect(isPeriodInProgress('2026-11-13', 'daily')).toBe(false);
+    });
+  });
+
+  describe('inProgressThrough', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      // 00:20 on Nov 20, before Nov 19's files are out (#1614).
+      vi.setSystemTime(new Date(2026, 10, 20, 0, 20));
+    });
+    afterEach(() => vi.useRealTimers());
+
+    it('names the newest published day, not yesterday', () => {
+      expect(inProgressThrough('2026-11-20', 'monthly', '2026-11-18')).toBe('2026-11-18');
+      expect(inProgressThrough('2026-11-18', 'weekly', '2026-11-18')).toBe('2026-11-18');
+      expect(inProgressThrough('2026-11-20', 'monthly', '2026-11-19')).toBe('2026-11-19');
+    });
+
+    it('is undefined for a finished period, a day, or before the latest date is known', () => {
+      expect(inProgressThrough('2026-10-05', 'monthly', '2026-11-18')).toBeUndefined();
+      expect(inProgressThrough('2026-11-18', 'daily', '2026-11-18')).toBeUndefined();
+      expect(inProgressThrough('2026-11-20', 'monthly', undefined)).toBeUndefined();
+      expect(inProgressThrough(undefined, 'monthly', '2026-11-18')).toBeUndefined();
+    });
+
+    it('is undefined while none of the period is published yet', () => {
+      vi.setSystemTime(new Date(2026, 11, 1, 0, 20));
+      expect(inProgressThrough('2026-12-01', 'monthly', '2026-11-29')).toBeUndefined();
+      expect(inProgressThrough('2026-11-30', 'weekly', '2026-11-29')).toBeUndefined();
     });
   });
 });
