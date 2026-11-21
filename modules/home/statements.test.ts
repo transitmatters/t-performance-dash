@@ -155,6 +155,16 @@ describe('buildStatements', () => {
     expect(service.link.label).toBe('Frequent Bus service');
   });
 
+  it('says what "best" is, since the Orange Line runs 143% of it', () => {
+    const { service } = byId(DATA);
+    expect(
+      service.viz.kind === 'meters' && service.viz.marks.find((m) => m.row === 'orange')?.value
+    ).toBe(1.43);
+    expect(service.note).toBe(
+      "Best means a line's busiest stretch at least 3 years ago, so one that has added trips since can pass 100%."
+    );
+  });
+
   it('compares slow zones now with their peak', () => {
     expect(byId(DATA).slowZones.head).toBe(
       'Slow zones add 1.3 minutes a day across the subway, down from 2 hours a day in April 2023.'

@@ -139,14 +139,17 @@ popd > /dev/null
 echo "Cleaning up copied constants directory..."
 rm -rf server/chalicelib/common
 
-# Only the files Vite builds into assets/ have a content hash in their names, so only they can be
-# cached forever. Everything else keeps its name from one deploy to the next: each route's
-# index.html, and everything copied from public/ (manifest.json, the data under static/, the
-# maplibre worker). Browsers must revalidate those, because a CloudFront invalidation doesn't
-# reach their caches. Hashed assets go up first so new HTML never points at files not yet uploaded.
-aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*" --include "assets/*" \
+# Files with a hash or version in their path (Vite's assets/ and the maplibre worker under
+# maplibre-gl/<version>/) never change, so browsers can cache them forever. They go up first so new
+# HTML never points at files not yet uploaded, and they're never deleted, so a browser still holding
+# the previous deploy's HTML can load its JS. Everything else must be revalidated, because a
+# CloudFront invalidation doesn't reach browser caches. That sync deletes whatever the build no
+# longer has, so removed pages stop serving old code, but it skips static/: data-ingestion and the
+# og card job write it between deploys.
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "*" --include "assets/*" --include "maplibre-gl/*" \
   --cache-control "public, max-age=31536000, immutable"
-aws s3 sync out/ s3://$FRONTEND_HOSTNAME --exclude "assets/*" \
+aws s3 sync out/ s3://$FRONTEND_HOSTNAME --delete \
+  --exclude "assets/*" --exclude "maplibre-gl/*" --exclude "static/*" \
   --cache-control "no-cache, must-revalidate"
 
 # Grab the cloudfront ID and invalidate its cache

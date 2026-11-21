@@ -8,7 +8,7 @@ import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
-import { getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds } from '../../common/constants/lines';
 import { DAY_FILTER_OPTIONS, useChartToggle } from '../../common/hooks/useChartToggle';
 import { halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { useDelimitatedRoute, useSetQueryParam } from '../../common/utils/router';
@@ -69,7 +69,7 @@ export function BusSpeedDetails() {
       start_date: startDate,
       end_date: endDate,
       // Grouped labels (e.g. 114/116/117) are summed server-side across their route_ids.
-      route: busRoute ? getBusRouteIds(busRoute).join(',') : undefined,
+      route: busRoute ? getBusRouteDataIds(busRoute).join(',') : undefined,
       agg: config.agg,
       // Only sent when narrowing: "All days" is the unfiltered figure.
       ...(dayType && { day_type: dayType }),
