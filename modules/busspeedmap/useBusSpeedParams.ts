@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { getBusRouteDisplayName } from '../../common/constants/lines';
 import { useOption } from '../../common/hooks/useChartToggle';
 import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../common/utils/router';
@@ -50,6 +51,24 @@ export const useTimeBand = () => useOption<TimeBand>(DEFAULT_TIME_BAND, TIME_BAN
 
 export const useDirection = () =>
   useOption<DirectionFilter>(DEFAULT_DIRECTION, DIRECTION_OPTIONS, 'direction');
+
+/**
+ * The speed map's direction and days in words, as "Outbound · Weekdays". A single day is wholly
+ * one day type, so it's named instead: "Outbound · Wednesday".
+ */
+export const useDirectionAndDays = () => {
+  const {
+    query: { date },
+  } = useDelimitatedRoute();
+  const { shown: period } = useShownPeriod();
+  const { value: dayType } = useDayType();
+  const { value: direction } = useDirection();
+  const days =
+    period === 'daily'
+      ? date && dayjs(date).format('dddd')
+      : DAY_TYPES.find(({ key }) => key === dayType)?.label;
+  return [DIRECTIONS.find(({ key }) => key === direction)?.label, days].filter(Boolean).join(' · ');
+};
 
 /** One route of a combined route like SL4/SL5, or all of them. */
 export const useRouteId = (routeIds: string[]) =>

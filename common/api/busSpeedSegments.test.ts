@@ -3,8 +3,10 @@ import { TWO_DAYS_AGO_STRING, YESTERDAY_STRING } from '../constants/dates';
 import {
   BusSpeedDataUnavailableError,
   busDwellsPath,
+  busRouteDelaysPath,
   busSpeedSegmentsPath,
   fetchBusDwellsUrl,
+  fetchBusRouteDelays,
   fetchBusSpeedSegmentsUrl,
 } from './busSpeedSegments';
 
@@ -130,6 +132,57 @@ describe('fetchBusDwellsUrl', () => {
     await expect(
       fetchBusDwellsUrl({ date: '2026-11-04', period: 'daily', timeBand: 'am_peak' })
     ).rejects.toThrow();
+  });
+});
+
+describe('busRouteDelaysPath', () => {
+  it('sits beside the leaderboard, one file a period', () => {
+    expect(busRouteDelaysPath('2026-11-04', 'daily')).toBe(
+      `${BASE}/daily/Year=2026/Month=11/Day=4/route_delays.json`
+    );
+    expect(busRouteDelaysPath('2026-11-04', 'weekly')).toBe(
+      `${BASE}/weekly/Year=2026/Week=45/route_delays.json`
+    );
+    expect(busRouteDelaysPath('2026-10-15', 'monthly')).toBe(
+      `${BASE}/monthly/Year=2026/Month=10/route_delays.json`
+    );
+  });
+});
+
+describe('fetchBusRouteDelays', () => {
+  const fetchMock = vi.fn();
+
+  beforeEach(() => {
+    vi.stubGlobal('window', { location: { origin: 'https://dashboard.transitmatters.org' } });
+    vi.stubGlobal('fetch', fetchMock);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    fetchMock.mockReset();
+  });
+
+  it("reads the period's file", async () => {
+    const body = { pm_peak: [] };
+    fetchMock.mockResolvedValue(new Response(JSON.stringify(body), { status: 200 }));
+    await expect(fetchBusRouteDelays({ date: '2026-11-04', period: 'weekly' })).resolves.toEqual(
+      body
+    );
+    expect(fetchMock).toHaveBeenCalledWith(
+      `https://dashboard.transitmatters.org${BASE}/weekly/Year=2026/Week=45/route_delays.json`
+    );
+  });
+
+  it('resolves to null for an archive published before there were route delays', async () => {
+    fetchMock.mockResolvedValue(new Response(null, { status: 403 }));
+    await expect(
+      fetchBusRouteDelays({ date: '2026-09-15', period: 'monthly' })
+    ).resolves.toBeNull();
+  });
+
+  it('throws on any other failure', async () => {
+    fetchMock.mockResolvedValue(new Response(null, { status: 500 }));
+    await expect(fetchBusRouteDelays({ date: '2026-11-04', period: 'daily' })).rejects.toThrow();
   });
 });
 
