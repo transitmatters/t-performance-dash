@@ -15,7 +15,6 @@ export default typescriptEslint.config(
     // recreates them before every CI lint run, not just in a local checkout.
     ignores: [
       'node_modules/**/*',
-      'build/**/*',
       'out/**/*',
       'storybook-static/**/*',
       'routeTree.gen.ts',

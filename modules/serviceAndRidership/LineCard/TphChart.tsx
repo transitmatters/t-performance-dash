@@ -9,8 +9,6 @@ Chart.register(Filler, Legend);
 import type { TripsPerHour } from '../types';
 import { getHourlyTickValues } from '../time';
 
-import styles from './LineCard.module.css';
-
 const hourLabels = getHourlyTickValues(1);
 
 type Props = {
@@ -96,7 +94,7 @@ export const TphChart = (props: Props) => {
   }, [datasets, highestTph]);
 
   return (
-    <div className={styles.tphChartContainer}>
+    <div>
       <Line height={100} redraw data={data} options={chartJsOptions} />
     </div>
   );

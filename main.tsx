@@ -4,7 +4,6 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
-import './styles/dashboard.css';
 import './styles/globals.css';
 import type { Layout } from './common/layouts/layoutTypes';
 import { NotFound } from './common/components/NotFound';
