@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import type { Plugin } from 'chart.js';
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import { useWeatherData } from '../../../api/hooks/weather';
-import { useAlertStore } from '../../../../modules/tripexplorer/AlertStore';
+import { useAlertStore } from '../../../../modules/tripexplorer/alertStore';
 import type {
   PlacedWeatherRun,
   WeatherGranularity,
@@ -14,7 +14,7 @@ import {
   weatherRowAt,
 } from '../../../../modules/weather/utils/weatherAnnotations';
 import type { WeatherHourly } from '../../../types/weather';
-import type { OldAlert } from '../../../types/alerts';
+import type { HistoricalAlert } from '../../../types/alerts';
 import { ONE_HOUR } from '../../../constants/time';
 import { useOtherLineShutdowns } from '../../../../modules/shutdowns';
 import { useDisplayStore } from '../../../state/displayStore';
@@ -50,7 +50,7 @@ export interface ChartLayers {
   weather: WeatherHourly[] | undefined;
   weatherRuns: PlacedWeatherRun[];
   isWeatherLoading: boolean;
-  alerts: OldAlert[] | undefined;
+  alerts: HistoricalAlert[] | undefined;
   isAlertsLoading: boolean;
   withAlerts: boolean;
   date: string | undefined;

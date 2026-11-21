@@ -189,11 +189,3 @@ export const PEAK_RIDERSHIP: {
   'Boat-Lynn': 2512,
   DEFAULT: 520580,
 };
-
-export const PEAK_COMPLETE_TRIP_TIMES = {
-  'line-red': { date: 'May 2020', value: 8374.5 },
-  'line-blue': { date: 'May 2020', value: 1860.5 },
-  'line-orange': { date: 'May 2020', value: 3776.75 },
-  'line-green': { date: 'May 2020', value: 21782 },
-  DEFAULT: { date: '', value: 1 },
-};

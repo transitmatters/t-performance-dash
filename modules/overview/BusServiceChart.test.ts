@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
-import type { BusTripCounts } from '../../../common/types/dataPoints';
-import { buildBusServiceRow, formatDeliveredPct, summarizeBusService } from './busService';
+import type { BusTripCounts } from '../../common/types/dataPoints';
+import { buildBusServiceRow, formatDeliveredPct, summarizeBusService } from './BusServiceChart';
 
 type Row = BusTripCounts & { date: string };
 

@@ -1,20 +1,20 @@
 import { useMemo } from 'react';
 
-import { useBusTripMetrics } from '../../../common/api/hooks/busTripMetrics';
-import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import { CHART_COLORS } from '../../../common/constants/colors';
+import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import { CHART_COLORS } from '../../common/constants/colors';
 import {
   getBusRouteDisplayName,
   getBusRouteIds,
   getFrequentBusRouteIds,
-} from '../../../common/constants/lines';
-import type { DeliveredTripMetricsBus } from '../../../common/types/dataPoints';
-import type { BusRoute } from '../../../common/types/lines';
-import type { DatedValue } from '../../../common/utils/dateAggregation';
-import type { AggType } from '../../speed/constants/speeds';
-import { ReliabilityGraph } from '../../reliability/charts/ReliabilityGraph';
-import { BUNCHED, headwayShare, ON_TIME } from '../../reliability/utils';
+} from '../../common/constants/lines';
+import type { DeliveredTripMetricsBus } from '../../common/types/dataPoints';
+import type { BusRoute } from '../../common/types/lines';
+import type { DatedValue } from '../../common/utils/dateAggregation';
+import type { AggType } from '../speed/constants/speeds';
+import { ReliabilityGraph } from '../reliability/charts/ReliabilityGraph';
+import { BUNCHED, headwayShare, ON_TIME } from '../reliability/utils';
 import { CHART_CONFIG, buildRow, chartWindowStart, toSlot } from './scorecardUtils';
 import type { OverviewWindow } from './scorecardUtils';
 

@@ -13,7 +13,7 @@ const LEGACY_ROUTES = getBusRoutes().filter((busRoute) =>
 const LABEL_USERS = [
   'common/constants/lines.ts',
   'common/utils/stations.ts',
-  'modules/dashboard/redesign/busReliability.tsx',
+  'modules/overview/BusReliabilityChart.tsx',
 ];
 
 const sources = import.meta.glob<string>(

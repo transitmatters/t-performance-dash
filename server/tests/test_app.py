@@ -396,7 +396,7 @@ class TestHealthcheck:
     def test_hides_api_keys_in_exception_messages(self, client, monkeypatch):
         v3_key = "v3-key-1234567890abcdef"
         monkeypatch.setattr(chalice_app.config, "MBTA_V3_API_KEY", v3_key)
-        # The empty string stands in for an unset MBTA_V2_API_KEY
+        # The empty string stands in for an unset key
         monkeypatch.setattr(chalice_app.config, "HEALTHCHECK_HIDE_SECRETS", ["", v3_key])
 
         def failing_headways(*args, **kwargs):

@@ -26,7 +26,7 @@ interface ReliabilityGraphProps {
   datasetName?: ChartDatasetName;
 }
 
-// Colors by position, in the line's own shades like the other v5 charts
+// Colors by position, in the line's own shades like the other line charts
 const seriesStyle = (colorKey: LineColorKey, index: number) =>
   index === 0
     ? { color: LINE_COLORS[colorKey], fill: true }

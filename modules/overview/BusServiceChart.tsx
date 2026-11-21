@@ -2,16 +2,16 @@ import { useCallback, useMemo } from 'react';
 import type { TooltipItem } from 'chart.js';
 import dayjs from 'dayjs';
 
-import { TimeSeriesChart } from '../../../common/components/charts/TimeSeriesChart';
-import type { ValueAxis } from '../../../common/components/charts/TimeSeriesChart';
-import type { HoverCardContent } from '../../../common/components/charts/hoverCard/types';
-import { ChartStack } from '../../../common/components/charts/ChartStack';
-import { Notice } from '../../../common/components/notices/Notice';
-import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import type { BusTripCounts } from '../../../common/types/dataPoints';
-import type { TripTotals } from '../../../common/utils/busTripCounts';
-import { mayIncludeTrackingGaps, sumTrips } from '../../../common/utils/busTripCounts';
-import { groupByCalendarMonth, splitTrailingWindows } from '../../../common/utils/dateAggregation';
+import { TimeSeriesChart } from '../../common/components/charts/TimeSeriesChart';
+import type { ValueAxis } from '../../common/components/charts/TimeSeriesChart';
+import type { HoverCardContent } from '../../common/components/charts/hoverCard/types';
+import { ChartStack } from '../../common/components/charts/ChartStack';
+import { Notice } from '../../common/components/notices/Notice';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import type { BusTripCounts } from '../../common/types/dataPoints';
+import type { TripTotals } from '../../common/utils/busTripCounts';
+import { mayIncludeTrackingGaps, sumTrips } from '../../common/utils/busTripCounts';
+import { groupByCalendarMonth, splitTrailingWindows } from '../../common/utils/dateAggregation';
 import { deltaSentimentFor } from './scorecardUtils';
 import type { ScorecardRow } from './types';
 

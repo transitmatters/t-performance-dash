@@ -29,7 +29,7 @@ const ROUTE_PARAM: Record<RouteLine, 'busRoute' | 'crRoute' | 'ferryRoute'> = {
 };
 
 /** Params that only mean something on the line and route they were picked on. */
-const SCOPED_PARAMS = ['from', 'to', 'view', 'busRoute', 'crRoute', 'ferryRoute'];
+const SCOPED_PARAMS = ['from', 'to', 'busRoute', 'crRoute', 'ferryRoute'];
 
 const withoutScopedParams = (query: QueryParams): QueryParams =>
   Object.fromEntries(Object.entries(query).filter(([key]) => !SCOPED_PARAMS.includes(key)));

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { AlertTime } from '../../../common/types/alerts';
-import { getDateString } from './Time';
+import type { AlertTime } from '../../common/types/alerts';
+import { getDateString } from './AlertTime';
 
 const period = (start: string | null, end: string | null): AlertTime => ({
   start,

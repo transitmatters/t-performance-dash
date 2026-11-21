@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { InfoTooltip } from '../general/InfoTooltip';
-import type { MiniWidgetObject, WidgetComparison } from './MiniWidgetCreator';
+import type { MiniWidgetObject, WidgetComparison } from '../../types/basicWidgets';
 import { formatComparisonDelta, isImprovement, isNegligible } from './internal/comparison';
 
 /** On-time share is the one stat that carries a verdict, so it gets sentiment color. */

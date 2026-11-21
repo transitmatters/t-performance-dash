@@ -6,8 +6,8 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from '../../../common/components/ui/card';
-import { BusRouteBadge } from '../../../common/components/widgets/BusRouteBadge';
+} from '../../common/components/ui/card';
+import { BusRouteBadge } from '../../common/components/widgets/BusRouteBadge';
 import type { MetricKey } from './types';
 
 export type MetricCopy = Partial<Record<MetricKey, { title: string; subtitle: string }>>;

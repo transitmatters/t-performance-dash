@@ -1,4 +1,4 @@
-import type { AlertsResponse, OldAlert } from '../types/alerts';
+import type { AlertsResponse, HistoricalAlert } from '../types/alerts';
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import { getStationKeysFromStations } from '../utils/stations';
 import { getBusRouteDataIds } from '../constants/lines';
@@ -114,7 +114,7 @@ export const fetchHistoricalAlerts = async (
   busRoute?: BusRoute,
   crRoute?: CommuterRailRoute,
   ferryRoute?: FerryRoute
-): Promise<OldAlert[]> => {
+): Promise<HistoricalAlert[]> => {
   return await apiFetch({
     path: `/api/alerts/${date}`,
     options: { route: getHistoricalAlertRoutes(line, busRoute, crRoute, ferryRoute) },

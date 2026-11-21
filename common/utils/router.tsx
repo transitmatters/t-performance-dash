@@ -78,7 +78,7 @@ export const useIsEmbed = () =>
 
 /** The line, tab and page a pathname points at. Pure, so the router can use it before render. */
 export const parseRoutePath = (pathname: string) => {
-  // Page detection expects Next's trailing-slash paths; a hand-typed `/red/speed` still has to work.
+  // Page detection expects trailing-slash paths; a hand-typed `/red/speed` still has to work.
   const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
   const tab = getTab((pathItems[1] as LinePath) ?? 'System');
   return {
@@ -257,13 +257,11 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   let href = `/${path}`;
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
   const validPage = currentPage.lines.includes(newLine);
-  if (key === line || currentPath === 'today' || !validPage) {
+  if (key === line || !validPage) {
     return href;
   }
-  // Drop stations, route params and view (a per-line preset selection, e.g. the Overview page's
-  // date range — carrying it to a different line makes that line's page open on whatever range was
-  // last picked instead of its own default).
-  const queryParams = queryWithout(query, ['from', 'to', 'view', ...ROUTE_PARAMS]);
+  // Drop stations and route params, which belong to the old line.
+  const queryParams = queryWithout(query, ['from', 'to', ...ROUTE_PARAMS]);
   href += currentPath ? `${currentPath}` : '';
   const queryString = queryParams.toString();
   href += queryString ? `?${queryString}` : '';

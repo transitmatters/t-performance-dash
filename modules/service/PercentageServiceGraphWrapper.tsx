@@ -21,8 +21,6 @@ interface PercentageServiceGraphWrapperProps {
   fill?: boolean;
 }
 
-// The "% delivered" KPI now lives in the page's stat-card row (see ServiceDetails), so the chart
-// no longer carries an in-plot carousel value — just the graph.
 export const PercentageServiceGraphWrapper = ({
   data,
   predictedData,

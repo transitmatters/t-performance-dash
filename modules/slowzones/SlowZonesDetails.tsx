@@ -7,6 +7,7 @@ import { useDelimitatedRoute } from '../../common/utils/router';
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
+  useSlowzoneZoneDelays,
   useSpeedRestrictionData,
 } from '../../common/api/hooks/slowzones';
 import { Widget } from '../../common/components/widgets';
@@ -44,6 +45,7 @@ export function SlowZonesDetails() {
 
   const delayTotals = useSlowzoneDelayTotalData();
   const allSlow = useSlowzoneAllData();
+  const zoneDelays = useSlowzoneZoneDelays(lineShort);
   const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
@@ -116,7 +118,6 @@ export function SlowZonesDetails() {
               endDateUTC={endDateUTC}
               line={line}
               lineShort={lineShort}
-              showWidgetValue={false}
               embedLine={linePath}
             />
           ) : (
@@ -132,6 +133,7 @@ export function SlowZonesDetails() {
             <SlowZonesMap
               key={lineShort}
               slowZones={allSlow.data!}
+              zoneDelays={zoneDelays.data}
               speedRestrictions={speedRestrictions.data}
               lineName={lineShort}
               direction={isDesktop ? 'horizontal' : 'vertical'}

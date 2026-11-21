@@ -7,7 +7,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from '../../../common/components/ui/card';
+} from '../../common/components/ui/card';
 import {
   Table,
   TableHeader,
@@ -15,15 +15,15 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from '../../../common/components/ui/table';
-import { Badge } from '../../../common/components/ui/badge';
-import { Button } from '../../../common/components/ui/button';
-import { Skeleton } from '../../../common/components/ui/skeleton';
-import { Sparkline } from '../../../common/components/charts/Sparkline';
-import { RouteBullet } from '../../../common/components/transit/RouteBullet';
-import { RouteLine } from '../../../common/components/transit/RouteLine';
-import { StationNode } from '../../../common/components/transit/StationNode';
-import { RollingNumber } from '../../../common/components/motion/RollingNumber';
+} from '../../common/components/ui/table';
+import { Badge } from '../../common/components/ui/badge';
+import { Button } from '../../common/components/ui/button';
+import { Skeleton } from '../../common/components/ui/skeleton';
+import { Sparkline } from '../../common/components/charts/Sparkline';
+import { RouteBullet } from '../../common/components/transit/RouteBullet';
+import { RouteLine } from '../../common/components/transit/RouteLine';
+import { StationNode } from '../../common/components/transit/StationNode';
+import { RollingNumber } from '../../common/components/motion/RollingNumber';
 import type { ScorecardRow, ScorecardSlot, MetricKey } from './types';
 
 interface MetricsScorecardProps {

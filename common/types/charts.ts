@@ -180,18 +180,6 @@ export interface ChartCallout {
   label: string;
 }
 
-export interface HeadwayHistogramProps {
-  chartId: string;
-  data: SingleDayDataPoint[];
-  date: string | undefined;
-  location: Location;
-  isLoading: boolean;
-  includeBothStopsForLocation?: boolean;
-  fname: DataName;
-  showLegend?: boolean;
-  metricField: MetricField;
-}
-
 export interface HeadwaysChartProps {
   headways: SingleDayDataPoint[];
   fromStation: Station;

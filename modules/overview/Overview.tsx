@@ -2,19 +2,19 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import dayjs from 'dayjs';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { Notice } from '../../../common/components/notices/Notice';
+import { useDelimitatedRoute } from '../../common/utils/router';
+import { Notice } from '../../common/components/notices/Notice';
 import {
   BUS_TRIP_METRICS_MIN_DATE,
   PRETTY_DATE_FORMAT,
   getBusRouteService,
-} from '../../../common/constants/dates';
-import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
-import type { LineShort } from '../../../common/types/lines';
-import { useSubwayScorecardRows } from './scorecardRows';
-import { useBusScorecardRows, BusMetricChart } from './busOverview';
-import { hasBusReliability } from './busReliability';
-import { useCrScorecardRows, useCrChartCopy, CrMetricChart } from './crOverview';
+} from '../../common/constants/dates';
+import { COMMUTER_RAIL_LINE_NAMES } from '../../common/types/lines';
+import type { LineShort } from '../../common/types/lines';
+import { useSubwayScorecardRows } from './useSubwayScorecardRows';
+import { useBusScorecardRows, BusMetricChart } from './BusMetrics';
+import { hasBusReliability } from './BusReliabilityChart';
+import { useCrScorecardRows, useCrChartCopy, CrMetricChart } from './CommuterRailMetrics';
 import { MetricsScorecard } from './MetricsScorecard';
 import { getOverviewWindow } from './scorecardUtils';
 import { MetricChartCard } from './MetricChartCard';
@@ -158,11 +158,11 @@ const CommuterRailOverview = () => {
   );
 };
 
-/** Design-doc option 2b: verdict + scorecard + one chart, replacing the 4-card grid.
+/** A line's or route's scorecard plus one chart of the picked metric.
  * Each mode picks its own scorecard rows and charts; the layout is shared. Each is keyed by its
  * line or route so the picked metric starts over on a switch: a metric picked on one line would
  * otherwise stay charted on another whose scorecard has no such row. */
-export const OverviewRedesign = () => {
+export const Overview = () => {
   const { tab, lineShort, query } = useDelimitatedRoute();
 
   if (tab === 'Bus') return <BusOverview key={query.busRoute} />;
