@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import type { SingleDayDataPoint } from '../../common/types/charts';
-import { HERO_STATIONS, minutesText, pickHero, worstLabel } from './heroChart';
+import { getLocationDetails, getParentStationForStopId } from '../../common/utils/stations';
+import { exploreHref, HERO_STATIONS, minutesText, pickHero, worstLabel } from './heroChart';
 
 const trip = (headwayMin: number, scheduledMin = 5, at = '2026-11-16T08:00:00') =>
   ({
@@ -25,6 +26,34 @@ describe('HERO_STATIONS', () => {
       ['State Street', ['70042']],
       ['Park Street', ['70200']],
     ]);
+  });
+});
+
+describe('exploreHref', () => {
+  it('links each line by stop ID, not station ID', () => {
+    expect(HERO_STATIONS.map((s) => exploreHref(s, '2026-11-19'))).toEqual([
+      '/red/trips/single/?from=70076&to=70061&date=2026-11-19',
+      '/orange/trips/single/?from=70021&to=70036&date=2026-11-19',
+      '/blue/trips/single/?from=70042&to=70060&date=2026-11-19',
+      '/green/trips/single/?from=70200&to=70201&date=2026-11-19',
+    ]);
+  });
+
+  it('opens the trip page on the hero’s station and direction', () => {
+    for (const station of HERO_STATIONS) {
+      const query = new URL(
+        exploreHref(station, '2026-11-19'),
+        'https://dashboard.transitmatters.org'
+      ).searchParams;
+      // The trip page reads its stations back the same way.
+      const from = getParentStationForStopId(query.get('from') ?? '', station.lineShort);
+      const to = getParentStationForStopId(query.get('to') ?? '', station.lineShort);
+      expect([from?.station, to?.station]).toEqual([station.from.station, station.to.station]);
+      expect(from && to && getLocationDetails(from, to).direction).toBe(
+        getLocationDetails(station.from, station.to).direction
+      );
+      expect(query.get('date')).toBe('2026-11-19');
+    }
   });
 });
 
