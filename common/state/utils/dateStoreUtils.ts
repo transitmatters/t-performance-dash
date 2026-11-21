@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
-import type { OverviewDatePresetKey } from '../../constants/dates';
-import { TODAY_STRING, SMALL_DATE_FORMAT, RANGE_PRESETS } from '../../constants/dates';
+import { TODAY_STRING, SMALL_DATE_FORMAT } from '../../constants/dates';
 import type { DateStoreSection } from '../../constants/pages';
 import type { QueryParams } from '../../types/router';
 import type { DateStore } from '../dateStore';
@@ -59,28 +58,7 @@ export const getDateStoreSection = (dateStoreSection: DateStoreSection, dateStor
   if (dateStoreSection === 'multiTrips') return dateStore.multiTripConfig;
   if (dateStoreSection === 'system') return dateStore.systemConfig;
   if (dateStoreSection === 'line') return dateStore.lineConfig;
-  if (dateStoreSection === 'overview') return dateStore.overviewPreset;
   return {};
-};
-
-export const getSelectedDates = (dateConfig: {
-  startDate?: string;
-  endDate?: string;
-  view?: OverviewDatePresetKey;
-}) => {
-  const { startDate, endDate, view } = dateConfig;
-  const viewInput = view ? RANGE_PRESETS[view]?.input : undefined;
-  if (viewInput)
-    return `${dayjs(viewInput.startDate).format(SMALL_DATE_FORMAT)} - ${dayjs(
-      viewInput.endDate
-    ).format(SMALL_DATE_FORMAT)}`;
-  if (startDate && endDate) {
-    return `${formatDate(startDate)} — ${formatDate(endDate)}`;
-  }
-
-  if (startDate) return formatDate(startDate);
-
-  return undefined;
 };
 
 const formatDate = (date: string) => {

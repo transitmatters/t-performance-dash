@@ -20,8 +20,6 @@ interface RidershipGraphWrapperProps {
   stationName?: string;
 }
 
-// The average/percentage/peak KPIs now live in the page's stat-card row (see RidershipDetails), so
-// the chart no longer carries an in-plot carousel value — just the graph.
 export const RidershipGraphWrapper = ({
   data,
   busRoute,

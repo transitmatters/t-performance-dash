@@ -313,21 +313,12 @@ export const GTFS_COLOR_LINE_IDS = [
 ] as const;
 export type GtfsColorLineId = (typeof GTFS_COLOR_LINE_IDS)[number];
 
-export const HEAVY_RAIL_LINES: Line[] = ['line-red', 'line-orange', 'line-blue'];
 export const SUBWAY_LINES: Line[] = [
   'line-red',
   'line-orange',
   'line-blue',
   'line-green',
   'line-mattapan',
-];
-export const LANDING_RAIL_LINES: Line[] = [
-  'line-red',
-  'line-orange',
-  'line-blue',
-  'line-green',
-  'line-mattapan',
-  'line-commuter-rail',
 ];
 
 export const RAIL_LINES = ['red', 'orange', 'green', 'blue', 'mattapan'];

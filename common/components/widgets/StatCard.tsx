@@ -20,7 +20,7 @@ const badgeVariantFor = (sentiment: StatSentiment) =>
       ? ('destructive' as const)
       : ('outline' as const);
 
-const DeltaBadge = ({ delta }: { delta: StatDelta }) => {
+export const DeltaBadge = ({ delta }: { delta: StatDelta }) => {
   const badge = <Badge variant={badgeVariantFor(delta.sentiment)}>{delta.label}</Badge>;
   if (!delta.detail) return badge;
   return (

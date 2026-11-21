@@ -6,10 +6,9 @@ import os
 logger = logging.getLogger(__name__)
 
 # API Keys (Don't edit! Set in local environment variables.)
-MBTA_V2_API_KEY = os.environ.get("MBTA_V2_API_KEY", "")
 MBTA_V3_API_KEY = os.environ.get("MBTA_V3_API_KEY", "")
 
-HEALTHCHECK_HIDE_SECRETS = [MBTA_V2_API_KEY, MBTA_V3_API_KEY]
+HEALTHCHECK_HIDE_SECRETS = [MBTA_V3_API_KEY]
 
 # Backend configuration
 PRODUCTION_API = "https://dashboard-api.labs.transitmatters.org"

@@ -6,7 +6,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import type { Href } from '../general/Link';
 
 import type { Line } from '../../types/lines';
-import type { Page } from '../../constants/pages';
 import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
 import { WidgetDiv } from './WidgetDiv';
 import { WidgetTitle } from './WidgetTitle';
@@ -20,9 +19,7 @@ interface Props {
   subtitle?: ReactNode;
   /** A control that acts on this card's chart — a view switch or a filter. */
   action?: ReactNode;
-  /** When set, the title becomes a chevron link to this page, colored by line. */
-  tab?: Page;
-  /** A pre-resolved chevron-link href, for cases where `tab` can't express the target (e.g. a route/date-specific link). */
+  /** When set, the title becomes a chevron link to this href, colored by line. */
   titleHref?: null | Href;
   line?: Line;
   /** Content rendered between the title and the ready-gated children, always shown. */
@@ -64,7 +61,6 @@ export const Widget = (props: Props) => {
     title,
     subtitle,
     action,
-    tab,
     titleHref,
     line,
     details,
@@ -95,7 +91,6 @@ export const Widget = (props: Props) => {
         title={title}
         subtitle={subtitle}
         action={action}
-        tab={tab}
         titleHref={titleHref}
         line={line}
       />

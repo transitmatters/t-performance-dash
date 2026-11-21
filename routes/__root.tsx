@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Outlet, createRootRoute, useMatches } from '@tanstack/react-router';
 import { useDelimitatedRoute, useIsNotFound } from '../common/utils/router';
 import { Layouts } from '../common/layouts/Layouts';
-import { Layout } from '../common/layouts/PrimaryLayout';
+import { AppProviders } from '../common/layouts/AppProviders';
 import { NavLayout } from '../common/layouts/NavLayout';
 import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
 import { DynamicMetaTags } from '../common/components/DynamicMetaTags';
@@ -34,16 +34,16 @@ const RootComponent = () => {
 
   if (embed && !notFound) {
     return (
-      <Layout>
+      <AppProviders>
         <Outlet key={colorVisionKey} />
-      </Layout>
+      </AppProviders>
     );
   }
 
   const SecondaryLayout = layout && !notFound ? Layouts[layout] : PassThroughLayout;
 
   return (
-    <Layout>
+    <AppProviders>
       <DynamicMetaTags />
       <LoadPresetsLayout>
         <NavLayout>
@@ -53,7 +53,7 @@ const RootComponent = () => {
           <BetaNotices />
         </NavLayout>
       </LoadPresetsLayout>
-    </Layout>
+    </AppProviders>
   );
 };
 

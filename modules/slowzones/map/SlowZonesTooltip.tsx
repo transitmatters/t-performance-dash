@@ -10,8 +10,6 @@ import { DeltaTimeWidgetValue } from '../../../common/types/basicWidgets';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
 import { prettyDate } from '../../../common/utils/date';
 
-import { TODAY_STRING } from '../../../common/constants/dates';
-import { useDelimitatedRoute } from '../../../common/utils/router';
 import { DIRECTIONS } from './segment';
 import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DirectionIndicator } from './DirectionIndicator';
@@ -81,9 +79,6 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
     color,
     segment: { slowZones, speedRestrictions },
   } = props;
-  const {
-    query: { endDate },
-  } = useDelimitatedRoute();
 
   const isHorizontal = side === 'top';
 
@@ -129,8 +124,6 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
   };
 
   const renderSlowZoneForDirection = (direction: SlowZoneDirection) => {
-    const isToday = endDate === TODAY_STRING;
-
     const [slowZone] = slowZones[direction];
     const speedRestrictionsForDirection = speedRestrictions[direction];
 
@@ -141,7 +134,7 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
 
     if (slowZone) {
       // We have a detected slow zone - show full delay info
-      const delayVal = isToday && slowZone.latest_delay ? slowZone.latest_delay : slowZone.delay;
+      const delayVal = slowZone.dayDelay;
       return (
         <div className={styles.direction}>
           <BasicWidgetDataLayout

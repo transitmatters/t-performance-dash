@@ -1,5 +1,6 @@
 """Tests for service_hours.py — scheduled vs. delivered service hours."""
 
+import threading
 from datetime import date
 
 from chalicelib import service_hours
@@ -28,3 +29,21 @@ class TestGetServiceHours:
         service_hours.get_service_hours("line-mattapan", date(2026, 9, 1), date(2026, 9, 30), "daily")
 
         assert queried == ["line-mattapan"]
+
+    def test_queries_run_concurrently(self, monkeypatch):
+        # Each stub waits for the other to start. If they run one after the other,
+        # the first wait times out and get_service_hours raises BrokenBarrierError.
+        barrier = threading.Barrier(2, timeout=2)
+
+        def fake_scheduled(**kwargs):
+            barrier.wait()
+            return {"2026-09-01": 100}
+
+        def fake_query(**kwargs):
+            barrier.wait()
+            return []
+
+        monkeypatch.setattr(service_hours, "get_scheduled_service_hours", fake_scheduled)
+        monkeypatch.setattr(service_hours, "query_extended_trip_metrics", fake_query)
+
+        service_hours.get_service_hours("line-red", date(2026, 9, 1), date(2026, 9, 30), "daily")

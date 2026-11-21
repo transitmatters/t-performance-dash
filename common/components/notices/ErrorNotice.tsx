@@ -8,17 +8,15 @@ import { Button } from '../ui/button';
 
 interface ErrorNoticeProps {
   query?: UseQueryResult<unknown>;
-  isWidget?: boolean;
-  inverse?: boolean;
 }
 
 /**
- * A failed chart is one card of four, so this is `role="status"` rather than `role="alert"` — four
- * simultaneous failures should not interrupt a screen reader four times. Every branch names the
+ * Several charts on a page can fail together, so this is `role="status"` rather than `role="alert"` —
+ * simultaneous failures should not each interrupt a screen reader. Every branch names the
  * problem and offers the recovery; the error is only ever read to pick a branch (see
  * `getErrorCopy`), never shown, so backend internals stay out of the UI.
  */
-export const ErrorNotice = ({ isWidget, inverse, query }: ErrorNoticeProps) => {
+export const ErrorNotice = ({ query }: ErrorNoticeProps) => {
   const { query: params } = useDelimitatedRoute();
   const { title, detail } = getErrorCopy(query?.error, {
     isRange: Boolean(params.startDate),
@@ -29,23 +27,16 @@ export const ErrorNotice = ({ isWidget, inverse, query }: ErrorNoticeProps) => {
   return (
     <div
       role="status"
-      className={classNames(
-        'flex h-full flex-col content-center items-center justify-center gap-1 rounded-lg px-4 text-center',
-        isWidget ? 'bg-card p-2' : ''
-      )}
+      className="flex h-full flex-col content-center items-center justify-center gap-1 rounded-lg px-4 text-center"
     >
       <FontAwesomeIcon
         size={'2x'}
         icon={faTriangleExclamation}
-        className={classNames('mb-1', inverse ? 'text-white/60' : 'text-destructive/70')}
+        className="mb-1 text-destructive/70"
         aria-hidden
       />
-      <p className={classNames('font-medium', inverse ? 'text-white' : 'text-card-foreground')}>
-        {title}
-      </p>
-      <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
-        {detail}
-      </p>
+      <p className="font-medium text-card-foreground">{title}</p>
+      <p className="text-sm text-muted-foreground">{detail}</p>
       {canRetry && (
         <Button
           variant="outline"

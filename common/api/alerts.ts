@@ -1,7 +1,7 @@
-import type { AlertsResponse, OldAlert } from '../types/alerts';
+import type { AlertsResponse, HistoricalAlert } from '../types/alerts';
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import { getStationKeysFromStations } from '../utils/stations';
-import { getBusRouteIds } from '../constants/lines';
+import { getBusRouteDataIds } from '../constants/lines';
 import { apiFetch } from './utils/fetch';
 
 const alertsAPIConfig = {
@@ -53,7 +53,10 @@ const fetchAlertsForLine = async (line: LineShort): Promise<AlertsResponse[]> =>
 };
 
 const fetchAlertsForBus = async (busRoute: string): Promise<AlertsResponse[]> => {
-  const options: RouteOptions = { ...alertsAPIConfig, route: getBusRouteIds(busRoute).join(',') };
+  const options: RouteOptions = {
+    ...alertsAPIConfig,
+    route: getBusRouteDataIds(busRoute).join(','),
+  };
   options['route_type'] = '3';
 
   return await apiFetch({
@@ -98,7 +101,7 @@ export const getHistoricalAlertRoutes = (
   crRoute?: CommuterRailRoute,
   ferryRoute?: FerryRoute
 ): string[] => {
-  if (line === 'Bus' && busRoute) return getBusRouteIds(busRoute);
+  if (line === 'Bus' && busRoute) return getBusRouteDataIds(busRoute);
   if (line === 'Commuter Rail' && crRoute) return [crRoute];
   if (line === 'Ferry' && ferryRoute) return [ferryRoute];
   if (line === 'Green') return GREEN_LINE_ROUTE_IDS;
@@ -111,7 +114,7 @@ export const fetchHistoricalAlerts = async (
   busRoute?: BusRoute,
   crRoute?: CommuterRailRoute,
   ferryRoute?: FerryRoute
-): Promise<OldAlert[]> => {
+): Promise<HistoricalAlert[]> => {
   return await apiFetch({
     path: `/api/alerts/${date}`,
     options: { route: getHistoricalAlertRoutes(line, busRoute, crRoute, ferryRoute) },

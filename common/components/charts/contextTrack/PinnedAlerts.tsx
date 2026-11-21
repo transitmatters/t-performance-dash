@@ -1,11 +1,11 @@
 import type { CSSProperties } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import type { OldAlert } from '../../../types/alerts';
+import type { HistoricalAlert } from '../../../types/alerts';
 import { ALERT_COLOR, alertKey, formatAlertRange } from './segments';
 
 interface PinnedAlertsProps {
-  alerts: OldAlert[];
+  alerts: HistoricalAlert[];
   indent: number;
   onRemove: (key: string) => void;
 }

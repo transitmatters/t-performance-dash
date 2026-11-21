@@ -32,8 +32,6 @@ export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 export const ONE_YEAR_AGO = TODAY.subtract(1, 'year');
 export const ONE_YEAR_AGO_STRING = ONE_YEAR_AGO.format(DATE_FORMAT);
-export const THREE_MONTHS_AGO = TODAY.subtract(90, 'days');
-export const THREE_MONTHS_AGO_STRING = TODAY.subtract(90, 'days').format(DATE_FORMAT);
 
 export const OVERVIEW_TRAIN_MIN_DATE = '2016-02-01';
 const TRAIN_MIN_DATE = '2016-01-15';
@@ -63,9 +61,6 @@ export const BUS_SPEED_MAP_MIN_DATE = '2025-12-24';
  * It's the same day the speed map's segment data starts.
  */
 export const BUS_TRIP_METRICS_MIN_DATE = BUS_SPEED_MAP_MIN_DATE;
-export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
-  .subtract(7, 'days')
-  .format(DATE_FORMAT);
 
 // Commuter Rail earliest Ridership date
 export const COMMUTER_RAIL_RIDERSHIP_MIN_DATE = '2022-06-22';
@@ -83,9 +78,6 @@ export const hasReliableCommuterRailBenchmarks = (date: string | undefined) =>
 
 export const RIDE_RELIABILITY_MIN_DATE = '2014-07-01';
 export const COMMUTER_RAIL_RELIABILITY_MIN_DATE = '2016-01-01';
-export const getESTDayjs = (date: string) => {
-  return dayjs(date).tz(est);
-};
 
 /**
  * When a bus route ran. It's retired once its last day of service is behind us; a route with an end
@@ -188,37 +180,6 @@ const SINGLE_RAPID_PRESETS: {
   },
 };
 
-const SINGLE_BUS_PRESETS: {
-  [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams>;
-} = {
-  mostRecent: {
-    key: 'mostRecent',
-    name: `${BUS_MAX_DAY.format(PRETTY_DATE_FORMAT)}`,
-    input: { date: BUS_MAX_DATE },
-  },
-  firstOfMonth: {
-    key: 'firstOfMonth',
-    name: `${BUS_MAX_DAY.startOf('month').format(PRETTY_DATE_FORMAT)}`,
-    input: {
-      date: BUS_MAX_DAY.startOf('month').format(DATE_FORMAT),
-    },
-  },
-  firstOfYear: {
-    key: 'firstOfYear',
-    name: `First of ${BUS_MAX_DAY.startOf('year').format('YYYY')}`,
-    input: {
-      date: BUS_MAX_DAY.startOf('month').format(DATE_FORMAT),
-    },
-  },
-  firstOfPrevYear: {
-    key: 'firstOfPrevYear',
-    name: `First of ${BUS_MAX_DAY.subtract(1, 'year').startOf('year').format('YYYY')}`,
-    input: {
-      date: BUS_MAX_DAY.subtract(1, 'year').startOf('year').format(DATE_FORMAT),
-    },
-  },
-};
-
 export const SINGLE_PRESETS: {
   [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
 } = {
@@ -299,51 +260,6 @@ const RANGE_RAPID_PRESETS: {
   },
 };
 
-const RANGE_BUS_PRESETS: {
-  [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams>;
-} = {
-  thisMonth: {
-    key: 'thisMonth',
-    name: BUS_MAX_DAY.format('MMMM YYYY'),
-    input: {
-      startDate: BUS_MAX_DAY.startOf('month').format(DATE_FORMAT),
-      endDate: BUS_MAX_DATE,
-    },
-  },
-  lastMonth: {
-    key: 'lastMonth',
-    name: BUS_MAX_DAY.subtract(1, 'month').format('MMMM YYYY'),
-    input: {
-      startDate: BUS_MAX_DAY.subtract(1, 'month').startOf('month').format(DATE_FORMAT),
-      endDate: BUS_MAX_DAY.subtract(1, 'month').endOf('month').format(DATE_FORMAT),
-    },
-  },
-  thisYear: {
-    key: 'thisYear',
-    name: BUS_MAX_DAY.format('YYYY'),
-    input: {
-      startDate: BUS_MAX_DAY.startOf('year').format(DATE_FORMAT),
-      endDate: BUS_MAX_DATE,
-    },
-  },
-  lastYear: {
-    key: 'lastYear',
-    name: BUS_MAX_DAY.subtract(1, 'year').format('YYYY'),
-    input: {
-      startDate: BUS_MAX_DAY.startOf('year').subtract(1, 'year').format(DATE_FORMAT),
-      endDate: BUS_MAX_DAY.endOf('year').subtract(1, 'year').format(DATE_FORMAT),
-    },
-  },
-  all: {
-    key: 'all',
-    name: 'All time',
-    input: {
-      startDate: dayjs(RIDE_MIN_DATE).format(DATE_FORMAT),
-      endDate: BUS_MAX_DATE,
-    },
-  },
-};
-
 /** The RIDE's "All time" starts with the page's data: reliability goes back further than ridership. */
 const rideAllTime = (startDate: string): DateSelectionDefaultOptions<DateParams> => ({
   key: 'all',
@@ -375,7 +291,10 @@ export const getRangePresets = (tab: Tab, page?: Page) =>
     : RANGE_PRESETS[tab];
 
 export type DatePresetKey =
-  | OverviewDatePresetKey
+  | 'week'
+  | 'month'
+  | 'year'
+  | 'all'
   | 'today'
   | 'mostRecent'
   | 'lastYear'
@@ -387,39 +306,8 @@ export type DatePresetKey =
   | 'firstOfPrevYear'
   | 'yesterday';
 
-type AggregationTypes = 'daily' | 'weekly' | 'monthly';
-
-// TODO: can probably consolidate this with the RANGE_PRESETS object.
-export const OVERVIEW_OPTIONS: {
-  [key in OverviewDatePresetKey]: { startDate: string; agg: AggregationTypes };
-} = {
-  week: {
-    startDate: TODAY.subtract(7, 'days').format(DATE_FORMAT),
-    agg: 'daily',
-  },
-  month: {
-    startDate: TODAY.subtract(31, 'days').format(DATE_FORMAT),
-    agg: 'daily',
-  },
-  year: {
-    startDate: TODAY.subtract(365, 'days').format(DATE_FORMAT),
-    agg: 'weekly',
-  },
-
-  all: {
-    startDate: dayjs(OVERVIEW_TRAIN_MIN_DATE).format(DATE_FORMAT),
-    agg: 'monthly',
-  },
-};
-
-export type OverviewDatePresetKey = keyof typeof OverviewRangeTypes;
-
-export enum OverviewRangeTypes {
-  week = 'Past week',
-  month = 'Past month',
-  year = 'Past year',
-  all = 'All time',
-}
+/** Where line pages' date range starts when the URL doesn't pick one. */
+export const DEFAULT_LINE_START_DATE = TODAY.subtract(365, 'days').format(DATE_FORMAT);
 
 export const RANGE_DATE_KEYS = Object.fromEntries(
   [

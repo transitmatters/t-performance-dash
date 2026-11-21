@@ -55,13 +55,6 @@ const WEATHER_SHADING_ALPHA: Record<SignificantCondition, number> = {
   storm: 0.4,
 };
 
-export const WEATHER_LABELS: Record<SignificantCondition, string> = {
-  rain: 'Rain',
-  snow: 'Snow',
-  fog: 'Fog',
-  storm: 'Storm',
-};
-
 // Higher-severity conditions win when coalescing a day's worth of hours down
 // to a single category.
 const SEVERITY: Record<SignificantCondition, number> = {

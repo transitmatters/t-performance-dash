@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +10,7 @@ import { cn } from '@/common/utils/cn';
 
 export const LANE_HEIGHT = 10;
 const LANE_GAP = 2;
-const LABEL_TEXT_MIN_WIDTH = 64;
+const LABEL_PADDING = 8;
 
 /** Opens the shared chart hover card above an element of the track. */
 export const showTrackCard = (
@@ -31,6 +32,8 @@ export const hideTrackCard = (element: HTMLElement) => hideHoverCard('annotation
 
 interface TrackRowProps {
   label: string;
+  // Shown when the label doesn't fit in the y axis's width
+  shortLabel?: string;
   icon: IconDefinition;
   geometry: TrackGeometry;
   status: 'loading' | 'empty' | 'ready';
@@ -38,33 +41,80 @@ interface TrackRowProps {
   lanes?: number;
   // Overrides the lanes' height, for rows drawn as a line rather than segments
   contentHeight?: number;
+  // Hides the label text, so every row's icon shows alone when any row's label doesn't fit
+  iconOnly?: boolean;
+  // Reports whether the label fits whole, or null once the row is gone
+  onLabelFit?: (label: string, fits: boolean | null) => void;
   children?: ReactNode;
 }
 
 export const TrackRow = ({
   label,
+  shortLabel,
   icon,
   geometry,
   status,
   emptyText,
   lanes = 1,
   contentHeight,
+  iconOnly = false,
+  onLabelFit,
   children,
 }: TrackRowProps) => {
   const lanesHeight = contentHeight ?? lanes * LANE_HEIGHT + (lanes - 1) * LANE_GAP;
   const height = Math.max(lanesHeight, 14);
-  // Narrow y axes leave room for the icon alone
-  const showText = geometry.left >= LABEL_TEXT_MIN_WIDTH;
+  const candidates = shortLabel ? [label, shortLabel] : [label];
+  const measureRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const [widths, setWidths] = useState<number[] | null>(null);
+  useLayoutEffect(() => {
+    let cancelled = false;
+    const measure = () => {
+      if (!cancelled) setWidths(measureRefs.current.map((element) => element?.offsetWidth ?? 0));
+    };
+    measure();
+    // Web fonts can load after the first measurement and change the widths
+    document.fonts?.ready.then(measure);
+    return () => {
+      cancelled = true;
+    };
+  }, [label, shortLabel]);
+  // The longest label that fits whole beside the icon
+  const fitting = widths
+    ? candidates.find((_, index) => widths[index] <= geometry.left - LABEL_PADDING)
+    : undefined;
+  const fits = widths ? fitting !== undefined : null;
+  useLayoutEffect(() => {
+    if (fits === null) return;
+    onLabelFit?.(label, fits);
+    return () => onLabelFit?.(label, null);
+  }, [fits, label, onLabelFit]);
+  const text = iconOnly ? undefined : fitting;
   return (
     <div role="group" aria-label={label} className="flex items-center">
       <div
-        className="flex shrink-0 justify-end pr-2 text-xs leading-none text-muted-foreground"
-        style={{ width: geometry.left }}
+        className="relative flex shrink-0 justify-end text-xs leading-none text-muted-foreground"
+        style={{ width: geometry.left, paddingRight: LABEL_PADDING }}
       >
-        <span className="flex min-w-0 items-center gap-1" title={showText ? undefined : label}>
+        <span
+          className="flex min-w-0 items-center gap-1"
+          title={text === label ? undefined : label}
+        >
           <FontAwesomeIcon icon={icon} className="size-3 shrink-0" aria-hidden />
-          {showText && <span className="truncate">{label}</span>}
+          {text && <span className="whitespace-nowrap">{text}</span>}
         </span>
+        {candidates.map((candidate, index) => (
+          <span
+            key={candidate}
+            ref={(element) => {
+              measureRefs.current[index] = element;
+            }}
+            aria-hidden
+            className="invisible absolute top-0 left-0 flex items-center gap-1 whitespace-nowrap"
+          >
+            <span className="size-3 shrink-0" />
+            {candidate}
+          </span>
+        ))}
       </div>
       <div className="relative shrink-0" style={{ width: geometry.right - geometry.left, height }}>
         {status === 'loading' && (

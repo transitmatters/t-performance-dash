@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowDown, faArrowUp, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { InfoTooltip } from '../general/InfoTooltip';
-import type { MiniWidgetObject, WidgetComparison } from './MiniWidgetCreator';
+import type { MiniWidgetObject, WidgetComparison } from '../../types/basicWidgets';
 import { formatComparisonDelta, isImprovement, isNegligible } from './internal/comparison';
 
 /** On-time share is the one stat that carries a verdict, so it gets sentiment color. */
@@ -70,6 +70,10 @@ interface StatStripProps {
 /**
  * The summary numbers under a chart, as a hairline-separated strip. The 10th and 90th percentiles
  * read as one range rather than two unrelated figures, so they share a cell when both are present.
+ *
+ * A figure here never breaks inside itself ("13m" over "22s"), so these cells are
+ * `whitespace-nowrap`. That lives here rather than in `StatCell`, whose plain-text values (Regional
+ * Rail's "3 hr 10 min") have to be able to wrap in a narrow cell.
  */
 export const StatStrip = ({ widgetObjects }: StatStripProps) => {
   const cells: ReactNode[] = [];
@@ -80,9 +84,17 @@ export const StatStrip = ({ widgetObjects }: StatStripProps) => {
 
     if (widget.text === '10%' && next?.text === '90%') {
       cells.push(
-        <StatCell key={widget.text} label="10th – 90th pctl">
-          {widget.widgetValue.getFormattedValue()}
-          <span className="text-muted-foreground">–</span>
+        // Long trips don't fit "13m 22s – 17m 41s" on one line in a narrow cell, so the range
+        // wraps at the dash. The dash stays with the first figure so no line starts with it.
+        <StatCell
+          key={widget.text}
+          label="10th – 90th pctl"
+          valueClassName="flex-wrap whitespace-nowrap"
+        >
+          <span className="flex items-baseline gap-x-1">
+            {widget.widgetValue.getFormattedValue()}
+            <span className="text-muted-foreground">–</span>
+          </span>
           {next.widgetValue.getFormattedValue()}
         </StatCell>
       );
@@ -98,6 +110,7 @@ export const StatStrip = ({ widgetObjects }: StatStripProps) => {
         label={widget.text}
         description={widget.description}
         valueClassName={classNames(
+          'whitespace-nowrap',
           onTime &&
             percentage !== undefined &&
             (percentage >= 0.7

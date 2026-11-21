@@ -7,7 +7,7 @@ import type { QueryParams, Route, Tab } from '../types/router';
 import { CHART_PARAMS, DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import { LINE_OBJECTS, getBusRouteIds } from '../constants/lines';
+import { LINE_OBJECTS, getBusRouteDataIds } from '../constants/lines';
 import { getBusRoutes } from '../constants/stations';
 import {
   saveDateStoreSection,
@@ -79,7 +79,7 @@ export const useIsEmbed = () =>
 
 /** The line, tab and page a pathname points at. Pure, so the router can use it before render. */
 export const parseRoutePath = (pathname: string) => {
-  // Page detection expects Next's trailing-slash paths; a hand-typed `/red/speed` still has to work.
+  // Page detection expects trailing-slash paths; a hand-typed `/red/speed` still has to work.
   const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
   const tab = getTab((pathItems[1] as LinePath) ?? 'System');
   return {
@@ -142,7 +142,7 @@ const BUS_ROUTE_ID = /^\d{1,3}[A-Z]?$/;
  */
 const isKnownRoute = (line: Line, page: Page, route: string) => {
   if (ANY_ROUTE_PAGES.includes(page)) return true;
-  if (line === 'line-bus' && getBusRouteIds(route).every((id) => BUS_ROUTE_ID.test(id))) {
+  if (line === 'line-bus' && getBusRouteDataIds(route).every((id) => BUS_ROUTE_ID.test(id))) {
     return true;
   }
   const knownRoutes = KNOWN_ROUTES_FOR_LINE[line];
@@ -274,13 +274,11 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   let href = `/${path}`;
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
   const validPage = currentPage.lines.includes(newLine);
-  if (key === line || currentPath === 'today' || !validPage) {
+  if (key === line || !validPage) {
     return href;
   }
-  // Drop stations, route params and view (a per-line preset selection, e.g. the Overview page's
-  // date range — carrying it to a different line makes that line's page open on whatever range was
-  // last picked instead of its own default).
-  const queryParams = queryWithout(query, ['from', 'to', 'view', ...ROUTE_PARAMS]);
+  // Drop stations and route params, which belong to the old line.
+  const queryParams = queryWithout(query, ['from', 'to', ...ROUTE_PARAMS]);
   href += currentPath ? `${currentPath}` : '';
   const queryString = queryParams.toString();
   href += queryString ? `?${queryString}` : '';
@@ -291,7 +289,9 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   const { query, page } = route;
   const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
   const currentPath = currentPage.path;
-  const validPage = currentPage.lines.includes('line-bus');
+  // A page without a route selector (Rankings) has no per-route view to switch to.
+  const validPage =
+    currentPage.lines.includes('line-bus') && currentPage.hasRouteSelector !== false;
   if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/trips/single?busRoute=${newRoute}`;
   }
@@ -496,19 +496,24 @@ export const getQueryParams = (
 };
 
 /**
+ * The speed map and Rankings share the single-day trips date section without being trip views, so
+ * the section alone can't say whether a page is one.
+ */
+const isTripPage = (page: Page | string): page is TripPage =>
+  page === 'singleTrips' || page === 'multiTrips';
+
+/**
  * Where the sidebar's Trips item goes: the trip view already open, or else the one last used, so a
  * picked date range is still there on the way back.
  */
 export const getNavTripPage = (currentPage: Page | string, tripPage: TripPage): PageMetadata =>
-  currentPage === 'singleTrips' || currentPage === 'multiTrips'
-    ? ALL_PAGES[currentPage]
-    : ALL_PAGES[tripPage];
+  isTripPage(currentPage) ? ALL_PAGES[currentPage] : ALL_PAGES[tripPage];
 
 const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
   return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
 };
 
-const savePageConfigIfNecessary = (
+export const savePageConfigIfNecessary = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
@@ -519,11 +524,8 @@ const savePageConfigIfNecessary = (
   if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
     saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
   }
-  if (
-    TRIP_SECTIONS.includes(currentPage.dateStoreSection) &&
-    !TRIP_SECTIONS.includes(newPage.dateStoreSection)
-  ) {
-    dateStore.setTripPage(currentPage.key as TripPage);
+  if (isTripPage(currentPage.key) && !isTripPage(newPage.key)) {
+    dateStore.setTripPage(currentPage.key);
   }
   if (!(currentPage.hasStationStore === newPage.hasStationStore)) {
     stationStore.setStationStore({

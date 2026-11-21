@@ -42,7 +42,6 @@ export enum PAGES {
 
 export type DateStoreSection =
   | 'landing'
-  | 'today'
   | 'line'
   | 'overview'
   | 'singleTrips'
@@ -306,8 +305,6 @@ export const COMMUTER_RAIL_OVERVIEW = [ALL_PAGES.overview, ALL_PAGES.ridership];
 
 export const FERRY_OVERVIEW = [ALL_PAGES.ridership];
 
-export const RIDE_OVERVIEW = [ALL_PAGES.ridership];
-
 export const OVERVIEW_PAGE = [ALL_PAGES.overview];
 
 export const LINE_PAGES = [
@@ -338,7 +335,3 @@ export const SYSTEM_PAGES_MAP = {
     ridership: 'systemServiceAndRidership',
   },
 };
-
-export const LANDING_PAGE = [ALL_PAGES.landing];
-
-export const SYSTEM_SUB_PAGES = [ALL_PAGES.systemSlowzones, ALL_PAGES.systemServiceAndRidership];

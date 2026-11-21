@@ -1,13 +1,8 @@
 import type dayjs from 'dayjs';
-import { TimeWidgetValue } from '../../common/types/basicWidgets';
 import type { DayDelayTotals } from '../../common/types/dataPoints';
 import type { LineShort, Line } from '../../common/types/lines';
-import { getSlowZoneDelayDelta, useFilteredDelayTotals } from '../../common/utils/slowZoneUtils';
 
-import { todayOrDate } from '../../common/constants/dates';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import { WidgetCarousel } from '../../common/components/general/WidgetCarousel';
-import { WidgetForCarousel } from '../../common/components/widgets/internal/WidgetForCarousel';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import type { SlowZonesEmbedLine } from './embed';
 
@@ -18,7 +13,6 @@ interface TotalSlowTimeWrapperProps {
   line: Line;
   lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>;
   showTitle?: boolean;
-  showWidgetValue?: boolean;
   embedLine?: SlowZonesEmbedLine;
 }
 
@@ -29,28 +23,10 @@ export const TotalSlowTimeWrapper = ({
   line,
   lineShort,
   showTitle = false,
-  showWidgetValue = true,
   embedLine,
 }: TotalSlowTimeWrapperProps) => {
-  const filteredDelayTotals = useFilteredDelayTotals(data, startDateUTC, endDateUTC);
-  const delayDelta = getSlowZoneDelayDelta(filteredDelayTotals, lineShort);
-
   return (
     <ChartStack>
-      {showWidgetValue && (
-        <WidgetCarousel isSingleWidget>
-          <WidgetForCarousel
-            widgetValue={
-              new TimeWidgetValue(
-                filteredDelayTotals[filteredDelayTotals.length - 1]?.[lineShort],
-                delayDelta
-              )
-            }
-            layoutKind="no-delta"
-            analysis={`Current (${todayOrDate(endDateUTC)})`}
-          />
-        </WidgetCarousel>
-      )}
       <TotalSlowTime
         // Pass all data and not filtered because we can filter using the X axis of the graph.
         data={data}

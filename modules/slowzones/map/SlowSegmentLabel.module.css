@@ -8,9 +8,3 @@
   /* This is in weird SVG values btw */
   font-size: 2.5pt;
 }
-
-.slowZoneLabel {
-  display: flex;
-  align-items: baseline;
-  gap: 1.5px;
-}

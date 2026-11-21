@@ -44,6 +44,8 @@ export const TravelTimesAggregateChart = ({
   const startDate = startDateProp ?? query.startDate;
   const endDate = endDateProp ?? query.endDate;
 
+  const slowZonesTrip = useMemo(() => ({ fromStation, toStation }), [fromStation, toStation]);
+
   const chart = useMemo(() => {
     const timeUnitByDate = timeUnit === 'by_date';
 
@@ -80,6 +82,7 @@ export const TravelTimesAggregateChart = ({
         yUnit="Minutes"
         fill={fill}
         trendline={trendline}
+        slowZonesTrip={slowZonesTrip}
         loadingRanges={loadingRanges}
         embedChart={timeUnitByDate ? 'traveltimes' : 'traveltimes-by-hour'}
       />
@@ -95,6 +98,7 @@ export const TravelTimesAggregateChart = ({
     dayFilter,
     fill,
     trendline,
+    slowZonesTrip,
     loadingRanges,
   ]);
 

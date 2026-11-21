@@ -26,10 +26,6 @@ export const useDatePresetStore = create<DatePresetStore>((set) => ({
   setDefaults: (dateStoreSection, query) =>
     set(() => {
       const preset = checkForPreset(query);
-      if (dateStoreSection === 'overview') {
-        PRESET_DEFAULTS.linePreset = query.view ?? 'year';
-        return PRESET_DEFAULTS;
-      }
       if (dateStoreSection === 'line') {
         PRESET_DEFAULTS.linePreset = preset;
         return PRESET_DEFAULTS;
@@ -51,8 +47,7 @@ export const useDatePresetStore = create<DatePresetStore>((set) => ({
 
   setDatePreset: (newPreset, dateStoreSection) =>
     set(() => {
-      if (dateStoreSection === 'line' || dateStoreSection === 'overview')
-        return { linePreset: newPreset };
+      if (dateStoreSection === 'line') return { linePreset: newPreset };
       if (dateStoreSection === 'multiTrips') return { rangeTripPreset: newPreset };
       if (dateStoreSection === 'singleTrips') return { singleTripPreset: newPreset };
       if (dateStoreSection === 'system') return { systemPreset: newPreset };

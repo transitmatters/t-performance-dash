@@ -11,8 +11,8 @@ import { TripDataNotes } from '../../common/components/notices/TripDataNotes';
 import { BetaAccuracyNotice } from '../../common/components/notices/BetaAccuracyNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
 import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
-import { useAlertStore } from './AlertStore';
-import { TripGraphs } from './TripGraphs';
+import { useAlertStore } from './alertStore';
+import { TripGraphs, TripSlowZonesBanner } from './TripGraphs';
 import { TripSetupNotice } from './TripSetupNotice';
 import { TripGraphsBoundary } from './TripGraphsBoundary';
 
@@ -58,16 +58,22 @@ export const TripExplorer = () => {
             </div>
             {busRoute && <PokeySchleppieAwardBanner busRoute={busRoute} />}
             <BnrdBanner busRoute={busRoute} />
-            {/* Urgent, per-view accuracy warnings stay visible with the charts. */}
-            <div className="flex flex-col gap-2 empty:hidden">
-              <BetaAccuracyNotice />
-              <SameDayNotice />
-              <CoverageGapNotice />
-              <TerminusNotice toStation={toStation} fromStation={fromStation} />
+            {/* One-line notices sit closer to the charts they describe than cards sit to each other. */}
+            <div className="flex flex-col gap-4">
+              {/* Urgent, per-view accuracy warnings stay visible with the charts. */}
+              <div className="flex flex-col gap-4 empty:hidden">
+                <BetaAccuracyNotice />
+                <SameDayNotice />
+                <CoverageGapNotice />
+                <TerminusNotice toStation={toStation} fromStation={fromStation} />
+                <TripSlowZonesBanner fromStation={fromStation} toStation={toStation} />
+              </div>
+              <TripGraphsBoundary>
+                <ChartPageDiv>
+                  <TripGraphs fromStation={fromStation} toStation={toStation} />
+                </ChartPageDiv>
+              </TripGraphsBoundary>
             </div>
-            <TripGraphsBoundary>
-              <TripGraphs fromStation={fromStation} toStation={toStation} />
-            </TripGraphsBoundary>
             {/* Provenance / context, collapsed by default. */}
             <TripDataNotes />
           </>
