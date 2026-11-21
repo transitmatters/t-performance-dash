@@ -107,19 +107,22 @@ def get_service_hours(
     route_ids = ROUTE_IDS_BY_LINE[single_route_id]
     single_route_id = SINGLE_ROUTE_IDS_BY_LINE_KEY[single_route_id]
     with futures.ThreadPoolExecutor(max_workers=2) as executor:
-        scheduled_service_hours = executor.submit(
+        # Submit both before waiting on either, so the two queries overlap.
+        scheduled_future = executor.submit(
             get_scheduled_service_hours,
             start_date=start_date,
             end_date=end_date,
             route_id=single_route_id,
             agg=agg,
-        ).result()
-        extended_trip_metrics = executor.submit(
+        )
+        trips_future = executor.submit(
             query_extended_trip_metrics,
             start_date=start_date,
             end_date=end_date,
             route_ids=route_ids,
-        ).result()
+        )
+        scheduled_service_hours = scheduled_future.result()
+        extended_trip_metrics = trips_future.result()
     delivered_service_hours = get_delivered_service_times(extended_trip_metrics, agg)
     for date_str in scheduled_service_hours.keys():
         scheduled = scheduled_service_hours.get(date_str)
