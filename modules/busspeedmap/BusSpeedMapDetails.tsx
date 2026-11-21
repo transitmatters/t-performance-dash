@@ -10,7 +10,7 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds } from '../../common/constants/lines';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { Skeleton } from '../../common/components/ui/skeleton';
 import { useDelimitatedRoute } from '../../common/utils/router';
@@ -36,7 +36,7 @@ export function BusSpeedMapDetails() {
   const { value: dayType } = useDayType();
   const { value: timeBand } = useTimeBand();
   const { value: direction } = useDirection();
-  const { value: routeId } = useRouteId(busRoute ? getBusRouteIds(busRoute) : []);
+  const { value: routeId } = useRouteId(busRoute ? getBusRouteDataIds(busRoute) : []);
 
   const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, Boolean(date));
   const { data: pmtilesUrl } = segments;
