@@ -116,7 +116,6 @@ export function SlowZonesDetails() {
               endDateUTC={endDateUTC}
               line={line}
               lineShort={lineShort}
-              showWidgetValue={false}
               embedLine={linePath}
             />
           ) : (

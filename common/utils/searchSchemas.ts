@@ -1,5 +1,3 @@
-import type { OverviewDatePresetKey } from '../constants/dates';
-import { OverviewRangeTypes } from '../constants/dates';
 import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 
 /**
@@ -104,21 +102,10 @@ const busSpeedSearch = (search: RawSearch) => ({
   rankView: str(search.rankView),
 });
 
-const OVERVIEW_VIEWS = Object.keys(OverviewRangeTypes) as OverviewDatePresetKey[];
-
-const overviewSearch = (search: RawSearch) => ({
-  view: oneOf(OVERVIEW_VIEWS)(search.view),
-});
-
 export const validateLineSearch = (search: RawSearch) => ({
   ...dateSearch(search),
   ...stationSearch(search),
   ...routeSearch(search),
-});
-
-export const validateOverviewSearch = (search: RawSearch) => ({
-  ...validateLineSearch(search),
-  ...overviewSearch(search),
 });
 
 export const validateTripSearch = (search: RawSearch) => ({
@@ -202,7 +189,7 @@ export const validateMultiTripEmbedSearch = (search: RawSearch) => ({
  * search lags the location during a navigation.
  */
 export const validateAnySearch = (search: RawSearch) => ({
-  ...validateOverviewSearch(search),
+  ...validateLineSearch(search),
   ...chartSearch(search),
   ...speedSearch(search),
   ...serviceSearch(search),

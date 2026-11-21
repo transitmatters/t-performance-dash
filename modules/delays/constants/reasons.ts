@@ -27,15 +27,6 @@ export interface DelayReason {
   color: string;
 }
 
-export const DELAY_FAMILIES: DelayFamily[] = [
-  { id: 'vehicle', label: 'Vehicle', color: '#2f6fb8' },
-  { id: 'infrastructure', label: 'Infrastructure', color: '#c2540a' },
-  { id: 'planned', label: 'Planned work', color: '#7b4fa3' },
-  { id: 'external', label: 'External', color: '#3aa07c' },
-  { id: 'medical', label: 'Medical & police', color: '#b0435f' },
-  { id: 'unknown', label: 'No reason given', color: '#78716c' },
-];
-
 /**
  * Each reason's color is a shade of its family's hue. Colorblind mode moves the families onto
  * Okabe-Ito hues (vehicle blue, infrastructure amber, planned pink, external sky, medical

@@ -54,28 +54,6 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
   }
 }
 
-export class DeltaZonesWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
-  getUnits() {
-    return 'zones';
-  }
-  getFormattedValue(isLarge?: boolean) {
-    if (this.delta === undefined) return '...';
-    return (
-      <p>
-        <WidgetText
-          isLarge={isLarge}
-          text={`${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta)}`}
-        />{' '}
-        <UnitText isLarge={isLarge} text={this.getUnits()} />
-      </p>
-    );
-  }
-  getFormattedDelta() {
-    new Error('DeltaWidgets should use `getFormattedValue`');
-    return 'invalid';
-  }
-}
-
 // This will eventually include the logic of the analysis (past week, since last Weds, etc.)
 export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
@@ -104,25 +82,6 @@ export class TimeWidgetValue extends BaseWidgetValue implements WidgetValueInter
   }
 }
 
-export class SZWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
-  getUnits() {
-    return 'zones';
-  }
-  getFormattedValue(isLarge?: boolean) {
-    if (typeof this.value === 'undefined') return '...';
-    return (
-      <p className="text-sm">
-        <WidgetText isLarge={isLarge} text={`${Math.abs(this.value).toString()}`} />{' '}
-        <UnitText isLarge={isLarge} text={this.getUnits()} />
-      </p>
-    );
-  }
-  getFormattedDelta() {
-    if (typeof this.delta === 'undefined') return '...';
-    return `${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta).toString()}`;
-  }
-}
-
 export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
   getUnits() {
     return '%';
@@ -141,27 +100,6 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
   getFormattedDelta() {
     if (this.delta === undefined) return '...';
     return `${this.delta >= 0 ? '+' : ''}${Math.round(100 * this.delta).toString()}%`;
-  }
-}
-
-export class TripsWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
-  getUnits() {
-    return 'Round trips';
-  }
-
-  getFormattedValue(isLarge?: boolean) {
-    if (this.value === undefined) return '...';
-    return (
-      <p>
-        <WidgetText isLarge={isLarge} text={Math.abs(this.value).toFixed(0)} />{' '}
-        <UnitText isLarge={isLarge} text={this.getUnits()} />
-      </p>
-    );
-  }
-
-  getFormattedDelta() {
-    if (this.delta === undefined) return '...';
-    return `${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta).toString()}`;
   }
 }
 
@@ -187,24 +125,19 @@ export class MPHWidgetValue extends BaseWidgetValue implements WidgetValueInterf
   }
 }
 
-export class RidersWidgetValue extends BaseWidgetValue implements WidgetValueInterface {
-  getUnits() {
-    return 'Fare validations';
-  }
+export interface WidgetComparison {
+  delta: number;
+  label: string;
+  unit: 'time' | 'percentage';
+  /** Colors a rise green instead of red, for stats like On time where more is better. */
+  higherIsBetter?: boolean;
+}
 
-  getFormattedValue(isLarge?: boolean) {
-    if (this.value === undefined) return '...';
-    return (
-      <p>
-        <WidgetText isLarge={isLarge} text={`${(this.value / 1000).toFixed(1)}k`} />{' '}
-        <UnitText isLarge={isLarge} text={this.getUnits()} />
-      </p>
-    );
-  }
-
-  // TODO
-  getFormattedDelta() {
-    if (this.delta === undefined) return '...';
-    return `${this.delta >= 0 ? '+' : '-'}${Math.abs(this.delta).toString()}`;
-  }
+export interface MiniWidgetObject {
+  type: 'delta' | 'data' | string;
+  widgetValue: WidgetValueInterface;
+  text: string;
+  /** How the figure is calculated, shown in a tooltip next to its label. */
+  description?: string;
+  comparison?: WidgetComparison;
 }

@@ -33,15 +33,6 @@ export interface AlertsResponse {
   routes?: string[];
   header: string;
 }
-export type AlertEffectTypes = AlertEffect;
-
-export enum AlertNames {
-  DELAY = 'Delays',
-  SHUTTLE = 'Shuttling',
-  STOP_CLOSURE = 'Stop Closure',
-  DETOUR = 'Detour',
-  SUSPENSION = 'Suspension',
-}
 
 export enum AlertEffect {
   ACCESS_ISSUE = 'ACCESS_ISSUE',

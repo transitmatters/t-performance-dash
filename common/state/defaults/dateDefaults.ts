@@ -3,7 +3,7 @@ import type { DateStoreSection } from '../../constants/pages';
 import type { DateStoreConfiguration } from '../types/dateStoreTypes';
 import {
   ONE_WEEK_AGO_STRING,
-  OVERVIEW_OPTIONS,
+  DEFAULT_LINE_START_DATE,
   TODAY_STRING,
   YESTERDAY_STRING,
   TODAY_SERVICE_STARTED,
@@ -11,34 +11,7 @@ import {
 import type { WithOptional } from '../../types/general';
 
 export const SUBWAY_DEFAULTS: Partial<DateStoreConfiguration> = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-  multiTripConfig: {
-    startDate: ONE_WEEK_AGO_STRING,
-    endDate: TODAY_STRING,
-  },
-  singleTripConfig: {
-    date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
-  },
-  overviewPreset: { view: 'year' },
-};
-
-export const BUS_DEFAULTS: WithOptional<DateStoreConfiguration, 'systemConfig' | 'overviewPreset'> =
-  {
-    lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
-    multiTripConfig: {
-      startDate: ONE_WEEK_AGO_STRING,
-      endDate: TODAY_STRING,
-    },
-    singleTripConfig: {
-      date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
-    },
-  };
-
-export const COMMUTER_RAIL_DEFAULTS: WithOptional<
-  DateStoreConfiguration,
-  'systemConfig' | 'overviewPreset'
-> = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
+  lineConfig: { startDate: DEFAULT_LINE_START_DATE, endDate: TODAY_STRING },
   multiTripConfig: {
     startDate: ONE_WEEK_AGO_STRING,
     endDate: TODAY_STRING,
@@ -48,11 +21,8 @@ export const COMMUTER_RAIL_DEFAULTS: WithOptional<
   },
 };
 
-export const FERRY_DEFAULTS: WithOptional<
-  DateStoreConfiguration,
-  'systemConfig' | 'overviewPreset'
-> = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
+export const BUS_DEFAULTS: WithOptional<DateStoreConfiguration, 'systemConfig'> = {
+  lineConfig: { startDate: DEFAULT_LINE_START_DATE, endDate: TODAY_STRING },
   multiTripConfig: {
     startDate: ONE_WEEK_AGO_STRING,
     endDate: TODAY_STRING,
@@ -62,11 +32,30 @@ export const FERRY_DEFAULTS: WithOptional<
   },
 };
 
-export const RIDE_DEFAULTS: WithOptional<
-  DateStoreConfiguration,
-  'systemConfig' | 'overviewPreset'
-> = {
-  lineConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
+export const COMMUTER_RAIL_DEFAULTS: WithOptional<DateStoreConfiguration, 'systemConfig'> = {
+  lineConfig: { startDate: DEFAULT_LINE_START_DATE, endDate: TODAY_STRING },
+  multiTripConfig: {
+    startDate: ONE_WEEK_AGO_STRING,
+    endDate: TODAY_STRING,
+  },
+  singleTripConfig: {
+    date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
+  },
+};
+
+export const FERRY_DEFAULTS: WithOptional<DateStoreConfiguration, 'systemConfig'> = {
+  lineConfig: { startDate: DEFAULT_LINE_START_DATE, endDate: TODAY_STRING },
+  multiTripConfig: {
+    startDate: ONE_WEEK_AGO_STRING,
+    endDate: TODAY_STRING,
+  },
+  singleTripConfig: {
+    date: TODAY_SERVICE_STARTED ? TODAY_STRING : YESTERDAY_STRING,
+  },
+};
+
+export const RIDE_DEFAULTS: WithOptional<DateStoreConfiguration, 'systemConfig'> = {
+  lineConfig: { startDate: DEFAULT_LINE_START_DATE, endDate: TODAY_STRING },
   multiTripConfig: {
     startDate: ONE_WEEK_AGO_STRING,
     endDate: TODAY_STRING,
@@ -77,7 +66,7 @@ export const RIDE_DEFAULTS: WithOptional<
 };
 
 export const SYSTEM_DEFAULTS: Partial<DateStoreConfiguration> = {
-  systemConfig: { startDate: OVERVIEW_OPTIONS.year.startDate, endDate: TODAY_STRING },
+  systemConfig: { startDate: DEFAULT_LINE_START_DATE, endDate: TODAY_STRING },
 };
 
 const TAB_DATE_MAP: { [key in Tab]: Partial<DateStoreConfiguration> } = {

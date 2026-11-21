@@ -1,4 +1,4 @@
-import type { MiniWidgetObject, WidgetComparison } from '../components/widgets/MiniWidgetCreator';
+import type { MiniWidgetObject, WidgetComparison } from '../types/basicWidgets';
 import { MPHWidgetValue, PercentageWidgetValue, TimeWidgetValue } from '../types/basicWidgets';
 import type { DayFilter } from '../types/charts';
 import {

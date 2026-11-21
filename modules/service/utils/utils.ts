@@ -56,11 +56,6 @@ export const getPercentageData = (
   return { scheduled: scheduled, peak };
 };
 
-export const getAverageWithNaNs = (data: number[]) => {
-  const removeNaNs = data.filter((datapoint) => !isNaN(datapoint));
-  return removeNaNs.reduce((sum, count) => sum + count, 0) / removeNaNs.length / 100;
-};
-
 const mean = (values: number[]) =>
   values.length ? values.reduce((sum, v) => sum + v, 0) / values.length : NaN;
 
