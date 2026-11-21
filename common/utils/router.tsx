@@ -274,7 +274,9 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   const { query, page } = route;
   const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
   const currentPath = currentPage.path;
-  const validPage = currentPage.lines.includes('line-bus');
+  // A page without a route selector (Rankings) has no per-route view to switch to.
+  const validPage =
+    currentPage.lines.includes('line-bus') && currentPage.hasRouteSelector !== false;
   if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/trips/single?busRoute=${newRoute}`;
   }

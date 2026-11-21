@@ -13,9 +13,12 @@ import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
 import { DelayTotalBars } from './charts/DelayTotalBars';
 import { DelayCauseBars } from './charts/DelayCauseBars';
 
+// Labelled as units so the pair reads as one either/or choice. A plain "Share" read as a button for
+// sharing the chart, next to the card's Copy link and Embed actions, and left "Minutes" looking like
+// a lone button that did nothing (#1578). The 'share' key stays as is, since dlView=share is in links.
 const STACK_MODE_OPTIONS: ['minutes' | 'share', string][] = [
   ['minutes', 'Minutes'],
-  ['share', 'Share'],
+  ['share', '% of total'],
 ];
 
 export function DelaysDetails() {

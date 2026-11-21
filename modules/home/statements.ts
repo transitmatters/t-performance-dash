@@ -35,6 +35,8 @@ export interface Statement {
   id: 'reliability' | 'delays' | 'frequency' | 'service' | 'slowZones';
   head: string;
   viz: Viz;
+  /** A line under the chart for a term the head can't define, like the service statement's "best". */
+  note?: string;
   link: { href: string; label: string };
 }
 
@@ -204,6 +206,9 @@ function service({ cell, mark, link }: Reader): Statement | undefined {
       marks: lines.map((l) => mark(l.id, l.cell?.score as number)),
       rule: { value: 1, label: 'Best' },
     },
+    // A line's best only counts weeks at least 3 years old (data-ingestion's LOOKBACK_YEARS), so a
+    // line that has added trips since, like the Orange Line in 2025, runs well over 100% of it.
+    note: "Best means a line's busiest stretch at least 3 years ago, so one that has added trips since can pass 100%.",
     link: link(furthest.id, 'service', 'service'),
   };
 }
