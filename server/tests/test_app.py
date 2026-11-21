@@ -392,6 +392,29 @@ class TestGitId:
         assert result.status_code == 409
 
 
+class TestHealthcheck:
+    def test_hides_api_keys_in_exception_messages(self, client, monkeypatch):
+        v3_key = "v3-key-1234567890abcdef"
+        monkeypatch.setattr(chalice_app.config, "MBTA_V3_API_KEY", v3_key)
+        # The empty string stands in for an unset MBTA_V2_API_KEY
+        monkeypatch.setattr(chalice_app.config, "HEALTHCHECK_HIDE_SECRETS", ["", v3_key])
+
+        def failing_headways(*args, **kwargs):
+            raise RuntimeError(f"GET https://api-v3.mbta.com/predictions?api_key={v3_key} returned 503")
+
+        monkeypatch.setattr(chalice_app.data_funcs, "headways", failing_headways)
+
+        result = client.http.get("/api/healthcheck")
+
+        assert result.status_code == 500
+        assert v3_key not in result.body.decode()
+        assert json.loads(result.body)["failed_checks"] == {
+            "S3 Headway Fetching": (
+                "Check threw an exception: GET https://api-v3.mbta.com/predictions?api_key=HIDDEN returned 503"
+            )
+        }
+
+
 class TestDateRangeValidation:
     @pytest.mark.parametrize(
         "path",
