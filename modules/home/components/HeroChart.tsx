@@ -10,7 +10,7 @@ import { getLocationDetails } from '../../../common/utils/stations';
 import { HeadwaysSingleChart } from '../../headways/charts/HeadwaysSingleChart';
 import { useAlertStore } from '../../tripexplorer/AlertStore';
 import type { HeroPick } from '../heroChart';
-import { minutesText, timeText, worstLabel } from '../heroChart';
+import { exploreHref, minutesText, timeText, worstLabel } from '../heroChart';
 import { useHeroChart } from '../useHeroChart';
 import { Placeholder } from './Placeholder';
 
@@ -72,7 +72,7 @@ export const HeroChart = () => {
   const { station } = pick;
   const worst = pick.rows[pick.worst];
   const { direction } = getLocationDetails(station.from, station.to);
-  const href = `/${station.path}/trips/single/?from=${station.from.station}&to=${station.to.station}&date=${date}`;
+  const href = exploreHref(station, date);
   return (
     <Card data-line={station.line} className="tm-fade-in gap-5 px-4 pt-0 sm:px-5">
       {/* The line's color along the top edge, like a platform sign. */}
