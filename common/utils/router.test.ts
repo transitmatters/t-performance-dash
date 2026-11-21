@@ -132,6 +132,16 @@ describe('withDefaultRouteParam', () => {
     expect(withDefaultRouteParam('/bus/', { busRoute: 'zzz' })).toEqual({ busRoute: '1' });
   });
 
+  it('keeps bus routes with no station file that the API still serves', () => {
+    expect(withDefaultRouteParam('/bus/delays/', { busRoute: '34E' })).toEqual({
+      busRoute: '34E',
+    });
+    expect(withDefaultRouteParam('/embed/bus/delays/total/', { busRoute: '34E' })).toEqual({
+      busRoute: '34E',
+    });
+    expect(withDefaultRouteParam('/bus/speed/', { busRoute: '1234' })).toEqual({ busRoute: '1' });
+  });
+
   it('keeps retired bus routes, which have station files of their own', () => {
     expect(withDefaultRouteParam('/bus/', { busRoute: '110-legacy' })).toEqual({
       busRoute: '110-legacy',
