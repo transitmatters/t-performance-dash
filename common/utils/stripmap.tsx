@@ -16,6 +16,10 @@ export const abbreviateStationName = ({ stationName }: { stationName: string }) 
     .replace('North Quincy', 'N. Quincy');
 };
 
+// Green is wide enough that stripmap's default minimum horizontal scale (1.8) shrinks its station
+// names to about 7px, too small to read at 45°. Zoom it to match the other lines; the map scrolls instead.
+export const getMinHorizontalScale = (lineName: string) => (lineName === 'Green' ? 2.4 : undefined);
+
 export const getStripMapWatermark = (isHorizontal: boolean, isDark: boolean): WatermarkOptions => ({
   // Vertical maps end at a terminal label in the bottom-right corner
   position: isHorizontal ? 'bottom-right' : 'bottom-left',
