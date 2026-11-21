@@ -2,10 +2,11 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import type { DayDelayTotals, SlowZoneResponse } from '../../common/types/dataPoints';
+import type { DayDelayTotals, SlowZoneAllSlowResponse } from '../../common/types/dataPoints';
 import type { LineShort } from '../../common/types/lines';
 import {
   filterAllSlow,
+  getSlowZoneDataEndDate,
   getSlowZoneDelayDelta,
   getStationPairName,
   getWorstSlowZoneSegment,
@@ -33,7 +34,7 @@ export interface SlowZoneStats {
 
 export const getSlowZoneStats = (
   delayTotals: DayDelayTotals[],
-  allSlow: SlowZoneResponse[],
+  allSlow: SlowZoneAllSlowResponse,
   startDateUTC: dayjs.Dayjs,
   endDateUTC: dayjs.Dayjs,
   lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>
@@ -45,13 +46,22 @@ export const getSlowZoneStats = (
   const currentSlowTime = filteredTotals[filteredTotals.length - 1]?.[lineShort] ?? NaN;
   const slowTimeDelta = getSlowZoneDelayDelta(filteredTotals, lineShort);
 
-  // Active-zone counts mirror useSlowZoneQuantityDelta, but line-wide (both directions).
-  const zones = filterAllSlow(allSlow, startDateUTC, endDateUTC, lineShort);
-  const activeZones = zones.filter((sz) => isSlowZoneActiveAsOf(sz, endDateUTC)).length;
+  // Line-wide (both directions).
+  const dataEndDateUTC = getSlowZoneDataEndDate(allSlow.updated_on);
+  const zones = filterAllSlow(allSlow.data, startDateUTC, endDateUTC, lineShort);
+  const activeZones = zones.filter((sz) =>
+    isSlowZoneActiveAsOf(sz, endDateUTC, dataEndDateUTC)
+  ).length;
   const startZones = zones.filter((sz) => dayjs.utc(sz.start).isSameOrBefore(startDateUTC)).length;
   const zonesDelta = activeZones - startZones;
 
-  const worst = getWorstSlowZoneSegment(allSlow, startDateUTC, endDateUTC, lineShort);
+  const worst = getWorstSlowZoneSegment(
+    allSlow.data,
+    startDateUTC,
+    endDateUTC,
+    dataEndDateUTC,
+    lineShort
+  );
   const worstSegment = worst
     ? { title: getStationPairName(worst.from, worst.to, true), delay: worst.delay }
     : null;

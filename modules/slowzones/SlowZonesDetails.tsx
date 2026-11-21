@@ -63,13 +63,7 @@ export function SlowZonesDetails() {
   const isRapidTransit = lineShort !== 'Commuter Rail' && lineShort !== 'Bus';
   const stats =
     delayTotals.data && allSlow.data && isRapidTransit
-      ? getSlowZoneStats(
-          delayTotals.data.data,
-          Array.isArray(allSlow.data) ? allSlow.data : allSlow.data.data,
-          startDateUTC,
-          endDateUTC,
-          lineShort
-        )
+      ? getSlowZoneStats(delayTotals.data.data, allSlow.data, startDateUTC, endDateUTC, lineShort)
       : null;
 
   return (

@@ -8,8 +8,10 @@ import {
   formatSegments,
   getStationPairName,
   getTripSlowZoneRuns,
+  getSlowZoneDataEndDate,
   getTripSlowZoneSummary,
   getWorstSlowZoneSegment,
+  isSlowZoneActiveAsOf,
   isZoneOnTrip,
 } from './slowZoneUtils';
 import { getParentStationForStopId } from './stations';
@@ -175,6 +177,33 @@ describe('filterAllSlow', () => {
   });
 });
 
+describe('getSlowZoneDataEndDate', () => {
+  it('is the day before the morning run', () => {
+    expect(getSlowZoneDataEndDate('2026-11-19T10:06:00+00:00').toISOString()).toBe(
+      '2026-11-18T00:00:00.000Z'
+    );
+  });
+});
+
+describe('isSlowZoneActiveAsOf', () => {
+  // The run on the morning of Nov 19 covers service through Nov 18.
+  const dataEnd = getSlowZoneDataEndDate('2026-11-19T10:06:00+00:00');
+  const endingOn = (end: string) => ({ end: `${end}T00:00:00` });
+
+  it("checks a range ending past the data against the data's last day", () => {
+    // 00:10 ET on Nov 20, before that day's run.
+    const end = dayjs.utc('2026-11-20');
+    expect(isSlowZoneActiveAsOf(endingOn('2026-11-18'), end, dataEnd)).toBe(true);
+    expect(isSlowZoneActiveAsOf(endingOn('2026-11-17'), end, dataEnd)).toBe(false);
+  });
+
+  it('checks a range ending within the data against its own end date', () => {
+    const end = dayjs.utc('2026-11-10');
+    expect(isSlowZoneActiveAsOf(endingOn('2026-11-10'), end, dataEnd)).toBe(true);
+    expect(isSlowZoneActiveAsOf(endingOn('2026-11-09'), end, dataEnd)).toBe(false);
+  });
+});
+
 describe('getWorstSlowZoneSegment', () => {
   const start = dayjs.utc('2025-01-01');
   const end = dayjs.utc('2025-03-31');
@@ -183,13 +212,13 @@ describe('getWorstSlowZoneSegment', () => {
     const cleared = zone('Red', '70061', '70063', '2025-01-01', '2025-01-10', 300);
     const active = zone('Red', '70083', '70095', '2025-01-05', '2025-03-31', 40);
     expect(cleared.latest_delay).not.toBeNull();
-    const worst = getWorstSlowZoneSegment([cleared, active], start, end, 'Red');
+    const worst = getWorstSlowZoneSegment([cleared, active], start, end, end, 'Red');
     expect(worst).toMatchObject({ delay: 40, from: { station: 'place-andrw' } });
   });
 
   it('returns null when no zone is active at the end date', () => {
     const cleared = zone('Red', '70061', '70063', '2025-01-01', '2025-01-10', 300);
-    expect(getWorstSlowZoneSegment([cleared], start, end, 'Red')).toBeNull();
+    expect(getWorstSlowZoneSegment([cleared], start, end, end, 'Red')).toBeNull();
   });
 });
 
