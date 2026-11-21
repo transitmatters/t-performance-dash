@@ -1,18 +1,18 @@
 import dayjs from 'dayjs';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { useDeliveredTripMetrics } from '../../../common/api/hooks/tripmetrics';
-import { useScheduledService } from '../../../common/api/hooks/service';
-import { useRidershipData } from '../../../common/api/hooks/ridership';
-import { getRidershipLineId } from '../../../common/utils/ridership';
-import { useSlowzoneDelayTotalData } from '../../../common/api/hooks/slowzones';
-import { TODAY_STRING } from '../../../common/constants/dates';
-import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import { SpeedGraph } from '../../speed/charts/SpeedGraph';
-import { ServiceGraph } from '../../service/ServiceGraph';
-import { TotalSlowTime } from '../../slowzones/charts/TotalSlowTime';
-import { RidershipGraph } from '../../ridership/RidershipGraph';
+import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
+import { useScheduledService } from '../../common/api/hooks/service';
+import { useRidershipData } from '../../common/api/hooks/ridership';
+import { getRidershipLineId } from '../../common/utils/ridership';
+import { useSlowzoneDelayTotalData } from '../../common/api/hooks/slowzones';
+import { TODAY_STRING } from '../../common/constants/dates';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import { SpeedGraph } from '../speed/charts/SpeedGraph';
+import { ServiceGraph } from '../service/ServiceGraph';
+import { TotalSlowTime } from '../slowzones/charts/TotalSlowTime';
+import { RidershipGraph } from '../ridership/RidershipGraph';
 import {
   CHART_CONFIG,
   CHART_FETCH_START,

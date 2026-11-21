@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { describe, expect, it, vi } from 'vitest';
-import type { RidershipCount } from '../../../common/types/dataPoints';
-import { getWeekStart } from '../../../common/utils/date';
+import type { RidershipCount } from '../../common/types/dataPoints';
+import { getWeekStart } from '../../common/utils/date';
 import {
   WINDOW_START,
   YEAR_OVER_YEAR_START,

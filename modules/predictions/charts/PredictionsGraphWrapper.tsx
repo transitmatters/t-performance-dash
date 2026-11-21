@@ -9,8 +9,6 @@ interface PredictionsGraphWrapperProps {
   endDate: string;
 }
 
-// The average/best/worst accuracy KPIs now live in the page's stat-card row (see
-// PredictionsDetails), so the chart no longer carries an in-plot carousel value — just the graph.
 export const PredictionsGraphWrapper = ({
   data,
   startDate,

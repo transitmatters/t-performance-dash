@@ -1,16 +1,16 @@
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 
-import { useDeliveredTripMetrics } from '../../../common/api/hooks/tripmetrics';
-import { useRidershipData } from '../../../common/api/hooks/ridership';
-import { getRidershipLineId } from '../../../common/utils/ridership';
-import { useSlowzoneAllData } from '../../../common/api/hooks/slowzones';
-import { LINE_COLORS } from '../../../common/constants/colors';
-import { TODAY_STRING } from '../../../common/constants/dates';
-import { filterAllSlow } from '../../../common/utils/slowZoneUtils';
-import type { DatedValue } from '../../../common/utils/dateAggregation';
-import type { Line, LineShort } from '../../../common/types/lines';
-import type { SlowZoneAllSlowResponse } from '../../../common/types/dataPoints';
+import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
+import { useRidershipData } from '../../common/api/hooks/ridership';
+import { getRidershipLineId } from '../../common/utils/ridership';
+import { useSlowzoneAllData } from '../../common/api/hooks/slowzones';
+import { LINE_COLORS } from '../../common/constants/colors';
+import { TODAY_STRING } from '../../common/constants/dates';
+import { filterAllSlow } from '../../common/utils/slowZoneUtils';
+import type { DatedValue } from '../../common/utils/dateAggregation';
+import type { Line, LineShort } from '../../common/types/lines';
+import type { SlowZoneAllSlowResponse } from '../../common/types/dataPoints';
 import type { ScorecardRow, ScorecardSlot } from './types';
 import {
   WINDOW_START,

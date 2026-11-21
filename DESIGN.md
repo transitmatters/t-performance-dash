@@ -191,8 +191,6 @@ Status text tones come from Tailwind's own scale: green-700 for Good and Win, am
 
 **The Brick Is for Brand Rule.** Signal Brick marks TransitMatters itself (donations, announcements). Don't use it for errors, alerts, or the Red Line.
 
-**The Legacy Variables Rule.** `:root` still defines older `--red-line`, `--bus`, and `--transitmatters-red` values that differ from the tokens above. They are legacy. New work uses the `mbta.*` and `tm.*` Tailwind colors or the `data-line` theme variables.
-
 ## Typography
 
 **Body Font:** The system stack (`-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, …, 'Helvetica Neue', sans-serif`), used for everything.
@@ -221,23 +219,22 @@ Weights are 400, 500, 600, and 700, nothing lighter or heavier. Charts draw on a
 
 ## Layout
 
-The app shell is a collapsible sidebar (icon-collapsed on desktop, a sheet on mobile) beside a `SidebarInset` main column on Stone Ground. Content is capped at 1200px (`.main-column`) and centered.
+The app shell is a collapsible sidebar (icon-collapsed on desktop, a sheet on mobile) beside a `SidebarInset` main column on Stone Ground.
 
 Line pages stack three things: a sticky line-colored header band (20px horizontal, 12px vertical padding) holding the title and the date/station controls, an optional control bar under it, and a grid of cards. Cards pad 16px (12px for the `sm` size) on every side, and children inside a card inherit that padding instead of adding their own.
 
-Spacing follows Tailwind's 4px scale. Breakpoints are Tailwind's defaults (640 / 768 / 1024 / 1280 / 1536px) and are shared with runtime code through `common/constants/breakpoints.js`. Charts switch to a chart-plus-side-legend grid at 770px and above. On phones, card headers stack the title above the actions, and scoreboard stops switch from columns to rows.
+Spacing follows Tailwind's 4px scale. Breakpoints are Tailwind's defaults (640 / 768 / 1024 / 1280 / 1536px) and are shared with runtime code through `common/constants/breakpoints.js`. On phones, card headers stack the title above the actions, and scoreboard stops switch from columns to rows.
 
 Every view is addressable: line, page, dates, and filters live in the URL search params, so any layout state can be shared as a link.
 
 ## Elevation & Depth
 
-The system is flat and ring-defined. Cards sit directly on Stone Ground with no shadow, separated by the change in tone and a 1px ring of 10% ink (`ring-1 ring-foreground/10`). Shadows are reserved for things that float over content: the sticky header band (`shadow-md`), popovers and menus (`shadow-md` / `shadow-lg`, each also ringed), and the tapped/selected states of legacy data boxes (inset shadows).
+The system is flat and ring-defined. Cards sit directly on Stone Ground with no shadow, separated by the change in tone and a 1px ring of 10% ink (`ring-1 ring-foreground/10`). Shadows are reserved for things that float over content: the sticky header band (`shadow-md`), popovers and menus (`shadow-md` / `shadow-lg`, each also ringed).
 
 ### Shadow Vocabulary
 
 - **Floating band** (`shadow-md`): The sticky line header, so content scrolling under it reads as passing beneath.
 - **Overlay** (`shadow-md`, `shadow-lg` for submenus): Popovers, dropdowns, and the command palette.
-- **Pressed** (`box-shadow: inset 1px 1px 4px rgba(0,0,0,0.2)`): Legacy tapped data boxes and selected line toggles. Don't extend this to new components.
 
 ### Named Rules
 
@@ -335,6 +332,5 @@ A small filled circle (10 / 14 / 16px) in the line's color. It identifies a line
 - **Don't** use Signal Brick for errors, alerts, or the Red Line.
 - **Don't** show more than one line's color as a page-wide accent.
 - **Don't** use circles decoratively. Circles mean stops and lines here.
-- **Don't** add shadows to in-flow cards or extend the legacy inset "pressed" shadows to new components.
-- **Don't** use the legacy `:root` line variables (`--red-line`, `--bus`, `--transitmatters-red`) in new code.
+- **Don't** add shadows to in-flow cards.
 - **Don't** add motion that ignores `prefers-reduced-motion`, or animate a value in a way that moves it under the reader.

@@ -78,7 +78,7 @@ export const useIsEmbed = () =>
 
 /** The line, tab and page a pathname points at. Pure, so the router can use it before render. */
 export const parseRoutePath = (pathname: string) => {
-  // Page detection expects Next's trailing-slash paths; a hand-typed `/red/speed` still has to work.
+  // Page detection expects trailing-slash paths; a hand-typed `/red/speed` still has to work.
   const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
   const tab = getTab((pathItems[1] as LinePath) ?? 'System');
   return {

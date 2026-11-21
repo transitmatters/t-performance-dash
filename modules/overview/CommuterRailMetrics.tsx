@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 
-import { useAlertDelays } from '../../../common/api/hooks/delays';
-import { useRidershipData } from '../../../common/api/hooks/ridership';
-import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import { LINE_COLORS } from '../../../common/constants/colors';
-import { TODAY_STRING } from '../../../common/constants/dates';
-import type { CommuterRailRoute } from '../../../common/types/lines';
-import { getRidershipLineId } from '../../../common/utils/ridership';
-import { RidershipGraph } from '../../ridership/RidershipGraph';
-import { TotalDelayGraph } from '../../delays/charts/TotalDelayGraph';
-import { toDisplayedDelays } from '../../delays/charts/utils';
+import { useAlertDelays } from '../../common/api/hooks/delays';
+import { useRidershipData } from '../../common/api/hooks/ridership';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import { LINE_COLORS } from '../../common/constants/colors';
+import { TODAY_STRING } from '../../common/constants/dates';
+import type { CommuterRailRoute } from '../../common/types/lines';
+import { getRidershipLineId } from '../../common/utils/ridership';
+import { RidershipGraph } from '../ridership/RidershipGraph';
+import { TotalDelayGraph } from '../delays/charts/TotalDelayGraph';
+import { toDisplayedDelays } from '../delays/charts/utils';
 import {
   CHART_CONFIG,
   WINDOW_START,

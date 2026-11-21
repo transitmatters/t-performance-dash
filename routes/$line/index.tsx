@@ -3,7 +3,7 @@ import { Layout } from '../../common/layouts/layoutTypes';
 import { requireLine } from '../../common/utils/lineRoute';
 import { redirectV3Route } from '../../common/utils/middleware';
 import { validateLineSearch } from '../../common/utils/searchSchemas';
-import { Overview } from '../../modules/dashboard/Overview';
+import { Overview } from '../../modules/overview/Overview';
 
 export const Route = createFileRoute('/$line/')({
   validateSearch: validateLineSearch,

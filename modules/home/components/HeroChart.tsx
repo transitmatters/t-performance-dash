@@ -8,7 +8,7 @@ import { RouteBullet } from '../../../common/components/transit/RouteBullet';
 import { Card } from '../../../common/components/ui/card';
 import { getLocationDetails } from '../../../common/utils/stations';
 import { HeadwaysSingleChart } from '../../headways/charts/HeadwaysSingleChart';
-import { useAlertStore } from '../../tripexplorer/AlertStore';
+import { useAlertStore } from '../../tripexplorer/alertStore';
 import type { HeroPick } from '../heroChart';
 import { minutesText, timeText, worstLabel } from '../heroChart';
 import { useHeroChart } from '../useHeroChart';

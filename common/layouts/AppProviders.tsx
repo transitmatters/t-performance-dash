@@ -6,11 +6,11 @@ import { queryClient } from '../api/queryClient';
 import { TooltipProvider } from '@/common/components/ui/tooltip';
 import { ChartHoverCard } from '@/common/components/charts/hoverCard/ChartHoverCard';
 
-interface LayoutProps {
+interface AppProvidersProps {
   children?: ReactNode;
 }
 
-export const Layout = ({ children }: LayoutProps) => {
+export const AppProviders = ({ children }: AppProvidersProps) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools buttonPosition="bottom-right" />

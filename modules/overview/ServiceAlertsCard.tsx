@@ -6,15 +6,15 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from '../../../common/components/ui/card';
-import { Badge } from '../../../common/components/ui/badge';
-import { Button } from '../../../common/components/ui/button';
-import { Skeleton } from '../../../common/components/ui/skeleton';
-import { useAlertsData } from '../../../common/api/hooks/alerts';
-import { getRelevantAlerts } from '../../commute/alerts/AlertBox';
-import { UpcomingTime } from '../../commute/alerts/Time';
-import type { FormattedAlert } from '../../../common/types/alerts';
-import type { BusRoute, CommuterRailRoute, LineShort } from '../../../common/types/lines';
+} from '../../common/components/ui/card';
+import { Badge } from '../../common/components/ui/badge';
+import { Button } from '../../common/components/ui/button';
+import { Skeleton } from '../../common/components/ui/skeleton';
+import { useAlertsData } from '../../common/api/hooks/alerts';
+import type { FormattedAlert } from '../../common/types/alerts';
+import type { BusRoute, CommuterRailRoute, LineShort } from '../../common/types/lines';
+import { getRelevantAlerts } from './alerts';
+import { UpcomingTime } from './AlertTime';
 
 const MAX_ROWS = 4;
 

@@ -1,6 +1,6 @@
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import dayjs from 'dayjs';
-import type { OldAlert } from '../../../types/alerts';
+import type { HistoricalAlert } from '../../../types/alerts';
 import { FIVE_MINUTES } from '../../../constants/time';
 import { hexWithAlpha } from '../../../utils/general';
 import { wallClock } from '../../../utils/date';
@@ -51,12 +51,12 @@ export const formatTimeRange = (start: string, end: string, daily = false) => {
   return `${from.format('h:mm A')} – ${to.format('h:mm A')}`;
 };
 
-export const formatAlertRange = (alert: OldAlert) =>
+export const formatAlertRange = (alert: HistoricalAlert) =>
   alert.valid_to
     ? formatTimeRange(alert.valid_from, alert.valid_to)
     : `Since ${wallClock(alert.valid_from).format('MMM D, h:mm A')}`;
 
-export const alertKey = (alert: OldAlert) =>
+export const alertKey = (alert: HistoricalAlert) =>
   `alert|${alert.valid_from}|${alert.valid_to}|${alert.text}`;
 
 /**
@@ -88,7 +88,7 @@ export const singleDayAxisBounds = (date: string, times: string[]): Domain => {
 };
 
 /** Clips an alert to the service day, or returns null when it falls outside it. */
-export const clipAlert = (alert: OldAlert, date: string) => {
+export const clipAlert = (alert: HistoricalAlert, date: string) => {
   const { open, close } = serviceDay(date);
   // Alerts are Eastern times with an offset; the charts' axis is Eastern wall clock.
   const from = wallClock(alert.valid_from);
@@ -101,7 +101,7 @@ export const clipAlert = (alert: OldAlert, date: string) => {
   return { from: start.format(FORMAT), to: end.format(FORMAT) };
 };
 
-export const alertSegments = (alerts: OldAlert[], date: string) =>
+export const alertSegments = (alerts: HistoricalAlert[], date: string) =>
   packLanes(
     alerts.flatMap((alert) => {
       const clipped = clipAlert(alert, date);
@@ -118,7 +118,7 @@ export const alertSegments = (alerts: OldAlert[], date: string) =>
   );
 
 export const getAlertAnnotations = (
-  alerts: OldAlert[],
+  alerts: HistoricalAlert[],
   date: string
 ): AnnotationOptions<keyof AnnotationTypeRegistry>[] =>
   alerts.flatMap((alert) => {

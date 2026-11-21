@@ -1,23 +1,23 @@
 import { useMemo } from 'react';
 
-import { useHistoricalBaselines, useRidershipBaseline } from '../../../common/api/hooks/baselines';
-import { useBusTripMetrics } from '../../../common/api/hooks/busTripMetrics';
-import { useAlertDelays } from '../../../common/api/hooks/delays';
-import { useRidershipData } from '../../../common/api/hooks/ridership';
-import { ChartPlaceHolder } from '../../../common/components/graphics/ChartPlaceHolder';
-import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
-import { getLineColorKey, LINE_COLORS } from '../../../common/constants/colors';
-import { getBusRouteDataIds } from '../../../common/constants/lines';
+import { useHistoricalBaselines, useRidershipBaseline } from '../../common/api/hooks/baselines';
+import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
+import { useAlertDelays } from '../../common/api/hooks/delays';
+import { useRidershipData } from '../../common/api/hooks/ridership';
+import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
+import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import { getLineColorKey, LINE_COLORS } from '../../common/constants/colors';
+import { getBusRouteDataIds } from '../../common/constants/lines';
 import type {
   FetchAlertDelaysByLineOptions,
   FetchBusTripMetricsOptions,
-} from '../../../common/types/api';
-import type { BusRoute } from '../../../common/types/lines';
-import { getRidershipLineId } from '../../../common/utils/ridership';
-import { SpeedGraph } from '../../speed/charts/SpeedGraph';
-import { RidershipGraph } from '../../ridership/RidershipGraph';
-import { TotalDelayGraph } from '../../delays/charts/TotalDelayGraph';
-import { toDisplayedDelays } from '../../delays/charts/utils';
+} from '../../common/types/api';
+import type { BusRoute } from '../../common/types/lines';
+import { getRidershipLineId } from '../../common/utils/ridership';
+import { SpeedGraph } from '../speed/charts/SpeedGraph';
+import { RidershipGraph } from '../ridership/RidershipGraph';
+import { TotalDelayGraph } from '../delays/charts/TotalDelayGraph';
+import { toDisplayedDelays } from '../delays/charts/utils';
 import {
   CHART_CONFIG,
   buildRidershipRow,
@@ -29,8 +29,8 @@ import {
   trimTrailingEmpty,
 } from './scorecardUtils';
 import type { OverviewWindow } from './scorecardUtils';
-import { BusReliabilityChart, useBusReliabilitySlot } from './busReliability';
-import { BusServiceChart, buildBusServiceRow, summarizeBusService } from './busService';
+import { BusReliabilityChart, useBusReliabilitySlot } from './BusReliabilityChart';
+import { BusServiceChart, buildBusServiceRow, summarizeBusService } from './BusServiceChart';
 import type { MetricKey, ScorecardSlot } from './types';
 
 // From yearOverYearStart so the row can compare with a year ago. The chart makes the same

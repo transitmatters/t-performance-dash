@@ -1,15 +1,15 @@
 import dayjs from 'dayjs';
 
-import { TODAY_STRING } from '../../../common/constants/dates';
-import type { RidershipCount } from '../../../common/types/dataPoints';
-import { getWeekStart } from '../../../common/utils/date';
-import { getSpeedGraphConfig } from '../../speed/constants/speeds';
-import type { DatedValue } from '../../../common/utils/dateAggregation';
+import { TODAY_STRING } from '../../common/constants/dates';
+import type { RidershipCount } from '../../common/types/dataPoints';
+import { getWeekStart } from '../../common/utils/date';
+import { getSpeedGraphConfig } from '../speed/constants/speeds';
+import type { DatedValue } from '../../common/utils/dateAggregation';
 import {
   getTrailingWindowDelta,
   getMonthlyTrend,
   getYearOverYearDelta,
-} from '../../../common/utils/dateAggregation';
+} from '../../common/utils/dateAggregation';
 import type { ScorecardRow, ScorecardSlot, DeltaSentiment, MetricKey } from './types';
 
 /** `days` before `date`, but no earlier than `earliest` */

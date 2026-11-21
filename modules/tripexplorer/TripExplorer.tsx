@@ -11,7 +11,7 @@ import { TripDataNotes } from '../../common/components/notices/TripDataNotes';
 import { BetaAccuracyNotice } from '../../common/components/notices/BetaAccuracyNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
 import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
-import { useAlertStore } from './AlertStore';
+import { useAlertStore } from './alertStore';
 import { TripGraphs, TripSlowZonesBanner } from './TripGraphs';
 import { TripSetupNotice } from './TripSetupNotice';
 import { TripGraphsBoundary } from './TripGraphsBoundary';

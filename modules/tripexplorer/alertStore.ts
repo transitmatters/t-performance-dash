@@ -1,11 +1,11 @@
 import { create } from 'zustand';
-import type { OldAlert } from '../../common/types/alerts';
+import type { HistoricalAlert } from '../../common/types/alerts';
 
 interface AlertStore {
   // Undefined until the day's alerts load, or when they fail to
-  alerts: OldAlert[] | undefined;
+  alerts: HistoricalAlert[] | undefined;
   isLoading: boolean;
-  setAlerts: (alerts: OldAlert[] | undefined, isLoading: boolean) => void;
+  setAlerts: (alerts: HistoricalAlert[] | undefined, isLoading: boolean) => void;
 }
 
 /** The selected day's service alerts, shared by every chart's context track. */

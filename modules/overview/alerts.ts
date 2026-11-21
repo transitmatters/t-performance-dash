@@ -1,4 +1,4 @@
-import type { AlertsResponse, UpcomingOrCurrent } from '../../../common/types/alerts';
+import type { AlertsResponse, UpcomingOrCurrent } from '../../common/types/alerts';
 
 export const getRelevantAlerts = (alerts: AlertsResponse[], type: UpcomingOrCurrent) => {
   return (

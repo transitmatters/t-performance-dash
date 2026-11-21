@@ -6,17 +6,17 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from '../../../common/components/ui/card';
-import { Badge } from '../../../common/components/ui/badge';
-import { Button } from '../../../common/components/ui/button';
-import { Skeleton } from '../../../common/components/ui/skeleton';
-import { useAccessibilityAlertsData } from '../../../common/api/hooks/alerts';
-import { getRelevantAlerts } from '../../commute/alerts/AlertBox';
-import { AlertEffect } from '../../../common/types/alerts';
-import EscalatorIcon from '../../../public/Icons/EscalatorIcon.svg?react';
-import ElevatorIcon from '../../../public/Icons/ElevatorIcon.svg?react';
-import { rtStations } from '../../../common/constants/stations';
-import type { LineShort } from '../../../common/types/lines';
+} from '../../common/components/ui/card';
+import { Badge } from '../../common/components/ui/badge';
+import { Button } from '../../common/components/ui/button';
+import { Skeleton } from '../../common/components/ui/skeleton';
+import { useAccessibilityAlertsData } from '../../common/api/hooks/alerts';
+import { AlertEffect } from '../../common/types/alerts';
+import EscalatorIcon from '../../public/Icons/EscalatorIcon.svg?react';
+import ElevatorIcon from '../../public/Icons/ElevatorIcon.svg?react';
+import { rtStations } from '../../common/constants/stations';
+import type { LineShort } from '../../common/types/lines';
+import { getRelevantAlerts } from './alerts';
 
 interface AccessibilityCardProps {
   lineShort: LineShort;

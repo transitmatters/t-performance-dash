@@ -1,8 +1,8 @@
 export type SearchObject = Record<string, string | string[] | undefined>;
 
 /**
- * Query strings parse to plain strings (or string arrays for repeated keys), the same shape Next's
- * `router.query` had. TanStack Router's default JSON-parses values, which would turn `?busRoute=1`
+ * Query strings parse to plain strings (or string arrays for repeated keys). TanStack Router's
+ * default JSON-parses values, which would turn `?busRoute=1`
  * into a number and break every consumer that compares against string route ids.
  */
 export const parseSearch = (searchStr: string): SearchObject => {

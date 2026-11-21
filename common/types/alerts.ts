@@ -4,7 +4,7 @@ export type AlertTime = {
   upcoming: boolean;
   current: boolean;
 };
-export interface OldAlert {
+export interface HistoricalAlert {
   /** Null when the feed had neither a header nor a short header. */
   text: string | null;
   valid_from: string;
