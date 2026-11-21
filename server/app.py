@@ -179,7 +179,9 @@ def healthcheck():
         except Exception as e:
             e_str = str(e)
             for secret in config.HEALTHCHECK_HIDE_SECRETS:
-                e_str.replace(secret, "HIDDEN")
+                # An unset key is "", and replacing "" would put HIDDEN between every character
+                if secret:
+                    e_str = e_str.replace(secret, "HIDDEN")
             failed_checks[check] = f"Check threw an exception: {e_str}"
 
     # Uptime monitors must reach the Lambda, never a cached copy at the edge
