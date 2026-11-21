@@ -1,9 +1,8 @@
 """Cache duration calculation based on data recency."""
 
-from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
+from datetime import date, datetime, timedelta
 
-EASTERN_TIME = ZoneInfo("America/New_York")
+from chalicelib import date_utils
 
 # Cache duration constants (in seconds)
 FIFTEEN_MINUTES = 900
@@ -12,12 +11,14 @@ ONE_DAY = 86400
 THREE_MONTHS = 7776000  # 90 days
 
 
-def get_cache_max_age(query_params: dict, yesterday_max_age: int = FIFTEEN_MINUTES) -> int:
+def get_cache_max_age(query_params: dict, yesterday_max_age: int = FIFTEEN_MINUTES, now: datetime | None = None) -> int:
     """Determine cache duration based on the date range in query parameters.
 
     Looks for a date in the query params (checking ``end_date``, ``date``, and
     ``to_date`` in that order) and selects a cache lifetime based on how recent
-    that date is relative to today in Eastern time:
+    that date is relative to the current service day. Service days run from 3 AM
+    to 3 AM Eastern, so until 3 AM the previous calendar date is still running and
+    counts as today.
 
     - **Today**: 15 minutes — today's data is still arriving.
     - **Yesterday**: ``yesterday_max_age`` (15 minutes by default) — yesterday's
@@ -37,6 +38,7 @@ def get_cache_max_age(query_params: dict, yesterday_max_age: int = FIFTEEN_MINUT
       yesterday_max_age: Cache max-age for yesterday's data. Trip event routes
           (headways, dwells, travel times) pass ``ONE_HOUR``, since yesterday's
           trips are almost always complete by the time anyone asks for them.
+      now: The moment to judge against, for tests. Defaults to the current time.
 
     Returns:
       int: Cache max-age in seconds.
@@ -50,11 +52,10 @@ def get_cache_max_age(query_params: dict, yesterday_max_age: int = FIFTEEN_MINUT
 
     if end_date_str:
         try:
-            end_date = datetime.strptime(end_date_str, "%Y-%m-%d").replace(tzinfo=EASTERN_TIME)
-            now = datetime.now(EASTERN_TIME)
-            today = now.replace(hour=0, minute=0, second=0, microsecond=0)
+            end_date: date = datetime.strptime(end_date_str, "%Y-%m-%d").date()
+            today = date_utils.current_service_date(now)
             yesterday = today - timedelta(days=1)
-            six_months_ago = now - timedelta(days=180)
+            six_months_ago = today - timedelta(days=180)
 
             if end_date >= today:
                 cache_max_age = FIFTEEN_MINUTES

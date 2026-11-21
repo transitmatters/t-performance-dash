@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
 import { fetchSingleDayData } from '../../common/api/datadashboard';
-import { YESTERDAY_STRING } from '../../common/constants/dates';
+import { PREVIOUS_SERVICE_DATE_STRING } from '../../common/constants/dates';
 import { ONE_HOUR } from '../../common/constants/time';
 import { QueryNameKeys } from '../../common/types/api';
 import { HERO_STATIONS, pickHero } from './heroChart';
@@ -9,11 +9,13 @@ import type { HeroPick } from './heroChart';
 export type HeroChartState = 'loading' | 'ready' | 'empty';
 
 /**
- * Yesterday's headways at each line's downtown station, and the line that ran the most unevenly.
- * Every visitor asks for the same past day, so the API's edge cache serves all but the first.
+ * The last finished service day's headways at each line's downtown station, and the line that ran
+ * the most unevenly. That's yesterday, except before 3 AM, when yesterday's service is still
+ * running and it's the day before. Every visitor asks for the same past day, so the API's edge
+ * cache serves all but the first.
  */
 export const useHeroChart = (): { pick?: HeroPick; date: string; state: HeroChartState } => {
-  const date = YESTERDAY_STRING;
+  const date = PREVIOUS_SERVICE_DATE_STRING;
   const results = useQueries({
     queries: HERO_STATIONS.map((station) => ({
       queryKey: [QueryNameKeys.headways, { stop: station.stopIds, date }],
