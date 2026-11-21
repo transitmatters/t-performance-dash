@@ -8,6 +8,7 @@ import {
   busDwellsFile,
   busSpeedSegmentsFile,
   fetchBusDwellsUrl,
+  fetchBusRouteDelays,
   fetchBusSpeedSegmentLeaderboard,
   fetchBusSpeedSegmentsUrl,
   fetchBusSpeedStops,
@@ -72,6 +73,17 @@ export const useBusSpeedSegmentLeaderboard = (
   return useQuery({
     queryKey: ['busSpeedSegmentLeaderboard', options],
     queryFn: () => fetchBusSpeedSegmentLeaderboard(options),
+    enabled: enabled,
+    staleTime: ONE_DAY,
+    gcTime: ONE_DAY,
+  });
+};
+
+/** Each route direction's median trip against free flow, or null for an archive without them. */
+export const useBusRouteDelays = (options: FetchBusSpeedSegmentsOptions, enabled?: boolean) => {
+  return useQuery({
+    queryKey: ['busRouteDelays', options],
+    queryFn: () => fetchBusRouteDelays(options),
     enabled: enabled,
     staleTime: ONE_DAY,
     gcTime: ONE_DAY,
