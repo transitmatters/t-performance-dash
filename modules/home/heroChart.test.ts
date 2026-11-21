@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { SingleDayDataPoint } from '../../common/types/charts';
-import { HERO_STATIONS, minutesText, pickHero, worstLabel } from './heroChart';
+import { HERO_STATIONS, heroDayLabel, minutesText, pickHero, worstLabel } from './heroChart';
 
 const trip = (headwayMin: number, scheduledMin = 5, at = '2026-11-16T08:00:00') =>
   ({
@@ -64,5 +64,15 @@ describe('pickHero', () => {
 
   it('has nothing to show without data', () => {
     expect(pickHero([{ station: red, rows: [] }])).toBeUndefined();
+  });
+});
+
+describe('heroDayLabel', () => {
+  it('calls yesterday yesterday', () => {
+    expect(heroDayLabel('2026-11-19', '2026-11-19')).toBe('Yesterday’s');
+  });
+
+  it('names the day before, shown while yesterday’s service runs past midnight', () => {
+    expect(heroDayLabel('2026-11-18', '2026-11-19')).toBe('Wednesday’s');
   });
 });

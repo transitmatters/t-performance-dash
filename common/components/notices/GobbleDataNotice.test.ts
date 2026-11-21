@@ -19,6 +19,14 @@ describe('includesGobbleOnlyBusDay', () => {
   test('no date at all is not Gobble-only', () => {
     expect(includesGobbleOnlyBusDay(undefined, undefined, TODAY)).toBe(false);
   });
+
+  test("before 3 AM it's yesterday's service, still running, that comes from Gobble", () => {
+    const yesterday = '2026-11-09';
+    expect(includesGobbleOnlyBusDay(yesterday, undefined, yesterday)).toBe(true);
+    expect(includesGobbleOnlyBusDay('2025-11-10', TODAY, yesterday)).toBe(true);
+    // Today's service hasn't started, so there's no data to describe
+    expect(includesGobbleOnlyBusDay(TODAY, undefined, yesterday)).toBe(false);
+  });
 });
 
 describe('includesGobbleFerryDay', () => {

@@ -1,18 +1,19 @@
 import { Link } from '../general/Link';
 import { useDelimitatedRoute } from '../../utils/router';
-import { FERRY_ARCHIVE_MAX_DATE, TODAY_STRING } from '../../constants/dates';
+import { FERRY_ARCHIVE_MAX_DATE, SERVICE_DATE_STRING, TODAY_STRING } from '../../constants/dates';
 
 /**
- * Whether a bus page's dates include today. Today is the only bus day served from Gobble: the
- * server reads LAMP for every earlier day from 2025-07-30, and the monthly archive before that,
- * but bus LAMP lags a day (see _lamp_key in server/chalicelib/s3.py). A single date counts as a
- * one-day range.
+ * Whether a bus page's dates include the service day now running. It's the only bus day served
+ * from Gobble: the server reads LAMP for every earlier day from 2025-07-30, and the monthly
+ * archive before that, but bus LAMP lags a day (see _lamp_key in server/chalicelib/s3.py).
+ * Service days run from 3 AM to 3 AM, so until 3 AM that's yesterday's date. A single date counts
+ * as a one-day range.
  */
 export const includesGobbleOnlyBusDay = (
   start: string | undefined,
   end: string | undefined,
-  today: string = TODAY_STRING
-) => start !== undefined && start <= today && (end ?? start) >= today;
+  serviceDate: string = SERVICE_DATE_STRING
+) => start !== undefined && start <= serviceDate && (end ?? start) >= serviceDate;
 
 /**
  * Whether a ferry page's dates reach past the MBTA's monthly ferry archive. Every later day comes
@@ -41,7 +42,7 @@ export const GobbleDataNotice = () => {
 
   return (
     <p>
-      Today's data is collected via the{' '}
+      {SERVICE_DATE_STRING === TODAY_STRING ? 'Today' : 'Yesterday'}'s data is collected via the{' '}
       <Link
         href="https://www.mbta.com/developers/v3-api/streaming"
         rel="noopener noreferrer"

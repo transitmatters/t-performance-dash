@@ -10,7 +10,7 @@ import { getLocationDetails } from '../../../common/utils/stations';
 import { HeadwaysSingleChart } from '../../headways/charts/HeadwaysSingleChart';
 import { useAlertStore } from '../../tripexplorer/AlertStore';
 import type { HeroPick } from '../heroChart';
-import { minutesText, timeText, worstLabel } from '../heroChart';
+import { heroDayLabel, minutesText, timeText, worstLabel } from '../heroChart';
 import { useHeroChart } from '../useHeroChart';
 import { Placeholder } from './Placeholder';
 
@@ -47,8 +47,8 @@ const Stat = ({ value, label, detail }: { value: string; label: string; detail: 
 );
 
 /**
- * Yesterday's headways on the line that ran the most unevenly, as the line's own trip chart draws
- * them: the day draws itself in, then the longest wait is called out.
+ * The last finished service day's headways on the line that ran the most unevenly, as the line's
+ * own trip chart draws them: the day draws itself in, then the longest wait is called out.
  */
 export const HeroChart = () => {
   const { pick, date, state } = useHeroChart();
@@ -87,7 +87,7 @@ export const HeroChart = () => {
           </h2>
           {/* Why this line: the stats beside it and the date under the chart say the rest. */}
           <p className="text-sm text-muted-foreground">
-            Yesterday’s roughest line.{' '}
+            {heroDayLabel(date)} roughest line.{' '}
             <Link href={href} className="font-medium whitespace-nowrap hover:underline">
               <span className="text-foreground">Explore this day →</span>
             </Link>

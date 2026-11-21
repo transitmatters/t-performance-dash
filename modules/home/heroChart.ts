@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
+import { YESTERDAY_STRING } from '../../common/constants/dates';
 import type { SingleDayDataPoint } from '../../common/types/charts';
 import type { Line, LineShort } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
 import { severityForRatio } from '../../common/utils/chartTheme';
 import { getParentStationForStopId, stopIdsForStations } from '../../common/utils/stations';
 
-// The hero chart: yesterday's headways on the subway line that ran the most unevenly, measured at a
-// central station every branch runs through, in one direction.
+// The hero chart: the last finished service day's headways on the subway line that ran the most
+// unevenly, measured at a central station every branch runs through, in one direction.
 
 export interface HeroStation {
   line: Line;
@@ -104,6 +105,13 @@ export const minutesText = (seconds: number) => {
 };
 
 /** "6:03 PM" */
+/**
+ * What the hero calls its day. That's yesterday, except before 3 AM, when yesterday's service is
+ * still running and the hero shows the day before, which it names.
+ */
+export const heroDayLabel = (date: string, yesterday: string = YESTERDAY_STRING) =>
+  date === yesterday ? 'Yesterday’s' : `${dayjs(date).format('dddd')}’s`;
+
 export const timeText = (row: SingleDayDataPoint) => dayjs(row.current_dep_dt).format('h:mm A');
 
 /** "14-min wait at 6:03 PM", for the chart's callout. */

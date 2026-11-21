@@ -12,6 +12,7 @@ import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
 import { getMinMaxDatesForRoute } from '../utils/stations';
 import type { Page } from './pages';
+import { SERVICE_DAY_START_HOUR } from './time';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -28,6 +29,26 @@ export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const YESTERDAY_STRING = TODAY.subtract(1, 'day').format(DATE_FORMAT);
 export const TWO_DAYS_AGO_STRING = TODAY.subtract(2, 'day').format(DATE_FORMAT);
 export const TODAY_SERVICE_STARTED = TODAY.hour() >= 6;
+
+/**
+ * The service day a moment falls in, as `YYYY-MM-DD`. Service days run from 3 AM to 3 AM Eastern,
+ * so the small hours belong to the day before. Mirrors current_service_date() in
+ * server/chalicelib/date_utils.py.
+ */
+export const getServiceDate = (now: dayjs.Dayjs) => {
+  const eastern = now.tz(est);
+  // Plain date arithmetic, so it doesn't matter which time zone the browser is in
+  const day = dayjs(eastern.format(DATE_FORMAT));
+  return (eastern.hour() < SERVICE_DAY_START_HOUR ? day.subtract(1, 'day') : day).format(
+    DATE_FORMAT
+  );
+};
+/** The service day now running. Until 3 AM that's yesterday's date. */
+export const SERVICE_DATE_STRING = getServiceDate(TODAY);
+/** The last service day that has finished. */
+export const PREVIOUS_SERVICE_DATE_STRING = dayjs(SERVICE_DATE_STRING)
+  .subtract(1, 'day')
+  .format(DATE_FORMAT);
 export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
 export const ONE_YEAR_AGO = TODAY.subtract(1, 'year');
