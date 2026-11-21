@@ -144,6 +144,10 @@ export const SingleDayLineChart = ({
   // Ringed and labeled beside the point, on whichever side has room, so it stays inside the plot
   // Held back while an intro draws the series in, then shown once the last point lands.
   const calloutValue = callout && !introPending ? Number(convertedData[callout.index]) : NaN;
+  // Annotations are clipped to the plot, so the ring and label need room above the point when it's
+  // the day's highest. 15% leaves at least 14px on a phone, more than half the label's height. Set
+  // before the callout shows, so the axis doesn't jump when it appears.
+  const calloutHeadroom = callout ? Number(convertedData[callout.index]) * 1.15 : undefined;
   const calloutAnnotations: typeof layerAnnotations =
     callout && Number.isFinite(calloutValue)
       ? [
@@ -343,6 +347,7 @@ export const SingleDayLineChart = ({
             scales: {
               y: {
                 display: true,
+                suggestedMax: calloutHeadroom,
                 border: { display: false },
                 grid: { color: chartTheme.grid },
                 ticks: {
