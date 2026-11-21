@@ -20,10 +20,11 @@ import {
   SEVERITY_COLORS,
   isOnTimeHeadwayRatio,
   severityForRatio,
+  severityPointStyle,
   useChartTheme,
 } from '../../utils/chartTheme';
 import { CHART_COLORS } from '../../constants/colors';
-import { getFormattedTimeString } from '../../utils/time';
+import { formatMinutesTick, getFormattedTimeString } from '../../utils/time';
 import { consistHoverContent } from '../../utils/occupancy';
 import type { HoverCardContent } from './hoverCard/types';
 import { LegendSingleDay } from './Legend';
@@ -33,23 +34,20 @@ import { ChartActions } from './ChartActions';
 import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
 import { singleDayAxisBounds } from './contextTrack/segments';
+import { useIntroAnimation } from './introAnimation';
 
-const pointColors = (
+/** Each point's severity against its benchmark, or undefined with no benchmark to judge it by. */
+const pointTones = (
   data: DataPoint[],
   metric_field: string,
-  neutralColor: string,
   effectiveBenchmark: (number | null)[],
   showUnderRatio?: boolean
-) => {
-  return data.map((point: DataPoint, idx: number) => {
+) =>
+  data.map((point: DataPoint, idx: number) => {
     const benchmarkValue = effectiveBenchmark[idx];
-    if (typeof benchmarkValue !== 'number' || !Number.isFinite(benchmarkValue)) {
-      return neutralColor; // no benchmark to judge this point against
-    }
-    const severity = severityForRatio(point[metric_field] / benchmarkValue, showUnderRatio);
-    return severity ? SEVERITY_COLORS[severity.tone] : neutralColor;
+    if (typeof benchmarkValue !== 'number' || !Number.isFinite(benchmarkValue)) return undefined;
+    return severityForRatio(point[metric_field] / benchmarkValue, showUnderRatio)?.tone;
   });
-};
 
 export const SingleDayLineChart = ({
   chartId,
@@ -68,8 +66,12 @@ export const SingleDayLineChart = ({
   chartTitle,
   fill = false,
   embedChart,
+  callout,
+  actions = true,
+  intro = false,
 }: SingleDayLineProps) => {
   const ref = useRef(null);
+  const { pending: introPending, options: introOptions } = useIntroAnimation(intro, data.length);
   const chartTheme = useChartTheme();
   const {
     layers,
@@ -136,26 +138,49 @@ export const SingleDayLineChart = ({
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
   );
 
+  const tones = pointTones(data, metricField, effectiveBenchmarkData, showUnderRatio);
+  const pointColors = tones.map((tone) => (tone ? SEVERITY_COLORS[tone] : chartTheme.neutralPoint));
+
+  // Ringed and labeled beside the point, on whichever side has room, so it stays inside the plot
+  // Held back while an intro draws the series in, then shown once the last point lands.
+  const calloutValue = callout && !introPending ? Number(convertedData[callout.index]) : NaN;
+  const calloutAnnotations: typeof layerAnnotations =
+    callout && Number.isFinite(calloutValue)
+      ? [
+          {
+            type: 'point',
+            xValue: labels[callout.index] as string,
+            yValue: calloutValue,
+            radius: 8,
+            backgroundColor: 'transparent',
+            borderColor: chartTheme.medianLine,
+            borderWidth: 2,
+          },
+          {
+            type: 'label',
+            xValue: labels[callout.index] as string,
+            yValue: calloutValue,
+            content: callout.label,
+            position: { x: callout.index / data.length > 0.6 ? 'end' : 'start', y: 'center' },
+            xAdjust: callout.index / data.length > 0.6 ? -14 : 14,
+            color: chartTheme.calloutText,
+            backgroundColor: chartTheme.medianLine,
+            borderRadius: 6,
+            padding: { x: 8, y: 4 },
+            font: { size: 12, weight: 600 },
+          },
+        ]
+      : [];
+
   const datasets: Array<Record<string, unknown>> = [
     {
       label: `Actual`,
       fill: false,
       borderColor: chartTheme.benchmarkLine,
-      pointBackgroundColor: pointColors(
-        data,
-        metricField,
-        chartTheme.neutralPoint,
-        effectiveBenchmarkData,
-        showUnderRatio
-      ),
+      pointBackgroundColor: pointColors,
       pointHoverRadius: 3,
-      pointHoverBackgroundColor: pointColors(
-        data,
-        metricField,
-        chartTheme.neutralPoint,
-        effectiveBenchmarkData,
-        showUnderRatio
-      ),
+      pointHoverBackgroundColor: pointColors,
+      pointStyle: tones.map(severityPointStyle),
       pointRadius: 3,
       pointHitRadius: 10,
       data: convertedData,
@@ -204,6 +229,7 @@ export const SingleDayLineChart = ({
             datasets,
           }}
           options={{
+            ...introOptions,
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
@@ -311,7 +337,7 @@ export const SingleDayLineChart = ({
               },
               annotation: {
                 // Add your annotations here
-                annotations: layerAnnotations,
+                annotations: [...layerAnnotations, ...calloutAnnotations],
               },
             },
             scales: {
@@ -323,7 +349,7 @@ export const SingleDayLineChart = ({
                   color: chartTheme.tick,
                   callback: (value) => {
                     return units === 'Minutes' && typeof value === 'number'
-                      ? getFormattedTimeString(value, 'minutes')
+                      ? formatMinutesTick(value)
                       : value.toLocaleString();
                   },
                 },
@@ -356,6 +382,7 @@ export const SingleDayLineChart = ({
                 time: {
                   unit: 'hour',
                   tooltipFormat: 'h:mm:ss a', // locale time with seconds
+                  displayFormats: { hour: 'h a' },
                 },
                 ticks: {
                   color: chartTheme.tick,
@@ -387,17 +414,19 @@ export const SingleDayLineChart = ({
           ) : (
             <div className="w-full" />
           )}
-          <ChartActions
-            datasetName={fname}
-            chartRef={ref}
-            location={location}
-            includeBothStopsForLocation={includeBothStopsForLocation}
-            csv={data}
-            startDate={date}
-            chartTitle={chartTitle}
-            embed={embedChart && <TripEmbedButton page="single" chart={embedChart} />}
-            className="ml-auto shrink-0 whitespace-nowrap"
-          />
+          {actions && (
+            <ChartActions
+              datasetName={fname}
+              chartRef={ref}
+              location={location}
+              includeBothStopsForLocation={includeBothStopsForLocation}
+              csv={data}
+              startDate={date}
+              chartTitle={chartTitle}
+              embed={embedChart && <TripEmbedButton page="single" chart={embedChart} />}
+              className="ml-auto shrink-0 whitespace-nowrap"
+            />
+          )}
         </div>
       </div>
     </ChartStack>

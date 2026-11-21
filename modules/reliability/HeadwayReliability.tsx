@@ -6,8 +6,8 @@ import { useReliabilityDirection } from '../../common/hooks/usePageFilters';
 import type { ReliabilityEntry } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import type { AggType } from '../speed/constants/speeds';
+import { BunchingAndGapsLines } from './charts/BunchingAndGapsLines';
 import { HeadwayBreakdown } from './charts/HeadwayBreakdown';
-import { OffScheduleDivergingBars } from './charts/OffScheduleDivergingBars';
 import { OnTimeBars } from './charts/OnTimeBars';
 import { periodName } from './charts/timeAxis';
 import { getHeadwayTotals, toHeadwayRows } from './utils';
@@ -64,8 +64,8 @@ export const HeadwayReliability = ({
       {card(
         'Bunching or long gaps',
         `Long gaps mean longer waits. Bunching often follows them, as the next ${vehicle} catches up to the late one, so the two tend to rise together.`,
-        `Each ${period}: headways longer than scheduled above the line, shorter (bunching) below it`,
-        <OffScheduleDivergingBars {...chartProps} />
+        `Each ${period}: share of all headways that were long gaps, and the share bunched`,
+        <BunchingAndGapsLines {...chartProps} />
       )}
     </>
   );

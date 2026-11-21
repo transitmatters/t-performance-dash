@@ -2,7 +2,7 @@ import { useLocation, useMatches, useNavigate, useRouter } from '@tanstack/react
 import { useCallback, useMemo } from 'react';
 import { isEqual, pickBy, startCase, toLower } from '@lodash-utils';
 import type { Line, LineColorKey, LinePath, LineShort } from '../types/lines';
-import { RAIL_LINES } from '../types/lines';
+import { COMMUTER_RAIL_ROUTES, FERRY_ROUTES, RAIL_LINES } from '../types/lines';
 import type { QueryParams, Route, Tab } from '../types/router';
 import { CHART_PARAMS, DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
@@ -17,7 +17,7 @@ import {
 import type { StationStore } from '../state/stationStore';
 import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
-import type { DateStore } from '../state/dateStore';
+import type { DateStore, TripPage } from '../state/dateStore';
 import { getLineColorKey, LINE_COLORS } from '../constants/colors';
 import type { SearchObject } from './searchParams';
 import { validateAnySearch } from './searchSchemas';
@@ -123,7 +123,17 @@ const DEFAULT_ROUTE_FOR_LINE: Partial<Record<Line, string>> = {
 };
 
 /**
- * The search with the mode's default route filled in, e.g. `/bus/ridership/` with no `busRoute`.
+ * Modes whose every route is known, so an unknown one is a typo or a dead link. Bus isn't here:
+ * its pages take routes beyond the station files, and the speed map reads its own tileset's.
+ */
+const KNOWN_ROUTES_FOR_LINE: Partial<Record<Line, readonly string[]>> = {
+  'line-commuter-rail': COMMUTER_RAIL_ROUTES,
+  'line-ferry': FERRY_ROUTES,
+};
+
+/**
+ * The search with the mode's default route filled in, e.g. `/bus/ridership/` with no `busRoute`,
+ * or `/commuter-rail/` with a `crRoute` that doesn't exist.
  * Pages that rank every route at once, like the leaderboard, are left without one.
  */
 export const withDefaultRouteParam = (pathname: string, search: SearchObject): SearchObject => {
@@ -131,7 +141,9 @@ export const withDefaultRouteParam = (pathname: string, search: SearchObject): S
   const param = line ? ROUTE_PARAM_FOR_LINE[line] : undefined;
   // Embed paths carry a chart name after the page, so their page may not resolve; they still need a route.
   if (!line || !param || ALL_PAGES[page]?.hasRouteSelector === false) return search;
-  if (search[param]) return search;
+  const route = search[param];
+  const knownRoutes = KNOWN_ROUTES_FOR_LINE[line];
+  if (route && (!knownRoutes || knownRoutes.includes(String(route)))) return search;
   return { ...search, [param]: DEFAULT_ROUTE_FOR_LINE[line] };
 };
 
@@ -278,8 +290,8 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
  * Unlike getBusRouteSelectionItemHref, this deliberately navigates rather than reparameterizing
  * the current page -- the leaderboard's "by route" view has no filtered view of its own to land
  * on, only the speed map does (via the same `busRoute` param, resolved there against the loaded
- * tileset's route_ids -- see BusSpeedMapDetails). `period` is the map's own, left off for its
- * default: the two pages open on different periods.
+ * tileset's route_ids -- see BusSpeedMapDetails). `period` is left off for the default, which
+ * both pages share.
  */
 export const getBusSpeedMapRouteHref = (
   newRoute: string,
@@ -466,6 +478,15 @@ export const getQueryParams = (
   };
 };
 
+/**
+ * Where the sidebar's Trips item goes: the trip view already open, or else the one last used, so a
+ * picked date range is still there on the way back.
+ */
+export const getNavTripPage = (currentPage: Page | string, tripPage: TripPage): PageMetadata =>
+  currentPage === 'singleTrips' || currentPage === 'multiTrips'
+    ? ALL_PAGES[currentPage]
+    : ALL_PAGES[tripPage];
+
 const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
   return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
 };
@@ -480,6 +501,12 @@ const savePageConfigIfNecessary = (
 ) => {
   if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
     saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
+  }
+  if (
+    TRIP_SECTIONS.includes(currentPage.dateStoreSection) &&
+    !TRIP_SECTIONS.includes(newPage.dateStoreSection)
+  ) {
+    dateStore.setTripPage(currentPage.key as TripPage);
   }
   if (!(currentPage.hasStationStore === newPage.hasStationStore)) {
     stationStore.setStationStore({

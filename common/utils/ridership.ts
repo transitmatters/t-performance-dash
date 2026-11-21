@@ -1,5 +1,6 @@
 import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../types/lines';
 import { RIDERSHIP_KEYS } from '../types/lines';
+import { stripLegacySuffix } from '../constants/lines';
 
 export const getRidershipLineId = (
   line: Line | undefined,
@@ -22,7 +23,8 @@ export const getRidershipLineId = (
       case 'SL4/SL5':
         return 'line-SLWashington';
       default:
-        return `line-${busRoute.replaceAll('/', '')}`;
+        // A retired route's counts are filed under its route_id, which its replacement now uses.
+        return `line-${stripLegacySuffix(busRoute).replaceAll('/', '')}`;
     }
   } else if (line === 'line-commuter-rail' && crRoute) {
     return `line-${crRoute.substring(3)}`;

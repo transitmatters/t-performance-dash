@@ -7,6 +7,7 @@ import {
   filterAllSlow,
   formatSegments,
   getStationPairName,
+  getTripSlowZoneRuns,
   getTripSlowZoneSummary,
   getWorstSlowZoneSegment,
   isZoneOnTrip,
@@ -210,5 +211,40 @@ describe('formatSegments', () => {
     expect(formatSegments(data, start, 'northbound')).toMatchObject([
       { from: { station: 'place-asmnl' }, to: { station: 'place-smmnl' } },
     ]);
+  });
+});
+
+describe('getTripSlowZoneRuns', () => {
+  const early = zone('Red', '70061', '70063', '2025-01-01', '2025-01-10', 60);
+  const late = zone('Red', '70083', '70095', '2025-01-06', '2025-01-31', 50);
+  const offTrip = zone('Red', '70083', '70085', '2025-01-01', '2025-01-31', 40);
+  const data = [
+    early,
+    late,
+    offTrip,
+    zone('Red', '70061', '70063', '2025-02-10', '2025-02-20', 15),
+  ];
+
+  it("splits the window wherever the trip's active zones change, skipping days with none", () => {
+    const runs = getTripSlowZoneRuns(data, alewife, braintree, 'Red', '2024-12-25', '2025-02-15');
+    expect(runs.map(({ start, end, total }) => ({ start, end, total }))).toEqual([
+      { start: '2025-01-01', end: '2025-01-05', total: 60 },
+      { start: '2025-01-06', end: '2025-01-10', total: 110 },
+      { start: '2025-01-11', end: '2025-01-31', total: 50 },
+      { start: '2025-02-10', end: '2025-02-15', total: 15 },
+    ]);
+    expect(runs[1].zones.map((z) => z.delay)).toEqual([60, 50]);
+  });
+
+  it('clips runs to the window', () => {
+    expect(
+      getTripSlowZoneRuns(data, alewife, braintree, 'Red', '2025-01-08', '2025-01-08')
+    ).toMatchObject([{ start: '2025-01-08', end: '2025-01-08', total: 110 }]);
+  });
+
+  it('returns nothing when no zone on the trip overlaps the window', () => {
+    expect(
+      getTripSlowZoneRuns(data, alewife, braintree, 'Red', '2025-03-01', '2025-03-31')
+    ).toEqual([]);
   });
 });

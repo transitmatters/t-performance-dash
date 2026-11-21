@@ -1,9 +1,6 @@
-import {
-  StatCard,
-  StatCardGrid,
-  type StatSentiment,
-} from '../../common/components/widgets/StatCard';
+import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import type { Line } from '../../common/types/lines';
+import { halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { type DelayAgg, AGG_PERIOD, formatDelay } from './format';
 import type { RangeRow } from './range';
 import { getDelayStats } from './utils';
@@ -15,14 +12,16 @@ interface DelayStatsProps {
   line?: Line;
 }
 
-const deltaFor = (delta: number) => {
-  if (!Number.isFinite(delta)) return undefined;
-
-  const sentiment: StatSentiment = Math.abs(delta) <= 1 ? 'flat' : delta < 0 ? 'good' : 'bad';
-  const word = sentiment === 'flat' ? 'flat' : sentiment === 'good' ? 'better' : 'worse';
-  const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
-
-  return { label: `${sign}${formatDelay(delta)} · ${word}`, sentiment };
+const deltaFor = (before: number, after: number) => {
+  const delta = after - before;
+  return statDelta({
+    delta,
+    negligible: 1,
+    magnitude: `${delta > 0 ? '+' : delta < 0 ? '-' : ''}${formatDelay(delta)}`,
+    words: ['better', 'worse'],
+    higherIsBetter: false,
+    detail: halvesDetail(before, after, formatDelay),
+  });
 };
 
 export const DelayStats = ({ data, agg, line }: DelayStatsProps) => {
@@ -35,7 +34,7 @@ export const DelayStats = ({ data, agg, line }: DelayStatsProps) => {
       <StatCard
         label={`Avg per ${AGG_PERIOD[agg]}`}
         value={formatDelay(stats.avgDelay)}
-        delta={deltaFor(stats.avgDelayDelta)}
+        delta={deltaFor(stats.avgDelayBefore, stats.avgDelayAfter)}
       />
       {stats.topReasonLabel && stats.topReasonShare != null && (
         <StatCard

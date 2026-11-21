@@ -60,10 +60,8 @@ export const getFormattedTimeString = (value: number, unit: 'minutes' | 'seconds
       return `${absValue}s`;
     case absValue < 3600:
       return `${duration.format('m')}m ${duration.format('s').padStart(2, '0')}s`;
-    case absValue > 86400:
-      return `${hoursDuration.toFixed(0)}h ${duration.format('m').padStart(2, '0')}m`;
     default:
-      return `${duration.format('H')}h ${duration.format('m').padStart(2, '0')}m`;
+      return `${Math.floor(hoursDuration)}h ${duration.format('m').padStart(2, '0')}m`;
   }
 };
 
@@ -91,11 +89,13 @@ export const getClockFormattedTimeString = (
   const minutesToAdd = Math.floor(seconds / 60);
   seconds = seconds % 60;
   minutes = minutes + minutesToAdd;
-  const hoursToAdd = Math.floor(minutes / 60);
-  minutes = minutes % 60;
-  hours += hoursToAdd;
+  // Without an hours field, a duration of an hour or more keeps counting minutes ("61:40").
+  if (showHours) {
+    hours = Math.floor(minutes / 60);
+    minutes = minutes % 60;
+  }
   const isPM = hours >= 12 && hours < 24;
-  hours = (use12Hour && hours > 12 ? hours - 12 : hours) % 24;
+  hours = use12Hour ? hours % 12 || 12 : hours % 24;
   // eslint-disable-next-line prefer-const
   let [hoursString, minutesString, secondsString] = [hours, minutes, seconds].map((num) =>
     num.toString().padStart(2, '0')
@@ -112,3 +112,7 @@ export const getClockFormattedTimeString = (
   }
   return timeString;
 };
+
+/** A minutes-axis tick as m:ss ("1:36"), one format at every size under a "Minutes" title. */
+export const formatMinutesTick = (minutes: number) =>
+  getClockFormattedTimeString(minutes * 60, { showHours: false, showSeconds: true });

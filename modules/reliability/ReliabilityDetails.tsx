@@ -4,13 +4,12 @@ import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useReliabilityData } from '../../common/api/hooks/reliability';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Notice } from '../../common/components/notices/Notice';
 import { FREQUENT_BUS_ROUTE_IDS, getBusRouteIds } from '../../common/constants/lines';
-import { COMMUTER_RAIL_LINE_NAMES, SUBWAY_LINES } from '../../common/types/lines';
+import { SUBWAY_LINES } from '../../common/types/lines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { TheRideReliability } from './TheRideReliability';
 import { CommuterRailReliability } from './CommuterRailReliability';
@@ -50,14 +49,10 @@ export function ReliabilityDetails() {
     enabled
   );
 
-  const title =
-    isRide || isSubway || isBus
-      ? 'Reliability'
-      : `Reliability · ${crRoute ? COMMUTER_RAIL_LINE_NAMES[crRoute] : 'All lines'}`;
   const props = { reliability, agg, startDate, endDate };
 
   return (
-    <PageWrapper pageTitle={title}>
+    <>
       <ChartPageDiv>
         {isBus && busRoute && !isFrequentBus && (
           <Notice title={`Route ${busRoute} isn't a Frequent Bus route`}>
@@ -94,10 +89,6 @@ export function ReliabilityDetails() {
                 (125–150%), and long gap (150% or more). Each share is every matching headway at
                 every station divided by all of them, added up over the period rather than averaged
                 from daily percentages. On time is the measure the home page judges each line on.
-              </p>
-              <p>
-                Before 2025, the MBTA&apos;s monthly archives compare Green Line trunk stations with
-                a single branch&apos;s schedule, so those weeks show more bunching than riders saw.
               </p>
               {hasExcessTripTime(line) && (
                 <p>
@@ -145,15 +136,28 @@ export function ReliabilityDetails() {
               </p>
             </>
           ) : (
-            <p>
-              Daily on-time and cancellation counts by line, published by the MBTA on its open data
-              portal, split into peak and off-peak service. Branches that share a line, such as Fall
-              River and New Bedford or trains running via the Fairmount Line, are counted under
-              their line. The data is updated monthly, so the latest weeks may be missing.
-            </p>
+            <>
+              <p>
+                Daily on-time and cancellation counts by line, published by the MBTA on its open
+                data portal. Branches that share a line, such as Fall River and New Bedford or
+                trains running via the Fairmount Line, are counted under their line. The data is
+                updated monthly, so the latest weeks may be missing.
+              </p>
+              <p>
+                A train is on time if it reaches its last stop no more than 5 minutes after the
+                scheduled time, the standard in the MBTA&apos;s Service Delivery Policy. Only the
+                last stop is checked, so a train that runs late along the way but makes up the time
+                still counts as on time. A cancelled train counts as not on time.
+              </p>
+              <p>
+                Peak trains are weekday trains that reach their Boston terminal between 6 and 10 AM,
+                or leave Boston between 3:30 and 7 PM. Every other train, including all weekend
+                trains, is off-peak.
+              </p>
+            </>
           )}
         </DataNotes>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

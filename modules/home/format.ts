@@ -1,3 +1,5 @@
+import type { Line } from '../../common/types/lines';
+import { REASON_BY_KEY, reasonLabel } from '../delays/constants/reasons';
 import { NEGLIGIBLE_TREND } from './config';
 import type { Cell, Direction, Status, Unit } from './types';
 
@@ -6,10 +8,11 @@ const round = (value: number, digits = 0) => {
   return Math.round(value * factor) / factor;
 };
 
+// Cut-offs test the rounded figure, so 999.96 reads "1k" rather than "1000".
 export const formatNumber = (value: number) =>
   value >= 10_000
     ? `${round(value / 1000)}k`
-    : value >= 1000
+    : Math.round(value) >= 1000
       ? `${round(value / 1000, 1)}k`
       : `${round(value, value >= 100 ? 0 : 1)}`;
 
@@ -21,9 +24,11 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
     case 'mph':
       return `${round(value, 1)} mph`;
     case 'seconds':
-      return value >= 90 ? `${round(value / 60, 1)} min` : `${Math.round(value)} s`;
+      return Math.round(value) >= 90 ? `${round(value / 60, 1)} min` : `${Math.round(value)} s`;
     case 'minutes':
-      return value >= 90 ? `${round(value / 60, 1)} hr` : `${round(value, value < 10 ? 1 : 0)} min`;
+      return Math.round(value) >= 90
+        ? `${round(value / 60, 1)} hr`
+        : `${round(value, value < 10 ? 1 : 0)} min`;
     case 'years':
       return `${Math.round(value)} yr`;
     case 'count':
@@ -34,6 +39,9 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
 /** The figure shown on a stop; `withUnit` adds the count's label (trips/day) for the detail. */
 export const formatCell = (cell: Cell, withUnit = false) => {
   if (cell.status === 'na') return 'n/a';
+  // Not enough data to score: a dash on the board, like any other missing figure. The popover
+  // still shows what was measured.
+  if (cell.status === 'insufficient' && !withUnit) return '—';
   const text = formatValue(cell.value, cell.unit);
   return withUnit && cell.unit === 'count' && cell.unitLabel && text !== '—'
     ? `${text} ${cell.unitLabel}`
@@ -43,11 +51,12 @@ export const formatCell = (cell: Cell, withUnit = false) => {
 /** "▲ 5% vs 12 weeks", or points when comparing shares a year apart. */
 export const formatTrend = (cell: Pick<Cell, 'trend' | 'trendBasis'>) => {
   if (cell.trend === null || !Number.isFinite(cell.trend)) return null;
-  const arrow = cell.trend > 0 ? '▲' : cell.trend < 0 ? '▼' : '';
-  const amount = Math.abs(Math.round(cell.trend * 100));
+  const rounded = Math.round(cell.trend * 100);
+  const arrow = rounded > 0 ? '▲ ' : rounded < 0 ? '▼ ' : '';
+  const amount = Math.abs(rounded);
   return cell.trendBasis === 'yearAgo'
-    ? `${arrow} ${amount} pts vs a year ago`
-    : `${arrow} ${amount}% last 2 weeks vs 12`;
+    ? `${arrow}${amount} pts vs a year ago`
+    : `${arrow}${amount}% last 2 weeks vs 12`;
 };
 
 const formatThreshold = (value: number, unit: Unit) =>
@@ -69,6 +78,12 @@ export const formatThresholds = ({
   return `Win ${op}${win} · Good ${op}${good} · Room to grow ${op}${room}`;
 };
 
+/** The top delay cause as the Delays page names it, or undefined without one it knows. */
+export const topCauseLabel = ({ topCause }: Pick<Cell, 'topCause'>, line: Line) => {
+  const reason = topCause && REASON_BY_KEY[topCause.cause];
+  return reason ? reasonLabel(reason, line) : undefined;
+};
+
 export type TrendSentiment = 'good' | 'bad' | 'flat';
 
 export const trendSentiment = (trend: number | null, direction: Direction): TrendSentiment => {
@@ -80,7 +95,8 @@ export const STATUS_TONE: Record<Status, string> = {
   win: 'text-green-700 dark:text-green-400',
   good: 'text-green-700 dark:text-green-400',
   room: 'text-amber-700 dark:text-amber-400',
-  problem: 'text-destructive',
+  // Not `text-destructive`: that red falls short of 4.5:1 on the stone ground.
+  problem: 'text-red-700 dark:text-red-400',
   insufficient: 'text-muted-foreground',
   na: 'text-muted-foreground',
 };

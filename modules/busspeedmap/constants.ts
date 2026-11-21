@@ -61,8 +61,8 @@ export const PERIODS: { key: Period; label: string }[] = [
   { key: 'monthly', label: 'Month' },
 ];
 
-export const DEFAULT_PERIOD: Period = 'daily';
-export const DEFAULT_SPEED_MAP_PERIOD: Period = 'monthly';
+// Both pages open on a month, which covers more segments and ranks them less noisily than a day.
+export const DEFAULT_PERIOD: Period = 'monthly';
 
 /**
  * Only meaningful for weekly/monthly periods -- a daily file's features carry no `day_type`
@@ -175,14 +175,40 @@ export const BUS_STOPS_SOURCE_LAYER = 'bus_stops';
 
 /**
  * Every value a station's `lines` can hold, keyed as the tileset spells it. Drives both the
- * station dot colours on the map and the line list in the station hover popup.
+ * station dot colours on the map and the line list in the station hover popup. Colors are getters
+ * so colorblind mode applies.
  */
 export const STATION_LINES: Record<string, { label: string; color: string }> = {
-  Red: { label: 'Red Line', color: COLORS.mbta.red },
-  Mattapan: { label: 'Mattapan Line', color: COLORS.mbta.mattapan },
-  Orange: { label: 'Orange Line', color: COLORS.mbta.orange },
-  Blue: { label: 'Blue Line', color: COLORS.mbta.blue },
-  Green: { label: 'Green Line', color: COLORS.mbta.green },
+  Red: {
+    label: 'Red Line',
+    get color() {
+      return COLORS.mbta.red;
+    },
+  },
+  Mattapan: {
+    label: 'Mattapan Line',
+    get color() {
+      return COLORS.mbta.mattapan;
+    },
+  },
+  Orange: {
+    label: 'Orange Line',
+    get color() {
+      return COLORS.mbta.orange;
+    },
+  },
+  Blue: {
+    label: 'Blue Line',
+    get color() {
+      return COLORS.mbta.blue;
+    },
+  },
+  Green: {
+    label: 'Green Line',
+    get color() {
+      return COLORS.mbta.green;
+    },
+  },
 };
 
 export const BOSTON_CENTER: { longitude: number; latitude: number; zoom: number } = {
@@ -274,7 +300,7 @@ export const LEADERBOARD_METRICS: LeaderboardMetricConfig[] = [
     key: 'reliability',
     label: 'Reliability',
     title: 'Least reliable routes',
-    rankedBy: 'Ranked by share of headways within 75–125% of schedule',
+    rankedBy: 'Ranked by share of headways within 75–125% of the scheduled headway',
     value: (entry) => headwayShare(entry, ON_TIME),
     format: (pct) => `${pct.toFixed(1)}% within 75–125%`,
     order: 'ascending',

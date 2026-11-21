@@ -36,7 +36,7 @@ const TrainConsist = ({ train }: { train: NonNullable<HoverCardContent['train']>
           <div key={car.id} className="flex min-w-10 flex-col items-center gap-0.5">
             <div
               className={cn(
-                'relative flex h-6 w-full items-center justify-center overflow-hidden rounded-[3px] text-[10px] font-medium tabular-nums',
+                'relative flex h-6 w-full items-center justify-center overflow-hidden rounded-[3px] text-xs font-medium tabular-nums',
                 // Rounder outer ends make the strip read as one train
                 index === 0 && 'rounded-l-[10px]',
                 index === lastIndex && 'rounded-r-[10px]',
@@ -60,7 +60,7 @@ const TrainConsist = ({ train }: { train: NonNullable<HoverCardContent['train']>
               )}
             </div>
             {car.detail && (
-              <span className="text-[10px] leading-none text-muted-foreground tabular-nums">
+              <span className="text-xs leading-none text-muted-foreground tabular-nums">
                 {car.detail}
               </span>
             )}

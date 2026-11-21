@@ -1,69 +1,88 @@
 import type { LineObject } from '../types/lines';
 import { COLORS } from './colors';
 
+// Colors are getters so colorblind mode applies (see colorVisionPalette).
 export const LINE_OBJECTS: LineObject = {
   'line-red': {
     name: 'Red Line',
     short: 'Red',
     path: 'red',
     key: 'line-red',
-    color: COLORS.mbta.red,
+    get color() {
+      return COLORS.mbta.red;
+    },
   },
   'line-orange': {
     name: 'Orange Line',
     short: 'Orange',
     path: 'orange',
     key: 'line-orange',
-    color: COLORS.mbta.orange,
+    get color() {
+      return COLORS.mbta.orange;
+    },
   },
   'line-green': {
     name: 'Green Line',
     short: 'Green',
     path: 'green',
     key: 'line-green',
-    color: COLORS.mbta.green,
+    get color() {
+      return COLORS.mbta.green;
+    },
   },
   'line-blue': {
     name: 'Blue Line',
     short: 'Blue',
     path: 'blue',
     key: 'line-blue',
-    color: COLORS.mbta.blue,
+    get color() {
+      return COLORS.mbta.blue;
+    },
   },
   'line-mattapan': {
     name: 'Mattapan Line',
     short: 'Mattapan',
     path: 'mattapan',
     key: 'line-mattapan',
-    color: COLORS.mbta.red,
+    get color() {
+      return COLORS.mbta.red;
+    },
   },
   'line-bus': {
     name: 'Buses',
     short: 'Bus',
     path: 'bus',
     key: 'line-bus',
-    color: COLORS.mbta.bus,
+    get color() {
+      return COLORS.mbta.bus;
+    },
   },
   'line-commuter-rail': {
     name: 'Commuter Rail',
     short: 'Commuter Rail',
     path: 'commuter-rail',
     key: 'line-commuter-rail',
-    color: COLORS.mbta.commuterRail,
+    get color() {
+      return COLORS.mbta.commuterRail;
+    },
   },
   'line-ferry': {
     name: 'Ferry',
     short: 'Ferry',
     path: 'ferry',
     key: 'line-ferry',
-    color: COLORS.mbta.ferry,
+    get color() {
+      return COLORS.mbta.ferry;
+    },
   },
   'line-RIDE': {
     name: 'The RIDE',
     short: 'The RIDE',
     path: 'the-ride',
     key: 'line-RIDE',
-    color: COLORS.mbta.theRide,
+    get color() {
+      return COLORS.mbta.theRide;
+    },
   },
 };
 
@@ -104,8 +123,8 @@ export const FREQUENT_BUS_ROUTE_IDS: string[] = [
 ];
 
 /**
- * Silver Line raw GTFS route_ids don't carry their rider-facing "SL#" names -- the MBTA
- * V3 API/GTFS feed identifies them by legacy numeric ids. Bus trip-metrics data (e.g. the
+ * Silver Line and CT raw GTFS route_ids don't carry their rider-facing "SL#"/"CT#" names -- the
+ * MBTA V3 API/GTFS feed identifies them by legacy numeric ids. Bus trip-metrics data (e.g. the
  * speed leaderboard) is keyed by these ids, so map them to the branded names for display.
  */
 export const BUS_ROUTE_ID_TO_DISPLAY_NAME: Record<string, string> = {
@@ -115,6 +134,7 @@ export const BUS_ROUTE_ID_TO_DISPLAY_NAME: Record<string, string> = {
   '751': 'SL4',
   '749': 'SL5',
   '746': 'SLW',
+  '747': 'CT2',
   '708': 'CT3',
 };
 
@@ -131,6 +151,17 @@ const BUS_DISPLAY_NAME_TO_ROUTE_ID: Record<string, string> = Object.fromEntries(
  */
 export const getBusRouteIds = (busRoute: string): string[] =>
   busRoute.split('/').map((name) => BUS_DISPLAY_NAME_TO_ROUTE_ID[name] ?? name);
+
+/** A retired route's label without its suffix, e.g. '60/65-legacy' -> '60/65'. */
+export const stripLegacySuffix = (busRoute: string) => busRoute.replace(/-legacy$/, '');
+
+/**
+ * The route_ids a route's data is filed under. A retired route kept the route_id its replacement
+ * now runs under, so '60/65-legacy' -> ['60', '65']. Callers must keep their dates within the
+ * route's service window, or they'll get the replacement's data too.
+ */
+export const getBusRouteDataIds = (busRoute: string): string[] =>
+  getBusRouteIds(stripLegacySuffix(busRoute));
 
 /** The route_ids behind a curated label that are Frequent Bus Routes: all of SL4/SL5, but only 116
  * of 114/116/117. Empty for a route that isn't frequent. */

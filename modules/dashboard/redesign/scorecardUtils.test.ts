@@ -1,8 +1,16 @@
 import dayjs from 'dayjs';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { getWeekStart } from '../../../common/utils/date';
-import { WINDOW_START, YEAR_OVER_YEAR_START, buildRidershipRow } from './scorecardUtils';
+import {
+  WINDOW_START,
+  YEAR_OVER_YEAR_START,
+  buildRidershipRow,
+  getOverviewWindow,
+  toSlot,
+  trailingWindowLabel,
+} from './scorecardUtils';
+import type { SlotQuery } from './scorecardUtils';
 
 /** Weekly ridership from YEAR_OVER_YEAR_START to two weeks ago, like the bus feed. */
 const ridership = (count: (weeksAgo: number) => number): RidershipCount[] => {
@@ -51,5 +59,111 @@ describe('buildRidershipRow', () => {
     expect(buildRidershipRow(data, '#000', { yearOverYear: true })?.trend).toEqual(
       buildRidershipRow(windowOnly, '#000')?.trend
     );
+  });
+});
+
+describe('buildRidershipRow for a retired route', () => {
+  it("keeps the route's final year in the sparkline", () => {
+    const { windowStart } = getOverviewWindow('2024-12-14');
+    const data = Array.from({ length: 70 }, (_, i) => ({
+      date: dayjs('2024-12-09').subtract(i, 'week').format('YYYY-MM-DD'),
+      count: 3000,
+    })).reverse();
+    expect(buildRidershipRow(data, '#000')).toBeNull();
+    const row = buildRidershipRow(data, '#000', { yearOverYear: true, windowStart });
+    expect(row?.formattedCurrent).toBe('3.0k');
+    expect(row?.yearOverYear?.label).toBe('0% vs a year ago');
+  });
+});
+
+describe('getOverviewWindow', () => {
+  it('ends on the given day', () => {
+    expect(getOverviewWindow('2024-12-14')).toEqual({
+      end: '2024-12-14',
+      windowStart: '2023-11-10',
+      yearOverYearStart: '2023-10-05',
+      chartFetchStart: '2024-10-15',
+    });
+  });
+
+  it("starts no earlier than the route's first day", () => {
+    expect(getOverviewWindow('2026-11-18', '2026-09-06')).toEqual({
+      end: '2026-11-18',
+      windowStart: '2026-09-06',
+      yearOverYearStart: '2026-09-06',
+      chartFetchStart: '2026-09-19',
+    });
+  });
+});
+
+describe('trailingWindowLabel', () => {
+  it('reads as the last 30 days while the data is current', () => {
+    expect(trailingWindowLabel(dayjs().subtract(3, 'day').format('YYYY-MM-DD'))).toBe(
+      'last 30 days'
+    );
+  });
+
+  it('names the end date when the data is well behind today', () => {
+    const end = dayjs().subtract(60, 'day');
+    expect(trailingWindowLabel(end.format('YYYY-MM-DD'))).toBe(`30 days to ${end.format('MMM D')}`);
+  });
+});
+
+describe('toSlot', () => {
+  const meta = { key: 'speed', label: 'Speed', subtitle: 'Average' } as const;
+  const row = buildRidershipRow(
+    ridership(() => 1000),
+    '#000'
+  );
+  const query = (overrides: Partial<SlotQuery> = {}): SlotQuery => ({
+    data: undefined,
+    isError: false,
+    isFetching: false,
+    refetch: vi.fn(),
+    ...overrides,
+  });
+
+  it('is loading until its data arrives', () => {
+    expect(toSlot(meta, [query({ isFetching: true })], () => row).status).toBe('loading');
+  });
+
+  it('waits for every query it needs', () => {
+    const slot = toSlot(meta, [query({ data: [] }), query({ isFetching: true })], () => row);
+    expect(slot.status).toBe('loading');
+  });
+
+  it('waits while asked to, even with its data', () => {
+    expect(toSlot(meta, [query({ data: [] })], () => row, true).status).toBe('loading');
+  });
+
+  it('is ready with the built row', () => {
+    const slot = toSlot(meta, [query({ data: [] })], () => row);
+    expect(slot.status).toBe('ready');
+    expect(slot.row).toBe(row);
+  });
+
+  it('is empty when the data builds no row', () => {
+    expect(toSlot(meta, [query({ data: [] })], () => null).status).toBe('empty');
+  });
+
+  it('keeps data a later refetch failed to replace', () => {
+    expect(toSlot(meta, [query({ data: [], isError: true })], () => row).status).toBe('ready');
+  });
+
+  it('retries only the queries that failed', () => {
+    const loaded = query({ data: [] });
+    const failed = query({ isError: true });
+    const slot = toSlot(meta, [loaded, failed], () => row);
+    expect(slot.status).toBe('error');
+    expect(slot.isRetrying).toBe(false);
+    slot.retry?.();
+    expect(failed.refetch).toHaveBeenCalledOnce();
+    expect(loaded.refetch).not.toHaveBeenCalled();
+  });
+
+  it('shows an error over waiting, and when a retry is under way', () => {
+    const slot = toSlot(meta, [query({ isError: true, isFetching: true })], () => row, true);
+    expect(slot.status).toBe('error');
+    expect(slot.isRetrying).toBe(true);
   });
 });

@@ -2,12 +2,14 @@ import dayjs from 'dayjs';
 import type { LineDelays } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
 import type { DelayReasonKey } from './constants/reasons';
-import { DELAY_REASONS, reasonLabel } from './constants/reasons';
+import { DELAY_REASONS, reasonFill, reasonLabel } from './constants/reasons';
 
 export interface ReasonSeries {
-  id: string;
+  id: DelayReasonKey;
   label: string;
   color: string;
+  /** The color, textured in colorblind mode (see reasonFill). */
+  fill: string | CanvasPattern;
   values: number[];
   total: number;
 }
@@ -28,6 +30,7 @@ export const buildSeries = (data: LineDelays[], line?: Line): ReasonSeries[] => 
     id: key,
     label,
     color,
+    fill: reasonFill(key),
     values: data.map((point) => point[key]),
     total: totals[key],
   }));

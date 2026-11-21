@@ -31,6 +31,8 @@ export const hideTrackCard = (element: HTMLElement) => hideHoverCard('annotation
 
 interface TrackRowProps {
   label: string;
+  // Shown in place of the label, for labels too long for the y axis's width
+  shortLabel?: string;
   icon: IconDefinition;
   geometry: TrackGeometry;
   status: 'loading' | 'empty' | 'ready';
@@ -43,6 +45,7 @@ interface TrackRowProps {
 
 export const TrackRow = ({
   label,
+  shortLabel,
   icon,
   geometry,
   status,
@@ -58,12 +61,15 @@ export const TrackRow = ({
   return (
     <div role="group" aria-label={label} className="flex items-center">
       <div
-        className="flex shrink-0 justify-end pr-2 text-[11px] leading-none text-muted-foreground"
+        className="flex shrink-0 justify-end pr-2 text-xs leading-none text-muted-foreground"
         style={{ width: geometry.left }}
       >
-        <span className="flex min-w-0 items-center gap-1" title={showText ? undefined : label}>
+        <span
+          className="flex min-w-0 items-center gap-1"
+          title={showText && !shortLabel ? undefined : label}
+        >
           <FontAwesomeIcon icon={icon} className="size-3 shrink-0" aria-hidden />
-          {showText && <span className="truncate">{label}</span>}
+          {showText && <span className="truncate">{shortLabel ?? label}</span>}
         </span>
       </div>
       <div className="relative shrink-0" style={{ width: geometry.right - geometry.left, height }}>
@@ -71,7 +77,7 @@ export const TrackRow = ({
           <Skeleton className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2" />
         )}
         {status === 'empty' && (
-          <p className="absolute inset-0 flex items-center text-[11px] leading-none text-muted-foreground/80">
+          <p className="absolute inset-0 flex items-center text-xs leading-none text-muted-foreground/80">
             {emptyText}
           </p>
         )}

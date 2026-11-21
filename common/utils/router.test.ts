@@ -7,6 +7,7 @@ import {
   getBusRouteSelectionItemHref,
   getBusSpeedMapRouteHref,
   getLineSelectionItemHref,
+  getNavTripPage,
   getQueryParams,
   parseRoutePath,
   stationScope,
@@ -43,6 +44,32 @@ describe('getQueryParams stations', () => {
     const busStore = { ...orangeStore, scope: stationScope('line-bus', { busRoute: '1' }) };
     expect(toTrips({ busRoute: '1' }, 'line-bus', busStore)).toMatchObject({ from: '70034' });
     expect(toTrips({ busRoute: '28' }, 'line-bus', busStore)).not.toHaveProperty('from');
+  });
+});
+
+describe('returning to trips', () => {
+  it('keeps the open trip view and otherwise reopens the last one used', () => {
+    expect(getNavTripPage('multiTrips', 'singleTrips')).toBe(ALL_PAGES.multiTrips);
+    expect(getNavTripPage('singleTrips', 'multiTrips')).toBe(ALL_PAGES.singleTrips);
+    expect(getNavTripPage('speed', 'multiTrips')).toBe(ALL_PAGES.multiTrips);
+    expect(getNavTripPage('speed', 'singleTrips')).toBe(ALL_PAGES.singleTrips);
+  });
+
+  it('restores the saved range when coming back to the date range view', () => {
+    const dateStore = {
+      ...useDateStore.getState(),
+      multiTripConfig: { startDate: '2026-03-01', endDate: '2026-03-31' },
+    };
+    const stationStore: StationStore = { setStationStore: () => {} };
+    const query = getQueryParams(
+      ALL_PAGES.speed,
+      ALL_PAGES.multiTrips,
+      { busRoute: '1', startDate: '2026-01-01', endDate: '2026-11-01' },
+      dateStore,
+      stationStore,
+      'line-bus'
+    );
+    expect(query).toMatchObject({ startDate: '2026-03-01', endDate: '2026-03-31', busRoute: '1' });
   });
 });
 
@@ -90,6 +117,24 @@ describe('withDefaultRouteParam', () => {
 
   it('keeps a route that is already there', () => {
     expect(withDefaultRouteParam('/bus/speed/', { busRoute: '22' })).toEqual({ busRoute: '22' });
+    expect(withDefaultRouteParam('/commuter-rail/', { crRoute: 'CR-Worcester' })).toEqual({
+      crRoute: 'CR-Worcester',
+    });
+  });
+
+  it('replaces an unknown Commuter Rail or ferry route with the default', () => {
+    expect(withDefaultRouteParam('/commuter-rail/', { crRoute: 'CR-Nope' })).toEqual({
+      crRoute: 'CR-Fairmount',
+    });
+    expect(withDefaultRouteParam('/ferry/ridership/', { ferryRoute: 'Boat-Nope' })).toEqual({
+      ferryRoute: 'Boat-F6',
+    });
+  });
+
+  it('leaves bus routes alone, since bus pages take routes beyond the station files', () => {
+    expect(withDefaultRouteParam('/bus/speedmap/', { busRoute: '9999' })).toEqual({
+      busRoute: '9999',
+    });
   });
 
   it('leaves the leaderboard and subway pages without one', () => {

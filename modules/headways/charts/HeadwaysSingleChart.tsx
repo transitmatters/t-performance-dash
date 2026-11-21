@@ -12,6 +12,9 @@ export const HeadwaysSingleChart = ({
   showLegend = true,
   date: dateProp,
   fill = false,
+  callout,
+  actions = true,
+  intro = false,
 }: HeadwaysChartProps) => {
   const { linePath, query } = useDelimitatedRoute();
   const date = dateProp ?? query.date;
@@ -36,9 +39,24 @@ export const HeadwaysSingleChart = ({
         showUnderRatio={true}
         fill={fill}
         embedChart="headways"
+        callout={callout}
+        actions={actions}
+        intro={intro}
       />
     );
-  }, [linePath, headways, date, fromStation, toStation, showLegend, anyHeadwayBenchmarks, fill]);
+  }, [
+    linePath,
+    headways,
+    date,
+    fromStation,
+    toStation,
+    showLegend,
+    anyHeadwayBenchmarks,
+    fill,
+    callout,
+    actions,
+    intro,
+  ]);
 
   return chart;
 };

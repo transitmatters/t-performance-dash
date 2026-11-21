@@ -9,7 +9,6 @@ import {
   DEFAULT_LEADERBOARD_METRIC,
   DEFAULT_LEADERBOARD_VIEW_MODE,
   DEFAULT_PERIOD,
-  DEFAULT_SPEED_MAP_PERIOD,
   DEFAULT_TIME_BAND,
   DIRECTIONS,
   LEADERBOARD_METRICS,
@@ -43,12 +42,7 @@ const TIME_BAND_OPTIONS: [TimeBand, string][] = TIME_BANDS.map(({ key, label, ho
   key === 'all_day' ? label : `${label} · ${hours}`,
 ]);
 
-export const usePeriod = () => {
-  const { page } = useDelimitatedRoute();
-  // The map opens on a month; Rankings on a day.
-  const initial = page === 'leaderboard' ? DEFAULT_PERIOD : DEFAULT_SPEED_MAP_PERIOD;
-  return useOption<Period>(initial, PERIOD_OPTIONS, 'period');
-};
+export const usePeriod = () => useOption<Period>(DEFAULT_PERIOD, PERIOD_OPTIONS, 'period');
 
 export const useDayType = () => useOption<DayType>(DEFAULT_DAY_TYPE, DAY_TYPE_OPTIONS, 'dayType');
 
@@ -111,6 +105,6 @@ export const usePeriodDateLabel = () => {
 export const useSpeedMapRouteHref = () => {
   const route = useDelimitatedRoute();
   const { shown } = useShownPeriod();
-  const period = shown === DEFAULT_SPEED_MAP_PERIOD ? undefined : shown;
+  const period = shown === DEFAULT_PERIOD ? undefined : shown;
   return (busRoute: string) => getBusSpeedMapRouteHref(busRoute, route, period);
 };

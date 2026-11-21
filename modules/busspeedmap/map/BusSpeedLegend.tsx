@@ -34,7 +34,7 @@ export const BusSpeedLegend = ({ hasDwells }: BusSpeedLegendProps) => {
           {SPEED_COLOR_STOPS.map(([speed, color]) => (
             <div key={speed} className="flex w-9 flex-col items-center">
               <div className="h-2.5 w-full" style={{ backgroundColor: color }} />
-              <span className="text-[10px] leading-tight tabular-nums">{speed}</span>
+              <span className="text-xs leading-tight tabular-nums">{speed}</span>
             </div>
           ))}
         </div>

@@ -4,16 +4,26 @@ import { useBusStopRidershipData } from '../../common/api/hooks/ridership';
 import { Widget } from '../../common/components/widgets';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../../common/components/ui/select';
 import { getLineColorKey, LINE_COLORS } from '../../common/constants/colors';
 import { getBusRouteDisplayName } from '../../common/constants/lines';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
+import { getBusRouteService } from '../../common/constants/dates';
 import type { BusStopRidership as BusStopRidershipData } from '../../common/types/dataPoints';
+import type { BusRoute } from '../../common/types/lines';
 import { BusStopRidershipMap } from './map/BusStopRidershipMap';
 import {
   DIRECTION_LABELS,
   getBusStopRidershipRouteIds,
   getStopComparisons,
   resolveBusStopRidershipSelection,
+  withSeasonsDuring,
 } from './map/busStopUtils';
 
 const formatChange = (change: number) =>
@@ -61,17 +71,23 @@ const StopComparisons = ({
  * Average weekday boardings at each stop of a bus route, one season at a time. The MBTA counts
  * these once a year, so unlike the rest of the page this doesn't follow the date range.
  */
-export const BusStopRidership = ({ busRoute }: { busRoute: string }) => {
+export const BusStopRidership = ({ busRoute }: { busRoute: BusRoute }) => {
   const routeIds = useMemo(() => getBusStopRidershipRouteIds(busRoute), [busRoute]);
   const ridership = useBusStopRidershipData(routeIds, true);
+  const { start, end, retired } = getBusRouteService(busRoute);
+  const serviceEnd = retired ? end : undefined;
+  const routes = useMemo(
+    () => ridership.data && withSeasonsDuring(ridership.data, start, serviceEnd),
+    [ridership.data, start, serviceEnd]
+  );
   const isDesktop = useBreakpoint('lg');
 
   const [routeId, setRouteId] = useState<string>('');
   const [season, setSeason] = useState<string>('');
   const [directionKey, setDirectionKey] = useState<string>('');
 
-  const view = ridership.data
-    ? resolveBusStopRidershipSelection(ridership.data, {
+  const view = routes
+    ? resolveBusStopRidershipSelection(routes, {
         routeId,
         season,
         directionId: directionKey === '' ? undefined : Number(directionKey),
@@ -124,17 +140,18 @@ export const BusStopRidership = ({ busRoute }: { busRoute: string }) => {
             )}
             <label className="flex items-center gap-2 text-sm">
               <span className="text-stone-600 dark:text-stone-300">Season</span>
-              <select
-                className="rounded-md border border-stone-300 bg-white px-2 py-1.5 text-sm dark:border-stone-600 dark:bg-stone-800"
-                value={view.season}
-                onChange={(event) => setSeason(event.target.value)}
-              >
-                {[...view.seasons].reverse().map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              <Select value={view.season} onValueChange={setSeason}>
+                <SelectTrigger size="sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[...view.seasons].reverse().map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </label>
           </div>
           <BusStopRidershipMap

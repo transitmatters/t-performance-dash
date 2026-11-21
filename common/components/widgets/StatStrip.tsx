@@ -20,13 +20,13 @@ export const StatCell = ({ label, description, children, valueClassName }: StatC
   // `bg-muted` rather than a fixed light grey: the figures inside inherit the card foreground, so a
   // cell pinned to stone-50 put near-white text on a near-white ground once the theme flipped.
   <div className="flex flex-col gap-y-1 bg-muted px-3.5 py-2.5">
-    <span className="flex items-center gap-1 text-[10px] font-medium tracking-[0.06em] text-muted-foreground uppercase">
+    <span className="flex items-center gap-1 text-xs font-medium tracking-[0.06em] text-muted-foreground uppercase">
       {label}
       {description && <InfoTooltip info={description} className="leading-none normal-case" />}
     </span>
     <span
       className={classNames(
-        'text-card-foreground flex flex-row items-baseline gap-x-1 text-[17px] leading-none font-semibold',
+        'text-card-foreground flex flex-row items-baseline gap-x-1 text-xl leading-none font-semibold tabular-nums',
         valueClassName
       )}
     >

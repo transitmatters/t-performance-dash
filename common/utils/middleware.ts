@@ -107,9 +107,15 @@ export const getV3RedirectHref = (pathname: string, search: URLSearchParams) => 
   }
 
   // handle v3 rapid transit route
-  if (resultParams && pathname.startsWith('/rapidtransit')) {
-    const { line, queryParams, tripSection } = resultParams;
-    return `/${line}/trips/${tripSection}/?${queryParams.toString()}`;
+  if (pathname.startsWith('/rapidtransit')) {
+    if (resultParams) {
+      const { line, queryParams, tripSection } = resultParams;
+      return `/${line}/trips/${tripSection}/?${queryParams.toString()}`;
+    }
+    // A config we can't read still names its line first; send it there rather than spin forever.
+    const firstField = search.get('config')?.split(',')[0];
+    const lineOrRoute = firstField ? getLineOrRoute(firstField) : undefined;
+    return lineOrRoute?.type === 'rail' ? `/${lineOrRoute.value}/` : '/';
   }
 
   // handle v3 bus route

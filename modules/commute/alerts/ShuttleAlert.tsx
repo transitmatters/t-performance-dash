@@ -23,9 +23,9 @@ export const ShuttleAlert = ({ alert, lineShort, type, noShrink }: ShuttleAlertP
       noShrink={noShrink}
     >
       <p className="mr-1">Shuttling</p>
-      <p className="font-bold">{min?.stop_name}</p>
+      <p className="font-semibold">{min?.stop_name}</p>
       <FontAwesomeIcon icon={faLeftRight} className={'mx-2 h-4 w-4'} />
-      <p className="font-bold">{max?.stop_name}</p>
+      <p className="font-semibold">{max?.stop_name}</p>
     </AlertBoxInner>
   );
 };

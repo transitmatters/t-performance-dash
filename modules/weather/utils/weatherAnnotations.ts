@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCloudBolt, faCloudRain, faSmog, faSnowflake } from '@fortawesome/free-solid-svg-icons';
 import type { WeatherCondition, WeatherHourly } from '../../../common/types/weather';
+import { colorVisionPalette } from '../../../common/utils/colorVision';
 import { hexWithAlpha } from '../../../common/utils/general';
 import type {
   HoverCardRow,
@@ -15,19 +16,23 @@ export type WeatherGranularity = 'hourly' | 'daily';
 
 export type SignificantCondition = Exclude<WeatherCondition, 'clear' | 'cloudy' | 'unknown'>;
 
-/** A stretch of one significant condition: consecutive hours, or a single day's worst. */
+/** A stretch of one significant condition: consecutive hours, or consecutive days of it as their worst. */
 export interface WeatherRun {
   start: string;
   end: string;
   condition: SignificantCondition;
 }
 
-export const WEATHER_BASE_COLORS: Record<SignificantCondition, string> = {
-  rain: '#60a5fa',
-  snow: '#94a3b8',
-  fog: '#9ca3af',
-  storm: '#7c3aed',
-};
+export const WEATHER_BASE_COLORS: Record<SignificantCondition, string> = colorVisionPalette(
+  {
+    rain: '#60a5fa',
+    snow: '#94a3b8',
+    fog: '#9ca3af',
+    storm: '#7c3aed',
+  },
+  // Snow goes icy blue so it parts from fog's gray, and storm goes magenta so it parts from rain
+  { rain: '#3b7fd9', snow: '#8ad8f2', fog: '#a8a29e', storm: '#c0489a' }
+);
 
 export const WEATHER_ICONS: Record<SignificantCondition, IconDefinition> = {
   rain: faCloudRain,
@@ -43,11 +48,11 @@ export const weatherTitleIcon = (condition: SignificantCondition) => ({
 });
 
 // Shading on the plot stays faint so the data reads through it
-const WEATHER_SHADING: Record<SignificantCondition, string> = {
-  rain: hexWithAlpha(WEATHER_BASE_COLORS.rain, 0.35),
-  snow: hexWithAlpha(WEATHER_BASE_COLORS.snow, 0.45),
-  fog: hexWithAlpha(WEATHER_BASE_COLORS.fog, 0.3),
-  storm: hexWithAlpha(WEATHER_BASE_COLORS.storm, 0.4),
+const WEATHER_SHADING_ALPHA: Record<SignificantCondition, number> = {
+  rain: 0.35,
+  snow: 0.45,
+  fog: 0.3,
+  storm: 0.4,
 };
 
 export const WEATHER_LABELS: Record<SignificantCondition, string> = {
@@ -114,13 +119,20 @@ const dailyRuns = (hours: WeatherHourly[]): WeatherRun[] => {
     }
   });
 
-  return Array.from(worstByDay.entries())
+  // Back-to-back days with the same worst condition share one run
+  const runs: WeatherRun[] = [];
+  Array.from(worstByDay.entries())
     .sort(([a], [b]) => (a < b ? -1 : 1))
-    .map(([day, condition]) => ({
-      start: day,
-      end: dayjs(day).add(1, 'day').format('YYYY-MM-DD'),
-      condition,
-    }));
+    .forEach(([day, condition]) => {
+      const end = dayjs(day).add(1, 'day').format('YYYY-MM-DD');
+      const last = runs[runs.length - 1];
+      if (last && last.end === day && last.condition === condition) {
+        last.end = end;
+      } else {
+        runs.push({ start: day, end, condition });
+      }
+    });
+  return runs;
 };
 
 export const getWeatherRuns = (
@@ -129,6 +141,9 @@ export const getWeatherRuns = (
 ): WeatherRun[] => (granularity === 'daily' ? dailyRuns(hours) : hourlyRuns(hours));
 
 export const weatherRunKey = (run: WeatherRun) => `weather|${run.start}|${run.condition}`;
+
+// Daily charts plot each day's point at midnight, so a day's run sits half a day earlier
+const DAILY_OFFSET = 12 * ONE_HOUR;
 
 /** A run placed on a chart's time axis, in epoch milliseconds. */
 export interface PlacedWeatherRun {
@@ -149,7 +164,7 @@ export const placeWeatherRuns = (
   granularity: WeatherGranularity,
   window?: { start: number; end: number }
 ): PlacedWeatherRun[] => {
-  const offset = granularity === 'daily' ? 12 * 60 * 60 * 1000 : 0;
+  const offset = granularity === 'daily' ? DAILY_OFFSET : 0;
   const times = hours.map((hour) => dayjs(hour.timestamp).valueOf());
   return getWeatherRuns(hours, granularity).flatMap((run) => {
     let start = dayjs(run.start).valueOf();
@@ -190,16 +205,19 @@ export const weatherRowAt = (
   const placed = runs.find(({ start, end }) => time >= start && time < end);
   if (!placed) return undefined;
   const { run, hours } = placed;
-  const hour =
+  // A daily run can span several days, so read only the hovered one
+  const own =
     granularity === 'hourly'
-      ? hours.find((h) => {
+      ? hours.filter((h) => {
           const start = dayjs(h.timestamp).valueOf();
           return time >= start && time < start + ONE_HOUR;
         })
-      : undefined;
+      : hours.filter(
+          (h) => h.timestamp.slice(0, 10) === dayjs(time + DAILY_OFFSET).format('YYYY-MM-DD')
+        );
   return {
     label: 'Weather',
-    value: describeWeather(hour ? [hour] : hours, run.condition),
+    value: describeWeather(own.length ? own : hours, run.condition),
     color: WEATHER_BASE_COLORS[run.condition],
   };
 };
@@ -213,7 +231,10 @@ export const getWeatherAnnotations = (
     type: 'box',
     xMin: start,
     xMax: end,
-    backgroundColor: WEATHER_SHADING[run.condition],
+    backgroundColor: hexWithAlpha(
+      WEATHER_BASE_COLORS[run.condition],
+      WEATHER_SHADING_ALPHA[run.condition]
+    ),
     borderColor: 'transparent',
     borderWidth: 0,
   }));

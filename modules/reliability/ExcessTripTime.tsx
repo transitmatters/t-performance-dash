@@ -5,6 +5,7 @@ import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard
 import { TitleWithInfo } from '../../common/components/general/InfoTooltip';
 import { useReliabilityDirection } from '../../common/hooks/usePageFilters';
 import { LINE_COLORS } from '../../common/constants/colors';
+import { TODAY_STRING } from '../../common/constants/dates';
 import type { Line } from '../../common/types/lines';
 import type { AggType } from '../speed/constants/speeds';
 import { ExcessTimeBars } from './charts/ExcessTimeBars';
@@ -37,6 +38,14 @@ export const ExcessTripTime = ({ line, agg, startDate, endDate }: ExcessTripTime
     { line, start_date: startDate, end_date: endDate, agg },
     Boolean(startDate && endDate)
   );
+  // Whether the line has any data at all. A range that's merely too recent still shows its charts,
+  // since the MBTA publishes weeks behind; a line with nothing published shows no section.
+  const coverage = useExcessTripTimeData({
+    line,
+    start_date: '2021-01-01',
+    end_date: TODAY_STRING,
+    agg: 'monthly',
+  });
   const rows = toEttRows(ett.data ?? [], direction);
   const totals = sumEttRows(rows);
   const ready = [ett, startDate, endDate];
@@ -49,7 +58,7 @@ export const ExcessTripTime = ({ line, agg, startDate, endDate }: ExcessTripTime
     offPeak: undefined,
   };
 
-  if (!startDate || !endDate) return null;
+  if (!startDate || !endDate || coverage.data?.length === 0) return null;
   const graphProps = { line, agg, startDate, endDate, kind: 'percent' as const };
 
   const card = (title: string, info: string, subtitle: string, chart: ReactNode) => (
@@ -61,13 +70,13 @@ export const ExcessTripTime = ({ line, agg, startDate, endDate }: ExcessTripTime
   return (
     <>
       <div className="flex flex-col gap-1">
-        <h2 className="text-lg font-semibold text-foreground">Excess trip time</h2>
+        <h2 className="text-base font-medium text-foreground">Excess trip time</h2>
         <p className="text-sm text-muted-foreground">
           How much longer riders&apos; trips took than the MBTA&apos;s baseline, from its fare and
           train data. The MBTA publishes it monthly, about five weeks behind.
         </p>
       </div>
-      {ett.data && (
+      {rows.length > 0 && (
         <StatCardGrid>
           <StatCard label="Riders within 5 min" value={formatPercent(withinFiveShare(totals))} />
           <StatCard label="Riders within 20 min" value={formatPercent(withinTwentyShare(totals))} />

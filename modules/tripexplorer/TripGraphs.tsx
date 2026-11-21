@@ -21,8 +21,6 @@ export const TripGraphs = ({ fromStation, toStation }: TripGraphsProps) => {
     query: { startDate, endDate, date },
     tab,
     line,
-    linePath,
-    lineShort,
     page,
   } = useDelimitatedRoute();
 
@@ -84,28 +82,37 @@ export const TripGraphs = ({ fromStation, toStation }: TripGraphsProps) => {
         line={line}
       />
     );
-  const [slowZoneStart, slowZoneEnd] = aggregate ? [startDate, endDate] : [date, date];
   return (
-    <>
-      {isSlowZonesLine(lineShort) && slowZoneStart && slowZoneEnd && (
-        <TripSlowZonesCallout
-          fromStation={fromStation}
-          toStation={toStation}
-          lineShort={lineShort}
-          line={line}
-          linePath={linePath}
-          startDate={slowZoneStart}
-          endDate={slowZoneEnd}
-        />
-      )}
-      <SubwayTripGraphs
-        fromStation={fromStation}
-        toStation={toStation}
-        parameters={parameters}
-        aggregate={aggregate}
-        enabled={enabled}
-        line={line}
-      />
-    </>
+    <SubwayTripGraphs
+      fromStation={fromStation}
+      toStation={toStation}
+      parameters={parameters}
+      aggregate={aggregate}
+      enabled={enabled}
+      line={line}
+    />
+  );
+};
+
+/** How much time slow zones added to a subway trip, for the notices above its charts. */
+export const TripSlowZonesBanner = ({ fromStation, toStation }: TripGraphsProps) => {
+  const {
+    query: { startDate, endDate, date },
+    linePath,
+    lineShort,
+  } = useDelimitatedRoute();
+  const aggregate = Boolean(startDate && endDate);
+  const [start, end] = aggregate ? [startDate, endDate] : [date, date];
+  if (!isSlowZonesLine(lineShort) || !start || !end) return null;
+  return (
+    <TripSlowZonesCallout
+      fromStation={fromStation}
+      toStation={toStation}
+      lineShort={lineShort}
+      linePath={linePath}
+      startDate={start}
+      endDate={end}
+      withChartToggle={aggregate}
+    />
   );
 };

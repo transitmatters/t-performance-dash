@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { ReactElement } from 'react';
 import { addProtocol, getVersion, LngLatBounds, setWorkerUrl } from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { PMTiles, Protocol } from 'pmtiles';
@@ -12,7 +13,9 @@ import type {
   Map as MaplibreMap,
 } from 'maplibre-gl';
 import { useBusSpeedStops } from '../../../common/api/hooks/busSpeedSegments';
+import { useThemeStore } from '../../../common/state/themeStore';
 import { getBusRouteDisplayName, getBusRouteIds } from '../../../common/constants/lines';
+import { getBusRouteStopIds } from '../../../common/utils/stations';
 import {
   BOSTON_CENTER,
   BUS_SPEED_STOPS_PATH,
@@ -54,6 +57,8 @@ import {
 import { SegmentPopupContent } from './BusSpeedSegmentPopupContent';
 import { BusStopPopupContent, StationPopupContent } from './BusSpeedStopPopupContent';
 import { ResetViewControl } from './ResetViewControl';
+import { EMPTY_ROUTE, useRouteSegments } from './routeSegments';
+import { findStopBounds } from './stopBounds';
 
 // Registered once at module scope, onto the shared maplibre-gl module. This file is only
 // ever reached through BusSpeedMapDetails' `dynamic(..., { ssr: false })` import, so it
@@ -89,19 +94,29 @@ class ArrayBufferSource implements PMTilesSource {
 }
 
 /**
- * Hands the fetched stops archive to the pmtiles protocol under its real URL, and returns the
- * pmtiles:// URL a Source can point at. The protocol resolves that URL to this in-memory
- * instance instead of opening a fetch-backed one of its own.
+ * Hands the fetched stops archive to the pmtiles protocol under its real URL, and returns that
+ * URL as the key it's registered under. A Source pointed at it with pmtiles:// gets this in-memory
+ * instance instead of a fetch-backed one of its own.
  */
 const registerStopsArchive = (buffer: ArrayBuffer): string => {
   const key = new URL(BUS_SPEED_STOPS_PATH, window.location.origin).toString();
   if (!protocol.get(key)) protocol.add(new PMTiles(new ArrayBufferSource(key, buffer)));
-  return `pmtiles://${key}`;
+  return key;
 };
 
-// CARTO's Positron. Free to use with attribution, and already the basemap TransitMatters
-// uses in otp-app, so there is no per-load billing to worry about here.
+/**
+ * The archive maplibre reads a URL from, registered first if maplibre hasn't asked for it yet, so
+ * tiles read here share its header and directories.
+ */
+const archiveFor = (url: string): PMTiles | undefined => {
+  if (!protocol.get(url)) protocol.add(new PMTiles(url));
+  return protocol.get(url);
+};
+
+// CARTO's Positron, and Dark Matter in dark mode. Free to use with attribution, and already the
+// basemap TransitMatters uses in otp-app, so there is no per-load billing to worry about here.
 const BASEMAP_STYLE = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+const DARK_BASEMAP_STYLE = 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json';
 
 const SOURCE_ID = 'bus-speed-segments';
 const ARROWS_LAYER_ID = 'bus-speed-direction-arrows';
@@ -113,6 +128,23 @@ const STATIONS_LAYER_ID = 'bus-speed-stations';
 const BUS_STOPS_LAYER_ID = 'bus-speed-bus-stops';
 const STATION_HITBOX_LAYER_ID = 'bus-speed-station-hitbox';
 const BUS_STOP_HITBOX_LAYER_ID = 'bus-speed-bus-stop-hitbox';
+
+const ARCHIVE_LAYER_IDS = {
+  halo: 'bus-speed-hover-halo',
+  casing: CASING_LAYER_ID,
+  lines: 'bus-speed-lines',
+  hitbox: HITBOX_LAYER_ID,
+};
+
+// The selected route below its archive's complete zoom, where the archive's own tiles keep only
+// some of its segments (see useRouteSegments).
+const ROUTE_SOURCE_ID = 'bus-speed-route';
+const ROUTE_LAYER_IDS = {
+  halo: 'bus-speed-route-hover-halo',
+  casing: 'bus-speed-route-casing',
+  lines: 'bus-speed-route-lines',
+  hitbox: 'bus-speed-route-hitbox',
+};
 
 const DWELLS_SOURCE_ID = 'bus-dwells';
 const DWELLS_LAYER_ID = 'bus-dwells';
@@ -224,17 +256,18 @@ const addArrowImage = (map: MaplibreMap) => {
  * comma-joined, e.g. "Red,Green") are drawn white with a dark ring, the usual map convention
  * for a transfer.
  */
-const stationColor: DataDrivenPropertyValueSpecification<string> = [
-  'case',
-  ['in', ',', ['get', 'lines']],
-  '#ffffff',
+const stationColor = (): DataDrivenPropertyValueSpecification<string> =>
   [
-    'match',
-    ['get', 'lines'],
-    ...Object.entries(STATION_LINES).flatMap(([line, { color }]) => [line, color]),
-    '#6b7280',
-  ],
-] as unknown as DataDrivenPropertyValueSpecification<string>;
+    'case',
+    ['in', ',', ['get', 'lines']],
+    '#ffffff',
+    [
+      'match',
+      ['get', 'lines'],
+      ...Object.entries(STATION_LINES).flatMap(([line, { color }]) => [line, color]),
+      '#6b7280',
+    ],
+  ] as unknown as DataDrivenPropertyValueSpecification<string>;
 
 const stationStrokeColor: DataDrivenPropertyValueSpecification<string> = [
   'case',
@@ -298,6 +331,89 @@ const dwellRadiusWith = (extra: number) =>
 const dwellRadius = dwellRadiusWith(0);
 const dwellHitRadius = dwellRadiusWith(3);
 
+interface SegmentLayersOptions {
+  ids: typeof ARCHIVE_LAYER_IDS;
+  /** The archive's layer, or none for a GeoJSON source. */
+  sourceLayer?: string;
+  zooms: { minzoom: number } | { maxzoom: number };
+  filter: FilterSpecification;
+  hitboxFilter: FilterSpecification;
+  hoveredFilter?: FilterSpecification;
+  /** The halo mounts on hover, after the rest, so it needs this to land beneath them. */
+  haloBeforeId: string;
+  /** Drawn between the lines and their hitbox. */
+  extra?: ReactElement | false;
+}
+
+/**
+ * The segments as drawn, from the archive or from the selected route's own source. An array rather
+ * than a component: a Source creates its layers as it re-renders, which a memoized component's
+ * layers would sit out, landing later than the stops that slot beneath them.
+ */
+const segmentLayers = ({
+  ids,
+  sourceLayer,
+  zooms,
+  filter,
+  hitboxFilter,
+  hoveredFilter,
+  haloBeforeId,
+  extra,
+}: SegmentLayersOptions): ReactElement[] => {
+  const shared = { ...(sourceLayer && { 'source-layer': sourceLayer }), ...zooms };
+  return [
+    // A glow around the hovered segment, beneath the stop dots and every segment layer so it
+    // doesn't cover them.
+    hoveredFilter && (
+      <Layer
+        key={ids.halo}
+        id={ids.halo}
+        type="line"
+        {...shared}
+        filter={hoveredFilter}
+        beforeId={haloBeforeId}
+        layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+        paint={{ 'line-color': HOVER_HALO_COLOR, 'line-width': hoverHaloWidth }}
+      />
+    ),
+    // A dark casing under the ramp. Positron is nearly white, so the pale middle of the speed
+    // scale would otherwise disappear into the basemap.
+    <Layer
+      key={ids.casing}
+      id={ids.casing}
+      type="line"
+      {...shared}
+      filter={filter}
+      layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+      paint={{ 'line-color': 'rgba(0, 0, 0, 0.35)', 'line-width': casingWidth }}
+    />,
+    <Layer
+      key={ids.lines}
+      id={ids.lines}
+      type="line"
+      {...shared}
+      filter={filter}
+      layout={{ 'line-cap': 'round', 'line-join': 'round' }}
+      paint={{
+        'line-color': speedColor,
+        'line-width': lineWidth,
+        'line-dasharray': lineDashes,
+      }}
+    />,
+    extra,
+    // Invisible and deliberately fat: the drawn segments are a few pixels wide, which is far too
+    // fine a target to hover reliably.
+    <Layer
+      key={ids.hitbox}
+      id={ids.hitbox}
+      type="line"
+      {...shared}
+      filter={hitboxFilter}
+      paint={{ 'line-color': '#000000', 'line-opacity': 0, 'line-width': 14 }}
+    />,
+  ].filter((layer): layer is ReactElement => Boolean(layer));
+};
+
 type Hovered = { longitude: number; latitude: number; anchor: 'top-left' | 'bottom-left' } & (
   | { kind: 'segment'; segments: BusSpeedSegmentProperties[] }
   | { kind: 'station'; properties: StationProperties }
@@ -319,6 +435,7 @@ const HOVER_LAYERS: Record<string, { kind: Hovered['kind']; rank: number }> = {
   [BUS_STOP_HITBOX_LAYER_ID]: { kind: 'busStop', rank: 1 },
   [DWELLS_HITBOX_LAYER_ID]: { kind: 'dwell', rank: 1 },
   [HITBOX_LAYER_ID]: { kind: 'segment', rank: 2 },
+  [ROUTE_LAYER_IDS.hitbox]: { kind: 'segment', rank: 2 },
 };
 const INTERACTIVE_LAYER_IDS = Object.keys(HOVER_LAYERS);
 
@@ -348,7 +465,7 @@ const segmentsSharingStops = (
   hovered: BusSpeedSegmentProperties
 ): BusSpeedSegmentProperties[] => {
   const matches = features
-    .filter((feature) => feature.layer.id === HITBOX_LAYER_ID)
+    .filter((feature) => HOVER_LAYERS[feature.layer.id]?.kind === 'segment')
     .map((feature) => feature.properties as BusSpeedSegmentProperties)
     .filter(
       (segment) =>
@@ -411,9 +528,15 @@ export const BusSpeedMapView = ({
   // The arrow layer only mounts once its image exists: maplibre drops a symbol whose icon is
   // missing when its tile is laid out, and wouldn't lay that tile out again just for the image.
   const [arrowImageReady, setArrowImageReady] = useState(false);
+  const isDark = useThemeStore((state) => state.theme === 'dark');
   const mapRef = useRef<MapRef>(null);
   const routeIds = useMemo(
     () => (routeFilter ? getBusRouteIds(routeFilter) : undefined),
+    [routeFilter]
+  );
+  // Finds a retired route's stops, which the stops archive no longer lists it at.
+  const routeStopIds = useMemo(
+    () => (routeFilter ? getBusRouteStopIds(routeFilter) : undefined),
     [routeFilter]
   );
   // Every feature of the selected routes, including the pooled ones standing in for several of
@@ -452,10 +575,26 @@ export const BusSpeedMapView = ({
   // Undefined until the archive loads, and for good if it's missing or fails -- the stops are
   // context only, so the map carries on without them.
   const { data: stopsArchive } = useBusSpeedStops();
-  const stopsUrl = useMemo(
+  const stopsKey = useMemo(
     () => (stopsArchive ? registerStopsArchive(stopsArchive) : undefined),
     [stopsArchive]
   );
+  // The stops slot beneath the lowest segment layer, so they wait for it: the sources add their
+  // layers as each re-renders, in no fixed order.
+  const [segmentLayersAdded, setSegmentLayersAdded] = useState(false);
+  const stopsUrl = stopsKey && segmentLayersAdded ? `pmtiles://${stopsKey}` : undefined;
+
+  // Kept as of the end of each zoom, for the route's own lines below.
+  const [zoom, setZoom] = useState<number>();
+
+  const routeLines = useRouteSegments({
+    archiveFor,
+    pmtilesUrl,
+    stopsKey,
+    routeIds: segmentStops ? undefined : routeIds,
+    routeStopIds,
+    zoom,
+  });
 
   // Which routes' lines are drawn, and which can be hovered. Where every route on a shared stop
   // pair is selected (as they all are with no route picked), the pair's pooled feature is drawn
@@ -712,39 +851,74 @@ export const BusSpeedMapView = ({
       cancelled = true;
     };
 
-    // Bounded to one retry: tiles for the focus may not be loaded yet if the user (or, on
-    // first mount in segment-focus mode, the default view) was somewhere else, so jump (no
-    // animation) out to the whole network -- checked against a real month's tiles, every route
-    // with geometry at zoom 8 still has it at 9-11 -- and try again once those tiles are in. If
-    // the focus still has nothing after that, it's missing at all zooms and there's nothing
-    // sensible left to fly to.
+    // A single segment is often just one short block -- a much tighter maxZoom than a whole
+    // route so the dialog map actually reads at street level instead of stopping at the same
+    // zoom a multi-mile route would.
+    const fitFocus = (bounds: LngLatBounds) =>
+      map.fitBounds(bounds, { padding: 48, duration: 800, maxZoom: segmentStops ? 18 : 15 });
+
+    // A segment in a dense area is thinned out of the tiles below about zoom 12, so the network
+    // view can't find it. Jump to its stops instead, where its tiles are complete, and fit the
+    // segment itself once they're in.
+    const jumpToSegmentStops = async () => {
+      const archive = stopsKey ? protocol.get(stopsKey) : undefined;
+      if (!segmentStops || !routeIds || !archive) return;
+      const stopBounds = await findStopBounds(archive, routeIds, {
+        stopNames: [segmentStops.from, segmentStops.to],
+        fallbackStopIds: routeStopIds,
+      }).catch(() => undefined);
+      if (cancelled || !stopBounds) return;
+      map.once('idle', () => {
+        const bounds = cancelled ? undefined : boundsOfLoadedFocus();
+        if (bounds) fitFocus(bounds);
+      });
+      map.fitBounds(stopBounds, { padding: 48, duration: 0, maxZoom: 16 });
+    };
+
+    // Without the stops archive, or for a route not in it, fit what the map has loaded. Tiles for
+    // the focus may not be loaded yet if the user (or, on first mount in segment-focus mode, the
+    // default view) was somewhere else, so jump (no animation) out to the whole network -- every
+    // route has some geometry there -- and try again once those tiles are in. A segment still
+    // missing then is thinned out at that zoom, so look it up by its stops.
     const attempt = (isRetry: boolean) => {
       if (cancelled) return;
       const bounds = boundsOfLoadedFocus();
       if (bounds) {
-        // A single segment is often just one short block -- a much tighter maxZoom than a
-        // whole route so the dialog map actually reads at street level instead of stopping at
-        // the same zoom a multi-mile route would.
-        map.fitBounds(bounds, { padding: 48, duration: 800, maxZoom: segmentStops ? 18 : 15 });
+        fitFocus(bounds);
       } else if (!isRetry) {
         const view = networkView(map);
         if (!view) return;
         map.once('idle', () => attempt(true));
         map.jumpTo(view);
+      } else {
+        void jumpToSegmentStops();
       }
     };
-    attempt(false);
-  }, [routeFilterClause, segmentStops, direction]);
+    // A whole route fits its stops: the loaded tiles hold only what's near the current view, and
+    // below zoom 12 only some of each route's segments.
+    const stopsArchive = stopsKey ? protocol.get(stopsKey) : undefined;
+    if (segmentStops || !stopsArchive || !routeIds) {
+      attempt(false);
+      return;
+    }
+    void findStopBounds(stopsArchive, routeIds, { fallbackStopIds: routeStopIds })
+      .catch(() => undefined)
+      .then((bounds) => {
+        if (cancelled) return;
+        if (bounds) fitFocus(bounds);
+        else attempt(false);
+      });
+  }, [routeFilterClause, routeIds, routeStopIds, segmentStops, direction, stopsKey]);
 
-  // The home button. With nothing selected that's just the network overview, but a focus can't
-  // be fitted straight from where the user is: zoomed in, only the tiles on screen are loaded,
-  // so the bounds would come out as the part of the route already in view. Ease out to the whole
-  // network first and fit once its tiles are in. Cancelled like any pending flight, so changing
-  // the focus mid-way wins.
+  // The home button. With nothing selected that's just the network overview, and a route fits its
+  // stops from anywhere. A segment, or a route without the stops archive, can't be fitted straight
+  // from where the user is: zoomed in, only the tiles on screen are loaded, so the bounds would
+  // come out as the part of it already in view. Ease out to the whole network first and fit once
+  // its tiles are in. Cancelled like any pending flight, so changing the focus mid-way wins.
   const resetView = () => {
     const map = mapRef.current?.getMap();
     const view = map && networkView(map);
-    if (!map || !view || !routeFilterClause) {
+    if (!map || !view || !routeFilterClause || (stopsKey && !segmentStops)) {
       runFocusFlight();
       return;
     }
@@ -765,10 +939,11 @@ export const BusSpeedMapView = ({
   // down one exact line rather than a whole route's worth of them. Keeping this a plain route
   // id in the ordinary case (rather than always including direction) matters: it means
   // toggling direction on the full map never re-triggers a fly-to, preserving today's
-  // "direction is just a filter, not a fly-to" feel.
+  // "direction is just a filter, not a fly-to" feel. Either flies again once the stops archive
+  // arrives, which a route is fitted to and a segment the network view can't find is found by.
   const focusKey = segmentStops
-    ? `${routeFilter ?? ''}|${direction}|${segmentStops.from}|${segmentStops.to}`
-    : routeFilter;
+    ? `${routeFilter ?? ''}|${direction}|${segmentStops.from}|${segmentStops.to}|${Boolean(stopsKey)}`
+    : routeFilter && `${routeFilter}|${Boolean(stopsKey)}`;
 
   // Re-runs the fly-to on every focus change, and back out to the network overview when the
   // filter is cleared. Skipped on mount for an ordinary route selection: the map's own onLoad
@@ -783,7 +958,8 @@ export const BusSpeedMapView = ({
     runFocusFlight();
     return () => cancelPendingFlightRef.current();
     // runFocusFlight is recreated only when focusKey's own inputs (routeFilter, direction,
-    // segmentStops) change, so it's redundant here -- focusKey is the one true dependency.
+    // segmentStops, the stops archive) change, so it's redundant here -- focusKey is the one
+    // true dependency.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [focusKey]);
 
@@ -792,7 +968,7 @@ export const BusSpeedMapView = ({
       ref={mapRef}
       initialViewState={BOSTON_CENTER}
       maxBounds={MAP_MAX_BOUNDS}
-      mapStyle={BASEMAP_STYLE}
+      mapStyle={isDark ? DARK_BASEMAP_STYLE : BASEMAP_STYLE}
       style={{ width: '100%', height: '100%' }}
       // react-map-gl skips any not yet in the style, so the stop hitboxes can be listed before
       // the stops archive has loaded.
@@ -810,81 +986,68 @@ export const BusSpeedMapView = ({
         addArrowImage(event.target);
         setArrowImageReady(true);
         limitZoomOut(event.target);
+        setZoom(event.target.getZoom());
+        const map = event.target;
+        const checkSegmentLayers = () => {
+          if (!map.getLayer(ROUTE_LAYER_IDS.casing)) return;
+          setSegmentLayersAdded(true);
+          map.off('styledata', checkSegmentLayers);
+        };
+        map.on('styledata', checkSegmentLayers);
+        checkSegmentLayers();
         runFocusFlight();
       }}
       onResize={(event) => limitZoomOut(event.target)}
+      onZoomEnd={(event) => setZoom(event.viewState.zoom)}
     >
       <NavigationControl position="top-right" showCompass={false} />
       <ResetViewControl onReset={resetView} />
+      {/* Mounted first, and from the start, so its layers sit beneath the archive's and the stops
+          can slot under both. Empty until there's a route to draw here. */}
+      <Source id={ROUTE_SOURCE_ID} type="geojson" data={routeLines?.segments ?? EMPTY_ROUTE}>
+        {segmentLayers({
+          ids: ROUTE_LAYER_IDS,
+          zooms: { maxzoom: routeLines?.belowZoom ?? 0 },
+          filter,
+          hitboxFilter,
+          hoveredFilter,
+          haloBeforeId: stopsUrl ? BUS_STOPS_LAYER_ID : ROUTE_LAYER_IDS.casing,
+        })}
+      </Source>
       <Source id={SOURCE_ID} type="vector" url={`pmtiles://${pmtilesUrl}`}>
-        {/* A glow around the hovered segment, beneath the stop dots and every segment layer so
-            it doesn't cover them. It mounts on hover, after the rest, so it needs a beforeId to
-            land there; the stops are below the casing once their archive has loaded. */}
-        {hoveredFilter && (
-          <Layer
-            id="bus-speed-hover-halo"
-            type="line"
-            source-layer={PMTILES_SOURCE_LAYER}
-            filter={hoveredFilter}
-            beforeId={stopsUrl ? BUS_STOPS_LAYER_ID : CASING_LAYER_ID}
-            layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-            paint={{ 'line-color': HOVER_HALO_COLOR, 'line-width': hoverHaloWidth }}
-          />
-        )}
-        {/* A dark casing under the ramp. Positron is nearly white, so the pale middle of
-            the speed scale would otherwise disappear into the basemap. */}
-        <Layer
-          id={CASING_LAYER_ID}
-          type="line"
-          source-layer={PMTILES_SOURCE_LAYER}
-          filter={filter}
-          layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-          paint={{ 'line-color': 'rgba(0, 0, 0, 0.35)', 'line-width': casingWidth }}
-        />
-        <Layer
-          id="bus-speed-lines"
-          type="line"
-          source-layer={PMTILES_SOURCE_LAYER}
-          filter={filter}
-          layout={{ 'line-cap': 'round', 'line-join': 'round' }}
-          paint={{
-            'line-color': speedColor,
-            'line-width': lineWidth,
-            'line-dasharray': lineDashes,
-          }}
-        />
-        {/* Direction of travel, only once a route is picked: unfiltered, many routes share each
-            street and one route's inbound can run against another's, so arrows there would be
-            noise. Mounts after the image (see arrowImageReady), so beforeId keeps it just above
-            the lines rather than on top of the stops. */}
-        {arrowImageReady && routeFilterClause && (
-          <Layer
-            id={ARROWS_LAYER_ID}
-            type="symbol"
-            source-layer={PMTILES_SOURCE_LAYER}
-            filter={filter}
-            minzoom={ARROWS_MIN_ZOOM}
-            beforeId={HITBOX_LAYER_ID}
-            layout={{
-              'symbol-placement': 'line',
-              'symbol-spacing': 80,
-              'icon-image': ARROW_IMAGE_ID,
-              'icon-size': arrowSize,
-              'icon-rotation-alignment': 'map',
-              'icon-allow-overlap': true,
-              'icon-ignore-placement': true,
-            }}
-          />
-        )}
-        {/* Invisible and deliberately fat: the drawn segments are a few pixels wide, which
-            is far too fine a target to hover reliably. */}
-        <Layer
-          id={HITBOX_LAYER_ID}
-          type="line"
-          source-layer={PMTILES_SOURCE_LAYER}
-          filter={hitboxFilter}
-          paint={{ 'line-color': '#000000', 'line-opacity': 0, 'line-width': 14 }}
-        />
+        {segmentLayers({
+          ids: ARCHIVE_LAYER_IDS,
+          sourceLayer: PMTILES_SOURCE_LAYER,
+          zooms: { minzoom: routeLines?.belowZoom ?? 0 },
+          filter,
+          hitboxFilter,
+          hoveredFilter,
+          haloBeforeId: stopsUrl ? BUS_STOPS_LAYER_ID : ROUTE_LAYER_IDS.casing,
+          // Direction of travel, only once a route is picked: unfiltered, many routes share each
+          // street and one route's inbound can run against another's, so arrows there would be
+          // noise. Mounts after the image (see arrowImageReady), so beforeId keeps it just above
+          // the lines rather than on top of the stops.
+          extra: arrowImageReady && Boolean(routeFilterClause) && (
+            <Layer
+              key={ARROWS_LAYER_ID}
+              id={ARROWS_LAYER_ID}
+              type="symbol"
+              source-layer={PMTILES_SOURCE_LAYER}
+              filter={filter}
+              minzoom={ARROWS_MIN_ZOOM}
+              beforeId={HITBOX_LAYER_ID}
+              layout={{
+                'symbol-placement': 'line',
+                'symbol-spacing': 80,
+                'icon-image': ARROW_IMAGE_ID,
+                'icon-size': arrowSize,
+                'icon-rotation-alignment': 'map',
+                'icon-allow-overlap': true,
+                'icon-ignore-placement': true,
+              }}
+            />
+          ),
+        })}
       </Source>
 
       {/* How long buses stood at each stop, as dots on the line: the segments' running speeds
@@ -939,18 +1102,17 @@ export const BusSpeedMapView = ({
         </Source>
       )}
 
-      {/* Declared after the segments so the casing exists to slot beneath: the archive loads
-          on its own schedule, and a layer added without a beforeId would land on top. Stations
-          sit above bus stops, both below every segment layer. */}
+      {/* Mounted once the lowest casing exists to slot beneath: a layer added without a beforeId
+          would land on top. Stations sit above bus stops, both below every segment layer. */}
       {stopsUrl && (
         <Source id={STOPS_SOURCE_ID} type="vector" url={stopsUrl}>
           <Layer
             id={STATIONS_LAYER_ID}
             type="circle"
             source-layer={STATIONS_SOURCE_LAYER}
-            beforeId={CASING_LAYER_ID}
+            beforeId={ROUTE_LAYER_IDS.casing}
             paint={{
-              'circle-color': stationColor,
+              'circle-color': stationColor(),
               'circle-radius': stationRadius,
               'circle-stroke-color': stationStrokeColor,
               'circle-stroke-width': 1.5,
@@ -996,7 +1158,7 @@ export const BusSpeedMapView = ({
               }
               filter={['==', ['get', 'stop_id'], hoveredStopId]}
               paint={{
-                'circle-color': hovered?.kind === 'station' ? stationColor : '#ffffff',
+                'circle-color': hovered?.kind === 'station' ? stationColor() : '#ffffff',
                 'circle-radius':
                   hovered?.kind === 'station' ? hoveredStationRadius : hoveredBusStopRadius,
                 'circle-stroke-color': HOVER_HALO_COLOR,

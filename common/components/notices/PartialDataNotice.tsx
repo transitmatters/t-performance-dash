@@ -9,18 +9,13 @@ interface PartialDataNoticeProps {
   query: ChunkedAggregateQueryResult;
 }
 
-/** Shown under a chart whose long date range is still arriving in pieces, or partly failed. */
+/**
+ * Shown under a chart once part of its long date range has failed to load. Parts still loading are
+ * shaded on the chart itself.
+ */
 export const PartialDataNotice = ({ query }: PartialDataNoticeProps) => {
   const { chunks } = query;
-  if (!chunks || (!chunks.pending && !chunks.failed)) return null;
-
-  if (chunks.pending) {
-    return (
-      <Notice>
-        Loading the rest of this date range ({chunks.loaded} of {chunks.total} parts loaded).
-      </Notice>
-    );
-  }
+  if (!chunks?.failed || chunks.pending) return null;
 
   return (
     <Notice variant="warning">

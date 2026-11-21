@@ -1,9 +1,10 @@
+import type { DelayCause } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
 
 // The shape of static/landing/overview.json (schemaVersion 1), built daily by data-ingestion
 // (chalicelib/overview).
 
-export type MetricId = 'service' | 'frequency' | 'reliability' | 'delays' | 'speed' | 'fleet';
+export type MetricId = 'service' | 'frequency' | 'reliability' | 'delays' | 'speed';
 
 /** `insufficient`: should be measured but there isn't enough recent data. `na`: not measured. */
 export type Status = 'win' | 'good' | 'room' | 'problem' | 'insufficient' | 'na';
@@ -55,20 +56,28 @@ export interface Cell {
   href?: string;
   /** Set when the status combines several measures, e.g. speed and slow zones. */
   parts?: CellPart[];
+  /** Delays: minutes a day under a delay alert (per route when several pool together). */
+  minutesPerDay?: number;
+  /** Reliability: share of headways half the scheduled gap or less. */
+  bunched?: number;
+  /**
+   * Delays: the cause with the most alert time over the last 4 weeks, leaving out alerts that give
+   * no reason, and its share of all the alert time.
+   */
+  topCause?: { cause: DelayCause; share: number };
 }
 
 export type HeadlineKind = 'strong' | 'good' | 'room' | 'needsWork' | 'limited';
 
 export interface Headline {
   kind: HeadlineKind;
-  /** Cells holding the row back, worst first. */
-  heldBackBy: MetricId[];
+  /** Cells holding the row back, worst first. An older file can list measures the page dropped. */
+  heldBackBy: string[];
 }
 
 export interface Row {
   id: string;
   label: string;
-  group: 'core' | 'also';
   /** Drives the `[data-line]` color tokens. */
   line: Line;
   href: string;
@@ -84,9 +93,10 @@ export interface HeroStat {
   unit: Unit | 'minutes';
   detail?: string;
   trend?: number | null;
-  /** A second line under the figure, for a tile without a trend. */
   note?: string;
   direction: Direction;
+  /** Slow zones: monthly means of minutes a day, as [YYYY-MM, minutes], oldest first. */
+  history?: [string, number][];
 }
 
 export interface HomeData {

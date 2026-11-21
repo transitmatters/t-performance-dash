@@ -15,17 +15,14 @@ export const PEAK_SCHEDULED_SERVICE: { [key in Line | 'DEFAULT']: number } = {
   DEFAULT: 0,
 };
 
-export const PEAK_SPEED: { [key in Line | 'DEFAULT']: number } = {
+// The speed series in baselines.json as of 2026-11-16, used only if that file fails to load.
+// Lines missing here have no historical maximum speed.
+export const PEAK_SPEED: Partial<Record<Line, number>> = {
   'line-red': 21.2,
-  'line-orange': 19.9,
-  'line-blue': 20.6,
-  'line-green': 12.5,
-  'line-mattapan': 18.8,
-  'line-commuter-rail': 0,
-  'line-bus': 0,
-  'line-ferry': 0,
-  'line-RIDE': 0,
-  DEFAULT: 0,
+  'line-orange': 18.13,
+  'line-blue': 20.66,
+  'line-green': 12.53,
+  'line-mattapan': 18.96,
 };
 
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.

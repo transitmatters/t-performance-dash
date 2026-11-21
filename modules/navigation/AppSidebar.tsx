@@ -9,7 +9,7 @@ import {
   SidebarTrigger,
   useSidebar,
 } from '../../common/components/ui/sidebar';
-import { isBetaHost } from '../../common/utils/constants';
+import { useColorVisionKey } from '../../common/utils/colorVision';
 import { SidebarCommandTrigger } from '../commandPalette/CommandPaletteTrigger';
 import { NavLines } from './NavLines';
 import { NavSystem } from './NavSystem';
@@ -17,6 +17,7 @@ import { ExtraMenuItems } from './ExtraMenuItems';
 
 export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
   const { isMobile, setOpenMobile } = useSidebar();
+  const colorVisionKey = useColorVisionKey();
   // On mobile the sidebar is a sheet, so navigating should dismiss it.
   const close = useCallback(() => {
     if (isMobile) setOpenMobile(false);
@@ -42,17 +43,12 @@ export const AppSidebar = ({ ...props }: ComponentProps<typeof Sidebar>) => {
         {/* Sheet on mobile has its own trigger in NavLayout's header. */}
         <SidebarTrigger className="hidden shrink-0 md:inline-flex" />
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent key={colorVisionKey}>
         <SidebarCommandTrigger />
         <NavSystem close={close} />
         <NavLines close={close} />
       </SidebarContent>
       <SidebarFooter className="group-data-[collapsible=icon]:hidden">
-        {isBetaHost() && (
-          <p className="px-2 text-xs text-sidebar-foreground/60">
-            Beta: usage data collected via Datadog
-          </p>
-        )}
         <ExtraMenuItems />
       </SidebarFooter>
     </Sidebar>

@@ -4,14 +4,12 @@ import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { useCrScorecard } from '../../../common/api/hooks/crScorecard';
-import { PageWrapper } from '../../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../../common/components/widgets/StatCard';
 import { useCrServiceScope, useServiceDay } from '../../../common/hooks/usePageFilters';
 import { useChartToggle } from '../../../common/hooks/useChartToggle';
 import type { DayKind } from '../../../common/types/dataPoints';
-import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
 import { getSpeedGraphConfig } from '../../speed/constants/speeds';
 import { LinesHourGrid } from './LinesHourGrid';
 import { RegionalRailNotes } from './RegionalRailNotes';
@@ -52,7 +50,6 @@ export function CommuterRailService() {
   const {
     query: { startDate, endDate, crRoute },
   } = useDelimitatedRoute();
-  const lineName = crRoute ? COMMUTER_RAIL_LINE_NAMES[crRoute] : undefined;
   const { value: scope } = useCrServiceScope();
   const { value: dayKind } = useServiceDay();
   const { value: wait, control: waitControl } = useChartToggle('midday', WAIT_OPTIONS, {
@@ -121,7 +118,7 @@ export function CommuterRailService() {
   const graphProps = { agg, startDate, endDate };
 
   return (
-    <PageWrapper pageTitle={`Service · ${byLine ? lineName : 'All lines'}`}>
+    <>
       <ChartPageDiv>
         {stats && span && (
           <StatCardGrid>
@@ -248,6 +245,6 @@ export function CommuterRailService() {
         )}
         <RegionalRailNotes />
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

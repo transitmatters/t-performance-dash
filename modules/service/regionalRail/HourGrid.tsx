@@ -26,11 +26,9 @@ const HOURS =
 const STATS = 'col-start-2 row-start-1 flex justify-end gap-x-2 text-right sm:col-start-3';
 const STAT_CELL = 'w-[4.5rem] shrink-0 whitespace-nowrap tabular-nums sm:w-20';
 
-const shortHour = (hour: number) => formatHour(hour).replace(' AM', 'a').replace(' PM', 'p');
-
 /** Hour labels over the grid, and the stats' column headings. */
 export const HourGridHeader = ({ stats }: { stats: string[] }) => (
-  <div aria-hidden className={cn(ROW, 'text-[11px] leading-tight text-muted-foreground')}>
+  <div aria-hidden className={cn(ROW, 'text-xs leading-tight text-muted-foreground')}>
     <div className={LABEL} />
     <div className={STATS}>
       {stats.map((stat) => (
@@ -41,11 +39,17 @@ export const HourGridHeader = ({ stats }: { stats: string[] }) => (
     </div>
     <div className={cn(HOURS, 'items-end')}>
       {SPAN_HOUR_INDEXES.map((hour, index) => (
+        // "5 AM", as elsewhere on the page. That's wider than an hour's cell, so label every third
+        // hour on phones and every other one from md, centred on its cell.
         <span
           key={hour}
-          className={cn('text-center whitespace-nowrap', index % 3 !== 0 && 'invisible md:visible')}
+          className={cn(
+            'flex justify-center whitespace-nowrap',
+            index % 3 !== 0 && 'invisible',
+            index % 2 === 0 ? 'md:visible' : 'md:invisible'
+          )}
         >
-          {shortHour(hour)}
+          {formatHour(hour)}
         </span>
       ))}
     </div>
@@ -84,7 +88,7 @@ export const HourGridRow = ({ label, hours, describe, stats }: HourGridRowProps)
             aria-label={description}
             title={description}
             className={cn(
-              'flex h-7 items-center justify-center rounded-[3px] text-[11px] font-medium tabular-nums',
+              'flex h-7 items-center justify-center rounded-[3px] text-xs font-medium tabular-nums',
               LEVEL_CLASS[level]
             )}
           >
@@ -105,7 +109,7 @@ export const HourGridLegend = ({ children }: { children?: ReactNode }) => (
         <span
           key={level}
           className={cn(
-            'flex h-5 min-w-6 items-center justify-center rounded-[3px] px-1 text-[11px] font-medium',
+            'flex h-5 min-w-6 items-center justify-center rounded-[3px] px-1 text-xs font-medium',
             LEVEL_CLASS[level]
           )}
         >

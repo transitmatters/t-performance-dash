@@ -6,7 +6,7 @@ import { MAJOR_EVENTS } from '../constants/majorEvents';
 import { CHART_COLORS } from '../constants/colors';
 import type { Line } from '../types/lines';
 import type { Block } from '../components/charts/TimeSeriesChart/types';
-import { useMajorEventsStore } from '../state/majorEventsStore';
+import { useDisplayStore } from '../state/displayStore';
 import { hexWithAlpha } from './general';
 
 const EVENT_COLOR = CHART_COLORS.GREY;
@@ -51,7 +51,7 @@ export const useMajorEvents = (
   startDate?: string,
   endDate?: string
 ): MajorEvent[] => {
-  const showEvents = useMajorEventsStore((state) => state.showEvents);
+  const showEvents = useDisplayStore((state) => state.showEvents);
   return useMemo(
     () => (showEvents ? getMajorEvents(lines, startDate, endDate) : []),
     [showEvents, lines, startDate, endDate]
@@ -91,7 +91,7 @@ export const hideBlocksExplainedByEvents = (blocks: Block[], events: MajorEvent[
       : block
   );
 
-const LABEL_FONT_SIZE = 11;
+const LABEL_FONT_SIZE = 12;
 const LABEL_LINE_HEIGHT = 1.2; // Chart.js's default
 const LABEL_PADDING = 4;
 const LABEL_GAP = 3;

@@ -18,7 +18,7 @@ EASTERN_TIME = ZoneInfo("America/New_York")
 SERVICE_DAY_START = timedelta(hours=3)
 
 # The most recent date for which we have monthly data
-MAX_MONTH_DATA_DATE = "2026-06-30"
+MAX_MONTH_DATA_DATE = "2026-09-30"
 MAX_FERRY_MONTH_DATA_DATE = "2026-03-31"
 
 # The earliest date for which LAMP bus data is published

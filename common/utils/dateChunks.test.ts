@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { splitDateRange } from './dateChunks';
+import { isLongRange, joinAdjacentChunks, splitDateRange } from './dateChunks';
 
 describe('splitDateRange', () => {
   it('leaves ranges of a year or less as one chunk', () => {
@@ -42,5 +42,41 @@ describe('splitDateRange', () => {
       { startDate: '2025-01-01', endDate: '2025-06-30' },
       { startDate: '2024-09-10', endDate: '2024-12-31' },
     ]);
+  });
+});
+
+describe('isLongRange', () => {
+  it('is true only past a year', () => {
+    expect(isLongRange('2025-01-01', '2026-01-01')).toBe(false);
+    expect(isLongRange('2025-01-01', '2026-01-02')).toBe(true);
+  });
+});
+
+describe('joinAdjacentChunks', () => {
+  it('joins back-to-back chunks and keeps gaps, oldest first', () => {
+    expect(
+      joinAdjacentChunks([
+        { startDate: '2025-01-01', endDate: '2025-12-31' },
+        { startDate: '2022-01-01', endDate: '2022-12-31' },
+        { startDate: '2021-03-15', endDate: '2021-12-31' },
+        { startDate: '2024-01-01', endDate: '2024-12-31' },
+      ])
+    ).toEqual([
+      { startDate: '2021-03-15', endDate: '2022-12-31' },
+      { startDate: '2024-01-01', endDate: '2025-12-31' },
+    ]);
+  });
+
+  it('leaves its input untouched', () => {
+    const chunks = [
+      { startDate: '2023-01-01', endDate: '2023-12-31' },
+      { startDate: '2022-01-01', endDate: '2022-12-31' },
+    ];
+    joinAdjacentChunks(chunks);
+    expect(chunks[1]).toEqual({ startDate: '2022-01-01', endDate: '2022-12-31' });
+  });
+
+  it('returns nothing for no chunks', () => {
+    expect(joinAdjacentChunks([])).toEqual([]);
   });
 });

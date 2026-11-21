@@ -4,7 +4,6 @@ import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { useScheduledService, useServiceHours } from '../../common/api/hooks/service';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
@@ -97,7 +96,7 @@ export function ServiceDetails() {
   const words: [string, string] = ['better', 'worse'];
 
   return (
-    <PageWrapper pageTitle={'Service'}>
+    <>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.avgRoundTrips) && (
           <StatCardGrid>
@@ -150,7 +149,7 @@ export function ServiceDetails() {
         </Widget>
         <Widget
           title="Service delivered"
-          subtitle={`Compared to ${SERVICE_COMPARISON_LABELS[comparison]}`}
+          subtitle={`Compared to ${SERVICE_COMPARISON_LABELS[comparison].toLowerCase()}`}
           ready={[tripsData, scheduledService]}
           action={comparisonControl}
         >
@@ -182,6 +181,6 @@ export function ServiceDetails() {
           <DailyServiceHistogram scheduledService={scheduledData!} dayKind={dayKind} />
         </Widget>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

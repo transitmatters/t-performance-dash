@@ -7,7 +7,6 @@ import { WidgetDiv } from '../../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../../../common/components/widgets/WidgetTitle';
 import { SelectedBusRouteScope } from '../../../common/hooks/useChartBusRoute';
 import { ToggleControl } from '../../../common/hooks/useChartToggle';
-import { PageWrapper } from '../../../common/layouts/PageWrapper';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { BusSpeedDataNotes } from '../BusSpeedDataNotes';
 import { DAY_TYPES, TIME_BANDS } from '../constants';
@@ -42,7 +41,7 @@ export function BusSpeedLeaderboardDetails() {
     .join(' · ');
 
   return (
-    <PageWrapper pageTitle={'Bus rankings'}>
+    <>
       {/* Ranks every route, so no chart here is about the route picked in the header. */}
       <SelectedBusRouteScope shown={false}>
         <ChartPageDiv>
@@ -108,6 +107,6 @@ export function BusSpeedLeaderboardDetails() {
           <BusSpeedDataNotes />
         </ChartPageDiv>
       </SelectedBusRouteScope>
-    </PageWrapper>
+    </>
   );
 }

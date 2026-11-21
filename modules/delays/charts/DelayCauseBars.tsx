@@ -4,7 +4,6 @@ import { Bar } from '@chartjs-components';
 
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import { useChartTheme } from '../../../common/utils/chartTheme';
-import { hexWithAlpha } from '../../../common/utils/general';
 import { watermarkSize } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
@@ -12,6 +11,7 @@ import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { DelaysEmbedButton } from '../DelaysEmbedButton';
 import { formatDelay } from '../format';
 import type { DelayReasonKey } from '../constants/reasons';
+import { reasonFill } from '../constants/reasons';
 import type { DelayRow } from '../reasonSeries';
 import { causeRows } from '../reasonSeries';
 
@@ -121,7 +121,7 @@ export const DelayCauseBars = ({
                 label: 'Time delayed',
                 data: rows.map((row) => row.total),
                 backgroundColor: rows.map((row) =>
-                  focus && row.key !== focus ? hexWithAlpha(row.color, 0.3) : row.color
+                  reasonFill(row.key, focus && row.key !== focus ? 0.3 : 1)
                 ),
                 borderRadius: 2,
                 barPercentage: 0.75,
@@ -165,7 +165,7 @@ export const DelayCauseBars = ({
               y: {
                 grid: { display: false },
                 border: { display: false },
-                ticks: { color: chartTheme.tick, font: { size: 13 } },
+                ticks: { color: chartTheme.tick, font: { size: LABEL_FONT_SIZE } },
               },
             },
           }}

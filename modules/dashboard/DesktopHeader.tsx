@@ -4,10 +4,11 @@ import { RouteBullet } from '../../common/components/transit/RouteBullet';
 import { usePageControls } from '../../common/hooks/usePageControls';
 import { usePageHeading } from '../../common/hooks/usePageHeading';
 import { lineColorBackground, needsDarkTextOn, textOnLineColor } from '../../common/styles/general';
+import { HeadingSwitchers } from './HeadingSwitchers';
 
 export const DesktopHeader = () => {
-  const { lineName, pageTitle } = usePageHeading();
-  const { visible: showControls, colorKey } = usePageControls();
+  const { pageTitle } = usePageHeading();
+  const { visible: showControls, colorKey, showTripControls } = usePageControls();
 
   return (
     <div className="sticky top-0 z-10 mb-2 shadow-md">
@@ -18,18 +19,16 @@ export const DesktopHeader = () => {
           lineColorBackground[colorKey ?? 'DEFAULT']
         )}
       >
-        <h1 className="flex shrink-0 flex-row items-baseline gap-x-2 text-xl">
-          <span className="font-bold">{lineName}</span>
+        {/* min-w-0 so a long route name truncates instead of overflowing the band. */}
+        <h1 className="flex min-w-0 flex-row items-center gap-x-2 text-xl">
+          <HeadingSwitchers compact="belowLg" className="font-bold" />
           <RouteBullet
             size="sm"
-            className={classNames(
-              'self-center',
-              needsDarkTextOn(colorKey) ? 'text-stone-900/60' : 'text-white/70'
-            )}
+            className={needsDarkTextOn(colorKey) ? 'text-stone-900/60' : 'text-white/70'}
           />
-          <span className="font-normal select-none">{pageTitle}</span>
+          <span className="shrink-0 font-normal whitespace-nowrap select-none">{pageTitle}</span>
         </h1>
-        {showControls && <BandControls />}
+        {showControls && showTripControls && <BandControls />}
       </div>
       {showControls && <BarControls />}
     </div>

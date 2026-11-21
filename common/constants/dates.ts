@@ -26,6 +26,7 @@ export const TODAY_MIDNIGHT = dayjs().startOf('day');
 export const YESTERDAY_MIDNIGHT = TODAY_MIDNIGHT.subtract(1, 'day');
 export const TODAY_STRING = TODAY.format(DATE_FORMAT);
 export const YESTERDAY_STRING = TODAY.subtract(1, 'day').format(DATE_FORMAT);
+export const TWO_DAYS_AGO_STRING = TODAY.subtract(2, 'day').format(DATE_FORMAT);
 export const TODAY_SERVICE_STARTED = TODAY.hour() >= 6;
 export const ONE_WEEK_AGO = TODAY.subtract(7, 'days');
 export const ONE_WEEK_AGO_STRING = ONE_WEEK_AGO.format(DATE_FORMAT);
@@ -49,7 +50,7 @@ export const FERRY_ARRIVALS_START_DATE = '2026-10-12';
 const FERRY_ROUTE_TRIPS_MIN_DATES: Partial<Record<FerryRoute, string>> = {
   'Boat-F10': FERRY_LIVE_START_DATE,
 };
-export const BUS_MAX_DATE = '2026-06-30';
+export const BUS_MAX_DATE = '2026-09-30';
 export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
 /**
  * The per-segment speed dataset behind the speed map and leaderboard starts here. It's built
@@ -57,6 +58,11 @@ export const BUS_MAX_DAY = dayjs(BUS_MAX_DATE);
  * 2025-07-30 (LAMP_BUS_START_DATE in server/chalicelib/date_utils.py).
  */
 export const BUS_SPEED_MAP_MIN_DATE = '2025-12-24';
+/**
+ * Bus trip metrics (trips run, miles, speed) start here; earlier rows hold only the fleet fields.
+ * It's the same day the speed map's segment data starts.
+ */
+export const BUS_TRIP_METRICS_MIN_DATE = BUS_SPEED_MAP_MIN_DATE;
 export const BUS_MAX_DATE_MINUS_ONE_WEEK = dayjs(BUS_MAX_DATE)
   .subtract(7, 'days')
   .format(DATE_FORMAT);
@@ -79,6 +85,15 @@ export const RIDE_RELIABILITY_MIN_DATE = '2014-07-01';
 export const COMMUTER_RAIL_RELIABILITY_MIN_DATE = '2016-01-01';
 export const getESTDayjs = (date: string) => {
   return dayjs(date).tz(est);
+};
+
+/**
+ * When a bus route ran. It's retired once its last day of service is behind us; a route with an end
+ * date still to come is running.
+ */
+export const getBusRouteService = (busRoute: BusRoute) => {
+  const { minDate: start, maxDate: end } = getMinMaxDatesForRoute('Bus', busRoute);
+  return { start, end, retired: Boolean(end && end < TODAY_STRING) };
 };
 
 /** The selectable range for a tab's date picker — the calendar disables everything outside it. */

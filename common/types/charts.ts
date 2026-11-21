@@ -57,6 +57,8 @@ export interface AggregateChunkProgress {
   failed: number;
   /** Chunks with neither data nor an error yet. */
   pending: number;
+  /** The date spans those pending chunks cover, joined where they touch, oldest first. */
+  pendingRanges: { startDate: string; endDate: string }[];
   /** by_time is taken from the newest chunk only, since percentiles can't be merged across chunks. */
   byTimeRange: { startDate: string; endDate: string };
   byTimeStatus: 'pending' | 'error' | 'success';
@@ -146,6 +148,10 @@ export interface AggregateLineProps extends LineProps {
   embedChart?: TripEmbedChart<'multi'>;
   /** Start with the trendline drawn. */
   trendline?: boolean;
+  /** A subway trip whose slow zones go in the chart's context track. */
+  slowZonesTrip?: { fromStation: Station; toStation: Station };
+  /** Set when the range loads in chunks: the spans still loading, shaded until they arrive. */
+  loadingRanges?: { startDate: string; endDate: string }[];
 }
 
 export interface SingleDayLineProps extends LineProps {
@@ -159,6 +165,19 @@ export interface SingleDayLineProps extends LineProps {
   fill?: boolean;
   /** Adds an Embed button that copies an `<iframe>` of this trip chart. */
   embedChart?: TripEmbedChart<'single'>;
+  /** Rings one point and labels it, e.g. the day's longest wait. */
+  callout?: ChartCallout;
+  /** The download, image and embed buttons, which name the page's line and stops. Off where the
+   * chart isn't on a line's page. */
+  actions?: boolean;
+  /** Draws the series in, point by point, the first time the chart appears. */
+  intro?: boolean;
+}
+
+export interface ChartCallout {
+  /** Index into `data`. */
+  index: number;
+  label: string;
 }
 
 export interface HeadwayHistogramProps {
@@ -182,4 +201,8 @@ export interface HeadwaysChartProps {
   date?: string;
   /** Fill the parent's height and leave out the buttons under the chart, as an embed does. */
   fill?: boolean;
+  callout?: ChartCallout;
+  /** Off where the chart isn't on a line's page; see SingleDayLineProps. */
+  actions?: boolean;
+  intro?: boolean;
 }

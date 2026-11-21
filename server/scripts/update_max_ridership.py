@@ -8,7 +8,7 @@ import sys
 import os
 
 BUS_CONSTANTS = pathlib.Path(__file__).resolve().parents[2] / "common" / "constants" / "bus_constants"
-# Mirrors getRidershipLineId in common/utils/ridership.ts
+# Mirrors getRidershipLineId in common/utils/ridership.ts, except for retired routes, which this skips
 BUS_RIDERSHIP_ALIASES = {
     "34": "3434E",
     "57": "5757A",

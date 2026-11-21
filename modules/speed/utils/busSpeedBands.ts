@@ -19,13 +19,16 @@ export const BAND_COLORS: Record<Exclude<TimeBand, 'all_day'>, { light: string; 
   late_night: { light: '#e34948', dark: '#e66767' },
 };
 
-/** The first service date the pipeline split into bands. Earlier rows carry only all-day totals. */
-export const BAND_DATA_START = '2025-12-24';
+/** The first service date with bus speeds, all-day and per band alike. */
+export const BUS_SPEED_DATA_START = '2025-12-24';
 
 const SERIES_KEYS = TIME_BANDS.map(({ key }) => key);
 
-/** Every line starts out shown; a viewer hides the ones they don't want from the legend. */
-export const DEFAULT_VISIBLE_BANDS: TimeBand[] = SERIES_KEYS;
+/**
+ * All day and the two rush hours to start, since all seven lines at once tangle together. The
+ * rest are one click away in the legend.
+ */
+export const DEFAULT_VISIBLE_BANDS: TimeBand[] = ['all_day', 'am_peak', 'pm_peak'];
 
 /**
  * The lines named in the `speedBands` param, in TIME_BANDS order. Unknown keys are dropped, and a
@@ -67,3 +70,31 @@ export const flattenBandsForCsv = (data: DeliveredTripMetricsBus[]) =>
     delete flat.time_bands;
     return flat;
   });
+
+export interface BandSpeed {
+  band: Exclude<TimeBand, 'all_day'>;
+  mph: number;
+}
+
+/**
+ * The slowest and fastest time of day over the whole range, each band's miles over its hours so a
+ * quiet day counts for only the trips it ran. Undefined when no row has a per-band breakdown.
+ */
+export const bandExtremes = (
+  data: DeliveredTripMetricsBus[]
+): { slowest: BandSpeed; fastest: BandSpeed } | undefined => {
+  const speeds = TIME_BANDS.flatMap(({ key }): BandSpeed[] => {
+    if (key === 'all_day') return [];
+    const totals = data.reduce(
+      (sum, row) => ({
+        miles: sum.miles + (row.time_bands?.[key]?.miles_covered ?? 0),
+        hours: sum.hours + (row.time_bands?.[key]?.total_time ?? 0) / 3600,
+      }),
+      { miles: 0, hours: 0 }
+    );
+    return totals.miles && totals.hours ? [{ band: key, mph: totals.miles / totals.hours }] : [];
+  });
+  if (speeds.length === 0) return undefined;
+  const sorted = [...speeds].sort((a, b) => a.mph - b.mph);
+  return { slowest: sorted[0], fastest: sorted[sorted.length - 1] };
+};

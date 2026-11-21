@@ -17,18 +17,18 @@ import {
   TableCell,
 } from '../../../common/components/ui/table';
 import { Badge } from '../../../common/components/ui/badge';
+import { Button } from '../../../common/components/ui/button';
 import { Skeleton } from '../../../common/components/ui/skeleton';
 import { Sparkline } from '../../../common/components/charts/Sparkline';
 import { RouteBullet } from '../../../common/components/transit/RouteBullet';
 import { RouteLine } from '../../../common/components/transit/RouteLine';
 import { StationNode } from '../../../common/components/transit/StationNode';
 import { RollingNumber } from '../../../common/components/motion/RollingNumber';
-import type { ScorecardRow, MetricKey } from './types';
+import type { ScorecardRow, ScorecardSlot, MetricKey } from './types';
 
 interface MetricsScorecardProps {
-  rows: ScorecardRow[];
-  isLoading: boolean;
-  skeletonRows?: number;
+  slots: ScorecardSlot[];
+  color?: string;
   selectedMetric: MetricKey;
   onSelectMetric: (metric: MetricKey) => void;
 }
@@ -46,18 +46,108 @@ const textColorFor = (sentiment: ScorecardRow['deltaSentiment']) => {
   return 'text-muted-foreground';
 };
 
+const ReadyCells = ({ row }: { row: ScorecardRow }) => (
+  <>
+    <TableCell>
+      <RollingNumber
+        value={row.currentValue}
+        format={row.formatValue}
+        className="text-xl font-semibold tabular-nums"
+      />{' '}
+      <span className="text-xs text-muted-foreground">{row.unit}</span>
+      {row.peakLabel && <div className="text-xs text-muted-foreground">{row.peakLabel}</div>}
+    </TableCell>
+    <TableCell>
+      <Badge variant={badgeVariantFor(row.deltaSentiment)}>
+        <span className="md:hidden">{row.deltaValueLabel}</span>
+        <span className="hidden md:inline">{row.deltaLabel}</span>
+      </Badge>
+      {row.yearOverYear && (
+        <div
+          className={classNames(
+            'mt-1 text-xs font-medium whitespace-nowrap',
+            textColorFor(row.yearOverYear.sentiment)
+          )}
+        >
+          <span className="md:hidden">{row.yearOverYear.shortLabel}</span>
+          <span className="hidden md:inline">{row.yearOverYear.label}</span>
+        </div>
+      )}
+    </TableCell>
+    <TableCell className="hidden w-full pr-6 md:table-cell">
+      <Sparkline values={row.trend} color={row.color} />
+    </TableCell>
+  </>
+);
+
+const LoadingCells = () => (
+  <>
+    <TableCell>
+      <Skeleton className="h-6 w-16" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="h-5 w-12 md:w-20" />
+    </TableCell>
+    <TableCell className="hidden w-full pr-6 md:table-cell">
+      <Skeleton className="h-4 w-full" />
+    </TableCell>
+  </>
+);
+
+/** A failed or empty row keeps its place, so it reads as missing rather than never there. */
+const MissingCells = ({ slot }: { slot: ScorecardSlot }) => (
+  <>
+    <TableCell className="text-sm whitespace-nowrap text-muted-foreground">
+      {slot.status === 'error' ? "Couldn't load" : 'No recent data'}
+    </TableCell>
+    <TableCell>
+      {slot.retry ? (
+        <Button
+          variant="outline"
+          size="xs"
+          disabled={slot.isRetrying}
+          onClick={(event) => {
+            // Retrying shouldn't also chart the row
+            event.stopPropagation();
+            slot.retry?.();
+          }}
+        >
+          {slot.isRetrying ? (
+            'Retrying…'
+          ) : (
+            <>
+              <span className="md:hidden">Retry</span>
+              <span className="hidden md:inline">Try again</span>
+            </>
+          )}
+        </Button>
+      ) : (
+        <span className="text-sm text-muted-foreground">—</span>
+      )}
+    </TableCell>
+    <TableCell className="hidden w-full pr-6 md:table-cell" />
+  </>
+);
+
+const SlotCells = ({ slot }: { slot: ScorecardSlot }) => {
+  if (slot.status === 'ready' && slot.row) return <ReadyCells row={slot.row} />;
+  if (slot.status === 'loading') return <LoadingCells />;
+  return <MissingCells slot={slot} />;
+};
+
+/** Each row keeps its place while it loads, and fills in when its own data arrives. */
 export const MetricsScorecard = ({
-  rows,
-  isLoading,
-  skeletonRows = 4,
+  slots,
+  color,
   selectedMetric,
   onSelectMetric,
 }: MetricsScorecardProps) => {
+  const isLoading = slots.some((slot) => slot.status === 'loading');
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <span style={{ color: rows[0]?.color }}>
+          <span style={{ color }}>
             <RouteBullet />
           </span>
           Metrics
@@ -69,7 +159,7 @@ export const MetricsScorecard = ({
           <TableHeader>
             <TableRow className="hover:bg-transparent">
               <TableHead className="pl-6">Metric</TableHead>
-              <TableHead>Last 30 days</TableHead>
+              <TableHead>Latest 30 days</TableHead>
               <TableHead>
                 <span className="md:hidden">Vs prev</span>
                 <span className="hidden md:inline">Vs previous 30 days</span>
@@ -77,102 +167,57 @@ export const MetricsScorecard = ({
               <TableHead className="hidden pr-6 md:table-cell">12 months</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody role="radiogroup" aria-label="Select a metric to chart below">
-            {isLoading
-              ? Array.from({ length: skeletonRows }).map((_, i) => (
-                  <TableRow key={`skeleton-${i}`} className="hover:bg-transparent">
-                    <TableCell className="pl-12">
-                      <div className="flex flex-col gap-1.5">
-                        <Skeleton className="h-4 w-28" />
-                        <Skeleton className="h-3 w-36" />
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-6 w-16" />
-                    </TableCell>
-                    <TableCell>
-                      <Skeleton className="h-5 w-20" />
-                    </TableCell>
-                    <TableCell className="hidden w-full pr-6 md:table-cell">
-                      <Skeleton className="h-4 w-full" />
-                    </TableCell>
-                  </TableRow>
-                ))
-              : rows.map((row, index) => {
-                  const isSelected = row.key === selectedMetric;
-                  return (
-                    <TableRow
-                      key={row.key}
-                      onClick={() => onSelectMetric(row.key)}
-                      className={classNames(
-                        'hover:bg-muted/40 cursor-pointer transition-colors',
-                        'has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset',
-                        isSelected && 'bg-muted/60'
+          <TableBody
+            role="radiogroup"
+            aria-label="Select a metric to chart below"
+            aria-busy={isLoading}
+          >
+            {slots.map((slot) => {
+              const isSelected = slot.key === selectedMetric;
+              const subtitle = slot.row?.subtitle ?? slot.subtitle;
+              return (
+                <TableRow
+                  key={slot.key}
+                  onClick={() => onSelectMetric(slot.key)}
+                  className={classNames(
+                    'hover:bg-muted/40 cursor-pointer transition-colors',
+                    'has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-inset',
+                    isSelected && 'bg-muted/60'
+                  )}
+                >
+                  <TableCell className="relative pl-12" style={{ color }}>
+                    <input
+                      type="radio"
+                      name="scorecard-metric"
+                      className="sr-only"
+                      checked={isSelected}
+                      onChange={() => onSelectMetric(slot.key)}
+                      aria-label={`Chart the ${slot.label} metric`}
+                    />
+                    <span className="pointer-events-none absolute inset-y-0 left-6 flex w-3 -translate-x-1/2 justify-center opacity-30">
+                      <RouteLine orientation="vertical" />
+                    </span>
+                    <span className="pointer-events-none absolute top-1/2 left-6 flex w-3 -translate-x-1/2 -translate-y-1/2 justify-center">
+                      <StationNode filled={isSelected} size={isSelected ? 'lg' : 'md'} />
+                    </span>
+                    <div className="flex flex-col gap-0.5 text-foreground">
+                      <span className="text-sm font-medium">{slot.label}</span>
+                      <span className="hidden text-xs text-muted-foreground sm:block">
+                        {subtitle}
+                      </span>
+                      {isSelected && (
+                        <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary">
+                          <ChevronDown className="size-3" aria-hidden />
+                          Charted below
+                        </span>
                       )}
-                    >
-                      <TableCell className="relative pl-12" style={{ color: row.color }}>
-                        <input
-                          type="radio"
-                          name="scorecard-metric"
-                          className="sr-only"
-                          checked={isSelected}
-                          onChange={() => onSelectMetric(row.key)}
-                          aria-label={`Chart the ${row.label} metric`}
-                        />
-                        <span className="pointer-events-none absolute inset-y-0 left-6 flex w-3 -translate-x-1/2 justify-center opacity-30">
-                          <RouteLine orientation="vertical" />
-                        </span>
-                        <span className="pointer-events-none absolute top-1/2 left-6 flex w-3 -translate-x-1/2 -translate-y-1/2 justify-center">
-                          <StationNode filled={isSelected} size={isSelected ? 'lg' : 'md'} />
-                        </span>
-                        <div className="flex flex-col gap-0.5 text-foreground">
-                          <span className="text-sm font-medium">{row.label}</span>
-                          <span className="hidden text-xs text-muted-foreground sm:block">
-                            {row.subtitle}
-                          </span>
-                          {isSelected && (
-                            <span className="mt-1 inline-flex items-center gap-1 text-xs font-medium text-primary">
-                              <ChevronDown className="size-3" aria-hidden />
-                              Charted below
-                            </span>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <RollingNumber
-                          value={row.currentValue}
-                          format={row.formatValue}
-                          className="text-xl font-semibold tabular-nums"
-                        />{' '}
-                        <span className="text-xs text-muted-foreground">{row.unit}</span>
-                        {row.peakLabel && (
-                          <div className="text-xs text-muted-foreground">{row.peakLabel}</div>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={badgeVariantFor(row.deltaSentiment)}>
-                          <span className="md:hidden">{row.deltaValueLabel}</span>
-                          <span className="hidden md:inline">{row.deltaLabel}</span>
-                        </Badge>
-                        {row.yearOverYear && (
-                          <div
-                            className={classNames(
-                              'mt-1 text-xs font-medium whitespace-nowrap',
-                              textColorFor(row.yearOverYear.sentiment)
-                            )}
-                          >
-                            <span className="md:hidden">{row.yearOverYear.shortLabel}</span>
-                            <span className="hidden md:inline">{row.yearOverYear.label}</span>
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell className="hidden w-full pr-6 md:table-cell">
-                        <Sparkline values={row.trend} color={row.color} />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            {!isLoading && !rows.length && (
+                    </div>
+                  </TableCell>
+                  <SlotCells slot={slot} />
+                </TableRow>
+              );
+            })}
+            {!slots.length && (
               <TableRow className="hover:bg-transparent">
                 <TableCell
                   colSpan={4}

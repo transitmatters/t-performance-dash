@@ -8,7 +8,7 @@ import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useChartTheme } from '../../utils/chartTheme';
-import { getFormattedTimeString } from '../../utils/time';
+import { formatMinutesTick, getFormattedTimeString } from '../../utils/time';
 import {
   TEMPERATURE_BAND_OPACITY,
   TEMPERATURE_SCALE,
@@ -28,6 +28,7 @@ import { ChartActions } from './ChartActions';
 import { ChartDiv } from './ChartDiv';
 import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
+import { loadingAnnotations } from './loadingAnnotations';
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   if (hourly) {
@@ -90,6 +91,8 @@ export const AggregateLineChart = ({
   fill = false,
   embedChart,
   trendline = false,
+  slowZonesTrip,
+  loadingRanges,
 }: AggregateLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -100,7 +103,16 @@ export const AggregateLineChart = ({
     temperatureEnabled: tempEnabled,
     geometryPlugin,
     weatherAt,
-  } = useChartLayers({ startDate, endDate, granularity: 'daily', enabled: !hourly && !fill });
+    slowZonesAt,
+  } = useChartLayers({
+    startDate,
+    endDate,
+    granularity: 'daily',
+    enabled: !hourly && !fill,
+    // Charts by time of day span many dates at every point, so there's no day to mark.
+    withOtherShutdowns: !hourly && !byTime,
+    slowZonesTrip: byTime ? undefined : slowZonesTrip,
+  });
   const { weather } = layers;
   const temperatureSeries = useMemo(
     () => (!hourly && !fill && tempEnabled && weather ? getDailyTemperatureSeries(weather) : null),
@@ -229,7 +241,7 @@ export const AggregateLineChart = ({
                   precision: 1,
                   callback: (value) => {
                     return yUnit === 'Minutes' && typeof value === 'number'
-                      ? getFormattedTimeString(value, 'minutes')
+                      ? formatMinutesTick(value)
                       : value.toLocaleString();
                   },
                 },
@@ -278,6 +290,9 @@ export const AggregateLineChart = ({
             },
             responsive: true,
             maintainAspectRatio: false,
+            // Each chunk that arrives rebuilds the chart; replaying the grow-in every time made it
+            // jump.
+            animation: loadingRanges ? false : undefined,
             // Make the tooltip display all 3 datapoints for each x axis entry.
             interaction: {
               mode: 'index',
@@ -285,7 +300,11 @@ export const AggregateLineChart = ({
             },
             plugins: {
               annotation: {
-                annotations: [...weatherBlocks, ...getMajorEventAnnotations(events)],
+                annotations: [
+                  ...weatherBlocks,
+                  ...getMajorEventAnnotations(events),
+                  ...(hourly ? [] : loadingAnnotations(loadingRanges ?? [], chartTheme)),
+                ],
               },
               legend: {
                 display: false,
@@ -315,10 +334,9 @@ export const AggregateLineChart = ({
                           )
                         : undefined;
                     const hoveredDay = medianItem?.parsed.x;
-                    const weatherRow =
-                      hoveredDay === undefined || hoveredDay === null
-                        ? undefined
-                        : weatherAt(hoveredDay);
+                    const hasDay = hoveredDay !== undefined && hoveredDay !== null;
+                    const weatherRow = hasDay ? weatherAt(hoveredDay) : undefined;
+                    const slowZonesRow = hasDay ? slowZonesAt(hoveredDay) : undefined;
                     const extraRows =
                       hoverRows && medianItem ? hoverRows(data[medianItem.dataIndex]) : [];
 
@@ -338,6 +356,7 @@ export const AggregateLineChart = ({
                           ? [{ label: '25th percentile', value: format(p25), color: fillColor }]
                           : []),
                         ...extraRows,
+                        ...(slowZonesRow ? [slowZonesRow] : []),
                         ...(trend
                           ? [{ label: 'Trend', value: format(trend), color: CHART_COLORS.RED }]
                           : []),

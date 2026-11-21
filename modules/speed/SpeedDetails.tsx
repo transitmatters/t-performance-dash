@@ -2,7 +2,6 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { useSpeedBaseline } from '../../common/api/hooks/baselines';
@@ -46,7 +45,7 @@ export function SpeedDetails() {
   const words: [string, string] = ['faster', 'slower'];
 
   return (
-    <PageWrapper pageTitle={'Speed'}>
+    <>
       <ChartPageDiv>
         {stats && Number.isFinite(stats.avgSpeed) && (
           <StatCardGrid>
@@ -97,6 +96,6 @@ export function SpeedDetails() {
           />
         </Widget>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

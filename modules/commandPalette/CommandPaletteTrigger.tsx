@@ -25,7 +25,7 @@ export const SidebarCommandTrigger = () => {
           >
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             <span className="truncate">Search…</span>
-            <kbd className="ml-auto rounded border border-sidebar-border px-1 font-sans text-[11px] text-sidebar-foreground/70">
+            <kbd className="ml-auto rounded border border-sidebar-border px-1 font-sans text-xs text-sidebar-foreground/70">
               {shortcut}
             </kbd>
           </SidebarMenuButton>

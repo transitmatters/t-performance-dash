@@ -23,7 +23,7 @@ describe('getSpeedStats', () => {
 
   it('uses the baseline it is given for the share of historical max', () => {
     expect(getSpeedStats(data, 25).percentOfMax).toBeCloseTo(2030 / 101 / 25);
-    expect(getSpeedStats(data, 0).percentOfMax).toBeNaN();
+    expect(getSpeedStats(data, undefined).percentOfMax).toBeNaN();
   });
 
   it('leaves out periods with no trips', () => {

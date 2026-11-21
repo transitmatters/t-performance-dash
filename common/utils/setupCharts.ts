@@ -19,6 +19,7 @@ import { annotationHoverCardPlugin } from '../components/charts/annotationToolti
 import { hoverHighlightPlugin } from '../components/charts/hoverCard/hoverHighlightPlugin';
 import { externalHoverCard, hoverCardCleanupPlugin } from '../components/charts/hoverCard/external';
 import { watermarkPlugin } from '../components/charts/watermarkPlugin';
+import { FONT_SANS, LABEL_FONT_SIZE } from '../constants/typography';
 
 ChartJS.register(
   BarController,
@@ -40,6 +41,10 @@ ChartJS.register(
   hoverCardCleanupPlugin,
   watermarkPlugin
 );
+
+// Canvas text doesn't inherit CSS, so charts would otherwise draw in Chart.js's Helvetica stack.
+ChartJS.defaults.font.family = FONT_SANS;
+ChartJS.defaults.font.size = LABEL_FONT_SIZE;
 
 // Hovers render in the shared HTML card (ChartHoverCard) instead of Chart.js's canvas tooltip.
 ChartJS.defaults.plugins.tooltip.enabled = false;

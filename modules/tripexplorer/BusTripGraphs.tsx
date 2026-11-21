@@ -142,6 +142,19 @@ export const BusTripGraphs = ({
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
+              title="Headways"
+              subtitle="Time between buses"
+              location={location}
+              line={line}
+            />
+            <HeadwaysSingleWrapper
+              query={headways}
+              toStation={toStation}
+              fromStation={fromStation}
+            />
+          </WidgetDiv>
+          <WidgetDiv>
+            <WidgetTitle
               title={<ByVehicleTitle vehicleNoun="Bus" />}
               subtitle="Median travel time of each bus"
               location={location}
@@ -153,19 +166,6 @@ export const BusTripGraphs = ({
               toStation={toStation}
               fromStation={fromStation}
               vehicleNoun="Bus"
-            />
-          </WidgetDiv>
-          <WidgetDiv>
-            <WidgetTitle
-              title="Headways"
-              subtitle="Time between buses"
-              location={location}
-              line={line}
-            />
-            <HeadwaysSingleWrapper
-              query={headways}
-              toStation={toStation}
-              fromStation={fromStation}
             />
           </WidgetDiv>
         </>

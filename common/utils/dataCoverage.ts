@@ -165,7 +165,10 @@ export const getNoDataReason = ({
   }
 
   if (isLineMetric) {
-    return { title: 'No data available', detail: 'Try another date range.' };
+    return {
+      title: 'No data available',
+      detail: date ? 'Try another date.' : 'Try another date range.',
+    };
   }
 
   switch (tab) {

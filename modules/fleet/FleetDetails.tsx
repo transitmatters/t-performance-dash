@@ -2,7 +2,6 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
@@ -110,7 +109,7 @@ export function FleetDetails() {
       : 'Most common car type';
 
   return (
-    <PageWrapper pageTitle={'Fleet'}>
+    <>
       {/* "All routes" charts aren't about the route picked in the header. */}
       <SelectedBusRouteScope shown={byRoute}>
         <ChartPageDiv>
@@ -154,20 +153,6 @@ export function FleetDetails() {
               />
             </Widget>
           )}
-          <Widget
-            title={metrics.age.title}
-            subtitle={subtitle('Average across the line')}
-            ready={[fleetMetrics]}
-          >
-            <FleetAgeGraphWrapper
-              data={fleetMetrics.data!}
-              metric={metrics.age}
-              showShuttling={shuttling}
-              config={config}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          </Widget>
           {fleetTypes && (
             <Widget
               title={metrics.mixTitle}
@@ -188,6 +173,20 @@ export function FleetDetails() {
               />
             </Widget>
           )}
+          <Widget
+            title={metrics.age.title}
+            subtitle={subtitle('Average across the line')}
+            ready={[fleetMetrics]}
+          >
+            <FleetAgeGraphWrapper
+              data={fleetMetrics.data!}
+              metric={metrics.age}
+              showShuttling={shuttling}
+              config={config}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          </Widget>
           <p className="text-sm text-muted-foreground">
             {isBus &&
               'Based on the buses seen at one stop per direction on each route, so expect some day-to-day noise. '}
@@ -198,6 +197,6 @@ export function FleetDetails() {
           </p>
         </ChartPageDiv>
       </SelectedBusRouteScope>
-    </PageWrapper>
+    </>
   );
 }

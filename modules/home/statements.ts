@@ -1,0 +1,258 @@
+import dayjs from 'dayjs';
+import type { Line } from '../../common/types/lines';
+import { FREQUENCY_GOALS, ROWS } from './config';
+import type { Cell, HomeData, MetricId } from './types';
+
+// The "Across the system" statements and the line under the page title: sentences filled in from
+// the report card's own numbers each day. A statement whose numbers are missing (an older file, a
+// line without data) is left out rather than shown half-true.
+
+const SUBWAY = ['red', 'orange', 'blue', 'green'];
+/** The rows the service statement compares; Mattapan and Ferry are too small to sway it. */
+const SERVICE_ROWS = ['red', 'orange', 'blue', 'green', 'commuter-rail', 'frequent-bus', 'all-bus'];
+
+export interface Mark {
+  row: string;
+  /** Unset for a mark that isn't one line, like the whole subway. */
+  line?: Line;
+  label: string;
+  value: number;
+  trend?: number | null;
+}
+
+export interface Rule {
+  value: number;
+  label: string;
+}
+
+export type Viz =
+  | { kind: 'dots'; marks: Mark[]; rules: Rule[] }
+  | { kind: 'bars'; unit: string; marks: Mark[] }
+  | { kind: 'meters'; marks: Mark[]; cap: number; rule?: Rule }
+  | { kind: 'area'; series: [string, number][]; peak: [string, number]; now: number };
+
+export interface Statement {
+  id: 'reliability' | 'delays' | 'frequency' | 'service' | 'slowZones';
+  head: string;
+  viz: Viz;
+  link: { href: string; label: string };
+}
+
+const pct = (value: number) => `${Math.round(value * 100)}%`;
+const isNumber = (value: unknown): value is number =>
+  typeof value === 'number' && Number.isFinite(value);
+const isGood = (cell?: Cell) => cell?.status === 'good' || cell?.status === 'win';
+
+const rowConfig = (id: string) => ROWS.find((row) => row.id === id);
+const labelOf = (id: string) => rowConfig(id)?.label ?? id;
+
+/** "1.3 minutes", "24 minutes" or "2 hours". */
+const formatMinutes = (minutes: number) => {
+  if (minutes >= 90) return `${Math.round(minutes / 6) / 10} hours`;
+  return minutes < 10
+    ? `${Math.round(minutes * 10) / 10} minutes`
+    : `${Math.round(minutes)} minutes`;
+};
+
+const reader = (data: HomeData) => {
+  const cell = (row: string, metric: MetricId) =>
+    data.rows.find((r) => r.id === row)?.cells[metric];
+  const hero = (id: string) => data.hero.find((stat) => stat.id === id);
+  const mark = (row: string, value: number, trend?: number | null): Mark => ({
+    row,
+    line: rowConfig(row)?.line,
+    label: labelOf(row),
+    value,
+    trend,
+  });
+  const link = (row: string, metric: MetricId, label: string) => ({
+    href: cell(row, metric)?.href ?? rowConfig(row)?.href ?? '/',
+    label: `${labelOf(row)} ${label}`,
+  });
+  return { cell, hero, mark, link };
+};
+
+type Reader = ReturnType<typeof reader>;
+
+/** Rows judged on how evenly vehicles are spaced. Commuter Rail is judged on time instead. */
+const SPACING_ROWS = [...SUBWAY, 'frequent-bus', 'all-bus'];
+const isBus = (id: string) => ['frequentBus', 'bus'].includes(rowConfig(id)?.mode ?? '');
+
+/**
+ * How many of the rows with headway data keep their vehicles evenly spaced, and the words for
+ * them: "subway lines" and "trains" for the subway alone, "lines" and "trains and buses" once
+ * buses are in. Undefined unless every subway line has a figure.
+ */
+const spacing = (cell: Reader['cell']) => {
+  const lines = SPACING_ROWS.map((id) => ({ id, cell: cell(id, 'reliability') })).filter((l) =>
+    isNumber(l.cell?.value)
+  );
+  if (!SUBWAY.every((id) => lines.some((l) => l.id === id))) return undefined;
+  const buses = lines.some((l) => isBus(l.id));
+  return {
+    lines,
+    evenly: lines.filter((l) => isGood(l.cell)).length,
+    line: buses ? 'line' : 'subway line',
+    vehicles: buses ? 'trains and buses' : 'trains',
+    /** For "no line keeps its trains or buses evenly spaced". */
+    anyVehicles: buses ? 'trains or buses' : 'trains',
+  };
+};
+
+const spacingSentence = (s: NonNullable<ReturnType<typeof spacing>>) =>
+  s.evenly === 0
+    ? `No ${s.line} keeps its ${s.anyVehicles} evenly spaced.`
+    : s.evenly === s.lines.length
+      ? `Every ${s.line} keeps its ${s.vehicles} evenly spaced.`
+      : `${s.evenly} of ${s.lines.length} ${s.line}s keep their ${s.vehicles} evenly spaced.`;
+
+function reliability({ cell, mark, link }: Reader): Statement | undefined {
+  const s = spacing(cell);
+  const thresholds = s?.lines[0].cell?.thresholds;
+  if (!s || !thresholds) return undefined;
+  const [win, good] = thresholds;
+  const worst = s.lines.reduce((a, b) => ((b.cell?.value ?? 1) < (a.cell?.value ?? 1) ? b : a));
+  return {
+    id: 'reliability',
+    head: spacingSentence(s),
+    viz: {
+      kind: 'dots',
+      marks: s.lines.map((l) => mark(l.id, l.cell?.value as number)),
+      rules: [
+        { value: good, label: 'Good' },
+        { value: win, label: 'Win' },
+      ],
+    },
+    link: link(worst.id, 'reliability', 'reliability'),
+  };
+}
+
+function delays({ cell, mark, link }: Reader): Statement | undefined {
+  const lines = SUBWAY.map((id) => ({ id, cell: cell(id, 'delays') }));
+  if (!lines.every((l) => isNumber(l.cell?.minutesPerDay))) return undefined;
+  const minutes = lines.map((l) => Math.round(l.cell?.minutesPerDay as number));
+  const [low, high] = [Math.min(...minutes), Math.max(...minutes)];
+  const worst = lines[minutes.indexOf(high)];
+  const mattapan = cell('mattapan', 'delays');
+  const mattapanMinutes = isNumber(mattapan?.minutesPerDay)
+    ? Math.round(mattapan.minutesPerDay)
+    : undefined;
+  return {
+    id: 'delays',
+    head:
+      high === 0
+        ? 'No subway line has had a delay alert in the last four weeks.'
+        : low === high
+          ? `Each subway line spends about ${low} minutes a day under a delay alert.`
+          : `Each subway line spends ${low} to ${high} minutes a day under a delay alert.`,
+    viz: {
+      kind: 'bars',
+      unit: 'min',
+      marks: [
+        ...lines.map((l, i) => mark(l.id, minutes[i], l.cell?.trend)),
+        ...(mattapanMinutes !== undefined
+          ? [mark('mattapan', mattapanMinutes, mattapan?.trend)]
+          : []),
+      ],
+    },
+    link: link(worst.id, 'delays', 'delays'),
+  };
+}
+
+function frequency({ cell, hero, mark, link }: Reader): Statement | undefined {
+  const subway = hero('subwayFrequency')?.value;
+  const bus = cell('all-bus', 'frequency')?.value;
+  const frequent = cell('frequent-bus', 'frequency')?.value;
+  if (!isNumber(subway) || !isNumber(bus) || !isNumber(frequent)) return undefined;
+  return {
+    id: 'frequency',
+    head: `A subway train comes every ${FREQUENCY_GOALS.subway} minutes or better for ${pct(subway)} of the service day; a bus, every ${FREQUENCY_GOALS.bus}, for ${pct(bus)}.`,
+    viz: {
+      kind: 'meters',
+      cap: 1,
+      marks: [
+        { row: 'subway', label: 'Subway', value: subway },
+        mark('frequent-bus', frequent),
+        mark('all-bus', bus),
+      ],
+    },
+    link: link('frequent-bus', 'frequency', 'frequency'),
+  };
+}
+
+function service({ cell, mark, link }: Reader): Statement | undefined {
+  const lines = SERVICE_ROWS.map((id) => ({ id, cell: cell(id, 'service') })).filter((l) =>
+    isNumber(l.cell?.score)
+  );
+  const good = lines[0]?.cell?.thresholds?.[1];
+  if (lines.length < 5 || !isNumber(good)) return undefined;
+  const atBest = lines.filter((l) => isGood(l.cell)).length;
+  const furthest = lines.reduce((a, b) => ((b.cell?.score ?? 0) < (a.cell?.score ?? 0) ? b : a));
+  const furthestScore = furthest.cell?.score as number;
+
+  return {
+    id: 'service',
+    head:
+      furthestScore >= 1
+        ? 'Every line runs as many trips as it did at its best, or more.'
+        : atBest === lines.length
+          ? `Every line runs at least ${pct(good)} of the trips it ran at its best.`
+          : `${atBest} of ${lines.length} lines run at least ${pct(good)} of the trips they ran at their best.`,
+    viz: {
+      kind: 'meters',
+      cap: 1.2,
+      marks: lines.map((l) => mark(l.id, l.cell?.score as number)),
+      rule: { value: 1, label: 'Best' },
+    },
+    link: link(furthest.id, 'service', 'service'),
+  };
+}
+
+function slowZones({ hero }: Reader): Statement | undefined {
+  const stat = hero('slowZones');
+  const series = stat?.history ?? [];
+  if (!isNumber(stat?.value) || series.length < 12) return undefined;
+  const peak = series.reduce((a, b) => (b[1] > a[1] ? b : a));
+  const then = `down from ${formatMinutes(peak[1])} a day in ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')}.`;
+  return {
+    id: 'slowZones',
+    // Under 3 seconds a day rounds to "0.0 minutes", so call it none.
+    head:
+      stat.value < 0.05
+        ? `There are no slow zones on the subway right now, ${then}`
+        : `Slow zones add ${formatMinutes(stat.value)} a day across the subway, ${then}`,
+    viz: { kind: 'area', series, peak, now: stat.value },
+    link: { href: '/slowzones', label: 'Slow zones' },
+  };
+}
+
+/** The statements in page order: the first leads, full width. */
+export const buildStatements = (data?: HomeData): Statement[] => {
+  if (!data) return [];
+  const read = reader(data);
+  return [reliability, delays, frequency, service, slowZones].flatMap((build) => build(read) ?? []);
+};
+
+/** The line under the page title, as a lead sentence and a quieter second one. */
+export const buildLede = (data?: HomeData): { lead: string; rest?: string } | undefined => {
+  if (!data) return undefined;
+  const { cell } = reader(data);
+  const service = SERVICE_ROWS.map((id) => cell(id, 'service')).filter((c) => isNumber(c?.score));
+  if (service.length < 5) return undefined;
+  const atBest = service.filter(isGood).length;
+  const lead = service.every((c) => (c?.score as number) >= 1)
+    ? 'The T is running at or above its best service.'
+    : atBest / service.length >= 0.7
+      ? 'The T is running close to its best service.'
+      : `${atBest} of ${service.length} lines run close to their best service.`;
+
+  const s = spacing(cell);
+  if (!s) return { lead };
+  const rest =
+    s.evenly === 0
+      ? `Keeping ${s.vehicles} evenly spaced is where it falls short.`
+      : s.evenly < s.lines.length
+        ? `Only ${spacingSentence(s)}`
+        : spacingSentence(s);
+  return { lead, rest };
+};

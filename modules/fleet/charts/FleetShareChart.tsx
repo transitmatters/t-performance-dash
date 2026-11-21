@@ -25,7 +25,7 @@ import {
   useMajorEvents,
 } from '../../../common/utils/majorEvents';
 import type { ParamsType } from '../../speed/constants/speeds';
-import { explainGaps, usePageShutdowns } from '../../shutdowns';
+import { explainGaps, useOtherLineShutdowns, usePageShutdowns } from '../../shutdowns';
 import { hasFleetMetric, type FleetModeMetrics } from '../constants/fleetTypes';
 
 interface FleetShareChartProps {
@@ -59,6 +59,7 @@ export const FleetShareChart = ({
   // Checked against null rather than truthiness -- 0% is a real value.
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
   const shuttlingBlocks = showShuttling
     ? hideGapsExplainedByEvents(
         explainGaps(
@@ -135,6 +136,7 @@ export const FleetShareChart = ({
                   ...shuttlingBlocks,
                   ...getNoDataSinceLatestAnnotation(labels),
                   ...getMajorEventAnnotations(events),
+                  ...otherShutdowns.annotations,
                 ],
               },
             },

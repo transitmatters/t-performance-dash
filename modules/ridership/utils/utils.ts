@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import type { RidershipCount } from '../../../common/types/dataPoints';
 import { PRETTY_DATE_FORMAT } from '../../../common/constants/dates';
 import type { SeasonalMaximum } from '../../../common/utils/seasonalRidership';
+import { halvesDetail, statDelta } from '../../../common/utils/statDelta';
 
 const mean = (values: number[]) =>
   values.length ? values.reduce((sum, v) => sum + v, 0) / values.length : NaN;
@@ -13,8 +14,8 @@ const halves = <T>(values: T[]): [T[], T[]] => {
 
 /**
  * Headline KPIs for the Ridership page's summary cards, derived entirely from data already fetched
- * for the chart (no extra requests). The average delta is trailing-vs-leading half of the selected
- * range — a "trending up/down over this window" signal, not a fresh query.
+ * for the chart (no extra requests). The average's change compares the leading and trailing halves
+ * of the selected range — a "trending up/down over this window" signal, not a fresh query.
  *
  * The percentage compares the newest week with the most riders in the same week of past years when
  * `seasonalMaximumFor` has it (see `seasonalPeak`), and with the all-time `peakRidership` otherwise.
@@ -37,13 +38,26 @@ export const getRidershipStats = (
   const percentage = latest ? latest.count / (seasonalPeak?.value ?? peakRidership) : NaN;
   return {
     average: mean(counts),
-    averageDelta: mean(c2) - mean(c1),
+    averageBefore: mean(c1),
+    averageAfter: mean(c2),
     percentage,
     seasonalPeak,
     peakCount: peak?.count,
     peakDate: peak?.date,
   };
 };
+
+const riders = (value: number) => Math.round(value).toLocaleString('en-us');
+
+/** Change badge for average weekday riders, second half of the range vs. the first. */
+export const ridershipDelta = (before: number, after: number) =>
+  statDelta({
+    delta: after - before,
+    negligible: 1,
+    magnitude: `${after > before ? '+' : ''}${riders(after - before)}`,
+    words: ['up', 'down'],
+    detail: halvesDetail(before, after, riders),
+  });
 
 export const getOutOfServiceMessage = (
   startDate: string,

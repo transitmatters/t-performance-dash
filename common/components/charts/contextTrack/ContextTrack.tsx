@@ -3,6 +3,7 @@ import type { RefObject } from 'react';
 import type { Chart } from 'chart.js';
 import {
   faCloudRain,
+  faGaugeSimpleHigh,
   faTemperatureHalf,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
@@ -26,6 +27,7 @@ import { Segment, TrackRow } from './TrackRow';
 import { TemperatureTrack, getTemperaturePoints } from './TemperatureTrack';
 import type { TemperaturePoint } from './TemperatureTrack';
 import { PinnedAlerts } from './PinnedAlerts';
+import { SlowZonesTrack } from './SlowZonesTrack';
 
 interface ContextTrackProps {
   layers: ChartLayers;
@@ -33,16 +35,30 @@ interface ContextTrackProps {
 }
 
 /**
- * Strips under a chart's x axis showing the service alerts, weather, and temperature behind the
- * data, lined up with the plot. Hovering a segment reads it; clicking shades it on the chart.
+ * Strips under a chart's x axis showing the service alerts, slow zones, weather, and temperature
+ * behind the data, lined up with the plot. Hovering a segment reads it; clicking shades it on the chart.
  */
 export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
-  const { enabled, geometry, granularity, weather, weatherRuns, date, alerts, withAlerts } = layers;
+  const {
+    enabled,
+    showWeather,
+    showTemperature,
+    geometry,
+    granularity,
+    weather,
+    weatherRuns,
+    date,
+    alerts,
+    withAlerts,
+    slowZones,
+  } = layers;
   const daily = granularity === 'daily';
   const pinned = useLayerStore((store) => store.pinned);
   const temperaturePinned = useLayerStore((store) => store.temperature);
   const toggle = useLayerStore((store) => store.toggle);
   const toggleTemperature = useLayerStore((store) => store.toggleTemperature);
+  const slowZonesPinned = useLayerStore((store) => store.slowZones);
+  const toggleSlowZones = useLayerStore((store) => store.toggleSlowZones);
   const rowsRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
 
@@ -71,7 +87,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
     [daily, weather]
   );
 
-  if (!enabled || !geometry) return null;
+  if (!enabled || !geometry || !(withAlerts || slowZones || showWeather || showTemperature))
+    return null;
   const domain = { min: geometry.min, max: geometry.max };
   const weatherStatus = layers.isWeatherLoading
     ? 'loading'
@@ -111,47 +128,70 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             })}
           </TrackRow>
         )}
-        <TrackRow
-          label="Weather"
-          icon={faCloudRain}
-          geometry={geometry}
-          status={weatherStatus}
-          emptyText={noWeatherData ? 'No weather data' : 'No rain, snow, fog or storms'}
-        >
-          {weatherRuns.map((run) => {
-            const range = formatTimeRange(run.run.start, run.run.end, daily);
-            return (
-              <Segment
-                key={run.key}
-                start={toFraction(run.start, domain)}
-                end={toFraction(run.end, domain)}
-                color={WEATHER_BASE_COLORS[run.run.condition]}
-                pinned={Boolean(pinned[run.key])}
-                label={`${describeWeather(run.hours, run.run.condition)}, ${range}`}
-                card={weatherCard(run, range)}
-                onToggle={() => toggle(run.key)}
-              />
-            );
-          })}
-        </TrackRow>
-        <TrackRow
-          label="Temp"
-          icon={faTemperatureHalf}
-          geometry={geometry}
-          status={
-            layers.isWeatherLoading ? 'loading' : temperaturePoints.length > 1 ? 'ready' : 'empty'
-          }
-          emptyText="No temperature data"
-          contentHeight={18}
-        >
-          <TemperatureTrack
-            points={temperaturePoints}
-            domain={domain}
-            daily={daily}
-            pinned={temperaturePinned}
-            onToggle={toggleTemperature}
-          />
-        </TrackRow>
+        {slowZones && (
+          <TrackRow
+            label="Slow zones"
+            shortLabel="Slow"
+            icon={faGaugeSimpleHigh}
+            geometry={geometry}
+            status={slowZones.isLoading ? 'loading' : slowZones.runs.length ? 'ready' : 'empty'}
+            emptyText="No slow zones on this trip"
+            contentHeight={18}
+          >
+            <SlowZonesTrack
+              runs={slowZones.runs}
+              domain={domain}
+              color={slowZones.color}
+              pinned={slowZonesPinned}
+              onToggle={toggleSlowZones}
+            />
+          </TrackRow>
+        )}
+        {showWeather && (
+          <TrackRow
+            label="Weather"
+            icon={faCloudRain}
+            geometry={geometry}
+            status={weatherStatus}
+            emptyText={noWeatherData ? 'No weather data' : 'No rain, snow, fog or storms'}
+          >
+            {weatherRuns.map((run) => {
+              const range = formatTimeRange(run.run.start, run.run.end, daily);
+              return (
+                <Segment
+                  key={run.key}
+                  start={toFraction(run.start, domain)}
+                  end={toFraction(run.end, domain)}
+                  color={WEATHER_BASE_COLORS[run.run.condition]}
+                  pinned={Boolean(pinned[run.key])}
+                  label={`${describeWeather(run.hours, run.run.condition)}, ${range}`}
+                  card={weatherCard(run, range)}
+                  onToggle={() => toggle(run.key)}
+                />
+              );
+            })}
+          </TrackRow>
+        )}
+        {showTemperature && (
+          <TrackRow
+            label="Temp"
+            icon={faTemperatureHalf}
+            geometry={geometry}
+            status={
+              layers.isWeatherLoading ? 'loading' : temperaturePoints.length > 1 ? 'ready' : 'empty'
+            }
+            emptyText="No temperature data"
+            contentHeight={18}
+          >
+            <TemperatureTrack
+              points={temperaturePoints}
+              domain={domain}
+              daily={daily}
+              pinned={temperaturePinned}
+              onToggle={toggleTemperature}
+            />
+          </TrackRow>
+        )}
         <div
           ref={ruleRef}
           aria-hidden

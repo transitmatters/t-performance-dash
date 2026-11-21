@@ -5,6 +5,7 @@ import {
   getBusStopRidershipRouteIds,
   getStopComparisons,
   resolveBusStopRidershipSelection,
+  withSeasonsDuring,
 } from './busStopUtils';
 
 const stop = (stop_id: string, boardings: number) => ({ stop_id, boardings, alightings: 0 });
@@ -121,5 +122,37 @@ describe('abbreviateBusStopName', () => {
     expect(
       abbreviateBusStopName({ stationName: 'Massachusetts Ave @ Massachusetts Ave Station' })
     ).toBe('Mass Ave @ Mass Ave');
+  });
+});
+
+describe('withSeasonsDuring', () => {
+  const seasonsOf = (routes: BusStopRidership[]) => routes[0].seasons.map(({ season }) => season);
+
+  it("drops seasons counted after a retired route's last day", () => {
+    expect(seasonsOf(withSeasonsDuring([route28], undefined, '2024-12-14'))).toEqual([
+      'Fall 2018',
+      'Fall 2019',
+      'Fall 2024',
+    ]);
+  });
+
+  it('drops a season whose counts ran past the last day', () => {
+    expect(seasonsOf(withSeasonsDuring([route28], undefined, '2025-11-15'))).not.toContain(
+      'Fall 2025'
+    );
+    expect(seasonsOf(withSeasonsDuring([route28], undefined, '2025-11-30'))).toContain('Fall 2025');
+  });
+
+  it("drops seasons counted before a replacement route's first day", () => {
+    expect(seasonsOf(withSeasonsDuring([route28], '2024-12-15', undefined))).toEqual(['Fall 2025']);
+  });
+
+  it('keeps a season that began with the schedule change that started the route', () => {
+    expect(seasonsOf(withSeasonsDuring([route28], '2025-09-06', undefined))).toEqual(['Fall 2025']);
+    expect(seasonsOf(withSeasonsDuring([route28], '2025-10-01', undefined))).toEqual([]);
+  });
+
+  it('keeps every season for a route that has always run', () => {
+    expect(withSeasonsDuring([route28], undefined, undefined)).toEqual([route28]);
   });
 });

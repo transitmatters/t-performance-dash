@@ -24,7 +24,7 @@ const METRIC_COPY: Required<MetricCopy> = {
   service: { title: 'Service delivered', subtitle: 'Daily round trips, last 30 days' },
   slowzones: { title: 'Slow zones', subtitle: 'Time lost to slow zones, last 30 days' },
   ridership: { title: 'Ridership', subtitle: 'Fare validations, last 30 days' },
-  delays: { title: 'Alert delays', subtitle: 'Daily time delayed per MBTA alerts, last 30 days' },
+  delays: { title: 'Delays', subtitle: 'Daily time delayed per MBTA alerts, last 30 days' },
   reliability: { title: 'Reliability', subtitle: 'Share of headways, last 30 days' },
 };
 

@@ -54,7 +54,7 @@ export const AlertBoxInner = ({
         <div className="flex w-full flex-col items-center justify-center text-stone-100">
           <div
             className={classNames(
-              'flex w-full flex-row items-center pr-2 text-lg',
+              'flex w-full flex-row items-center pr-2 text-sm',
               _noShrink && 'flex-wrap'
             )}
           >

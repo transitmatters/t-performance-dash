@@ -1,4 +1,5 @@
-import { getBusRouteIds } from '../../../common/constants/lines';
+import dayjs from 'dayjs';
+import { getBusRouteDataIds } from '../../../common/constants/lines';
 import type { BusStopRidership, BusStopRidershipStop } from '../../../common/types/dataPoints';
 
 /** Routes the MBTA counts under more GTFS IDs than their label names, as in getRidershipLineId */
@@ -9,7 +10,40 @@ const EXTRA_ROUTE_IDS: Record<string, string[]> = {
 };
 
 export const getBusStopRidershipRouteIds = (busRoute: string) =>
-  EXTRA_ROUTE_IDS[busRoute] ?? getBusRouteIds(busRoute);
+  EXTRA_ROUTE_IDS[busRoute] ?? getBusRouteDataIds(busRoute);
+
+// The first and last month of each season's counts. Only Fall appears in the data so far.
+const SEASON_MONTHS: Record<string, [string, string]> = {
+  Winter: ['01', '02'],
+  Spring: ['03', '05'],
+  Summer: ['06', '08'],
+  Fall: ['09', '11'],
+};
+
+/**
+ * Keeps the seasons counted while a route ran. A retired route and its replacement share
+ * route_ids, so counts from after the old route's last day are the new route's, and counts from
+ * before the new route's first day are the old route's. Seasons begin with a schedule change, a
+ * few days into their first month, so a route that started that month keeps that season.
+ */
+export const withSeasonsDuring = (
+  routes: BusStopRidership[],
+  serviceStart: string | undefined,
+  serviceEnd: string | undefined
+): BusStopRidership[] => {
+  if (!serviceStart && !serviceEnd) return routes;
+  const duringService = ({ season }: { season: string }) => {
+    const [name, year] = season.split(' ');
+    const months = SEASON_MONTHS[name];
+    if (!months) return true;
+    const [firstMonth, lastMonth] = months.map((month) => dayjs(`${year}-${month}-01`));
+    return (
+      (!serviceStart || !firstMonth.isBefore(serviceStart, 'month')) &&
+      (!serviceEnd || lastMonth.endOf('month').format('YYYY-MM-DD') <= serviceEnd)
+    );
+  };
+  return routes.map((route) => ({ ...route, seasons: route.seasons.filter(duringService) }));
+};
 
 /** The last fall before the pandemic */
 export const BASELINE_SEASON = 'Fall 2019';

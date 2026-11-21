@@ -6,6 +6,7 @@ import { DesktopHeader } from '../../modules/dashboard/DesktopHeader';
 import { usePageControls } from '../hooks/usePageControls';
 import { MobileControlPanel } from '../components/controls/MobileControlPanel';
 import { CIPBanner } from '../components/CIPBanner';
+import { usePageTitle } from '../hooks/usePageHeading';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -14,9 +15,12 @@ interface DashboardLayoutProps {
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const isMobile = !useBreakpoint('md');
   const { visible: showControls } = usePageControls();
+  // Set here rather than by each page, so it names the line and survives a page's early return.
+  const title = usePageTitle();
 
   return (
-    <div className="flex flex-1 flex-col pb-24 md:pb-0">
+    <div className="flex flex-1 flex-col">
+      <title>{title}</title>
       <CIPBanner />
       <div className="flex-1">
         {isMobile ? <MobileHeader /> : <DesktopHeader />}

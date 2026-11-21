@@ -1,7 +1,6 @@
 'use client';
 
 import { useDelimitatedRoute } from '../../common/utils/router';
-import { PageWrapper } from '../../common/layouts/PageWrapper';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
 import { DataNotes } from '../../common/components/notices/DataNotes';
@@ -39,7 +38,7 @@ export function DelaysDetails() {
   }
 
   return (
-    <PageWrapper pageTitle={'Delays'}>
+    <>
       <ChartPageDiv>
         {rangeData && <DelayStats data={rangeData} agg={agg} line={line} />}
         <Widget
@@ -198,6 +197,6 @@ export function DelaysDetails() {
           </div>
         </DataNotes>
       </ChartPageDiv>
-    </PageWrapper>
+    </>
   );
 }

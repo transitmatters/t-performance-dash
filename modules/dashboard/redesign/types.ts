@@ -24,3 +24,18 @@ export interface ScorecardRow {
   /** The 30-day figure as a share of the historical peak, e.g. "74% of peak". */
   peakLabel?: string;
 }
+
+export type SlotStatus = 'loading' | 'error' | 'empty' | 'ready';
+
+/** A scorecard row's place in the table, which it keeps while its data loads, fails or is missing. */
+export interface ScorecardSlot {
+  key: MetricKey;
+  label: string;
+  subtitle: string;
+  status: SlotStatus;
+  /** Set when status is 'ready' */
+  row?: ScorecardRow;
+  /** Refetches the failed queries. Set when status is 'error'. */
+  retry?: () => void;
+  isRetrying?: boolean;
+}

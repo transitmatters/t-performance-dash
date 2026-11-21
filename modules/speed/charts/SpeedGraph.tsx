@@ -26,7 +26,7 @@ import {
 } from '../../../common/utils/majorEvents';
 import { addMPHToSpeedData } from '../../../common/utils/csv';
 import type { ParamsType } from '../constants/speeds';
-import { explainGaps, usePageShutdowns } from '../../shutdowns';
+import { explainGaps, useOtherLineShutdowns, usePageShutdowns } from '../../shutdowns';
 
 interface SpeedGraphProps {
   data: SpeedTripMetrics[];
@@ -53,6 +53,7 @@ export const SpeedGraph = ({
   const labels = data.map((point) => point.date);
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
   const shuttlingBlocks = hideGapsExplainedByEvents(
     explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
       startDate,
@@ -94,10 +95,8 @@ export const SpeedGraph = ({
                     : null
                 ),
               },
-              // No baseline is established for every line yet (PEAK_SPEED defaults to 0),
-              // so skip the null dataset that produces the baseline's legend entry rather
-              // than show a misleading "Historical Maximum (0 mph)".
-              ...(peak > 0
+              // Lines without a speed baseline (bus) get no legend entry for it.
+              ...(peak
                 ? [
                     {
                       label: `Historical Maximum (${peak} mph)`,
@@ -114,12 +113,16 @@ export const SpeedGraph = ({
             layout: {
               padding: {
                 top: showTitle ? 25 : 0,
+                // Room for the wordmark under the legend: its desktop height (watermarkSize) plus a gap.
+                bottom: 21,
               },
             },
             interaction: {
               intersect: false,
             },
             plugins: {
+              // Below the legend: the filled speed line often reaches the plot's top corner.
+              watermark: { placement: 'below' },
               tooltip: {
                 mode: 'index',
                 position: 'nearest',
@@ -131,14 +134,13 @@ export const SpeedGraph = ({
                     const color = LINE_COLORS[colorKey ?? 'default'];
                     return {
                       hero: { value: `${mph}`, unit: 'mph', color },
-                      meter:
-                        peak > 0
-                          ? {
-                              fraction: mph / peak,
-                              label: `${((100 * mph) / peak).toFixed(1)}% of historical maximum (${peak} mph)`,
-                              color,
-                            }
-                          : undefined,
+                      meter: peak
+                        ? {
+                            fraction: mph / peak,
+                            label: `${((100 * mph) / peak).toFixed(1)}% of historical maximum (${peak} mph)`,
+                            color,
+                          }
+                        : undefined,
                     };
                   },
                 },
@@ -158,8 +160,8 @@ export const SpeedGraph = ({
                 // Add your annotations here
                 annotations: [
                   // Kept in lockstep with the dataset above: index 1 is only the peak
-                  // dataset when peak > 0 added it.
-                  ...(peak > 0
+                  // dataset when there is a peak.
+                  ...(peak
                     ? [
                         {
                           type: 'line' as const,
@@ -176,6 +178,7 @@ export const SpeedGraph = ({
                   ...shuttlingBlocks,
                   ...getNoDataSinceLatestAnnotation(labels),
                   ...getMajorEventAnnotations(events),
+                  ...otherShutdowns.annotations,
                 ],
               },
             },

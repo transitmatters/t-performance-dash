@@ -6,6 +6,9 @@ import {
   describeShutdowns,
   explainGapBlocks,
   explainGaps,
+  otherLineShutdownBlocks,
+  otherShutdownLines,
+  shutdownDates,
   shutdownDays,
   shutdownLineId,
   stationForStop,
@@ -32,6 +35,54 @@ describe('shutdownLineId', () => {
     expect(shutdownLineId('Green')).toBe('Green');
     expect(shutdownLineId('Commuter Rail', 'CR-Worcester')).toBe('CR-Worcester');
     expect(shutdownLineId('Bus')).toBeUndefined();
+  });
+});
+
+describe('otherShutdownLines', () => {
+  it('gives subway pages the rest of the subway', () => {
+    expect(otherShutdownLines('Red')).toEqual(['Orange', 'Blue', 'Green', 'Mattapan']);
+    expect(otherShutdownLines('Green')).toEqual(['Red', 'Orange', 'Blue', 'Mattapan']);
+  });
+
+  it('gives Commuter Rail the whole subway and other modes nothing', () => {
+    expect(otherShutdownLines('Commuter Rail')).toEqual([
+      'Red',
+      'Orange',
+      'Blue',
+      'Green',
+      'Mattapan',
+    ]);
+    expect(otherShutdownLines('Bus')).toEqual([]);
+    expect(otherShutdownLines(undefined)).toEqual([]);
+  });
+});
+
+describe('otherLineShutdownBlocks', () => {
+  it('shades the days each shuttle ran in its line color, explained on hover', () => {
+    const views = describeShutdowns([shutdown()], 'Red');
+    expect(otherLineShutdownBlocks([{ line: 'Red', views }])).toEqual([
+      {
+        from: '2026-03-06T12:00:00',
+        to: '2026-03-08T12:00:00',
+        label: '',
+        fillColor: '#da291c1F',
+        tooltip: {
+          title: 'Red Line · Shuttle: Alewife–Harvard',
+          lines: [
+            shutdownDates(views[0]),
+            'Shuttle buses replace Red Line service between Alewife and Harvard',
+          ],
+        },
+      },
+    ]);
+  });
+
+  it('leaves out station closures', () => {
+    const views = describeShutdowns(
+      [shutdown({ effect: 'STATION_CLOSURE', stops: ['place-harsq'] })],
+      'Red'
+    );
+    expect(otherLineShutdownBlocks([{ line: 'Red', views }])).toEqual([]);
   });
 });
 
