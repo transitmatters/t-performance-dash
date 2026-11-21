@@ -14,7 +14,7 @@ import type {
 } from 'maplibre-gl';
 import { useBusSpeedStops } from '../../../common/api/hooks/busSpeedSegments';
 import { useThemeStore } from '../../../common/state/themeStore';
-import { getBusRouteDisplayName, getBusRouteIds } from '../../../common/constants/lines';
+import { getBusRouteDataIds, getBusRouteDisplayName } from '../../../common/constants/lines';
 import { getBusRouteStopIds } from '../../../common/utils/stations';
 import {
   BOSTON_CENTER,
@@ -503,7 +503,7 @@ interface BusSpeedMapViewProps {
   direction: DirectionFilter;
   /**
    * A raw route_id or a curated BusRoute label; composites like 114/116/117 or
-   * SL1/SL2/SL3/SLW show every route_id behind them (see getBusRouteIds).
+   * SL1/SL2/SL3/SLW show every route_id behind them (see getBusRouteDataIds).
    */
   routeFilter?: string;
   /**
@@ -531,7 +531,7 @@ export const BusSpeedMapView = ({
   const isDark = useThemeStore((state) => state.theme === 'dark');
   const mapRef = useRef<MapRef>(null);
   const routeIds = useMemo(
-    () => (routeFilter ? getBusRouteIds(routeFilter) : undefined),
+    () => (routeFilter ? getBusRouteDataIds(routeFilter) : undefined),
     [routeFilter]
   );
   // Finds a retired route's stops, which the stops archive no longer lists it at.

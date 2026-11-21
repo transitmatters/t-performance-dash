@@ -39,13 +39,6 @@ export enum AggregateAPIParams {
 export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | string };
 export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;
 
-export type FetchSpeedsOptions = {
-  agg: AggType;
-  start_date?: string;
-  end_date?: string;
-  line?: Line;
-};
-
 export type FetchDeliveredTripMetricsOptions = {
   agg: AggType;
   start_date?: string;
@@ -106,13 +99,6 @@ export enum FetchAlertDelaysByLineParams {
   endDate = 'end_date',
   line = 'line',
   agg = 'agg',
-}
-
-export enum FetchSpeedsParams {
-  startDate = 'start_date',
-  endDate = 'end_date',
-  agg = 'agg',
-  line = 'line',
 }
 
 export type FetchScheduledServiceOptions = {

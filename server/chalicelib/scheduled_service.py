@@ -43,6 +43,10 @@ def get_next_day_kind_service_levels(
 ) -> ByDayKindServiceLevels:
     """Find the first day in the scheduled service list matching the given day kind.
 
+    Days with GTFS calendar exceptions (holidays, event service) don't show typical service,
+    so the first matching day without one is preferred. If every matching day has an
+    exception, the first matching day is used anyway.
+
     Args:
       scheduled_service: ScheduledService: List of daily scheduled service records.
       day_kind: DayKind: One of "weekday", "saturday", or "sunday".
@@ -69,13 +73,21 @@ def get_next_day_kind_service_levels(
             return day_of_week == 6
         return False
 
+    matching_day = None
     for daily_service_count in scheduled_service:
-        if predicate(daily_service_count):
-            return {
-                "date": daily_service_count["date"],
-                "service_levels": daily_service_count.get("byHour", {}).get("totals", []),
-            }
-    return None
+        if not predicate(daily_service_count):
+            continue
+        if not daily_service_count.get("hasServiceExceptions"):
+            matching_day = daily_service_count
+            break
+        if matching_day is None:
+            matching_day = daily_service_count
+    if matching_day is None:
+        return None
+    return {
+        "date": matching_day["date"],
+        "service_levels": matching_day.get("byHour", {}).get("totals", []),
+    }
 
 
 def get_service_levels(
