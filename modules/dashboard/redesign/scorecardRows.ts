@@ -85,10 +85,10 @@ const buildSlowZoneRow = (
     ...SLOW_ZONES,
     formattedCurrent: `${currentCount}`,
     currentValue: currentCount,
-    // "zones" (a plain count noun under the "This month" column), not "active" — the count is a
-    // monthly figure, and "active" would imply a live/right-now reading.
+    // "zone(s)" (a plain count noun under the "Latest 30 days" column), not "active" — the count
+    // covers the whole window, and "active" would imply a live/right-now reading.
     formatValue: (v) => Math.round(v).toString(),
-    unit: 'zones',
+    unit: currentCount === 1 ? 'zone' : 'zones',
     deltaLabel:
       delta === 0
         ? 'No change · flat'
