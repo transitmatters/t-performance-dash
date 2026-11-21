@@ -88,17 +88,19 @@ export const isPeriodInProgress = (date: string | undefined, period: Period): bo
 };
 
 /**
- * The last day an in-progress week or month's file covers: the newest published day, which is the
- * day before yesterday until yesterday's ingest has run. Undefined for a finished period, and for
- * one with no published day yet (all of the 1st of a month, or the 2nd before the 1st is out).
+ * The last day a partial week or month's file covers: the newest published day, which is the day
+ * before yesterday until yesterday's ingest has run. That includes a period that ended yesterday,
+ * whose file still stops a day short until then. Undefined once the period is fully published, and
+ * while none of it is (all of the 1st of a month, or the 2nd before the 1st is out).
  */
 export const inProgressThrough = (
   date: string | undefined,
   period: Period,
   latestDate: string | undefined
 ): string | undefined => {
-  if (!date || !latestDate || !isPeriodInProgress(date, period)) return undefined;
-  return latestDate >= periodStart(date, period) ? latestDate : undefined;
+  if (!date || !latestDate || period === 'daily') return undefined;
+  const isPartial = periodStart(date, period) <= latestDate && latestDate < periodEnd(date, period);
+  return isPartial ? latestDate : undefined;
 };
 
 /**
