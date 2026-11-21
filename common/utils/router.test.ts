@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import type { Route } from '../types/router';
+import type { PageMetadata } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
 import { useDateStore } from '../state/dateStore';
 import type { StationStore } from '../state/stationStore';
@@ -10,6 +11,7 @@ import {
   getNavTripPage,
   getQueryParams,
   parseRoutePath,
+  savePageConfigIfNecessary,
   stationScope,
   stripForeignRouteParams,
   withDefaultRouteParam,
@@ -53,6 +55,34 @@ describe('returning to trips', () => {
     expect(getNavTripPage('singleTrips', 'multiTrips')).toBe(ALL_PAGES.singleTrips);
     expect(getNavTripPage('speed', 'multiTrips')).toBe(ALL_PAGES.multiTrips);
     expect(getNavTripPage('speed', 'singleTrips')).toBe(ALL_PAGES.singleTrips);
+  });
+
+  describe('after a page that shares the single-day trips date section', () => {
+    const stationStore: StationStore = { setStationStore: () => {} };
+    const leave = (from: PageMetadata, to: PageMetadata) =>
+      savePageConfigIfNecessary(
+        from,
+        to,
+        { busRoute: '1' },
+        useDateStore.getState(),
+        stationStore,
+        'line-bus'
+      );
+    const tripsTarget = () => getNavTripPage('ridership', useDateStore.getState().tripPage);
+
+    afterEach(() => useDateStore.setState({ tripPage: 'singleTrips' }));
+
+    it.each([ALL_PAGES.speedmap, ALL_PAGES.leaderboard])(
+      'still reopens a trip view after $name',
+      (page) => {
+        leave(page, ALL_PAGES.ridership);
+        expect(tripsTarget()).toBe(ALL_PAGES.singleTrips);
+
+        leave(ALL_PAGES.multiTrips, page);
+        leave(page, ALL_PAGES.ridership);
+        expect(tripsTarget()).toBe(ALL_PAGES.multiTrips);
+      }
+    );
   });
 
   it('restores the saved range when coming back to the date range view', () => {
