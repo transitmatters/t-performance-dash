@@ -245,11 +245,12 @@ const SlowZoneArea = ({ viz }: { viz: Extract<Viz, { kind: 'area' }> }) => {
   );
 };
 
-export const StatementViz = ({ viz }: { viz: Viz }) => (
+export const StatementViz = ({ viz, note }: { viz: Viz; note?: string }) => (
   <div className="mt-1.5 flex flex-col gap-1.5 text-sm">
     {viz.kind === 'dots' && <Dots viz={viz} />}
     {viz.kind === 'bars' && <Bars viz={viz} />}
     {viz.kind === 'meters' && <Meters viz={viz} />}
     {viz.kind === 'area' && <SlowZoneArea viz={viz} />}
+    {note && <p className="mt-1 text-xs text-pretty text-muted-foreground">{note}</p>}
   </div>
 );

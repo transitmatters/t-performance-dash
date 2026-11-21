@@ -1,5 +1,5 @@
 import { LabeledControl } from '../../../common/components/controls/LabeledControl';
-import { getBusRouteIds } from '../../../common/constants/lines';
+import { getBusRouteDataIds } from '../../../common/constants/lines';
 import { ToggleControl } from '../../../common/hooks/useChartToggle';
 import { useDelimitatedRoute } from '../../../common/utils/router';
 import {
@@ -46,7 +46,7 @@ export const SpeedMapFilters = () => {
   } = useDelimitatedRoute();
   const { shown } = useShownPeriod();
   const direction = useDirection();
-  const routeIds = busRoute ? getBusRouteIds(busRoute) : [];
+  const routeIds = busRoute ? getBusRouteDataIds(busRoute) : [];
   return (
     <>
       {routeIds.length > 1 && <RouteFilter routeIds={routeIds} />}

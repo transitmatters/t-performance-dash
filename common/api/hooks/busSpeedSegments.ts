@@ -11,6 +11,7 @@ import {
   fetchBusSpeedSegmentLeaderboard,
   fetchBusSpeedSegmentsUrl,
   fetchBusSpeedStops,
+  getLatestBusSpeedDate,
 } from '../busSpeedSegments';
 
 /**
@@ -82,6 +83,16 @@ export const useBusSpeedStops = () => {
     queryKey: ['busSpeedStops'],
     queryFn: fetchBusSpeedStops,
     // Only changes with MBTA's GTFS feed, so one fetch lasts the whole session.
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
+};
+
+/** The newest day with published segments, from the once-per-page-load check the pages open on. */
+export const useLatestBusSpeedDate = () => {
+  return useQuery({
+    queryKey: ['latestBusSpeedDate'],
+    queryFn: getLatestBusSpeedDate,
     staleTime: Infinity,
     gcTime: Infinity,
   });

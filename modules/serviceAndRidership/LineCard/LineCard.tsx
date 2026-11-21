@@ -84,13 +84,17 @@ export const LineCard = (props: Props) => {
 
   const generateHref = useGenerateHref();
   const href = useMemo(() => {
+    // Mattapan's lineKind is 'red' (it's run as part of the Red Line), but it has its own pages
+    if (id === 'line-Mattapan') {
+      return generateHref(ALL_PAGES.overview, 'serviceAndRidership', {}, 'mattapan');
+    }
     // Navigate to the overview page for subway lines
-    if (['red', 'blue', 'green', 'orange', 'mattapan'].includes(lineKind)) {
+    if (['red', 'blue', 'green', 'orange'].includes(lineKind)) {
       return generateHref(
         ALL_PAGES.overview,
         'serviceAndRidership',
         {},
-        lineKind as 'red' | 'blue' | 'green' | 'orange' | 'mattapan'
+        lineKind as 'red' | 'blue' | 'green' | 'orange'
       );
     }
     if (lineKind === 'regional-rail') {

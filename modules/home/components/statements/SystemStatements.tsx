@@ -56,7 +56,7 @@ export const SystemStatements = ({
                 )}
               >
                 <StatementText statement={statement} lead={i === 0} />
-                <StatementViz viz={statement.viz} />
+                <StatementViz viz={statement.viz} note={statement.note} />
               </article>
             ))
           : state === 'loading' && [0, 1, 2].map((i) => <Pending key={i} pulse />)}
