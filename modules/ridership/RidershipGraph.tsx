@@ -57,7 +57,8 @@ export const RidershipGraph = ({
   const isMobile = !useBreakpoint('md');
   const ref = useRef(null);
   const linePeak = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
-  const peak = stationName ? 0 : linePeak;
+  // No maximum (0) for a station, or for a line whose baseline is held back.
+  const peak = stationName ? 0 : (linePeak ?? 0);
   const seasonal = useSeasonalRidershipMaximums(line, busRoute, crRoute, ferryRoute);
   const seasonalMaximumFor = stationName ? undefined : seasonal.maximumFor;
   const seasonalPending = !stationName && seasonal.isPending;
