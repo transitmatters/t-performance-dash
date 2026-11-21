@@ -88,6 +88,22 @@ export const isPeriodInProgress = (date: string | undefined, period: Period): bo
 };
 
 /**
+ * The last day a partial week or month's file covers: the newest published day, which is the day
+ * before yesterday until yesterday's ingest has run. That includes a period that ended yesterday,
+ * whose file still stops a day short until then. Undefined once the period is fully published, and
+ * while none of it is (all of the 1st of a month, or the 2nd before the 1st is out).
+ */
+export const inProgressThrough = (
+  date: string | undefined,
+  period: Period,
+  latestDate: string | undefined
+): string | undefined => {
+  if (!date || !latestDate || period === 'daily') return undefined;
+  const isPartial = periodStart(date, period) <= latestDate && latestDate < periodEnd(date, period);
+  return isPartial ? latestDate : undefined;
+};
+
+/**
  * The route leaderboard's API takes an arbitrary [start_date, end_date] range; the merged
  * leaderboard page derives one from the single selected date the same way the segment
  * leaderboard's file layout already carves up service -- a calendar day, an ISO week

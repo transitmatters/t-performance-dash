@@ -17,6 +17,7 @@ import {
   dwellShare,
   formatSegmentSpeed,
   groupLeaderboardByBusRoute,
+  inProgressThrough,
   isPeriodInProgress,
   isPooledSegment,
   noSpeedReason,
@@ -701,6 +702,39 @@ describe('period dates', () => {
       expect(isPeriodInProgress('2026-11-05', 'monthly')).toBe(true);
       expect(isPeriodInProgress('2026-10-05', 'monthly')).toBe(false);
       expect(isPeriodInProgress('2026-11-13', 'daily')).toBe(false);
+    });
+  });
+
+  describe('inProgressThrough', () => {
+    it('names the newest published day, not yesterday', () => {
+      // At 00:20 on Nov 20, Nov 19's files aren't out yet, so the newest is Nov 18 (#1614).
+      expect(inProgressThrough('2026-11-20', 'monthly', '2026-11-18')).toBe('2026-11-18');
+      expect(inProgressThrough('2026-11-18', 'weekly', '2026-11-18')).toBe('2026-11-18');
+      expect(inProgressThrough('2026-11-20', 'monthly', '2026-11-19')).toBe('2026-11-19');
+    });
+
+    it('still names it for a period that ended yesterday, until its last day is out', () => {
+      // Monday Nov 23 before Sunday's files are out: the week of Nov 16 stops at Saturday.
+      expect(inProgressThrough('2026-11-22', 'weekly', '2026-11-21')).toBe('2026-11-21');
+      // Dec 1 before Nov 30's files are out.
+      expect(inProgressThrough('2026-11-29', 'monthly', '2026-11-29')).toBe('2026-11-29');
+    });
+
+    it('is undefined once the period is fully published', () => {
+      expect(inProgressThrough('2026-11-22', 'weekly', '2026-11-22')).toBeUndefined();
+      expect(inProgressThrough('2026-11-29', 'monthly', '2026-11-30')).toBeUndefined();
+      expect(inProgressThrough('2026-10-05', 'monthly', '2026-11-18')).toBeUndefined();
+    });
+
+    it('is undefined for a day, or before the latest date is known', () => {
+      expect(inProgressThrough('2026-11-18', 'daily', '2026-11-18')).toBeUndefined();
+      expect(inProgressThrough('2026-11-20', 'monthly', undefined)).toBeUndefined();
+      expect(inProgressThrough(undefined, 'monthly', '2026-11-18')).toBeUndefined();
+    });
+
+    it('is undefined while none of the period is published yet', () => {
+      expect(inProgressThrough('2026-12-01', 'monthly', '2026-11-29')).toBeUndefined();
+      expect(inProgressThrough('2026-11-30', 'weekly', '2026-11-29')).toBeUndefined();
     });
   });
 });

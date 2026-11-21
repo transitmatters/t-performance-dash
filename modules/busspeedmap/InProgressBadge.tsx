@@ -1,13 +1,15 @@
 import dayjs from 'dayjs';
+import { useLatestBusSpeedDate } from '../../common/api/hooks/busSpeedSegments';
 import { Badge } from '../../common/components/ui/badge';
-import { YESTERDAY_STRING } from '../../common/constants/dates';
 import type { Period } from './types';
-import { isPeriodInProgress } from './utils';
+import { inProgressThrough } from './utils';
 
 /** The current week or month has a file too, built from the days so far. */
 export const InProgressBadge = ({ date, period }: { date?: string; period: Period }) => {
-  if (!isPeriodInProgress(date, period)) return null;
-  const through = dayjs(YESTERDAY_STRING).format('MMM D');
+  const { data: latestDate } = useLatestBusSpeedDate();
+  const throughDate = inProgressThrough(date, period, latestDate);
+  if (!throughDate) return null;
+  const through = dayjs(throughDate).format('MMM D');
   return (
     <Badge
       variant="warning"
