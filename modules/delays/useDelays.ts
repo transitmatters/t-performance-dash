@@ -1,6 +1,6 @@
 import { useAlertDelays, useDailyAlertDelays } from '../../common/api/hooks/delays';
 import { TODAY_STRING } from '../../common/constants/dates';
-import { getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds } from '../../common/constants/lines';
 import { getWeekStart } from '../../common/utils/date';
 import { useDelimitatedRoute } from '../../common/utils/router';
 import { lineToDefaultRouteId } from '../predictions/utils/utils';
@@ -33,7 +33,7 @@ export const useDelays = (startDate: string | undefined, endDate: string | undef
   // Bus delays are stored per GTFS route id; grouped labels (e.g. 114/116/117) are summed
   // server-side, and "Bus" is every route together.
   const delaysLine =
-    line === 'line-bus' ? (busRoute ? getBusRouteIds(busRoute).join(',') : 'Bus') : routeId;
+    line === 'line-bus' ? (busRoute ? getBusRouteDataIds(busRoute).join(',') : 'Bus') : routeId;
 
   const alertDelays = useAlertDelays(
     { start_date: startDate, end_date: endDate, line: delaysLine, agg: fetchAgg },

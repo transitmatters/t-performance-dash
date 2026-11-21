@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 import type { Chart } from 'chart.js';
 import {
@@ -61,6 +61,18 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
   const toggleSlowZones = useLayerStore((store) => store.toggleSlowZones);
   const rowsRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
+  const [labelFits, setLabelFits] = useState<Record<string, boolean>>({});
+  const onLabelFit = useCallback((label: string, fits: boolean | null) => {
+    setLabelFits((previous) => {
+      if (fits === null) {
+        const next = { ...previous };
+        delete next[label];
+        return next;
+      }
+      return previous[label] === fits ? previous : { ...previous, [label]: fits };
+    });
+  }, []);
+  const iconOnly = Object.values(labelFits).includes(false);
 
   // Mirror the chart's hover rule down through the track, without re-rendering on every move
   useEffect(() => {
@@ -106,6 +118,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             label="Alerts"
             icon={faTriangleExclamation}
             geometry={geometry}
+            iconOnly={iconOnly}
+            onLabelFit={onLabelFit}
             status={alertStatus}
             emptyText={alerts ? 'No service alerts' : 'Alerts unavailable'}
             lanes={Math.max(...alertSpans.map((span) => span.lane + 1), 1)}
@@ -134,6 +148,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             shortLabel="Slow"
             icon={faGaugeSimpleHigh}
             geometry={geometry}
+            iconOnly={iconOnly}
+            onLabelFit={onLabelFit}
             status={slowZones.isLoading ? 'loading' : slowZones.runs.length ? 'ready' : 'empty'}
             emptyText="No slow zones on this trip"
             contentHeight={18}
@@ -152,6 +168,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             label="Weather"
             icon={faCloudRain}
             geometry={geometry}
+            iconOnly={iconOnly}
+            onLabelFit={onLabelFit}
             status={weatherStatus}
             emptyText={noWeatherData ? 'No weather data' : 'No rain, snow, fog or storms'}
           >
@@ -177,6 +195,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             label="Temp"
             icon={faTemperatureHalf}
             geometry={geometry}
+            iconOnly={iconOnly}
+            onLabelFit={onLabelFit}
             status={
               layers.isWeatherLoading ? 'loading' : temperaturePoints.length > 1 ? 'ready' : 'empty'
             }
