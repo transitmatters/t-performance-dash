@@ -152,16 +152,33 @@ describe('withDefaultRouteParam', () => {
     });
   });
 
-  it('replaces an unknown Commuter Rail or ferry route with the default', () => {
+  it('replaces an unknown route with the default', () => {
     expect(withDefaultRouteParam('/commuter-rail/', { crRoute: 'CR-Nope' })).toEqual({
       crRoute: 'CR-Fairmount',
     });
     expect(withDefaultRouteParam('/ferry/ridership/', { ferryRoute: 'Boat-Nope' })).toEqual({
       ferryRoute: 'Boat-F6',
     });
+    expect(withDefaultRouteParam('/bus/', { busRoute: 'zzz' })).toEqual({ busRoute: '1' });
   });
 
-  it('leaves bus routes alone, since bus pages take routes beyond the station files', () => {
+  it('keeps bus routes with no station file that the API still serves', () => {
+    expect(withDefaultRouteParam('/bus/delays/', { busRoute: '34E' })).toEqual({
+      busRoute: '34E',
+    });
+    expect(withDefaultRouteParam('/embed/bus/delays/total/', { busRoute: '34E' })).toEqual({
+      busRoute: '34E',
+    });
+    expect(withDefaultRouteParam('/bus/speed/', { busRoute: '1234' })).toEqual({ busRoute: '1' });
+  });
+
+  it('keeps retired bus routes, which have station files of their own', () => {
+    expect(withDefaultRouteParam('/bus/', { busRoute: '110-legacy' })).toEqual({
+      busRoute: '110-legacy',
+    });
+  });
+
+  it("leaves the speed map's route alone, since it reads routes from its own tileset", () => {
     expect(withDefaultRouteParam('/bus/speedmap/', { busRoute: '9999' })).toEqual({
       busRoute: '9999',
     });

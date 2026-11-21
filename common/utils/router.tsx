@@ -7,7 +7,8 @@ import type { QueryParams, Route, Tab } from '../types/router';
 import { CHART_PARAMS, DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import { LINE_OBJECTS } from '../constants/lines';
+import { LINE_OBJECTS, getBusRouteDataIds } from '../constants/lines';
+import { getBusRoutes } from '../constants/stations';
 import {
   saveDateStoreSection,
   getDateStoreSection,
@@ -122,18 +123,35 @@ const DEFAULT_ROUTE_FOR_LINE: Partial<Record<Line, string>> = {
   'line-ferry': 'Boat-F6',
 };
 
-/**
- * Modes whose every route is known, so an unknown one is a typo or a dead link. Bus isn't here:
- * its pages take routes beyond the station files, and the speed map reads its own tileset's.
- */
+/** Every route each mode's pages can show, so an unknown one is a typo or a dead link. */
 const KNOWN_ROUTES_FOR_LINE: Partial<Record<Line, readonly string[]>> = {
+  'line-bus': getBusRoutes(),
   'line-commuter-rail': COMMUTER_RAIL_ROUTES,
   'line-ferry': FERRY_ROUTES,
 };
 
+/** Pages that take routes beyond the station files: the bus speed map reads its tileset's. */
+const ANY_ROUTE_PAGES: Page[] = ['speedmap'];
+
+/** A raw GTFS bus route_id the API accepts, e.g. '34E' or '741' (SL1); see chalicelib/delays.py. */
+const BUS_ROUTE_ID = /^\d{1,3}[A-Z]?$/;
+
+/**
+ * Whether `line`'s pages can show `route`. Bus pages fetch by route_id, so they also show routes
+ * with no station file, like 34E linked from the speed map.
+ */
+const isKnownRoute = (line: Line, page: Page, route: string) => {
+  if (ANY_ROUTE_PAGES.includes(page)) return true;
+  if (line === 'line-bus' && getBusRouteDataIds(route).every((id) => BUS_ROUTE_ID.test(id))) {
+    return true;
+  }
+  const knownRoutes = KNOWN_ROUTES_FOR_LINE[line];
+  return !knownRoutes || knownRoutes.includes(route);
+};
+
 /**
  * The search with the mode's default route filled in, e.g. `/bus/ridership/` with no `busRoute`,
- * or `/commuter-rail/` with a `crRoute` that doesn't exist.
+ * or `/bus/` with a `busRoute` that doesn't exist.
  * Pages that rank every route at once, like the leaderboard, are left without one.
  */
 export const withDefaultRouteParam = (pathname: string, search: SearchObject): SearchObject => {
@@ -142,8 +160,7 @@ export const withDefaultRouteParam = (pathname: string, search: SearchObject): S
   // Embed paths carry a chart name after the page, so their page may not resolve; they still need a route.
   if (!line || !param || ALL_PAGES[page]?.hasRouteSelector === false) return search;
   const route = search[param];
-  const knownRoutes = KNOWN_ROUTES_FOR_LINE[line];
-  if (route && (!knownRoutes || knownRoutes.includes(String(route)))) return search;
+  if (route && isKnownRoute(line, page, String(route))) return search;
   return { ...search, [param]: DEFAULT_ROUTE_FOR_LINE[line] };
 };
 
