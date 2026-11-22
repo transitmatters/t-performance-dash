@@ -1,7 +1,7 @@
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { MetricFieldKeys, PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { SingleDayLineChart } from '../../../common/components/charts/SingleDayLineChart';
 import { getLocationDetails } from '../../../common/utils/stations';
 
@@ -10,6 +10,7 @@ interface SpeedBetweenStationsSingleChartProps {
   toStation: Station;
   fromStation: Station;
   showLegend?: boolean;
+  date: string;
 }
 
 export const SpeedBetweenStationsSingleChart = ({
@@ -17,17 +18,15 @@ export const SpeedBetweenStationsSingleChart = ({
   toStation,
   fromStation,
   showLegend = true,
+  date,
 }: SpeedBetweenStationsSingleChartProps) => {
-  const {
-    linePath,
-    query: { date },
-  } = useDelimitatedRoute();
+  const linePage = useLinePage();
 
   const location = getLocationDetails(fromStation, toStation);
 
   return (
     <SingleDayLineChart
-      chartId={`speed-between-stations-chart-${linePath}`}
+      chartId={`speed-between-stations-chart-${linePage.linePath}`}
       data={traveltimes}
       date={date}
       metricField={MetricFieldKeys.speedMph}
@@ -38,6 +37,7 @@ export const SpeedBetweenStationsSingleChart = ({
       fname={'speeds'}
       chartTitle="Speeds"
       showLegend={showLegend}
+      alerts={linePage}
     />
   );
 };

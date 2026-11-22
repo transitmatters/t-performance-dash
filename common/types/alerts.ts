@@ -1,3 +1,13 @@
+import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from './lines';
+
+/** Whose alerts to show: a page's line and route, or a whole line. */
+export interface AlertsScope {
+  lineShort: LineShort;
+  busRoute?: BusRoute;
+  crRoute?: CommuterRailRoute;
+  ferryRoute?: FerryRoute;
+}
+
 export type AlertTime = {
   end: string | null;
   start: string | null;

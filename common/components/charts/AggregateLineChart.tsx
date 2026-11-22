@@ -21,7 +21,7 @@ import {
 } from '../../../modules/weather/utils/temperatureDataset';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { getMajorEventAnnotations, useMajorEvents } from '../../utils/majorEvents';
-import { useDelimitatedRoute } from '../../utils/router';
+import { useLinePage } from '../../hooks/usePageParams';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartActions } from './ChartActions';
@@ -122,7 +122,7 @@ export const AggregateLineChart = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
-  const { line } = useDelimitatedRoute();
+  const { line } = useLinePage();
   // Charts by time of day span many dates at every point, so there's no day to mark.
   const lineEvents = useMajorEvents(line, startDate, endDate);
   const events = hourly || byTime ? [] : lineEvents;

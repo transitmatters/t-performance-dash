@@ -24,5 +24,5 @@ export const useTripMetrics = (routeType: RouteType, skip: QueryNameKeys[] = [])
         : undefined,
   });
 
-  return { aggregate: dates.kind === 'range', single, multi };
+  return { single, multi };
 };

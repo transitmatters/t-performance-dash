@@ -1,10 +1,10 @@
 import { Bar } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { useMemo, useRef } from 'react';
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { CHART_COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { CHART_COLORS } from '../../../common/constants/colors';
 import type { HeadwaysChartProps } from '../../../common/types/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
@@ -18,11 +18,10 @@ export const HeadwaysHistogram = ({
   headways,
   fromStation,
   toStation,
-  date: dateProp,
+  date,
   fill = false,
 }: HeadwaysChartProps) => {
-  const { colorKey, linePath, lineShort, query } = useDelimitatedRoute();
-  const date = dateProp ?? query.date;
+  const { color, linePath, lineShort } = useLinePage();
 
   const ref = useRef(null);
   const chartTheme = useChartTheme();
@@ -46,7 +45,7 @@ export const HeadwaysHistogram = ({
             data={{
               datasets: [
                 {
-                  backgroundColor: LINE_COLORS[colorKey ?? 'default'],
+                  backgroundColor: color,
                   borderRadius: 4,
                   label:
                     lineShort === 'Bus' ? 'Buses' : lineShort === 'Ferry' ? 'Ferries' : 'Trains',
@@ -109,12 +108,12 @@ export const HeadwaysHistogram = ({
                         hero: {
                           value: count.toLocaleString(),
                           unit: count === 1 ? vehicle : vehicles,
-                          color: LINE_COLORS[colorKey ?? 'default'],
+                          color: color,
                         },
                         meter: {
                           fraction: pctTrips / 100,
                           label: `${pctTrips}% of ${vehicles}`,
-                          color: LINE_COLORS[colorKey ?? 'default'],
+                          color: color,
                         },
                         rows: benchmark
                           ? [
@@ -157,7 +156,7 @@ export const HeadwaysHistogram = ({
     fill,
     dataObject,
     isMobile,
-    colorKey,
+    color,
     linePath,
     lineShort,
     buckets,

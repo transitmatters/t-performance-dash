@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import { Link } from '../general/Link';
 import { FERRY_ARCHIVE_MAX_DATE, PRETTY_DATE_FORMAT } from '../../constants/dates';
-import { useDelimitatedRoute } from '../../utils/router';
+import { useLinePage, usePageDates } from '../../hooks/usePageParams';
+import { asDateRange } from '../../utils/pageParams';
 import { includesGobbleFerryDay } from './GobbleDataNotice';
 
 const Collection = () => (
@@ -29,13 +30,10 @@ const Collection = () => (
  * Renders as plain prose for embedding inside the "About this data" accordion (see TripDataNotes).
  */
 export const BetaDataNotice = () => {
-  const {
-    line,
-    linePath,
-    query: { date, startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line } = useLinePage();
+  const { startDate, endDate } = asDateRange(usePageDates());
 
-  if (line === 'line-commuter-rail' || linePath === 'commuter-rail') {
+  if (line === 'line-commuter-rail') {
     return (
       <>
         <p className="font-medium text-foreground">How Commuter Rail data is collected</p>
@@ -50,10 +48,7 @@ export const BetaDataNotice = () => {
     );
   }
 
-  if (
-    (line === 'line-ferry' || linePath === 'ferry') &&
-    includesGobbleFerryDay(startDate ?? date, endDate ?? date)
-  ) {
+  if (line === 'line-ferry' && includesGobbleFerryDay(startDate, endDate)) {
     return (
       <>
         <p className="font-medium text-foreground">How ferry data is collected</p>

@@ -1,13 +1,11 @@
-import { useDelimitatedRoute } from '../../utils/router';
+import { useLinePage } from '../../hooks/usePageParams';
 
 /**
  * Bus coverage note. Renders as plain prose for the "About this data"
  * accordion (see TripDataNotes).
  */
 export const BusDataNotice = () => {
-  const { line, linePath } = useDelimitatedRoute();
-
-  if (line !== 'line-bus' && linePath !== 'bus') {
+  if (useLinePage().line !== 'line-bus') {
     return null;
   }
 

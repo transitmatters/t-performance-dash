@@ -69,7 +69,7 @@ export const SingleDayLineChart = ({
   callout,
   actions = true,
   intro = false,
-  alertsLine,
+  alerts,
 }: SingleDayLineProps) => {
   const ref = useRef(null);
   const { pending: introPending, options: introOptions } = useIntroAnimation(intro, data.length);
@@ -85,9 +85,8 @@ export const SingleDayLineChart = ({
     endDate: date,
     granularity: 'hourly',
     // Embeds have no track, so they skip the request
-    enabled: Boolean(date) && !fill,
-    withAlerts: true,
-    alertsLine,
+    enabled: !fill,
+    alerts,
   });
   const { weather } = layers;
   const temperaturePoints = useMemo(
@@ -96,10 +95,7 @@ export const SingleDayLineChart = ({
   );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
-  const xBounds = useMemo(
-    () => (date ? singleDayAxisBounds(date, labels) : undefined),
-    [date, labels]
-  );
+  const xBounds = useMemo(() => singleDayAxisBounds(date, labels), [date, labels]);
 
   // Per-point MBTA scheduled benchmark.
   const mbtaBenchmarkData = data.map((datapoint) => {
@@ -402,11 +398,11 @@ export const SingleDayLineChart = ({
                 display: true,
                 title: {
                   display: true,
-                  text: date ? prettyDate(date, true) : 'No date selected',
+                  text: prettyDate(date, true),
                   color: chartTheme.tick,
                 },
-                min: xBounds?.min,
-                max: xBounds?.max,
+                min: xBounds.min,
+                max: xBounds.max,
               },
             },
           }}

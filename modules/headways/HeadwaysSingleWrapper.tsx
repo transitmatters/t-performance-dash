@@ -6,6 +6,7 @@ import type { SingleDayDataPoint } from '../../common/types/charts';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
+import { useLinePage, useSingleDate } from '../../common/hooks/usePageParams';
 import { HeadwaysSingleChart } from './charts/HeadwaysSingleChart';
 
 interface HeadwaysSingleWrapperProps {
@@ -19,6 +20,8 @@ export const HeadwaysSingleWrapper = ({
   toStation,
   fromStation,
 }: HeadwaysSingleWrapperProps) => {
+  const linePage = useLinePage();
+  const { date } = useSingleDate();
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" metric="headways" />;
@@ -26,7 +29,13 @@ export const HeadwaysSingleWrapper = ({
 
   return (
     <ChartStack>
-      <HeadwaysSingleChart headways={query.data} toStation={toStation} fromStation={fromStation} />
+      <HeadwaysSingleChart
+        date={date}
+        alerts={linePage}
+        headways={query.data}
+        toStation={toStation}
+        fromStation={fromStation}
+      />
       <StatStrip widgetObjects={widgetObjects} />
     </ChartStack>
   );

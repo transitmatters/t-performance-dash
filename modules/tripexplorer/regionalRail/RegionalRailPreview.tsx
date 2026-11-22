@@ -15,7 +15,6 @@ import { REGIONAL_RAIL_REPORTS_URL } from '../../../common/constants/regionalRai
 import { ToggleControl } from '../../../common/hooks/useChartToggle';
 import type { RreAmenity, RreDayKind } from '../../../common/types/regionalRailExplorer';
 import type { Station } from '../../../common/types/stations';
-import { useDelimitatedRoute } from '../../../common/utils/router';
 import { ComparisonTable } from './ComparisonTable';
 import { TrainsStrip } from './TrainsStrip';
 import type { StripRow } from './TrainsStrip';
@@ -70,16 +69,15 @@ const ExplorerCallout = ({ trip, href }: { trip: string; href: string }) => (
 interface RegionalRailPreviewProps {
   fromStation: Station;
   toStation: Station;
+  /** The day on a single-day page; a range plans a weekday. */
+  date?: string;
 }
 
 /**
  * This trip on Regional Rail next to today's Commuter Rail, as TransitMatters' Regional Rail
  * Explorer plans it. It's a short version of the Explorer's comparison, and links there for the rest.
  */
-export const RegionalRailPreview = ({ fromStation, toStation }: RegionalRailPreviewProps) => {
-  const {
-    query: { date },
-  } = useDelimitatedRoute();
+export const RegionalRailPreview = ({ fromStation, toStation, date }: RegionalRailPreviewProps) => {
   const [chosenDay, setChosenDay] = useState<RreDayKind>();
   const [time, setTime] = useState(DEFAULT_TIME);
   // A single day plans the kind of day it falls on, until the rider picks another
