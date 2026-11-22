@@ -1,9 +1,12 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
+import { ONE_HOUR } from '../../constants/time';
 import { fetchServiceAndRidershipDashboardData } from '../serviceAndRidership';
 
 export const serviceAndRidershipQuery = queryOptions({
-  queryKey: ['service-and-ridership'],
+  queryKey: ['serviceAndRidership'],
   queryFn: fetchServiceAndRidershipDashboardData,
+  // A static file, rebuilt daily
+  staleTime: ONE_HOUR,
 });
 
 export const useServiceAndRidershipDashboard = () => {
