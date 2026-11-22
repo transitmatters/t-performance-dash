@@ -1,4 +1,4 @@
-import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripExplorerQueries } from '../../common/api/hooks/tripExplorer';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PartialDataNotice } from '../../common/components/notices/PartialDataNotice';
 import type { TripEmbedChart } from '../../common/constants/staticRoutes';

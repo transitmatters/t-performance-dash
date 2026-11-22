@@ -1,7 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
-import { fetchSingleDayData } from '../../common/api/datadashboard';
+import { singleDayTripMetricQuery } from '../../common/api/hooks/tripExplorer';
 import { YESTERDAY_STRING } from '../../common/constants/dates';
-import { ONE_HOUR } from '../../common/constants/time';
 import { QueryNameKeys } from '../../common/types/api';
 import { HERO_STATIONS, pickHero } from './heroChart';
 import type { HeroPick } from './heroChart';
@@ -15,11 +14,10 @@ export type HeroChartState = 'loading' | 'ready' | 'empty';
 export const useHeroChart = (): { pick?: HeroPick; date: string; state: HeroChartState } => {
   const date = YESTERDAY_STRING;
   const results = useQueries({
-    queries: HERO_STATIONS.map((station) => ({
-      queryKey: [QueryNameKeys.headways, { stop: station.stopIds, date }],
-      queryFn: () => fetchSingleDayData(QueryNameKeys.headways, { stop: station.stopIds, date }),
-      staleTime: ONE_HOUR,
-    })),
+    // The trip page's own query, so "Explore this day" opens on a warm cache.
+    queries: HERO_STATIONS.map((station) =>
+      singleDayTripMetricQuery(QueryNameKeys.headways, { stop: station.stopIds, date })
+    ),
   });
   // Waits for every line, so the pick doesn't swap once a slower line loads.
   if (results.some((result) => result.isPending)) return { date, state: 'loading' };

@@ -1,4 +1,4 @@
-import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripExplorerQueries } from '../../common/api/hooks/tripExplorer';
 import { EmbedMessage } from '../../common/components/embed/EmbedMessage';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import type { TripEmbedChart } from '../../common/constants/staticRoutes';
