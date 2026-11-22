@@ -2,6 +2,7 @@
 
 import csv
 import itertools
+import sys
 import zlib
 from datetime import date
 
@@ -159,8 +160,12 @@ SINGLE_DAY_SOURCES = (_lamp_key, _historic_key, _gobble_key)
 DAILY_FALLBACK_SOURCES = (_lamp_key, _gobble_key)
 
 
-def _download_first(keys):
+def _download_first(keys, event_types=None):
     """Download and parse the first of ``keys`` that exists, skipping Nones.
+
+    Args:
+      keys: S3 keys to try in order.
+      event_types: Event types to keep, or None for all. (Default value = None)
 
     Returns:
       list[dict] | None: Rows sorted by event_time, or None if no key exists.
@@ -170,7 +175,7 @@ def _download_first(keys):
             continue
         try:
             csv_text = download(key, "ascii", key.endswith(".gz"))
-            return _parse_events(csv_text, fix_dst_eve=key.startswith("Events/monthly-data/"))
+            return _parse_events(csv_text, fix_dst_eve=key.startswith("Events/monthly-data/"), event_types=event_types)
         except ClientError as ex:
             if ex.response["Error"]["Code"] != "NoSuchKey":
                 raise
@@ -178,7 +183,7 @@ def _download_first(keys):
     return None
 
 
-def download_one_event_file(date: pd.Timestamp, stop_id: str):
+def download_one_event_file(date: pd.Timestamp, stop_id: str, event_types=None):
     """Download a single day's events for a stop, for single-day (trip view) requests.
 
     Tries LAMP first for the most detail, then the monthly archive, then Gobble.
@@ -186,14 +191,15 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str):
     Args:
       date: pd.Timestamp: The date to fetch events for.
       stop_id: str: The stop identifier.
+      event_types: Event types to keep, or None for all. (Default value = None)
 
     Returns:
       list[dict]: Rows of event data sorted by event_time, or empty list if unavailable.
     """
-    return _download_first(source(date, stop_id) for source in SINGLE_DAY_SOURCES) or []
+    return _download_first((source(date, stop_id) for source in SINGLE_DAY_SOURCES), event_types) or []
 
 
-def download_range_event_file(date: pd.Timestamp, stop_id: str, start_date: date, end_date: date):
+def download_range_event_file(date: pd.Timestamp, stop_id: str, start_date: date, end_date: date, event_types=None):
     """Download one ``parallel.s3_date_range`` entry for a stop, for ranged (aggregate) requests.
 
     Reads the monthly archive first since it's the most complete. If the stop has no
@@ -205,6 +211,7 @@ def download_range_event_file(date: pd.Timestamp, stop_id: str, start_date: date
       stop_id: str: The stop identifier.
       start_date: date: Start of the requested range, to limit the daily fallback.
       end_date: date: End of the requested range, to limit the daily fallback.
+      event_types: Event types to keep, or None for all. (Default value = None)
 
     Returns:
       list[dict]: Rows of event data, or empty list if unavailable.
@@ -213,7 +220,7 @@ def download_range_event_file(date: pd.Timestamp, stop_id: str, start_date: date
     if historic_key is None:
         days = [date]
     else:
-        rows = _download_first([historic_key])
+        rows = _download_first([historic_key], event_types)
         if rows is not None:
             return rows
         month_start = date.replace(day=1)
@@ -222,7 +229,7 @@ def download_range_event_file(date: pd.Timestamp, stop_id: str, start_date: date
 
     rows = []
     for day in days:
-        rows.extend(_download_first(source(day, stop_id) for source in DAILY_FALLBACK_SOURCES) or [])
+        rows.extend(_download_first((source(day, stop_id) for source in DAILY_FALLBACK_SOURCES), event_types) or [])
     return rows
 
 
@@ -241,22 +248,58 @@ def _fix_dst_eve_prediction(row: dict):
     return row
 
 
-def _parse_events(csv_text: str, fix_dst_eve=False):
+# The event columns the metric calculations read. A year of a busy stop is hundreds of thousands
+# of rows, so dropping the rest (stop_sequence, vehicle_id, scheduled_trip_id, ...) keeps
+# aggregate requests well inside the Lambda's memory.
+EVENT_FIELDS = (
+    "service_date",
+    "route_id",
+    "trip_id",
+    "direction_id",
+    "event_type",
+    "event_time",
+    "vehicle_label",
+    "vehicle_consist",
+    "occupancy_status",
+    "occupancy_percentage",
+    "scheduled_headway",
+    "scheduled_tt",
+    "scheduled_travel_time",
+)
+# Columns with few distinct values, which share one string object per value.
+INTERNED_FIELDS = ("service_date", "route_id", "direction_id", "event_type")
+
+
+def _slim_event(row: dict):
+    """Keep only EVENT_FIELDS, interning the low-cardinality ones."""
+    slim = {field: row[field] for field in EVENT_FIELDS if field in row}
+    for field in INTERNED_FIELDS:
+        if field in slim:
+            slim[field] = sys.intern(slim[field])
+    return slim
+
+
+def _parse_events(csv_text: str, fix_dst_eve=False, event_types=None):
     """Parse an events CSV into rows sorted by event_time.
 
     Args:
       csv_text: str: The CSV file contents.
       fix_dst_eve: Correct predicted events on days before a DST change. Only the
         monthly rapid transit archive needs this. (Default value = False)
+      event_types: Event types to keep, or None for all. (Default value = None)
     """
     rows = csv.DictReader(csv_text.splitlines())
     if fix_dst_eve:
         rows = map(_fix_dst_eve_prediction, rows)
-    return sorted(rows, key=_event_instant)
+    if event_types is not None:
+        rows = (row for row in rows if row["event_type"] in event_types)
+    return sorted(map(_slim_event, rows), key=_event_instant)
 
 
 @parallel.make_parallel
-def parallel_download_events(datestop: itertools.product, single_day=False, start_date=None, end_date=None):
+def parallel_download_events(
+    datestop: itertools.product, single_day=False, start_date=None, end_date=None, event_types=None
+):
     """Download event data for a single (date, stop) pair. Parallelized via @make_parallel.
 
     Args:
@@ -264,17 +307,18 @@ def parallel_download_events(datestop: itertools.product, single_day=False, star
       single_day: Use the single-day source order instead of the ranged one. (Default value = False)
       start_date: Start of the requested range, for ranged requests. (Default value = None)
       end_date: End of the requested range, for ranged requests. (Default value = None)
+      event_types: Event types to keep, or None for all. (Default value = None)
 
     Returns:
       list[dict]: Event rows for the given date and stop.
     """
     (date, stop) = datestop
     if single_day:
-        return download_one_event_file(date, stop)
-    return download_range_event_file(date, stop, start_date, end_date)
+        return download_one_event_file(date, stop, event_types)
+    return download_range_event_file(date, stop, start_date, end_date, event_types)
 
 
-def download_events(start_date: date, end_date: date, stops: list, single_day=False):
+def download_events(start_date: date, end_date: date, stops: list, single_day=False, event_types=None):
     """Download event data for multiple stops over a date range, in parallel.
 
     Single-day requests (trip views) read LAMP, then the monthly archive, then Gobble.
@@ -286,16 +330,17 @@ def download_events(start_date: date, end_date: date, stops: list, single_day=Fa
       end_date: date: End of the date range (inclusive).
       stops: list: List of stop IDs to fetch data for.
       single_day: Whether this is a single-day request. (Default value = False)
+      event_types: Event types to keep, or None for all. (Default value = None)
 
     Returns:
       list[dict]: All event rows sorted by event_time.
     """
     if single_day:
         datestops = [(pd.Timestamp(start_date), stop) for stop in stops]
-        result = parallel_download_events(datestops, single_day=True)
+        result = parallel_download_events(datestops, single_day=True, event_types=event_types)
     else:
         datestops = itertools.product(parallel.s3_date_range(start_date, end_date, stops), stops)
-        result = parallel_download_events(datestops, start_date=start_date, end_date=end_date)
+        result = parallel_download_events(datestops, start_date=start_date, end_date=end_date, event_types=event_types)
     result = filter(
         lambda row: start_date.strftime("%Y-%m-%d") <= row["service_date"] <= end_date.strftime("%Y-%m-%d"), result
     )
