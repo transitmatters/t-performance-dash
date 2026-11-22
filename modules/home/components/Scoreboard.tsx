@@ -1,3 +1,4 @@
+import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { Link } from '../../../common/components/general/Link';
@@ -83,8 +84,7 @@ const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 
         )}
       >
         {unscored ? (
-          // Holds the node's place, so the figure lines up with the scored stops'.
-          <span aria-hidden="true" className="size-5 shrink-0" />
+          <ChangeIcon cell={cell} />
         ) : (
           <span
             className={cn(
@@ -107,7 +107,6 @@ const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 
               'font-normal text-muted-foreground'
           )}
         >
-          {unscored && cell.status === 'unscored' && <ChangeArrow value={cell.value} />}
           {formatCell(cell)}
         </span>
       </PopoverTrigger>
@@ -118,13 +117,24 @@ const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 
   );
 };
 
-/** ▲ or ▼ before a change, in the text color: it isn't good or bad for the score. */
-const ChangeArrow = ({ value }: { value: number | null }) =>
-  value === null || Math.round(value * 100) === 0 ? null : (
-    <span aria-hidden="true" className="mr-1 text-[0.7em] text-muted-foreground">
-      {value > 0 ? '▲' : '▼'}
-    </span>
+/**
+ * Sits where a scored stop's node does, so the figure lines up beneath it: which way the change
+ * went, in a neutral color, since it isn't good or bad for the score.
+ */
+const ChangeIcon = ({ cell }: { cell: Cell }) => {
+  const change =
+    cell.status === 'unscored' && cell.value !== null ? Math.round(cell.value * 100) : 0;
+  const Icon = change > 0 ? TrendingUp : change < 0 ? TrendingDown : Minus;
+  return (
+    <Icon
+      aria-hidden="true"
+      className={cn(
+        'size-5 shrink-0 text-muted-foreground transition-transform group-hover:scale-110',
+        change === 0 && 'opacity-40'
+      )}
+    />
   );
+};
 
 /**
  * Holds a stop's place until its data lands: an unlit stop on the line, with bars where the figure
