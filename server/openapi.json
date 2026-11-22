@@ -4089,9 +4089,57 @@
         "title": "TripMetricsEntry",
         "type": "object"
       },
+      "BusBandTotals": {
+        "additionalProperties": true,
+        "description": "A bus route's totals for one time band, as in `BusTripMetricsEntry.time_bands`.\n\nAttributes:\n    count: Trips delivered.\n    n_traversals: Segment traversals measured.\n    n_interpolated: Traversals whose times were interpolated.\n    miles_covered: Total miles covered.\n    total_time: Total trip time in seconds.\n    total_dwell: Seconds spent around the stops in `n_dwell_stops`.\n    n_dwell_stops: Stops with an observed dwell.",
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "number"
+          },
+          "n_traversals": {
+            "title": "N Traversals",
+            "type": "number"
+          },
+          "n_interpolated": {
+            "default": null,
+            "title": "N Interpolated",
+            "nullable": true,
+            "type": "number"
+          },
+          "miles_covered": {
+            "title": "Miles Covered",
+            "type": "number"
+          },
+          "total_time": {
+            "title": "Total Time",
+            "type": "number"
+          },
+          "total_dwell": {
+            "default": null,
+            "title": "Total Dwell",
+            "nullable": true,
+            "type": "number"
+          },
+          "n_dwell_stops": {
+            "default": null,
+            "title": "N Dwell Stops",
+            "nullable": true,
+            "type": "number"
+          }
+        },
+        "required": [
+          "count",
+          "n_traversals",
+          "miles_covered",
+          "total_time"
+        ],
+        "title": "BusBandTotals",
+        "type": "object"
+      },
       "BusTripMetricsEntry": {
         "additionalProperties": true,
-        "description": "Delivered trip metrics for a bus route (or group of routes) over one day, week or month.\n\nEntries can also have fleet fields: `fleet_trips` (trips with a known vehicle), `avg_bus_age`,\n`pct_<type>_trips` and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).\nThese are omitted when unknown. Daily entries for the whole day (no `time_band`) also have\n`median_speed_mph` and `mean_speed_mph`.\n\nThe `headways_*` fields count headways at mid-route timepoints by their ratio to the scheduled\nheadway, in the same buckets as `/api/reliability`. They're counted from 2025-12-24 and for the\nwhole day only, so they're omitted before then and when a `time_band` is requested.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    route: Route ID, or the comma-separated group that was requested.\n    count: Trips delivered.\n    total_time: Total trip time in seconds, arrival to arrival, so including dwell.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.\n    headways_under_50: Headways at most half the scheduled headway (bunched).\n    headways_50_75: Headways over 50% and up to 75% of scheduled.\n    headways_75_125: Headways over 75% and under 125% of scheduled.\n    headways_125_150: Headways 125% up to 150% of scheduled.\n    headways_over_150: Headways 150% of scheduled or more.\n    scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.\n    unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.\n        Omitted with `scheduled_trips`.\n    unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with\n        `scheduled_trips`.\n    total_dwell: Seconds spent around the stops in `n_dwell_stops`. Missing from daily rows\n        written before the pipeline recorded dwell.\n    n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).\n        Average dwell per stop is `total_dwell / n_dwell_stops`.",
+        "description": "Delivered trip metrics for a bus route (or group of routes) over one day, week or month.\n\nEntries can also have `pct_<type>_trips` fields and per-propulsion shares named\n`fleet_mix_<type>` (e.g. `fleet_mix_hybrid`), omitted when unknown.\n\nThe `headways_*` fields count headways at mid-route timepoints by their ratio to the scheduled\nheadway, in the same buckets as `/api/reliability`. They're counted from 2025-12-24 and for the\nwhole day only, so they're omitted before then and when a `time_band` is requested.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    route: Route ID, or the comma-separated group that was requested.\n    count: Trips delivered.\n    total_time: Total trip time in seconds, arrival to arrival, so including dwell.\n    miles_covered: Total miles covered.\n    n_traversals: Segment traversals measured.\n    headways_under_50: Headways at most half the scheduled headway (bunched).\n    headways_50_75: Headways over 50% and up to 75% of scheduled.\n    headways_75_125: Headways over 75% and under 125% of scheduled.\n    headways_125_150: Headways 125% up to 150% of scheduled.\n    headways_over_150: Headways 150% of scheduled or more.\n    scheduled_trips: Trips scheduled. From 2025-12-24, and omitted when a `time_band` is set.\n    unobserved_trips: Scheduled trips with no observed stop, an estimate of trips dropped.\n        Omitted with `scheduled_trips`.\n    unobserved_waived_trips: The unobserved trips that have an MBTA waiver. Omitted with\n        `scheduled_trips`.\n    total_dwell: Seconds spent around the stops in `n_dwell_stops`. Missing from daily rows\n        written before the pipeline recorded dwell.\n    n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).\n        Average dwell per stop is `total_dwell / n_dwell_stops`.\n    n_interpolated: Traversals whose times were interpolated.\n    median_speed_mph: Median traversal speed. Daily, whole-day entries only.\n    mean_speed_mph: Mean traversal speed. Daily, whole-day entries only.\n    day_type: `business_day` or `weekend_or_holiday`, on daily entries.\n    fleet_trips: Trips with a known vehicle. Omitted when unknown.\n    avg_bus_age: Average bus age in years. Omitted when unknown.\n    pct_battery_trips: Percentage of trips run by battery buses. Omitted when unknown.\n    time_bands: The same totals by departure window, keyed by time band (`am_peak`, ...).\n        Absent before 2025-12-24 and when a `time_band` is requested.",
         "properties": {
           "date": {
             "title": "Date",
@@ -4116,6 +4164,57 @@
           "n_traversals": {
             "title": "N Traversals",
             "type": "number"
+          },
+          "n_interpolated": {
+            "default": null,
+            "title": "N Interpolated",
+            "nullable": true,
+            "type": "number"
+          },
+          "median_speed_mph": {
+            "default": null,
+            "title": "Median Speed Mph",
+            "nullable": true,
+            "type": "number"
+          },
+          "mean_speed_mph": {
+            "default": null,
+            "title": "Mean Speed Mph",
+            "nullable": true,
+            "type": "number"
+          },
+          "day_type": {
+            "default": null,
+            "title": "Day Type",
+            "nullable": true,
+            "type": "string"
+          },
+          "fleet_trips": {
+            "default": null,
+            "title": "Fleet Trips",
+            "nullable": true,
+            "type": "number"
+          },
+          "avg_bus_age": {
+            "default": null,
+            "title": "Avg Bus Age",
+            "nullable": true,
+            "type": "number"
+          },
+          "pct_battery_trips": {
+            "default": null,
+            "title": "Pct Battery Trips",
+            "nullable": true,
+            "type": "number"
+          },
+          "time_bands": {
+            "default": null,
+            "title": "Time Bands",
+            "nullable": true,
+            "additionalProperties": {
+              "$ref": "#/components/schemas/BusBandTotals"
+            },
+            "type": "object"
           },
           "headways_under_50": {
             "default": null,
@@ -4191,7 +4290,7 @@
       },
       "CrTripMetricsEntry": {
         "additionalProperties": true,
-        "description": "Commuter Rail fleet metrics for a route over one day, week or month.\n\nEntries also have per-fleet shares named `fleet_mix_<type>` (e.g. `fleet_mix_rotem`), and\n`avg_cab_car_age` when known.\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    route: Route ID, or `all`.\n    fleet_trips: Trips with a known cab car.",
+        "description": "Commuter Rail fleet metrics for a route over one day, week or month.\n\nEntries also have per-fleet shares named `fleet_mix_<type>` (e.g. `fleet_mix_rotem`).\n\nAttributes:\n    date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).\n    route: Route ID, or `all`.\n    fleet_trips: Trips with a known cab car.\n    avg_cab_car_age: Average cab car age in years, when known.",
         "properties": {
           "date": {
             "title": "Date",
@@ -4204,6 +4303,12 @@
           "fleet_trips": {
             "default": null,
             "title": "Fleet Trips",
+            "nullable": true,
+            "type": "number"
+          },
+          "avg_cab_car_age": {
+            "default": null,
+            "title": "Avg Cab Car Age",
             "nullable": true,
             "type": "number"
           }

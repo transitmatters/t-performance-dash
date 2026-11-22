@@ -2333,13 +2333,51 @@ export interface components {
       [key: string]: unknown;
     };
     /**
+     * BusBandTotals
+     * @description A bus route's totals for one time band, as in `BusTripMetricsEntry.time_bands`.
+     *
+     *     Attributes:
+     *         count: Trips delivered.
+     *         n_traversals: Segment traversals measured.
+     *         n_interpolated: Traversals whose times were interpolated.
+     *         miles_covered: Total miles covered.
+     *         total_time: Total trip time in seconds.
+     *         total_dwell: Seconds spent around the stops in `n_dwell_stops`.
+     *         n_dwell_stops: Stops with an observed dwell.
+     */
+    BusBandTotals: {
+      /** Count */
+      count: number;
+      /** N Traversals */
+      n_traversals: number;
+      /**
+       * N Interpolated
+       * @default null
+       */
+      n_interpolated?: number | null;
+      /** Miles Covered */
+      miles_covered: number;
+      /** Total Time */
+      total_time: number;
+      /**
+       * Total Dwell
+       * @default null
+       */
+      total_dwell?: number | null;
+      /**
+       * N Dwell Stops
+       * @default null
+       */
+      n_dwell_stops?: number | null;
+    } & {
+      [key: string]: unknown;
+    };
+    /**
      * BusTripMetricsEntry
      * @description Delivered trip metrics for a bus route (or group of routes) over one day, week or month.
      *
-     *     Entries can also have fleet fields: `fleet_trips` (trips with a known vehicle), `avg_bus_age`,
-     *     `pct_<type>_trips` and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).
-     *     These are omitted when unknown. Daily entries for the whole day (no `time_band`) also have
-     *     `median_speed_mph` and `mean_speed_mph`.
+     *     Entries can also have `pct_<type>_trips` fields and per-propulsion shares named
+     *     `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`), omitted when unknown.
      *
      *     The `headways_*` fields count headways at mid-route timepoints by their ratio to the scheduled
      *     headway, in the same buckets as `/api/reliability`. They're counted from 2025-12-24 and for the
@@ -2366,6 +2404,15 @@ export interface components {
      *             written before the pipeline recorded dwell.
      *         n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).
      *             Average dwell per stop is `total_dwell / n_dwell_stops`.
+     *         n_interpolated: Traversals whose times were interpolated.
+     *         median_speed_mph: Median traversal speed. Daily, whole-day entries only.
+     *         mean_speed_mph: Mean traversal speed. Daily, whole-day entries only.
+     *         day_type: `business_day` or `weekend_or_holiday`, on daily entries.
+     *         fleet_trips: Trips with a known vehicle. Omitted when unknown.
+     *         avg_bus_age: Average bus age in years. Omitted when unknown.
+     *         pct_battery_trips: Percentage of trips run by battery buses. Omitted when unknown.
+     *         time_bands: The same totals by departure window, keyed by time band (`am_peak`, ...).
+     *             Absent before 2025-12-24 and when a `time_band` is requested.
      */
     BusTripMetricsEntry: {
       /** Date */
@@ -2380,6 +2427,48 @@ export interface components {
       miles_covered: number;
       /** N Traversals */
       n_traversals: number;
+      /**
+       * N Interpolated
+       * @default null
+       */
+      n_interpolated?: number | null;
+      /**
+       * Median Speed Mph
+       * @default null
+       */
+      median_speed_mph?: number | null;
+      /**
+       * Mean Speed Mph
+       * @default null
+       */
+      mean_speed_mph?: number | null;
+      /**
+       * Day Type
+       * @default null
+       */
+      day_type?: string | null;
+      /**
+       * Fleet Trips
+       * @default null
+       */
+      fleet_trips?: number | null;
+      /**
+       * Avg Bus Age
+       * @default null
+       */
+      avg_bus_age?: number | null;
+      /**
+       * Pct Battery Trips
+       * @default null
+       */
+      pct_battery_trips?: number | null;
+      /**
+       * Time Bands
+       * @default null
+       */
+      time_bands?: {
+        [key: string]: components['schemas']['BusBandTotals'];
+      } | null;
       /**
        * Headways Under 50
        * @default null
@@ -2437,13 +2526,13 @@ export interface components {
      * CrTripMetricsEntry
      * @description Commuter Rail fleet metrics for a route over one day, week or month.
      *
-     *     Entries also have per-fleet shares named `fleet_mix_<type>` (e.g. `fleet_mix_rotem`), and
-     *     `avg_cab_car_age` when known.
+     *     Entries also have per-fleet shares named `fleet_mix_<type>` (e.g. `fleet_mix_rotem`).
      *
      *     Attributes:
      *         date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
      *         route: Route ID, or `all`.
      *         fleet_trips: Trips with a known cab car.
+     *         avg_cab_car_age: Average cab car age in years, when known.
      */
     CrTripMetricsEntry: {
       /** Date */
@@ -2455,6 +2544,11 @@ export interface components {
        * @default null
        */
       fleet_trips?: number | null;
+      /**
+       * Avg Cab Car Age
+       * @default null
+       */
+      avg_cab_car_age?: number | null;
     } & {
       [key: string]: unknown;
     };
