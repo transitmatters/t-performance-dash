@@ -233,21 +233,10 @@ export interface TimePredictionWeek {
 
 export type DayKind = 'weekday' | 'saturday' | 'sunday';
 
-export type ServiceLevels = {
-  /** Null when the range has no day of this kind. */
-  [key in DayKind]: {
-    date: string;
-    service_levels: number[] | undefined;
-  } | null;
-};
+/** A day kind is missing or null when the range has none of it. */
+export type ServiceLevels = Schemas['ServiceLevelsByDayKind'];
 
-export type ScheduledService = {
-  start_date: string;
-  end_date: string;
-  start_date_service_levels: ServiceLevels;
-  end_date_service_levels: ServiceLevels;
-  counts: { date: string; count: number }[];
-};
+export type ScheduledService = Schemas['GetScheduledServiceResponse'];
 
 export type ServiceHours = {
   date: string;
