@@ -1,7 +1,7 @@
 'use client';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { useSpeedBaseline } from '../../common/api/hooks/baselines';
@@ -20,25 +20,16 @@ import { SpeedGraphWrapper } from './SpeedGraphWrapper';
 dayjs.extend(utc);
 
 export function SpeedDetails() {
-  const {
-    line,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
-  const enabled = Boolean(startDate && endDate && line && config.agg);
-  const speeds = useDeliveredTripMetrics(
-    {
-      start_date: startDate,
-      end_date: endDate,
-      agg: config.agg,
-      line,
-    },
-    enabled
-  );
+  const speeds = useDeliveredTripMetrics({
+    start_date: startDate,
+    end_date: endDate,
+    agg: config.agg,
+    line,
+  });
   const peak = useSpeedBaseline(line);
-  if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
-  }
 
   const stats = speeds.data ? getSpeedStats(speeds.data, peak) : null;
   const mph = (value: number) => `${value.toFixed(1)} mph`;

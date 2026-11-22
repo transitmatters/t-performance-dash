@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { useRidershipData, useStationRidershipData } from '../../common/api/hooks/ridership';
 import {
   useRidershipBaseline,
@@ -23,14 +23,11 @@ import { BusStopRidership } from './BusStopRidership';
 import { getStationAverages, getStationSeries, isStationRidershipLine } from './map/utils';
 
 export function RidershipDetails() {
-  const {
-    line,
-    lineShort,
-    query: { startDate, endDate, busRoute, crRoute, ferryRoute },
-  } = useDelimitatedRoute();
+  const { line, lineShort, busRoute, crRoute, ferryRoute } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const config = SPEED_RANGE_PARAM_MAP.week;
   const lineId = getRidershipLineId(line, busRoute, crRoute, ferryRoute);
-  const enabled = Boolean(startDate && endDate && lineId);
+  const enabled = Boolean(lineId);
 
   const ridership = useRidershipData(
     {
@@ -124,7 +121,7 @@ export function RidershipDetails() {
               <Button onClick={() => selectStation(null)}>Show line total</Button>
             )
           }
-          ready={[ridership, startDate, endDate, lineId]}
+          ready={[ridership, lineId]}
         >
           <RidershipGraphWrapper
             data={
@@ -134,8 +131,8 @@ export function RidershipDetails() {
             }
             stationName={selectedStationName || undefined}
             config={config}
-            startDate={startDate!}
-            endDate={endDate!}
+            startDate={startDate}
+            endDate={endDate}
             busRoute={busRoute}
             crRoute={crRoute}
           />
@@ -144,7 +141,7 @@ export function RidershipDetails() {
           <Widget
             title="Station ridership"
             subtitle="Average weekday fare validations at each gated station. Select a station to chart it above."
-            ready={[stationRidership, startDate, endDate]}
+            ready={[stationRidership]}
           >
             {Object.keys(stationAverages).length > 0 ? (
               <StationRidershipMap

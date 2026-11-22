@@ -6,8 +6,8 @@ import { enUS } from 'date-fns/locale';
 
 import { max, min } from 'date-fns';
 import dayjs from 'dayjs';
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { useLinePage } from '../../../common/hooks/usePageParams';
+import { COLORS } from '../../../common/constants/colors';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
@@ -31,7 +31,7 @@ export const PredictionsGraph = ({
   endDate,
   showTitle = false,
 }: PredictionsGraphProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { color, linePath } = useLinePage();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.week);
@@ -80,14 +80,14 @@ export const PredictionsGraph = ({
             datasets: [
               {
                 label: `Arrival Predictions`,
-                borderColor: LINE_COLORS[line ?? 'default'],
+                borderColor: color,
                 pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,
                 pointHoverRadius: 6,
                 spanGaps: false,
-                pointHoverBackgroundColor: LINE_COLORS[line ?? 'default'],
-                pointBackgroundColor: LINE_COLORS[line ?? 'default'],
+                pointHoverBackgroundColor: color,
+                pointBackgroundColor: color,
                 data: reducedData.map((datapoint) =>
                   (
                     (datapoint?.num_accurate_predictions / datapoint?.num_predictions) *

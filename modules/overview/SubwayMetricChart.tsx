@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { useScheduledService } from '../../common/api/hooks/service';
 import { useRidershipData } from '../../common/api/hooks/ridership';
@@ -24,28 +24,28 @@ import {
 import type { MetricKey } from './types';
 
 export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
-  const { line, lineShort } = useDelimitatedRoute();
+  const { line, lineShort } = useLinePage();
   const endDate = TODAY_STRING;
   const startDate = CHART_FETCH_START;
-  const enabled = Boolean(line);
 
-  const tripMetrics = useDeliveredTripMetrics(
-    { start_date: startDate, end_date: endDate, agg: CHART_CONFIG.agg, line },
-    enabled
-  );
-  const predictedService = useScheduledService(
-    { start_date: startDate, end_date: endDate, route_id: lineShort, agg: CHART_CONFIG.agg },
-    enabled
-  );
+  const tripMetrics = useDeliveredTripMetrics({
+    start_date: startDate,
+    end_date: endDate,
+    agg: CHART_CONFIG.agg,
+    line,
+  });
+  const predictedService = useScheduledService({
+    start_date: startDate,
+    end_date: endDate,
+    route_id: lineShort,
+    agg: CHART_CONFIG.agg,
+  });
   // The scorecard's request for the same line, so the page asks for ridership once
-  const ridership = useRidershipData(
-    {
-      line_id: getRidershipLineId(line, undefined, undefined, undefined),
-      start_date: WINDOW_START,
-      end_date: endDate,
-    },
-    enabled
-  );
+  const ridership = useRidershipData({
+    line_id: getRidershipLineId(line, undefined, undefined, undefined),
+    start_date: WINDOW_START,
+    end_date: endDate,
+  });
   const delayTotals = useSlowzoneDelayTotalData();
 
   if (metric === 'speed') {
@@ -82,7 +82,7 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
     );
   }
   if (metric === 'slowzones') {
-    if (!delayTotals.data || !line || !lineShort) return <ChartPlaceHolder query={delayTotals} />;
+    if (!delayTotals.data) return <ChartPlaceHolder query={delayTotals} />;
     if (lineShort === 'Bus' || lineShort === 'Commuter Rail')
       return <ChartPlaceHolder query={delayTotals} />;
     const totals = delayTotals.data.data;

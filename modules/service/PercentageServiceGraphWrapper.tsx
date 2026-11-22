@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import { ChartStack } from '../../common/components/charts/ChartStack';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { ParamsType } from '../speed/constants/speeds';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
@@ -30,7 +30,7 @@ export const PercentageServiceGraphWrapper = ({
   comparison,
   fill = false,
 }: PercentageServiceGraphWrapperProps) => {
-  const { line } = useDelimitatedRoute();
+  const { line } = useLinePage();
   const peakService = useScheduledServiceBaseline(line);
 
   const { scheduled, peak } = useMemo(

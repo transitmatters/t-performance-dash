@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { Chart } from '@chartjs-utils';
 import { Bar } from '@chartjs-components';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { watermarkSize } from '../../../common/constants/charts';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
@@ -46,7 +46,7 @@ export const DelayCauseBars = ({
   onFocus,
   fill = false,
 }: DelayCauseBarsProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line, linePath } = useLinePage();
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');

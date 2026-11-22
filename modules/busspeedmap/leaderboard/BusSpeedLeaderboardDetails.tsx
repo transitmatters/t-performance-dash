@@ -7,7 +7,7 @@ import { WidgetDiv } from '../../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../../../common/components/widgets/WidgetTitle';
 import { SelectedBusRouteScope } from '../../../common/hooks/useChartBusRoute';
 import { ToggleControl } from '../../../common/hooks/useChartToggle';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage, useSingleDate } from '../../../common/hooks/usePageParams';
 import { BusSpeedDataNotes } from '../BusSpeedDataNotes';
 import { DAY_TYPES, TIME_BANDS } from '../constants';
 import { InProgressBadge } from '../InProgressBadge';
@@ -16,9 +16,8 @@ import { BusSpeedRouteLeaderboardSection } from './BusSpeedRouteLeaderboardSecti
 import { BusSpeedSegmentLeaderboardSection } from './BusSpeedSegmentLeaderboardSection';
 
 export function BusSpeedLeaderboardDetails() {
-  const {
-    query: { date },
-  } = useDelimitatedRoute();
+  const { date } = useSingleDate();
+  const { colorKey } = useLinePage();
 
   const { rankBy, view, metric, hasSegmentView, viewMode } = useRankings();
   const { shown: period } = useShownPeriod();
@@ -61,6 +60,7 @@ export function BusSpeedLeaderboardDetails() {
                     enabled={frequentRoutesOnly}
                     setEnabled={setFrequentRoutesOnly}
                     label="Frequent bus routes only"
+                    colorKey={colorKey}
                   />
                 )
               }

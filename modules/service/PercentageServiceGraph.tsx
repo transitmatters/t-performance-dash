@@ -7,8 +7,8 @@ import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 
 import { round } from '@lodash-utils';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
+import { useLinePage } from '../../common/hooks/usePageParams';
+import { CHART_COLORS, COLORS } from '../../common/constants/colors';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
@@ -49,7 +49,7 @@ export const PercentageServiceGraph = ({
   fill = false,
   embed,
 }: PercentageServiceGraphProps) => {
-  const { line, colorKey, linePath } = useDelimitatedRoute();
+  const { line, color: lineColor, linePath, lineShort } = useLinePage();
   const { tooltipFormat, unit, callbacks } = config;
 
   const isMobile = !useBreakpoint('md');
@@ -58,10 +58,9 @@ export const PercentageServiceGraph = ({
 
   const events = useMajorEvents(line, startDate, endDate);
 
-  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(lineShort, startDate, endDate);
 
   const labels = data.map((point) => point.date);
-  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   const shuttlingBlocks = hideGapsExplainedByEvents(
     explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
       startDate,

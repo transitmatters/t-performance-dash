@@ -3,7 +3,7 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Link } from '../../common/components/general/Link';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { usePredictionData } from '../../common/api/hooks/predictions';
 import { Widget } from '../../common/components/widgets';
@@ -24,10 +24,8 @@ import { PredictionsBinsGraphWrapper } from './charts/PredictionsBinsGraphWrappe
 dayjs.extend(utc);
 
 export function PredictionsDetails() {
-  const {
-    line,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const greenBranch = useGreenBranch();
   const routeId = line === 'line-green' ? greenBranch.routeId : lineToDefaultRouteId(line);
 
@@ -37,9 +35,6 @@ export function PredictionsDetails() {
     start_date: startDate,
     end_date: endDate,
   });
-  if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
-  }
 
   const stats = predictions.data?.length ? getPredictionStats(predictions.data) : null;
 

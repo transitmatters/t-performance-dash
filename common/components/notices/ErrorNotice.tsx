@@ -2,8 +2,8 @@ import { faArrowsRotate, faTriangleExclamation } from '@fortawesome/free-solid-s
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames';
 import type { UseQueryResult } from '@tanstack/react-query';
+import { useSearch } from '@tanstack/react-router';
 import { getErrorCopy } from '../../api/utils/ApiError';
-import { useDelimitatedRoute } from '../../utils/router';
 import { Button } from '../ui/button';
 
 interface ErrorNoticeProps {
@@ -17,9 +17,9 @@ interface ErrorNoticeProps {
  * `getErrorCopy`), never shown, so backend internals stay out of the UI.
  */
 export const ErrorNotice = ({ query }: ErrorNoticeProps) => {
-  const { query: params } = useDelimitatedRoute();
+  const isRange = useSearch({ strict: false, select: (search) => Boolean(search.startDate) });
   const { title, detail } = getErrorCopy(query?.error, {
-    isRange: Boolean(params.startDate),
+    isRange,
     isOnline: navigator.onLine,
   });
   const canRetry = Boolean(query?.refetch);

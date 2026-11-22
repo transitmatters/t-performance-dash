@@ -8,7 +8,7 @@ import '@transitmatters/stripmap/dist/style.css';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { abbreviateStationName, getStripMapWatermark } from '../../../common/utils/stripmap';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useDateRange } from '../../../common/hooks/usePageParams';
 import { SvgChart } from '../../../common/components/charts/SvgChart';
 import { StationRidershipTooltip } from './StationRidershipTooltip';
 import { formatStationRidership, getOtherLinesAtStation } from './utils';
@@ -29,7 +29,7 @@ export const StationRidershipMap = ({
   selectedStationId,
   onSelectStation,
 }: StationRidershipMapProps) => {
-  const { startDate, endDate } = useDelimitatedRoute().query;
+  const { startDate, endDate } = useDateRange();
   const line = useMemo(
     () => Object.values(LINE_OBJECTS).find((obj) => obj.short === lineName)!,
     [lineName]

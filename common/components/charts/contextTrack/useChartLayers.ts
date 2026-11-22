@@ -21,6 +21,7 @@ import { useDisplayStore } from '../../../state/displayStore';
 import { isLongRange } from '../../../utils/dateChunks';
 import { useTripSlowZones } from '../../../../modules/slowzones/useTripSlowZones';
 import type { SlowZonesTrip } from '../../../types/charts';
+import type { LineShort } from '../../../types/lines';
 import { alertKey, getAlertAnnotations, serviceDay } from './segments';
 import { chartGeometryPlugin } from './chartGeometryPlugin';
 import type { TrackGeometry } from './chartGeometryPlugin';
@@ -36,8 +37,8 @@ interface UseChartLayersOptions {
   enabled: boolean;
   // Only single-day trip charts have the day's alerts
   alerts?: AlertsScope;
-  // Date-range charts can shade other lines' shutdowns, when the reader turns them on
-  withOtherShutdowns?: boolean;
+  // Date-range charts can shade shutdowns on lines other than this one, when the reader turns them on
+  otherShutdownsBesides?: LineShort;
   // A subway trip, whose slow zones get a row on its travel time and speed charts
   slowZonesTrip?: SlowZonesTrip;
 }
@@ -69,7 +70,7 @@ export const useChartLayers = ({
   granularity,
   enabled,
   alerts: alertsScope,
-  withOtherShutdowns = false,
+  otherShutdownsBesides,
   slowZonesTrip,
 }: UseChartLayersOptions) => {
   const withAlerts = Boolean(alertsScope);
@@ -125,7 +126,11 @@ export const useChartLayers = ({
     [slowZoneRuns]
   );
   const slowZoneColor = slowZones?.color;
-  const otherShutdowns = useOtherLineShutdowns(withOtherShutdowns ? startDate : undefined, endDate);
+  const otherShutdowns = useOtherLineShutdowns(
+    otherShutdownsBesides,
+    otherShutdownsBesides ? startDate : undefined,
+    endDate
+  );
   const [geometry, setGeometry] = useState<TrackGeometry | null>(null);
   // Charts without a track have no use for the plot's position, so don't re-render them with it
   const geometryPlugin: Plugin = useMemo(

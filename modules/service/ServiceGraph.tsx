@@ -1,14 +1,13 @@
 import { useCallback, useMemo, useRef } from 'react';
 import type { TooltipItem } from 'chart.js';
 
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import type { DeliveredTripMetrics, ScheduledService } from '../../common/types/dataPoints';
 import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartActions } from '../../common/components/charts/ChartActions';
 import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
-import { LINE_COLORS } from '../../common/constants/colors';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { HoverCardContent } from '../../common/components/charts/hoverCard/types';
 import { hideBlocksExplainedByEvents, useMajorEvents } from '../../common/utils/majorEvents';
@@ -28,9 +27,8 @@ interface ServiceGraphProps {
 
 export const ServiceGraph = (props: ServiceGraphProps) => {
   const { data, predictedData, startDate, endDate, config, fill = false } = props;
-  const { line, colorKey } = useDelimitatedRoute();
+  const { line, color: lineColor } = useLinePage();
   const ref = useRef(null);
-  const lineColor = LINE_COLORS[colorKey ?? 'default'];
 
   const peak = useScheduledServiceBaseline(line);
 

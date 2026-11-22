@@ -12,7 +12,7 @@ import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { getBusRouteDataIds } from '../../common/constants/lines';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { Skeleton } from '../../common/components/ui/skeleton';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage, useSingleDate } from '../../common/hooks/usePageParams';
 import { BusRouteDelayCard } from './BusRouteDelayCard';
 import { BusSpeedDataNotes } from './BusSpeedDataNotes';
 import { ALL_ROUTES, TIME_BANDS } from './constants';
@@ -30,20 +30,19 @@ import {
 } from './useBusSpeedParams';
 
 export function BusSpeedMapDetails() {
-  const {
-    query: { date, busRoute },
-  } = useDelimitatedRoute();
+  const { busRoute } = useLinePage();
+  const { date } = useSingleDate();
   const { shown: period } = useShownPeriod();
   const { value: dayType } = useDayType();
   const { value: timeBand } = useTimeBand();
   const { value: direction } = useDirection();
   const { value: routeId } = useRouteId(busRoute ? getBusRouteDataIds(busRoute) : []);
 
-  const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, Boolean(date));
+  const segments = useBusSpeedSegmentsUrl({ date, period, timeBand });
   const { data: pmtilesUrl } = segments;
   // Null for an archive from before dwell had a layer of its own. Read as running speeds until
   // that's known, as every archive from here on is.
-  const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand }, Boolean(date));
+  const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand });
 
   const band = TIME_BANDS.find(({ key }) => key === timeBand);
   const directionAndDays = useDirectionAndDays();
@@ -61,7 +60,6 @@ export function BusSpeedMapDetails() {
   const mapBox = 'h-[28rem] w-full overflow-hidden rounded-lg md:h-[36rem]';
 
   const renderBody = () => {
-    if (!date) return <p>Select a date to load the bus speed map.</p>;
     const serviceEnd = serviceEndBefore(busRoute, date, period);
     if (serviceEnd) return <RetiredRouteNotice serviceEnd={serviceEnd} period={period} />;
     if (segments.isLoading) return <Skeleton className={mapBox} />;
@@ -109,7 +107,7 @@ export function BusSpeedMapDetails() {
           />
           <div className="flex flex-col gap-3">{renderBody()}</div>
         </WidgetDiv>
-        {date && !serviceEndBefore(busRoute, date, period) && (
+        {!serviceEndBefore(busRoute, date, period) && (
           <BusRouteDelayCard
             date={date}
             period={period}

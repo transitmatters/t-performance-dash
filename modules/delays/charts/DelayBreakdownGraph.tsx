@@ -6,7 +6,7 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
@@ -55,7 +55,7 @@ export const DelayBreakdownGraph = ({
   agg = 'weekly',
   fill = false,
 }: DelayBreakdownGraphProps) => {
-  const { linePath } = useDelimitatedRoute();
+  const { linePath } = useLinePage();
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');

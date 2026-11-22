@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import dayjs from 'dayjs';
 
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { Notice } from '../../common/components/notices/Notice';
 import {
   BUS_TRIP_METRICS_MIN_DATE,
@@ -47,7 +47,7 @@ const OverviewLayout = ({ chart, chartCopy, cards, ...scorecard }: OverviewLayou
 );
 
 const SubwayOverview = ({ lineShort }: { lineShort: LineShort }) => {
-  const { line } = useDelimitatedRoute();
+  const { line } = useLinePage();
   const { slots, color } = useSubwayScorecardRows(line, lineShort);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('speed');
 
@@ -84,8 +84,7 @@ const RETIRED_BUS_CHART_COPY: MetricCopy = {
 };
 
 const BusOverview = () => {
-  const { query } = useDelimitatedRoute();
-  const busRoute = query.busRoute ?? '1';
+  const busRoute = useLinePage().busRoute ?? '1';
   const service = getBusRouteService(busRoute);
   // A retired route's figures end on its last day of service, and none start before its first.
   const span = getOverviewWindow(service.retired ? service.end : undefined, service.start);
@@ -133,8 +132,7 @@ const BusOverview = () => {
 };
 
 const CommuterRailOverview = () => {
-  const { query } = useDelimitatedRoute();
-  const crRoute = query.crRoute ?? 'CR-Fairmount';
+  const crRoute = useLinePage().crRoute ?? 'CR-Fairmount';
   const { slots, color } = useCrScorecardRows(crRoute);
   const chartCopy = useCrChartCopy(crRoute);
   const [selectedMetric, setSelectedMetric] = useState<MetricKey>('ridership');
@@ -163,10 +161,10 @@ const CommuterRailOverview = () => {
  * line or route so the picked metric starts over on a switch: a metric picked on one line would
  * otherwise stay charted on another whose scorecard has no such row. */
 export const Overview = () => {
-  const { tab, lineShort, query } = useDelimitatedRoute();
+  const { tab, lineShort, busRoute, crRoute } = useLinePage();
 
-  if (tab === 'Bus') return <BusOverview key={query.busRoute} />;
-  if (tab === 'Commuter Rail') return <CommuterRailOverview key={query.crRoute} />;
-  if (tab !== 'Subway' || !lineShort) return null;
+  if (tab === 'Bus') return <BusOverview key={busRoute} />;
+  if (tab === 'Commuter Rail') return <CommuterRailOverview key={crRoute} />;
+  if (tab !== 'Subway') return null;
   return <SubwayOverview key={lineShort} lineShort={lineShort} />;
 };

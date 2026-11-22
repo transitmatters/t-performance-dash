@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
+import { useSearch } from '@tanstack/react-router';
 import { useShutdownsData } from '../../common/api/hooks/shutdowns';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import type { ShutdownView } from './utils/shutdowns';
 import {
   affectsTrip,
@@ -20,8 +21,10 @@ export const usePageShutdowns = (
   startDate?: string,
   endDate?: string
 ): ShutdownView[] => {
-  const { lineShort, query } = useDelimitatedRoute();
-  const line = shutdownLineId(lineShort, query.crRoute);
+  const { lineShort, crRoute } = useLinePage();
+  // Embeds don't get the page's dates or stops filled in, so these can be missing.
+  const query = useSearch({ strict: false });
+  const line = shutdownLineId(lineShort, crRoute);
   const start = startDate ?? query.startDate ?? query.date;
   const end = endDate ?? query.endDate ?? start;
   const { data } = useShutdownsData(

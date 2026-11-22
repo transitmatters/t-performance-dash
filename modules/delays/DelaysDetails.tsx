@@ -1,6 +1,6 @@
 'use client';
 
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../common/components/widgets';
 import { DataNotes } from '../../common/components/notices/DataNotes';
@@ -22,10 +22,8 @@ const STACK_MODE_OPTIONS: ['minutes' | 'share', string][] = [
 ];
 
 export function DelaysDetails() {
-  const {
-    line,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const { alertDelays, agg, period, isActual, delayData, series, rangeData, rangeQueries } =
     useDelays(startDate, endDate);
 
@@ -35,10 +33,6 @@ export function DelaysDetails() {
     STACK_MODE_OPTIONS,
     { variant: 'toggle', paramKey: 'dlView' }
   );
-
-  if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
-  }
 
   return (
     <>

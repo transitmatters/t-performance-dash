@@ -128,7 +128,13 @@ export const MobileControlPanel = () => {
           <LabeledControl label="Show on charts">
             <div className="flex flex-col gap-3">
               {displayOptions.map(({ key, label, checked, setChecked }) => (
-                <ToggleSwitch key={key} enabled={checked} setEnabled={setChecked} label={label} />
+                <ToggleSwitch
+                  key={key}
+                  enabled={checked}
+                  setEnabled={setChecked}
+                  label={label}
+                  colorKey={colorKey}
+                />
               ))}
             </div>
           </LabeledControl>

@@ -2,16 +2,16 @@ import { useId } from 'react';
 import { Switch } from '../ui/switch';
 import { Label } from '../ui/label';
 import { lineColorVar } from '../../styles/general';
-import { useDelimitatedRoute } from '../../utils/router';
+import type { LineColorKey } from '../../types/lines';
 
 interface ToggleSwitchProps {
   enabled: boolean;
   setEnabled: (enabled: boolean) => void;
   label: string;
+  colorKey: LineColorKey | undefined;
 }
 
-export const ToggleSwitch = ({ enabled, setEnabled, label }: ToggleSwitchProps) => {
-  const { colorKey } = useDelimitatedRoute();
+export const ToggleSwitch = ({ enabled, setEnabled, label, colorKey }: ToggleSwitchProps) => {
   const id = useId();
 
   return (

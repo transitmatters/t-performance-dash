@@ -2,7 +2,7 @@ import { useAlertDelays, useDailyAlertDelays } from '../../common/api/hooks/dela
 import { TODAY_STRING } from '../../common/constants/dates';
 import { getBusRouteDataIds } from '../../common/constants/lines';
 import { getWeekStart } from '../../common/utils/date';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { lineToDefaultRouteId } from '../predictions/utils/utils';
 import { useGreenBranch } from '../../common/hooks/useGreenBranch';
 import { AGG_PERIOD, delayAggFor } from './format';
@@ -11,11 +11,8 @@ import { coverRange, splitByWeek } from './range';
 import { buildSeries, toActualDelays, toMonthly, withinRange } from './reasonSeries';
 
 /** The delays for the line, route and branch in the URL over these dates, as the Delays page shows them. */
-export const useDelays = (startDate: string | undefined, endDate: string | undefined) => {
-  const {
-    line,
-    query: { crRoute, busRoute },
-  } = useDelimitatedRoute();
+export const useDelays = (startDate: string, endDate: string) => {
+  const { line, crRoute, busRoute } = useLinePage();
   const greenBranch = useGreenBranch();
 
   // Green picks its branch from the toggle; commuter rail uses the crRoute from query params.
@@ -26,7 +23,7 @@ export const useDelays = (startDate: string | undefined, endDate: string | undef
         ? crRoute
         : lineToDefaultRouteId(line);
 
-  const agg = startDate && endDate ? delayAggFor(startDate, endDate) : 'weekly';
+  const agg = delayAggFor(startDate, endDate);
   // There's no monthly table: months are summed from the weekly rows.
   const fetchAgg = agg === 'daily' ? 'daily' : 'weekly';
 
@@ -37,26 +34,18 @@ export const useDelays = (startDate: string | undefined, endDate: string | undef
 
   const alertDelays = useAlertDelays(
     { start_date: startDate, end_date: endDate, line: delaysLine, agg: fetchAgg },
-    Boolean(startDate && endDate && line && delaysLine)
+    Boolean(delaysLine)
   );
 
   // The first and last weekly rows run past the selected dates, so totals use daily rows there.
-  const split =
-    fetchAgg === 'weekly' && startDate && endDate
-      ? splitByWeek(startDate, endDate, TODAY_STRING)
-      : undefined;
+  const split = fetchAgg === 'weekly' ? splitByWeek(startDate, endDate, TODAY_STRING) : undefined;
   const edgeSpans = [split?.head, split?.tail].filter((span): span is DateSpan => !!span);
-  const edgeDelays = useDailyAlertDelays(line ? delaysLine : undefined, edgeSpans);
+  const edgeDelays = useDailyAlertDelays(delaysLine, edgeSpans);
 
   const actual = alertDelays.data && toActualDelays(alertDelays.data);
-  const rows =
-    actual && startDate && endDate
-      ? withinRange(
-          actual.rows,
-          fetchAgg === 'weekly' ? getWeekStart(startDate) : startDate,
-          endDate
-        )
-      : undefined;
+  const rows = actual
+    ? withinRange(actual.rows, fetchAgg === 'weekly' ? getWeekStart(startDate) : startDate, endDate)
+    : undefined;
   const delayData = rows && agg === 'monthly' ? toMonthly(rows) : rows;
 
   const edgesReady = edgeDelays.every((query) => query.data);

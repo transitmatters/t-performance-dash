@@ -1,7 +1,7 @@
 'use client';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { useScheduledService, useServiceHours } from '../../common/api/hooks/service';
 import { useScheduledServiceBaseline } from '../../common/api/hooks/baselines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
@@ -33,11 +33,8 @@ dayjs.extend(utc);
 const PERIOD_NOUNS = { daily: 'day', weekly: 'week', monthly: 'month' } as const;
 
 export function ServiceDetails() {
-  const {
-    line,
-    lineShort,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line, lineShort } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const { value: comparison, control: comparisonControl } = useChartToggle(
     'scheduled',
     SERVICE_COMPARISON_OPTIONS,
@@ -50,28 +47,21 @@ export function ServiceDetails() {
     { paramKey: 'day' }
   );
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
-  const enabled = Boolean(startDate && endDate && line && config.agg);
-  const tripsData = useDeliveredTripMetrics(
-    {
-      start_date: startDate,
-      end_date: endDate,
-      agg: config.agg,
-      line,
-    },
-    enabled
-  );
+  const tripsData = useDeliveredTripMetrics({
+    start_date: startDate,
+    end_date: endDate,
+    agg: config.agg,
+    line,
+  });
 
   const showServiceHours = line === 'line-red' || line === 'line-orange' || line === 'line-blue';
 
-  const scheduledService = useScheduledService(
-    {
-      start_date: startDate,
-      end_date: endDate,
-      route_id: lineShort,
-      agg: config.agg,
-    },
-    enabled
-  );
+  const scheduledService = useScheduledService({
+    start_date: startDate,
+    end_date: endDate,
+    route_id: lineShort,
+    agg: config.agg,
+  });
   const scheduledData = scheduledService.data;
 
   const serviceHoursData = useServiceHours(
@@ -81,13 +71,9 @@ export function ServiceDetails() {
       line_id: line,
       agg: config.agg,
     },
-    enabled && showServiceHours
+    showServiceHours
   );
   const peakService = useScheduledServiceBaseline(line);
-
-  if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
-  }
 
   const stats =
     tripsData.data && scheduledData

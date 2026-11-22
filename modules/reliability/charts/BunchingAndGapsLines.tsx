@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Line } from '@chartjs-components';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
@@ -54,7 +54,7 @@ export const BunchingAndGapsLines = ({
   startDate,
   endDate,
 }: BunchingAndGapsLinesProps) => {
-  const { linePath } = useDelimitatedRoute();
+  const { linePath } = useLinePage();
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
