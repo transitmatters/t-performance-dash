@@ -12,6 +12,7 @@ import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
 import { parseRoutePath, stripForeignRouteParams, withDefaultRouteParam } from './router';
 import type { SearchObject } from './searchParams';
+import { withCanonicalStations } from './stationParams';
 import { stringifySearch } from './searchParams';
 
 type DateQuery = { date?: string; startDate?: string; endDate?: string };
@@ -151,15 +152,19 @@ export const getDateRedirectHref = (
 
 /**
  * Where to send a URL whose query doesn't fit its page: a route param from another mode (the line
- * would render as that route), a missing route on a bus, Commuter Rail or ferry page, or missing or
- * broken dates. Route params go first, since they set the date bounds.
+ * would render as that route), a missing route on a bus, Commuter Rail or ferry page, missing or
+ * invalid stations on a trip page, or missing or broken dates. Route params go first, since they set
+ * the stations and the date bounds.
  */
 export const getCanonicalSearchHref = (
   pathname: string,
   search: SearchObject,
   latestDate?: string
 ) => {
-  const stripped = withDefaultRouteParam(pathname, stripForeignRouteParams(pathname, search));
+  const stripped = withCanonicalStations(
+    pathname,
+    withDefaultRouteParam(pathname, stripForeignRouteParams(pathname, search))
+  );
   const dateHref = getDateRedirectHref(pathname, stripped, latestDate);
   if (dateHref) return dateHref;
   return isEqual(stripped, search) ? undefined : `${pathname}${stringifySearch(stripped)}`;

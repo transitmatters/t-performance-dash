@@ -1,6 +1,5 @@
 import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useEffect } from 'react';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
 import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
@@ -10,7 +9,6 @@ import {
   optionsStation,
   stopIdsForStations,
   findValidDefaultStations,
-  findNextValidStation,
   stopNoun,
 } from '../../utils/stations';
 import type { BusRoute, CommuterRailRoute, Line, FerryRoute } from '../../types/lines';
@@ -25,9 +23,8 @@ export interface StationSelectorWidgetProps {
 }
 
 /**
- * The trip's two ends, falling back to the route's defaults, and kept valid in the URL. Mounted
- * wherever the trip is shown, even with the picker hidden (the mobile controls sheet), so a
- * first visit always gets stations.
+ * The trip's two ends. The router has already put valid ones in the URL (`withCanonicalStations`);
+ * the defaults only cover the render before a redirect lands.
  */
 export const useTripStations = ({
   line,
@@ -35,7 +32,6 @@ export const useTripStations = ({
   crRoute,
   ferryRoute,
 }: StationSelectorWidgetProps) => {
-  const updateQueryParams = useUpdateQuery();
   const lineShort = LINE_OBJECTS[line].short;
   const {
     query: { from, to },
@@ -45,19 +41,6 @@ export const useTripStations = ({
   const { defaultFrom, defaultTo } = findValidDefaultStations(stations);
   const toStation = getStationInOptions(to, stations) ?? defaultTo;
   const fromStation = getStationInOptions(from, stations) ?? defaultFrom;
-
-  useEffect(() => {
-    if (fromStation && toStation && fromStation.station === toStation.station) {
-      const nextValidStation = findNextValidStation(fromStation, stations);
-      if (nextValidStation) {
-        const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, nextValidStation);
-        updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
-      }
-    } else {
-      const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
-      updateQueryParams({ from: fromStopIds?.[0], to: toStopIds?.[0] });
-    }
-  }, [fromStation, toStation, updateQueryParams, stations]);
 
   return { stations, fromStation, toStation, lineShort };
 };
