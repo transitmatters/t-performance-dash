@@ -2,7 +2,7 @@ import { useSingleDayTripMetrics } from '../../common/api/hooks/tripExplorer';
 import { EmbedMessage } from '../../common/components/embed/EmbedMessage';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import type { TripEmbedChart } from '../../common/constants/staticRoutes';
-import { QueryNameKeys, SingleDayAPIParams } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import type { RouteType } from '../../common/types/api';
 import type { Station } from '../../common/types/stations';
 import { stopIdsForStations } from '../../common/utils/stations';
@@ -37,13 +37,7 @@ export const SingleTripEmbedChart = ({
   const queryName = CHART_QUERIES[chart];
   const result = useSingleDayTripMetrics({
     routeType,
-    params: {
-      [SingleDayAPIParams.stop]: fromStopIds,
-      [SingleDayAPIParams.fromStop]: fromStopIds,
-      [SingleDayAPIParams.toStop]: toStopIds,
-      [SingleDayAPIParams.date]: date,
-    },
-    enabled: Boolean(fromStopIds && toStopIds && date),
+    params: { stop: fromStopIds, from_stop: fromStopIds, to_stop: toStopIds, date },
     only: [queryName],
   })[queryName];
 

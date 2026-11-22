@@ -1,10 +1,5 @@
-import {
-  useMultiDayTripMetrics,
-  useSingleDayTripMetrics,
-} from '../../common/api/hooks/tripExplorer';
+import { useTripPage } from '../../common/hooks/usePageParams';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
-import type { Station } from '../../common/types/stations';
-import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
@@ -14,30 +9,15 @@ import {
   useChartToggle,
 } from '../../common/hooks/useChartToggle';
 import { getLocationDetails } from '../../common/utils/stations';
-import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
+import { useTripMetrics } from './useTripMetrics';
 
-interface FerryTripGraphsProps {
-  fromStation: Station;
-  toStation: Station;
-  parameters: SingleDayAPIOptions | AggregateAPIOptions; // TODO
-  aggregate: boolean;
-  enabled: boolean;
-  line: Line | undefined;
-}
-
-export const FerryTripGraphs = ({
-  fromStation,
-  toStation,
-  parameters,
-  aggregate,
-  enabled,
-  line,
-}: FerryTripGraphsProps) => {
+export const FerryTripGraphs = () => {
+  const { line, fromStation, toStation } = useTripPage();
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -54,17 +34,8 @@ export const FerryTripGraphs = ({
     { paramKey: 'hwDays' }
   );
 
-  // Only the view on screen fetches; the other hook stays disabled.
-  const single = useSingleDayTripMetrics({
-    routeType: 'ferry',
-    params: parameters,
-    enabled: enabled && !aggregate,
-  });
-  const multi = useMultiDayTripMetrics({
-    routeType: 'ferry',
-    params: parameters,
-    enabled: enabled && aggregate,
-  });
+  const { aggregate, single, multi } = useTripMetrics('ferry');
+
   const location = getLocationDetails(fromStation, toStation);
 
   return (

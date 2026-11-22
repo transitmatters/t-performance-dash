@@ -216,7 +216,15 @@ export const getStationForInvalidFromSelection = (
   return getTrunkStationFor(from, stations);
 };
 
-export const stopIdsForStations = (from: Station | undefined, to: Station | undefined) => {
+export function stopIdsForStations(
+  from: Station,
+  to: Station
+): { fromStopIds: string[]; toStopIds: string[] };
+export function stopIdsForStations(
+  from: Station | undefined,
+  to: Station | undefined
+): { fromStopIds: string[] | undefined; toStopIds: string[] | undefined };
+export function stopIdsForStations(from: Station | undefined, to: Station | undefined) {
   if (to === undefined || from === undefined) {
     return { fromStopIds: undefined, toStopIds: undefined };
   }
@@ -227,7 +235,7 @@ export const stopIdsForStations = (from: Station | undefined, to: Station | unde
     fromStopIds: from.stops[directionKey],
     toStopIds: to.stops[directionKey],
   };
-};
+}
 
 /**
  * Names the direction the way the trip's own line does. Station order runs the way of the stops

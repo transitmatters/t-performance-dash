@@ -1,9 +1,9 @@
 import { LINE_OBJECTS } from '../constants/lines';
 import { ALL_PAGES } from '../constants/pages';
 import type { Station } from '../types/stations';
-import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import { parseRoutePath } from './router';
 import type { SearchObject } from './searchParams';
+import { validateAnySearch } from './searchSchemas';
 import {
   findNearestConnectingStation,
   findNextValidStation,
@@ -12,8 +12,6 @@ import {
   optionsStation,
   stopIdsForStations,
 } from './stations';
-
-const asString = (value: SearchObject[string]) => (typeof value === 'string' ? value : undefined);
 
 const hasStopIds = (from: Station | undefined, to: Station | undefined) => {
   const { fromStopIds, toStopIds } = stopIdsForStations(from, to);
@@ -30,15 +28,16 @@ export const withCanonicalStations = (pathname: string, search: SearchObject): S
   const { line, page } = parseRoutePath(pathname);
   if (!line || !ALL_PAGES[page]?.hasStationStore) return search;
 
+  const query = validateAnySearch(search);
   const stations = optionsStation(
     LINE_OBJECTS[line].short,
-    asString(search.busRoute) as BusRoute | undefined,
-    asString(search.crRoute) as CommuterRailRoute | undefined,
-    asString(search.ferryRoute) as FerryRoute | undefined
+    query.busRoute,
+    query.crRoute,
+    query.ferryRoute
   );
   const { defaultFrom, defaultTo } = findValidDefaultStations(stations);
-  const givenFrom = getStationInOptions(asString(search.from), stations);
-  const givenTo = getStationInOptions(asString(search.to), stations);
+  const givenFrom = getStationInOptions(query.from, stations);
+  const givenTo = getStationInOptions(query.to, stations);
   let fromStation = givenFrom ?? defaultFrom;
   let toStation = givenTo ?? defaultTo;
 

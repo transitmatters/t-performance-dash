@@ -1,10 +1,5 @@
-import {
-  useMultiDayTripMetrics,
-  useSingleDayTripMetrics,
-} from '../../common/api/hooks/tripExplorer';
+import { useTripPage } from '../../common/hooks/usePageParams';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
-import type { Station } from '../../common/types/stations';
-import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import {
@@ -13,8 +8,6 @@ import {
   useChartToggle,
 } from '../../common/hooks/useChartToggle';
 import { getLocationDetails } from '../../common/utils/stations';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import type { Line } from '../../common/types/lines';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
@@ -26,38 +19,13 @@ import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { DelayInsight } from '../../common/components/notices/DelayInsight';
 import { BenchmarkFieldKeys, MetricFieldKeys } from '../../common/types/charts';
+import { useTripMetrics } from './useTripMetrics';
 
-interface BusTripGraphsProps {
-  fromStation: Station;
-  toStation: Station;
-  parameters: AggregateAPIOptions | SingleDayAPIOptions; // TODO
-  aggregate: boolean;
-  enabled: boolean;
-  line: Line | undefined;
-}
-
-export const BusTripGraphs = ({
-  fromStation,
-  toStation,
-  parameters,
-  aggregate,
-  enabled,
-  line,
-}: BusTripGraphsProps) => {
-  // Only the view on screen fetches; the other hook stays disabled.
-  const single = useSingleDayTripMetrics({
-    routeType: 'bus',
-    params: parameters,
-    enabled: enabled && !aggregate,
-  });
-  const multi = useMultiDayTripMetrics({
-    routeType: 'bus',
-    params: parameters,
-    enabled: enabled && aggregate,
-  });
+export const BusTripGraphs = () => {
+  const { line, fromStation, toStation, busRoute, dates } = useTripPage();
+  const { aggregate, single, multi } = useTripMetrics('bus');
   const location = getLocationDetails(fromStation, toStation);
-  const { query } = useDelimitatedRoute();
-  const busRouteLabel = query.busRoute ? `Route ${query.busRoute}` : undefined;
+  const busRouteLabel = busRoute ? `Route ${busRoute}` : undefined;
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -134,7 +102,7 @@ export const BusTripGraphs = ({
               data={single.traveltimes.data}
               metricField={MetricFieldKeys.travelTimeSec}
               benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-              date={query.date}
+              date={dates.kind === 'single' ? dates.date : undefined}
               subject={busRouteLabel}
               line={line}
             />
