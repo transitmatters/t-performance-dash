@@ -11,7 +11,8 @@ const BUS_DELIVERED =
 const BUS_DROPPED =
   "Share of scheduled trips with no bus location data at all over the last 4 complete weeks, the same estimate as the bus leaderboard's dropped trips. A bus whose tracker is off counts as dropped, so this can run a little high.";
 const RIDERSHIP_DEFINITION =
-  'Median riders a day over the latest 4 weeks of counts, against the same weeks a year earlier. Each mode publishes on its own schedule, so the weeks compared differ by mode. Not scored: the T doesn’t control ridership directly.';
+  'Median riders a day over the latest 4 weeks of counts, against the same weeks a year earlier. Each mode publishes on its own schedule, so the weeks compared differ by mode.';
+const NOT_SCORED = "Not scored: the T doesn't control ridership directly.";
 const reliabilityDefinition = (where: string) =>
   `Share of headways (the wait between one vehicle and the next) within 75–125% of the scheduled headway, at ${where}, over the last 4 complete weeks.`;
 const DELAYS_DEFINITION =
@@ -36,7 +37,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
       "Trips per day compared with the line's busiest stretch at least 3 years ago, and how much of the schedule actually ran.",
     definitions: {
       subway:
-        'Trips run per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago. Also shows the share of scheduled service hours delivered over the last 4 complete weeks.',
+        'On the subway this counts trips that actually ran per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago. Also shows the share of scheduled service hours delivered over the last 4 complete weeks.',
       commuterRail: SCHEDULED_SERVICE,
       frequentBus: `${SCHEDULED_SERVICE} ${BUS_DELIVERED}`,
       bus: `${SCHEDULED_SERVICE} ${BUS_DELIVERED}`,
@@ -95,20 +96,19 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     summary:
       "Change in riders from the same weeks a year earlier. Not scored: the T doesn't control ridership directly, though better service tends to bring riders back.",
     definitions: {
-      subway: RIDERSHIP_DEFINITION,
-      commuterRail: RIDERSHIP_DEFINITION,
-      frequentBus: `${RIDERSHIP_DEFINITION} Routes add up.`,
-      bus: RIDERSHIP_DEFINITION,
-      ferry: RIDERSHIP_DEFINITION,
+      subway: `${RIDERSHIP_DEFINITION} ${NOT_SCORED}`,
+      commuterRail: `${RIDERSHIP_DEFINITION} ${NOT_SCORED}`,
+      frequentBus: `${RIDERSHIP_DEFINITION} Routes add up. ${NOT_SCORED}`,
+      bus: `${RIDERSHIP_DEFINITION} ${NOT_SCORED}`,
+      ferry: `${RIDERSHIP_DEFINITION} ${NOT_SCORED}`,
     },
   },
 };
 
 /** The measures each line is scored on, in column order. */
 export const SCORED_METRICS: MetricId[] = ['service', 'dropped', 'reliability', 'delays', 'speed'];
-/** Shown after the scored measures, set apart and left out of the verdict. */
+/** Shown after the scored measures, set apart, off the route line and left out of the verdict. */
 export const UNSCORED_METRICS: MetricId[] = ['ridership'];
-export const METRIC_ORDER: MetricId[] = [...SCORED_METRICS, ...UNSCORED_METRICS];
 
 export interface RowConfig {
   id: string;
@@ -192,3 +192,8 @@ export const definitionFor = (metric: MetricId, rowId: string) => {
 
 /** A trend smaller than this reads as flat. */
 export const NEGLIGIBLE_TREND = 0.02;
+/**
+ * The same for a change in points from a year earlier (`trendBasis: 'yearAgo'`), like dropped trips,
+ * whose cut-offs are a few points apart.
+ */
+export const NEGLIGIBLE_POINTS = 0.002;

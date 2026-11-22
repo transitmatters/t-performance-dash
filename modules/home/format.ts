@@ -1,6 +1,6 @@
 import type { Line } from '../../common/types/lines';
 import { REASON_BY_KEY, reasonLabel } from '../delays/constants/reasons';
-import { NEGLIGIBLE_TREND } from './config';
+import { NEGLIGIBLE_POINTS, NEGLIGIBLE_TREND } from './config';
 import type { Cell, Direction, Status, Unit } from './types';
 
 const round = (value: number, digits = 0) => {
@@ -36,11 +36,22 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
   }
 };
 
+/** A fraction as whole percent, halves rounded away from zero so +0.5% and −0.5% match. */
+export const roundedPercent = (value: number) =>
+  Math.sign(value) * Math.round(Math.abs(value) * 100);
+
 /** A change as "+6%" or "−4%". */
 export const formatChange = (value: number) => {
-  const rounded = Math.round(value * 100);
+  const rounded = roundedPercent(value);
   return rounded > 0 ? `+${rounded}%` : rounded < 0 ? `−${-rounded}%` : '0%';
 };
+
+/**
+ * A share of trips dropped: to a tenth under 10%, where a whole percent hides the difference
+ * between lines. The scoreboard, the statement and its chart all print it this way.
+ */
+export const formatDroppedShare = (value: number) =>
+  value < 0.1 ? `${(value * 100).toFixed(1)}%` : `${Math.round(value * 100)}%`;
 
 /** The figure shown on a stop; `withUnit` adds the count's label (trips/day) for the detail. */
 export const formatCell = (cell: Cell, withUnit = false) => {
@@ -50,8 +61,7 @@ export const formatCell = (cell: Cell, withUnit = false) => {
   if (cell.status === 'insufficient' && !withUnit) return '—';
   if (cell.value === null || !Number.isFinite(cell.value)) return '—';
   if (cell.metric === 'ridership') return formatChange(cell.value);
-  // Dropped trips run well under 10%, where a whole percent hides the difference between lines.
-  if (cell.metric === 'dropped' && cell.value < 0.1) return `${round(cell.value * 100, 1)}%`;
+  if (cell.metric === 'dropped') return formatDroppedShare(cell.value);
   const text = formatValue(cell.value, cell.unit);
   return withUnit && cell.unit === 'count' && cell.unitLabel && text !== '—'
     ? `${text} ${cell.unitLabel}`
@@ -70,22 +80,25 @@ export const formatTrend = (cell: Pick<Cell, 'trend' | 'trendBasis'>) => {
     : `${arrow}${amount}% last 2 weeks vs 12`;
 };
 
-const formatThreshold = (value: number, unit: Unit) =>
-  unit === 'pct'
-    ? `${Math.round(value * 100)}%`
-    : unit === 'seconds'
-      ? `${value} s`
-      : `${value} yr`;
+const formatThreshold = (value: number, unit: Unit, metric?: Cell['metric']) =>
+  metric === 'dropped'
+    ? formatDroppedShare(value)
+    : unit === 'pct'
+      ? `${Math.round(value * 100)}%`
+      : unit === 'seconds'
+        ? `${value} s`
+        : `${value} yr`;
 
 /** "Win ≥100% · Good ≥92% · Room to grow ≥80%", or undefined for a cell that isn't judged. */
 export const formatThresholds = ({
   thresholds,
   direction,
   scoreUnit,
-}: Pick<Cell, 'thresholds' | 'direction' | 'scoreUnit'>) => {
+  metric,
+}: Pick<Cell, 'thresholds' | 'direction' | 'scoreUnit'> & { metric?: Cell['metric'] }) => {
   if (!thresholds || !direction || !scoreUnit) return undefined;
   const op = direction === 'higher' ? '≥' : '≤';
-  const [win, good, room] = thresholds.map((t) => formatThreshold(t, scoreUnit));
+  const [win, good, room] = thresholds.map((t) => formatThreshold(t, scoreUnit, metric));
   return `Win ${op}${win} · Good ${op}${good} · Room to grow ${op}${room}`;
 };
 
@@ -97,8 +110,13 @@ export const topCauseLabel = ({ topCause }: Pick<Cell, 'topCause'>, line: Line) 
 
 export type TrendSentiment = 'good' | 'bad' | 'flat';
 
-export const trendSentiment = (trend: number | null, direction: Direction): TrendSentiment => {
-  if (trend === null || Math.abs(trend) < NEGLIGIBLE_TREND) return 'flat';
+export const trendSentiment = (
+  trend: number | null,
+  direction: Direction,
+  trendBasis?: Cell['trendBasis']
+): TrendSentiment => {
+  const negligible = trendBasis === 'yearAgo' ? NEGLIGIBLE_POINTS : NEGLIGIBLE_TREND;
+  if (trend === null || Math.abs(trend) < negligible) return 'flat';
   return trend > 0 === (direction === 'higher') ? 'good' : 'bad';
 };
 

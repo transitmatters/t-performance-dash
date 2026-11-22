@@ -11,7 +11,7 @@ import { cn } from '../../../common/utils/cn';
 import { METRICS, UNSCORED_METRICS, ROWS, SCORED_METRICS } from '../config';
 import type { RowConfig } from '../config';
 import { HEADLINE_LABELS, STATUS_LABELS } from '../copy';
-import { formatCell } from '../format';
+import { formatCell, roundedPercent } from '../format';
 import type { Cell, HeadlineKind, MetricId, Row } from '../types';
 import type { HomeState } from '../useHomeData';
 import { CellDetail } from './CellDetail';
@@ -60,7 +60,7 @@ const RowTitle = ({ line: { config, row }, state }: { line: ScoreboardLine; stat
 );
 
 const cellLabel = (row: Row, cell: Cell) =>
-  cell.status === 'unscored'
+  UNSCORED_METRICS.includes(cell.metric) && cell.status === 'unscored'
     ? `${row.label} ${METRICS[cell.metric].label}: ${formatCell(cell, true)} from a year earlier. Show details.`
     : `${row.label} ${METRICS[cell.metric].label}: ${STATUS_LABELS[cell.status]}${
         cell.status === 'na' ? '' : `, ${formatCell(cell, true)}`
@@ -122,16 +122,16 @@ const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 
  * went, in a neutral color, since it isn't good or bad for the score.
  */
 const ChangeIcon = ({ cell }: { cell: Cell }) => {
-  const change =
-    cell.status === 'unscored' && cell.value !== null ? Math.round(cell.value * 100) : 0;
+  // No figure (stale or too little history): nothing to point either way, so just hold the place.
+  if (cell.status !== 'unscored' || cell.value === null) {
+    return <span aria-hidden="true" className="size-5 shrink-0" />;
+  }
+  const change = roundedPercent(cell.value);
   const Icon = change > 0 ? TrendingUp : change < 0 ? TrendingDown : Minus;
   return (
     <Icon
       aria-hidden="true"
-      className={cn(
-        'size-5 shrink-0 text-muted-foreground transition-transform group-hover:scale-110',
-        change === 0 && 'opacity-40'
-      )}
+      className="size-5 shrink-0 text-muted-foreground transition-transform group-hover:scale-110"
     />
   );
 };
