@@ -1,10 +1,5 @@
-import {
-  useMultiDayTripMetrics,
-  useSingleDayTripMetrics,
-} from '../../common/api/hooks/tripExplorer';
+import { useTripPage } from '../../common/hooks/usePageParams';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
-import type { Station } from '../../common/types/stations';
-import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { QueryNameKeys } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
@@ -14,7 +9,6 @@ import {
   useChartToggle,
 } from '../../common/hooks/useChartToggle';
 import { getLocationDetails } from '../../common/utils/stations';
-import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
@@ -23,24 +17,10 @@ import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
 import { WidgetTitle } from '../../common/components/widgets';
 import { RegionalRailPreview } from './regionalRail/RegionalRailPreview';
+import { useTripMetrics } from './useTripMetrics';
 
-interface CommuterRailTripGraphsProps {
-  fromStation: Station;
-  toStation: Station;
-  parameters: SingleDayAPIOptions | AggregateAPIOptions; // TODO
-  aggregate: boolean;
-  enabled: boolean;
-  line: Line | undefined;
-}
-
-export const CommuterRailTripGraphs = ({
-  fromStation,
-  toStation,
-  parameters,
-  aggregate,
-  enabled,
-  line,
-}: CommuterRailTripGraphsProps) => {
+export const CommuterRailTripGraphs = () => {
+  const { line, fromStation, toStation } = useTripPage();
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -62,21 +42,11 @@ export const CommuterRailTripGraphs = ({
     { paramKey: 'dwDays' }
   );
 
-  // Only the view on screen fetches; the other hook stays disabled.
-  const single = useSingleDayTripMetrics({
-    routeType: 'cr',
-    params: parameters,
-    enabled: enabled && !aggregate,
-    skip: fromStation?.terminus ? [QueryNameKeys.dwells] : [],
-  });
+  const { aggregate, single, multi } = useTripMetrics(
+    'cr',
+    fromStation.terminus ? [QueryNameKeys.dwells] : []
+  );
 
-  const multi = useMultiDayTripMetrics({
-    routeType: 'cr',
-    params: parameters,
-    enabled: enabled && aggregate,
-    skip: fromStation?.terminus ? [QueryNameKeys.dwells] : [],
-  });
-  
   const location = getLocationDetails(fromStation, toStation);
 
   return (

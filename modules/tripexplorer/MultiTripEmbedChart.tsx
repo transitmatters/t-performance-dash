@@ -2,7 +2,7 @@ import { useMultiDayTripMetrics } from '../../common/api/hooks/tripExplorer';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PartialDataNotice } from '../../common/components/notices/PartialDataNotice';
 import type { TripEmbedChart } from '../../common/constants/staticRoutes';
-import { AggregateAPIParams, QueryNameKeys } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import type { RouteType } from '../../common/types/api';
 import type { DayFilter } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
@@ -43,13 +43,12 @@ export const MultiTripEmbedChart = ({
   const result = useMultiDayTripMetrics({
     routeType,
     params: {
-      [AggregateAPIParams.stop]: fromStopIds,
-      [AggregateAPIParams.fromStop]: fromStopIds,
-      [AggregateAPIParams.toStop]: toStopIds,
-      [AggregateAPIParams.startDate]: startDate,
-      [AggregateAPIParams.endDate]: endDate,
+      stop: fromStopIds,
+      from_stop: fromStopIds,
+      to_stop: toStopIds,
+      start_date: startDate,
+      end_date: endDate,
     },
-    enabled: Boolean(fromStopIds && toStopIds && startDate && endDate),
     only: [queryName],
   })[queryName];
 

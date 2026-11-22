@@ -143,7 +143,7 @@ describe('ferry routes', () => {
           .filter((to) => to !== from)
           .forEach((to) => {
             const { fromStopIds, toStopIds } = stopIdsForStations(from, to);
-            expect([...fromStopIds!, ...toStopIds!].every((id) => id.includes('|1|'))).toBe(true);
+            expect([...fromStopIds, ...toStopIds].every((id) => id.includes('|1|'))).toBe(true);
             expect(getLocationDetails(from, to).direction).toBe('loop');
           })
       );
