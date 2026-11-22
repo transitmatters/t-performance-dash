@@ -58,8 +58,3 @@ export type DashboardData = {
   modeData: Record<string, SummaryData>;
   summaryData: SummaryData;
 };
-
-export type ServiceAndRidershipContext = {
-  startDate: string | undefined;
-  endDate: string | undefined;
-};
