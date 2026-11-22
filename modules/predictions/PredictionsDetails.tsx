@@ -30,18 +30,13 @@ export function PredictionsDetails() {
   } = useDelimitatedRoute();
   const greenBranch = useGreenBranch();
   const routeId = line === 'line-green' ? greenBranch.routeId : lineToDefaultRouteId(line);
-  const enabled = Boolean(routeId);
 
-  const predictions = usePredictionData(
-    {
-      // Only subway lines have a Predictions page, and each has a default route.
-      route_id: routeId!,
-      // Without these the stat cards cover all history, not the charted range.
-      start_date: startDate,
-      end_date: endDate,
-    },
-    enabled
-  );
+  const predictions = usePredictionData({
+    route_id: routeId,
+    // Without these the stat cards cover all history, not the charted range.
+    start_date: startDate,
+    end_date: endDate,
+  });
   if (!startDate || !endDate) {
     return <p>Select a date range to load graphs.</p>;
   }
