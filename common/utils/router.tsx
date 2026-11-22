@@ -164,10 +164,17 @@ export const withDefaultRouteParam = (pathname: string, search: SearchObject): S
   return { ...search, [param]: DEFAULT_ROUTE_FOR_LINE[line] };
 };
 
+// Merged like TanStack merges a route's validated search, so unknown params still carry over.
+export const routeFromLocation = (pathname: string, search: SearchObject): Route =>
+  routeWithQuery(pathname, { ...search, ...validateAnySearch(search) });
+
 export const useDelimitatedRoute = (): Route => {
   const { pathname, search } = useLocation();
-  // Merged like TanStack merges a route's validated search, so unknown params still carry over.
   const query: QueryParams = useMemo(() => ({ ...search, ...validateAnySearch(search) }), [search]);
+  return routeWithQuery(pathname, query);
+};
+
+const routeWithQuery = (pathname: string, query: QueryParams): Route => {
   const { pathItems, tab, page, line } = parseRoutePath(withoutEmbedPrefix(pathname));
   const colorKey = getLineColorKey(line, query.busRoute);
 
