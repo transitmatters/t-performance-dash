@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TWO_DAYS_AGO_STRING, YESTERDAY_STRING } from '../constants/dates';
 import {
@@ -8,7 +9,9 @@ import {
   fetchBusDwellsUrl,
   fetchBusRouteDelays,
   fetchBusSpeedSegmentsUrl,
+  fetchLatestBusSpeedDate,
 } from './busSpeedSegments';
+import { latestBusSpeedDateQuery } from './hooks/busSpeedSegments';
 
 const BASE = '/businsights/BusSpeedSegments';
 const BANDS = ['early_am', 'am_peak', 'midday', 'pm_peak', 'evening', 'late_night'] as const;
@@ -189,13 +192,10 @@ describe('fetchBusRouteDelays', () => {
   });
 });
 
-describe('getLatestBusSpeedDate', () => {
+describe('fetchLatestBusSpeedDate', () => {
   const fetchMock = vi.fn();
-  // The result is cached per module, so each case loads a fresh copy.
-  const latest = async () => (await import('./busSpeedSegments')).getLatestBusSpeedDate();
 
   beforeEach(() => {
-    vi.resetModules();
     vi.stubGlobal('window', { location: { origin: 'https://dashboard.transitmatters.org' } });
     vi.stubGlobal('fetch', fetchMock);
   });
@@ -207,7 +207,7 @@ describe('getLatestBusSpeedDate', () => {
 
   it("opens on yesterday once yesterday's segments are out", async () => {
     fetchMock.mockResolvedValue(new Response(null, { status: 200 }));
-    await expect(latest()).resolves.toBe(YESTERDAY_STRING);
+    await expect(fetchLatestBusSpeedDate()).resolves.toBe(YESTERDAY_STRING);
     expect(fetchMock).toHaveBeenCalledWith(
       `https://dashboard.transitmatters.org${busSpeedSegmentsPath(YESTERDAY_STRING, 'daily', 'all_day')}`,
       { method: 'HEAD' }
@@ -216,17 +216,16 @@ describe('getLatestBusSpeedDate', () => {
 
   it('falls back to the day before while yesterday is missing or the check fails', async () => {
     fetchMock.mockResolvedValue(new Response(null, { status: 403 }));
-    await expect(latest()).resolves.toBe(TWO_DAYS_AGO_STRING);
-    vi.resetModules();
+    await expect(fetchLatestBusSpeedDate()).resolves.toBe(TWO_DAYS_AGO_STRING);
     fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
-    await expect(latest()).resolves.toBe(TWO_DAYS_AGO_STRING);
+    await expect(fetchLatestBusSpeedDate()).resolves.toBe(TWO_DAYS_AGO_STRING);
   });
 
-  it('only checks once', async () => {
+  it('is only checked once per page load', async () => {
     fetchMock.mockResolvedValue(new Response(null, { status: 200 }));
-    const { getLatestBusSpeedDate } = await import('./busSpeedSegments');
-    await getLatestBusSpeedDate();
-    await getLatestBusSpeedDate();
+    const client = new QueryClient();
+    await client.ensureQueryData(latestBusSpeedDateQuery);
+    await client.ensureQueryData(latestBusSpeedDateQuery);
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
