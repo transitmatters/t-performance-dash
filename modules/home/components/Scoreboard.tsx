@@ -7,7 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../../common/compone
 import { RouteBullet } from '../../../common/components/transit/RouteBullet';
 import { RouteLine } from '../../../common/components/transit/RouteLine';
 import { cn } from '../../../common/utils/cn';
-import { METRICS, OUTCOME_METRICS, ROWS, SCORED_METRICS } from '../config';
+import { METRICS, UNSCORED_METRICS, ROWS, SCORED_METRICS } from '../config';
 import type { RowConfig } from '../config';
 import { HEADLINE_LABELS, STATUS_LABELS } from '../copy';
 import { formatCell } from '../format';
@@ -67,10 +67,10 @@ const cellLabel = (row: Row, cell: Cell) =>
 
 /**
  * One stop on the strip: the node opens the detail, with the figure and its status beneath. An
- * outcome (ridership) isn't a stop on the line: it has no node, just its figure.
+ * unscored measure (ridership) isn't a stop on the line: it has no node, just its figure.
  */
 const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 'row' }) => {
-  const outcome = OUTCOME_METRICS.includes(cell.metric);
+  const unscored = UNSCORED_METRICS.includes(cell.metric);
   return (
     <Popover>
       <PopoverTrigger
@@ -82,7 +82,7 @@ const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 
             : 'w-full items-center gap-3 py-2 text-left'
         )}
       >
-        {outcome ? (
+        {unscored ? (
           // Holds the node's place, so the figure lines up with the scored stops'.
           <span aria-hidden="true" className="size-5 shrink-0" />
         ) : (
@@ -102,12 +102,12 @@ const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 
         <span
           className={cn(
             'text-sm font-semibold tabular-nums',
-            outcome && 'decoration-dotted underline-offset-4 group-hover:underline',
+            unscored && 'decoration-dotted underline-offset-4 group-hover:underline',
             (cell.status === 'na' || cell.status === 'insufficient') &&
               'font-normal text-muted-foreground'
           )}
         >
-          {outcome && cell.status === 'unscored' && <OutcomeArrow value={cell.value} />}
+          {unscored && cell.status === 'unscored' && <ChangeArrow value={cell.value} />}
           {formatCell(cell)}
         </span>
       </PopoverTrigger>
@@ -118,8 +118,8 @@ const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 
   );
 };
 
-/** ▲ or ▼ before a change, in the text color: an outcome isn't good or bad for the score. */
-const OutcomeArrow = ({ value }: { value: number | null }) =>
+/** ▲ or ▼ before a change, in the text color: it isn't good or bad for the score. */
+const ChangeArrow = ({ value }: { value: number | null }) =>
   value === null || Math.round(value * 100) === 0 ? null : (
     <span aria-hidden="true" className="mr-1 text-[0.7em] text-muted-foreground">
       {value > 0 ? '▲' : '▼'}
@@ -156,7 +156,7 @@ const PendingStop = ({
           aria-hidden="true"
           className={cn(
             'inline-block size-5 rounded-full border-2 border-current bg-card opacity-40',
-            OUTCOME_METRICS.includes(metric) && 'invisible',
+            UNSCORED_METRICS.includes(metric) && 'invisible',
             pulse && 'animate-pulse motion-reduce:animate-none'
           )}
         />
@@ -199,7 +199,7 @@ const LineStop = ({
   );
 
 /** Ridership sits apart from the scored measures, in its own tinted column. */
-const OUTCOME_CELL = 'border-l border-dashed bg-muted/40 px-1 lg:pr-4';
+const UNSCORED_CELL = 'border-l border-dashed bg-muted/40 px-1 lg:pr-4';
 
 const MetricHeader = ({ metric }: { metric: MetricId }) => (
   <span className="inline-flex items-center gap-1">
@@ -235,8 +235,8 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
         </td>
       ))}
       <td aria-hidden="true" />
-      {OUTCOME_METRICS.map((metric) => (
-        <td key={metric} className={cn(OUTCOME_CELL, 'py-3 align-top')}>
+      {UNSCORED_METRICS.map((metric) => (
+        <td key={metric} className={cn(UNSCORED_CELL, 'py-3 align-top')}>
           <LineStop line={line} metric={metric} layout="column" state={state} />
         </td>
       ))}
@@ -260,16 +260,15 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
             </th>
           ))}
           <th aria-hidden="true" className="w-4" />
-          {OUTCOME_METRICS.map((metric) => (
+          {UNSCORED_METRICS.map((metric) => (
             <th
               scope="col"
               key={metric}
               className={cn(
-                OUTCOME_CELL,
+                UNSCORED_CELL,
                 'pb-2 align-bottom text-xs font-medium text-muted-foreground'
               )}
             >
-              <span className="block text-[11px] tracking-wide uppercase">Outcome</span>
               <MetricHeader metric={metric} />
             </th>
           ))}
@@ -302,8 +301,8 @@ const MobileStrips = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
             ))}
           </ul>
         </div>
-        <ul className="mt-1 border-t border-dashed pt-1" aria-label="Outcome">
-          {OUTCOME_METRICS.map((metric) => (
+        <ul className="mt-1 border-t border-dashed pt-1" aria-label="Not scored">
+          {UNSCORED_METRICS.map((metric) => (
             <li key={metric}>
               <LineStop line={line} metric={metric} layout="row" state={state} />
             </li>

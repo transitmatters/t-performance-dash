@@ -93,7 +93,7 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     id: 'ridership',
     label: 'Ridership',
     summary:
-      "Change in riders from the same weeks a year earlier. Not scored: the T doesn't control ridership directly, so it's an outcome of everything else here.",
+      "Change in riders from the same weeks a year earlier. Not scored: the T doesn't control ridership directly, though better service tends to bring riders back.",
     definitions: {
       subway: RIDERSHIP_DEFINITION,
       commuterRail: RIDERSHIP_DEFINITION,
@@ -106,9 +106,9 @@ export const METRICS: Record<MetricId, MetricMethod> = {
 
 /** The measures each line is scored on, in column order. */
 export const SCORED_METRICS: MetricId[] = ['service', 'dropped', 'reliability', 'delays', 'speed'];
-/** Shown after the scored measures, set apart: outcomes of the service, not part of the verdict. */
-export const OUTCOME_METRICS: MetricId[] = ['ridership'];
-export const METRIC_ORDER: MetricId[] = [...SCORED_METRICS, ...OUTCOME_METRICS];
+/** Shown after the scored measures, set apart and left out of the verdict. */
+export const UNSCORED_METRICS: MetricId[] = ['ridership'];
+export const METRIC_ORDER: MetricId[] = [...SCORED_METRICS, ...UNSCORED_METRICS];
 
 export interface RowConfig {
   id: string;
