@@ -46,7 +46,7 @@ export function SlowZonesDetails() {
   const delayTotals = useSlowzoneDelayTotalData();
   const allSlow = useSlowzoneAllData();
   const zoneDelays = useSlowzoneZoneDelays(lineShort);
-  const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line, date: endDate });
 
   const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
   const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
