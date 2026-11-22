@@ -44,7 +44,10 @@ export const getDelaysPageUrl = (
   { linePath, query }: Pick<Route, 'linePath' | 'query'>
 ) => `${window.location.origin}/${linePath}/delays/${delaysSearch(chart, query)}`;
 
-export const getDelaysEmbedSnippet = (chart: DelaysEmbedChart, route: Route) =>
+export const getDelaysEmbedSnippet = (
+  chart: DelaysEmbedChart,
+  route: Pick<Route, 'line' | 'linePath' | 'query'>
+) =>
   getEmbedSnippet(
     `/embed/${route.linePath}/delays/${chart}/${delaysSearch(chart, route.query)}`,
     getDelaysEmbedTitle(chart, route)

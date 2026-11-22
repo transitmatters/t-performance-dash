@@ -15,6 +15,7 @@ import { parseRoutePath, stripForeignRouteParams, withDefaultRouteParam } from '
 import type { SearchObject } from './searchParams';
 import { withCanonicalStations } from './stationParams';
 import { stringifySearch } from './searchParams';
+import type { DateRange, SingleDate } from './pageParams';
 
 type DateQuery = { date?: string; startDate?: string; endDate?: string };
 
@@ -106,36 +107,40 @@ interface NormalizeDateParamsArgs {
  * pages, `startDate` and `endDate` on range pages. Undefined when the search already has one, or
  * the page doesn't take dates.
  */
-export const normalizeDateParams = ({
-  section,
-  tab,
-  page,
-  search,
-  stored = {},
-  latestDate,
-}: NormalizeDateParamsArgs): SearchObject | undefined => {
-  const isRange = RANGE_SECTIONS.includes(section);
-  if (!isRange && !SINGLE_SECTIONS.includes(section)) return undefined;
-
+const boundsAndDefaults = ({ section, tab, page, search }: NormalizeDateParamsArgs) => {
   const route = (search.busRoute ?? search.crRoute ?? search.ferryRoute) as
     | BusRoute
     | CommuterRailRoute
     | FerryRoute
     | undefined;
-  const bounds = getDatePickerBounds(tab, page, route);
   const defaults: DateQuery = getDefaultDates(section, tab) ?? {};
+  return { bounds: getDatePickerBounds(tab, page, route), defaults };
+};
 
-  let dates: DateQuery;
-  if (isRange) {
-    const fallback = asDate(stored.startDate) && asDate(stored.endDate) ? stored : defaults;
-    const windowDays =
-      defaults.startDate && defaults.endDate
-        ? dayjs(defaults.endDate).diff(defaults.startDate, 'day')
-        : FALLBACK_WINDOW_DAYS;
-    dates = normalizeRange(search, bounds, fallback, windowDays);
-  } else {
-    dates = normalizeSingle(search, bounds, asDate(stored.date) ? stored : defaults, latestDate);
-  }
+/** The range a range page shows for this search: complete, ordered and in bounds. */
+export const canonicalDateRange = (args: NormalizeDateParamsArgs): DateRange => {
+  const { bounds, defaults } = boundsAndDefaults(args);
+  const { stored = {} } = args;
+  const fallback = asDate(stored.startDate) && asDate(stored.endDate) ? stored : defaults;
+  const windowDays =
+    defaults.startDate && defaults.endDate
+      ? dayjs(defaults.endDate).diff(defaults.startDate, 'day')
+      : FALLBACK_WINDOW_DAYS;
+  return normalizeRange(args.search, bounds, fallback, windowDays);
+};
+
+/** The day a single-day page shows for this search, in bounds. */
+export const canonicalSingleDate = (args: NormalizeDateParamsArgs): SingleDate => {
+  const { bounds, defaults } = boundsAndDefaults(args);
+  const { stored = {}, latestDate } = args;
+  return normalizeSingle(args.search, bounds, asDate(stored.date) ? stored : defaults, latestDate);
+};
+
+export const normalizeDateParams = (args: NormalizeDateParamsArgs): SearchObject | undefined => {
+  const { section, search } = args;
+  const isRange = RANGE_SECTIONS.includes(section);
+  if (!isRange && !SINGLE_SECTIONS.includes(section)) return undefined;
+  const dates: DateQuery = isRange ? canonicalDateRange(args) : canonicalSingleDate(args);
 
   const normalized = pickBy(
     { ...search, date: undefined, startDate: undefined, endDate: undefined, ...dates },

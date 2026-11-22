@@ -8,8 +8,8 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
 import type { ServiceEmbedChart } from '../../common/constants/staticRoutes';
 import type { LinePath } from '../../common/types/lines';
-import { normalizeDateParams } from '../../common/utils/dateParams';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
+import { canonicalDateRange } from '../../common/utils/dateParams';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { DailyServiceHistogram } from './DailyServiceHistogram';
 import { PercentageServiceGraphWrapper } from './PercentageServiceGraphWrapper';
@@ -30,28 +30,23 @@ interface ServiceChartEmbedProps {
 /** One Service page chart on its own, for iframing into articles. */
 export const ServiceChartEmbed = ({ line, chart }: ServiceChartEmbedProps) => {
   const search = useSearch({ from: '/embed/$line/service/$chart' });
-  const { line: lineKey, lineShort } = useDelimitatedRoute();
+  const { line: lineKey, lineShort } = useLinePage();
   // Fills in missing or out-of-range dates without rewriting the URL, as the slow zone embed does.
-  const dates =
-    normalizeDateParams({ section: 'line', tab: 'Subway', page: 'service', search }) ?? search;
-  const startDate = dates.startDate as string;
-  const endDate = dates.endDate as string;
+  const { startDate, endDate } = canonicalDateRange({
+    section: 'line',
+    tab: 'Subway',
+    page: 'service',
+    search,
+  });
   const comparison = search.compare ?? 'scheduled';
   const day = search.day ?? 'weekday';
 
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
-  const enabled = Boolean(startDate && endDate && lineKey && config.agg);
   const range = { start_date: startDate, end_date: endDate, agg: config.agg };
   const usesTrips = chart === 'round-trips' || chart === 'delivered';
-  const tripsData = useDeliveredTripMetrics({ ...range, line: lineKey }, enabled && usesTrips);
-  const scheduledData = useScheduledService(
-    { ...range, route_id: lineShort },
-    enabled && chart !== 'hours'
-  );
-  const serviceHours = useServiceHours(
-    { ...range, line_id: lineKey },
-    enabled && chart === 'hours'
-  );
+  const tripsData = useDeliveredTripMetrics({ ...range, line: lineKey }, usesTrips);
+  const scheduledData = useScheduledService({ ...range, route_id: lineShort }, chart !== 'hours');
+  const serviceHours = useServiceHours({ ...range, line_id: lineKey }, chart === 'hours');
 
   const renderChart = () => {
     const needed = usesTrips

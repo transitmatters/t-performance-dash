@@ -58,7 +58,10 @@ export const getTripPageUrl = (
 ) => `${window.location.origin}/${linePath}/trips/${embed.page}/${tripSearch(embed, query)}`;
 
 /** `trendline`: the chart has its trendline turned on, so the embed draws it too. */
-export const getTripEmbedSnippet = (embed: TripEmbed & { trendline?: boolean }, route: Route) => {
+export const getTripEmbedSnippet = (
+  embed: TripEmbed & { trendline?: boolean },
+  route: Pick<Route, 'line' | 'linePath' | 'query'>
+) => {
   const search = tripSearch(embed, route.query, embed.trendline ? { trend: '1' } : {});
   return getEmbedSnippet(
     `/embed/${route.linePath}/trips/${embed.page}/${embed.chart}/${search}`,
