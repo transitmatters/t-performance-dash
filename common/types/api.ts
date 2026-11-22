@@ -1,6 +1,6 @@
 import type { DayType, TimeBand } from '../../modules/busspeedmap/types';
 import type { AggType } from '../../modules/speed/constants/speeds';
-import type { ServiceHours, SpeedRestriction } from './dataPoints';
+import type { ServiceHours } from './dataPoints';
 import type { Line, LineRouteId } from './lines';
 
 export enum QueryNameKeys {
@@ -172,12 +172,6 @@ export type FetchPredictionsParams = {
   route_id: LineRouteId;
   start_date?: string;
   end_date?: string;
-};
-
-export type FetchSpeedRestrictionsResponse = {
-  available: boolean;
-  date: string;
-  zones: SpeedRestriction[];
 };
 
 export type FetchServiceHoursOptions = Partial<{

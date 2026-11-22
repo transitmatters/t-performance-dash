@@ -206,17 +206,8 @@ export type LineSegmentData = {
   color: string;
 };
 
-export type SpeedRestriction = {
-  id: string;
-  line: Exclude<LineShort, 'Bus'>;
-  description: string;
-  reason: string;
-  fromStopId: null | string;
-  toStopId: null | string;
-  reported: string;
-  speedMph: number;
-  trackFeet: number;
-  lineId: Line;
+/** A speed restriction zone, with when its data is from (`currentAsOf`) and was fetched (`validAsOf`). */
+export type SpeedRestriction = Schemas['SpeedRestrictionZone'] & {
   currentAsOf: Date;
   validAsOf: Date;
 };
