@@ -128,9 +128,9 @@ export const useChartLayers = ({
   );
   const pinned = useLayerStore((store) => store.pinned);
   const temperatureEnabled =
-    useLayerStore((store) => store.temperature) && enabled && showTemperature;
+    useLayerStore((store) => store.temperaturePinned) && enabled && showTemperature;
   const slowZones = useTripSlowZones(enabled ? slowZonesTrip : undefined, startDate, endDate);
-  const slowZonesPinned = useLayerStore((store) => store.slowZones);
+  const slowZonesPinned = useLayerStore((store) => store.slowZonesPinned);
   const slowZoneRuns = slowZones?.runs;
   const placedSlowZones = useMemo(
     () => (slowZoneRuns ? placeSlowZoneRuns(slowZoneRuns) : undefined),
