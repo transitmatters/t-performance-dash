@@ -16,6 +16,7 @@ import { RidershipGraph } from '../ridership/RidershipGraph';
 import {
   CHART_CONFIG,
   CHART_FETCH_START,
+  WINDOW_START,
   chartWindowStart,
   hasTrips,
   trimTrailingEmpty,
@@ -36,10 +37,11 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
     { start_date: startDate, end_date: endDate, route_id: lineShort, agg: CHART_CONFIG.agg },
     enabled
   );
+  // The scorecard's request for the same line, so the page asks for ridership once
   const ridership = useRidershipData(
     {
       line_id: getRidershipLineId(line, undefined, undefined, undefined),
-      start_date: startDate,
+      start_date: WINDOW_START,
       end_date: endDate,
     },
     enabled
@@ -98,12 +100,13 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
     );
   }
   if (!ridership.data) return <ChartPlaceHolder query={ridership} />;
-  if (!ridership.data.length)
+  const ridershipData = ridership.data.filter((point) => point.date >= startDate);
+  if (!ridershipData.length)
     return <NoDataNotice isLineMetric message="No ridership counts in the last 60 days." />;
-  const ridershipEnd = ridership.data[ridership.data.length - 1]?.date ?? endDate;
+  const ridershipEnd = ridershipData[ridershipData.length - 1]?.date ?? endDate;
   return (
     <RidershipGraph
-      data={ridership.data}
+      data={ridershipData}
       config={CHART_CONFIG}
       startDate={chartWindowStart(ridershipEnd)}
       endDate={ridershipEnd}
