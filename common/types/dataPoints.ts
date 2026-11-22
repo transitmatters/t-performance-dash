@@ -93,16 +93,18 @@ export interface SlowZoneDailyDelaysResponse {
   updated_on: string;
 }
 
-/** Fleet stats from data-ingestion. Each mode fills in its own share and age fields. */
-export interface FleetMetrics {
+/** Per-fleet shares, `fleet_mix_<type>`. The spec describes them but can't list keys that vary by line. */
+export type FleetMix = { [key: `fleet_mix_${string}`]: number | undefined };
+
+/** What the fleet charts read from any mode's trip metrics. Each mode fills in its own fields. */
+export interface FleetMetrics extends FleetMix {
   date: string;
-  fleet_trips?: number;
-  avg_car_age?: number;
-  pct_new_trips?: number;
-  avg_bus_age?: number;
-  pct_battery_trips?: number;
-  avg_cab_car_age?: number;
-  [key: `fleet_mix_${string}`]: number | undefined;
+  fleet_trips?: number | null;
+  avg_car_age?: number | null;
+  pct_new_trips?: number | null;
+  avg_bus_age?: number | null;
+  pct_battery_trips?: number | null;
+  avg_cab_car_age?: number | null;
 }
 
 export interface SpeedTripMetrics extends FleetMetrics {
@@ -112,44 +114,23 @@ export interface SpeedTripMetrics extends FleetMetrics {
   miles_per_hour?: string;
 }
 
-export interface DeliveredTripMetrics extends SpeedTripMetrics {
-  line: Line;
-}
+export type DeliveredTripMetrics = Schemas['TripMetricsEntry'] &
+  FleetMix & {
+    line: Line;
+    avg_car_age?: number;
+    pct_new_trips?: number;
+    miles_per_hour?: string;
+  };
 
 /**
- * Daily speed metrics for a single bus route, from the DeliveredTripMetricsBus table.
- * Unlike rail, miles_covered/total_time are summed directly from observed segments
- * rather than extrapolated, but the mph formula (miles_covered / (total_time / 3600))
- * is the same.
+ * Speed metrics for a bus route, from the DeliveredTripMetricsBus table. Unlike rail,
+ * miles_covered/total_time are summed directly from observed segments rather than extrapolated,
+ * but the mph formula (miles_covered / (total_time / 3600)) is the same.
  */
-export interface DeliveredTripMetricsBus
-  extends SpeedTripMetrics, BusTripCounts, Partial<HeadwayCounts> {
-  route: string;
-  n_traversals: number;
-  n_interpolated: number;
-  // The headway counts are at mid-route timepoints, whole day only, and from 2025-12-24 on.
-  // Whole-day, daily rows only: a median or mean can't be split by time band or summed into a
-  // week or month.
-  median_speed_mph?: number;
-  mean_speed_mph?: number;
-  // Fleet fields, daily rows only (the `fleet_mix_*` shares are on SpeedTripMetrics). Route `all`
-  // is the whole system and carries only these.
-  fleet_trips?: number;
-  pct_battery_trips?: number;
-  avg_bus_age?: number;
-  // The same totals split by departure window (keys are TIME_BANDS minus `all_day`), on daily rows
-  // and weekly/monthly rollups alike. Absent before the pipeline began recording it (2025-12-24) and
-  // when the request set `time_band`; a band with no traversals is zeros or missing.
-  time_bands?: Partial<Record<string, BusBandTotals>>;
-}
+export type DeliveredTripMetricsBus = Schemas['BusTripMetricsEntry'] &
+  FleetMix & { miles_per_hour?: string };
 
-export interface BusBandTotals {
-  count: number;
-  n_traversals: number;
-  n_interpolated: number;
-  miles_covered: number;
-  total_time: number;
-}
+export type BusBandTotals = Schemas['BusBandTotals'];
 
 /**
  * Every trip LAMP scheduled, the ones with no observed stop (an estimate of trips dropped, since a
@@ -157,41 +138,20 @@ export interface BusBandTotals {
  * 2025-12-24, whole day only, and left off when not measured rather than sent as zero.
  */
 export interface BusTripCounts {
-  scheduled_trips?: number;
-  unobserved_trips?: number;
-  unobserved_waived_trips?: number;
+  scheduled_trips?: number | null;
+  unobserved_trips?: number | null;
+  unobserved_waived_trips?: number | null;
 }
 
 /** Commuter Rail cab-car fleet stats for one route, or `all`, from DeliveredTripMetricsCR. */
-export interface DeliveredTripMetricsCR extends FleetMetrics {
-  route: string;
-}
+export type DeliveredTripMetricsCR = Schemas['CrTripMetricsEntry'] & FleetMix;
 
 /**
- * One route's totals over a date range, as ranked by /api/busspeedleaderboard. mph is
- * derived client-side the same way as everywhere else (miles_covered / (total_time / 3600))
- * from figures summed across the range, not averaged day-by-day.
- *
- * total_time runs arrival to arrival, so it includes the time around stops in total_dwell.
- * Average dwell is total_dwell / n_dwell_stops. The dwell fields and n_days (days with speed
- * data) are missing from leaderboards computed before they were added.
- *
- * Routes with fleet data also have its stats for the range, each day weighted by the trips it
- * sampled (`fleet_trips`). The API sends avg_bus_age and the fleet_mix_* shares too; only the
- * fields the leaderboard ranks by are typed here.
+ * One route's totals over a date range, as ranked by /api/busspeedleaderboard. mph is derived
+ * client-side the same way as everywhere else (miles_covered / (total_time / 3600)) from figures
+ * summed across the range, not averaged day-by-day.
  */
-export interface BusSpeedLeaderboardEntry extends BusTripCounts, Partial<HeadwayCounts> {
-  route: string;
-  miles_covered: number;
-  total_time: number;
-  count: number;
-  n_traversals: number;
-  total_dwell?: number;
-  n_dwell_stops?: number;
-  n_days?: number;
-  fleet_trips?: number;
-  pct_battery_trips?: number;
-}
+export type BusSpeedLeaderboardEntry = Schemas['BusSpeedLeaderboardEntry'];
 
 export type LineSegmentData = {
   duration: number;

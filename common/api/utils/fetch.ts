@@ -40,17 +40,3 @@ export const apiFetch = async <P extends ApiPath>({
   );
   return await response.json();
 };
-
-/**
- * `apiFetch` without the spec's types, for routes whose frontend types don't match the spec yet.
- * Each caller should move to `apiFetch` once its types and their readers handle what the spec
- * allows (usually fields that can be missing or null); remove this when none are left.
- */
-export const apiFetchUnchecked = async ({
-  path,
-  options,
-  errorMessage,
-}: Omit<ApiFetchArgs<ApiPath>, 'pathParams'>) => {
-  const response = await fetchOrThrow(buildUrl(path, options).toString(), undefined, errorMessage);
-  return await response.json();
-};

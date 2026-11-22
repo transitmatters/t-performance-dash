@@ -3,6 +3,7 @@ import { FetchDeliveredTripMetricsParams } from '../types/api';
 import type { DeliveredTripMetrics } from '../types/dataPoints';
 import { withWeekStart } from '../utils/date';
 import { isLine } from '../utils/isLine';
+import { withFleetMix } from './utils/fleetMix';
 import { apiFetch } from './utils/fetch';
 
 export const fetchActualTripsByLine = async (
@@ -19,7 +20,7 @@ export const fetchActualTripsByLine = async (
     isLine(line)
       ? [
           {
-            ...row,
+            ...withFleetMix(row),
             line,
             avg_car_age: avg_car_age ?? undefined,
             pct_new_trips: pct_new_trips ?? undefined,
