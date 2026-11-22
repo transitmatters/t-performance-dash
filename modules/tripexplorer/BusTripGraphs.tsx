@@ -1,4 +1,4 @@
-import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripExplorerQueries } from '../../common/api/hooks/tripExplorer';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
