@@ -36,22 +36,33 @@ export const formatValue = (value: number | null, unit: Unit | 'minutes'): strin
   }
 };
 
+/** A change as "+6%" or "−4%". */
+export const formatChange = (value: number) => {
+  const rounded = Math.round(value * 100);
+  return rounded > 0 ? `+${rounded}%` : rounded < 0 ? `−${-rounded}%` : '0%';
+};
+
 /** The figure shown on a stop; `withUnit` adds the count's label (trips/day) for the detail. */
 export const formatCell = (cell: Cell, withUnit = false) => {
   if (cell.status === 'na') return 'n/a';
   // Not enough data to score: a dash on the board, like any other missing figure. The popover
   // still shows what was measured.
   if (cell.status === 'insufficient' && !withUnit) return '—';
+  if (cell.value === null || !Number.isFinite(cell.value)) return '—';
+  if (cell.metric === 'ridership') return formatChange(cell.value);
+  // Dropped trips run well under 10%, where a whole percent hides the difference between lines.
+  if (cell.metric === 'dropped' && cell.value < 0.1) return `${round(cell.value * 100, 1)}%`;
   const text = formatValue(cell.value, cell.unit);
   return withUnit && cell.unit === 'count' && cell.unitLabel && text !== '—'
     ? `${text} ${cell.unitLabel}`
     : text;
 };
 
-/** "▲ 5% vs 12 weeks", or points when comparing shares a year apart. */
+/** "▲ 5% last 2 weeks vs 12", or points when comparing shares a year apart. */
 export const formatTrend = (cell: Pick<Cell, 'trend' | 'trendBasis'>) => {
-  if (cell.trend === null || !Number.isFinite(cell.trend)) return null;
-  const rounded = Math.round(cell.trend * 100);
+  if (cell.trend === null || cell.trend === undefined || !Number.isFinite(cell.trend)) return null;
+  // Shares a year apart (dropped trips) move by fractions of a point.
+  const rounded = round(cell.trend * 100, cell.trendBasis === 'yearAgo' ? 1 : 0);
   const arrow = rounded > 0 ? '▲ ' : rounded < 0 ? '▼ ' : '';
   const amount = Math.abs(rounded);
   return cell.trendBasis === 'yearAgo'
@@ -99,4 +110,5 @@ export const STATUS_TONE: Record<Status, string> = {
   problem: 'text-red-700 dark:text-red-400',
   insufficient: 'text-muted-foreground',
   na: 'text-muted-foreground',
+  unscored: 'text-muted-foreground',
 };

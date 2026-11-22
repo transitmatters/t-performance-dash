@@ -4,10 +4,13 @@ import type { Line } from '../../common/types/lines';
 // The shape of static/landing/overview.json (schemaVersion 1), built daily by data-ingestion
 // (chalicelib/overview).
 
-export type MetricId = 'service' | 'frequency' | 'reliability' | 'delays' | 'speed';
+export type MetricId = 'service' | 'dropped' | 'reliability' | 'delays' | 'speed' | 'ridership';
 
-/** `insufficient`: should be measured but there isn't enough recent data. `na`: not measured. */
-export type Status = 'win' | 'good' | 'room' | 'problem' | 'insufficient' | 'na';
+/**
+ * `insufficient`: should be measured but there isn't enough recent data. `na`: not measured.
+ * `unscored`: measured but never judged, like ridership.
+ */
+export type Status = 'win' | 'good' | 'room' | 'problem' | 'insufficient' | 'na' | 'unscored';
 
 export type Direction = 'higher' | 'lower';
 
@@ -47,7 +50,7 @@ export interface Cell {
   baselineLabel?: string;
   /** Last 2 weeks vs the 12-week window, as a fraction (0.05 = 5% higher). */
   trend: number | null;
-  /** `yearAgo`: `trend` is the change in score since the schedule a year ago, in points. */
+  /** `yearAgo`: `trend` is the change in score since the same weeks a year ago, in points. */
   trendBasis?: 'yearAgo';
   secondary?: string;
   spark?: number[];

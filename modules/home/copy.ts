@@ -7,6 +7,7 @@ export const STATUS_LABELS: Record<Status, string> = {
   problem: 'Needs work',
   insufficient: 'Not enough data',
   na: 'Not measured',
+  unscored: 'Not scored',
 };
 
 export const HEADLINE_LABELS: Record<HeadlineKind, string> = {

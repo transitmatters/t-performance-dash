@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import type { Line } from '../../common/types/lines';
-import { FREQUENCY_GOALS, ROWS } from './config';
+import { ROWS } from './config';
 import type { Cell, HomeData, MetricId } from './types';
 
 // The "Across the system" statements and the line under the page title: sentences filled in from
@@ -32,7 +32,7 @@ export type Viz =
   | { kind: 'area'; series: [string, number][]; peak: [string, number]; now: number };
 
 export interface Statement {
-  id: 'reliability' | 'delays' | 'frequency' | 'service' | 'slowZones';
+  id: 'reliability' | 'delays' | 'service' | 'slowZones';
   head: string;
   viz: Viz;
   /** A line under the chart for a term the head can't define, like the service statement's "best". */
@@ -161,27 +161,6 @@ function delays({ cell, mark, link }: Reader): Statement | undefined {
   };
 }
 
-function frequency({ cell, hero, mark, link }: Reader): Statement | undefined {
-  const subway = hero('subwayFrequency')?.value;
-  const bus = cell('all-bus', 'frequency')?.value;
-  const frequent = cell('frequent-bus', 'frequency')?.value;
-  if (!isNumber(subway) || !isNumber(bus) || !isNumber(frequent)) return undefined;
-  return {
-    id: 'frequency',
-    head: `A subway train comes every ${FREQUENCY_GOALS.subway} minutes or better for ${pct(subway)} of the service day; a bus, every ${FREQUENCY_GOALS.bus}, for ${pct(bus)}.`,
-    viz: {
-      kind: 'meters',
-      cap: 1,
-      marks: [
-        { row: 'subway', label: 'Subway', value: subway },
-        mark('frequent-bus', frequent),
-        mark('all-bus', bus),
-      ],
-    },
-    link: link('frequent-bus', 'frequency', 'frequency'),
-  };
-}
-
 function service({ cell, mark, link }: Reader): Statement | undefined {
   const lines = SERVICE_ROWS.map((id) => ({ id, cell: cell(id, 'service') })).filter((l) =>
     isNumber(l.cell?.score)
@@ -209,7 +188,7 @@ function service({ cell, mark, link }: Reader): Statement | undefined {
     // A line's best only counts weeks at least 3 years old (data-ingestion's LOOKBACK_YEARS), so a
     // line that has added trips since, like the Orange Line in 2025, runs well over 100% of it.
     note: "Best means a line's busiest stretch at least 3 years ago, so one that has added trips since can pass 100%.",
-    link: link(furthest.id, 'service', 'service'),
+    link: link(furthest.id, 'service', 'scheduled service'),
   };
 }
 
@@ -235,7 +214,7 @@ function slowZones({ hero }: Reader): Statement | undefined {
 export const buildStatements = (data?: HomeData): Statement[] => {
   if (!data) return [];
   const read = reader(data);
-  return [reliability, delays, frequency, service, slowZones].flatMap((build) => build(read) ?? []);
+  return [reliability, delays, service, slowZones].flatMap((build) => build(read) ?? []);
 };
 
 /** The line under the page title, as a lead sentence and a quieter second one. */

@@ -69,14 +69,23 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
         <span
           className={cn('flex items-center gap-1.5 text-xs font-medium', STATUS_TONE[cell.status])}
         >
-          <span className="text-primary">
-            <StatusNode status={cell.status} className="size-4" />
-          </span>
+          {cell.status !== 'unscored' && (
+            <span className="text-primary">
+              <StatusNode status={cell.status} className="size-4" />
+            </span>
+          )}
           {STATUS_LABELS[cell.status]}
         </span>
       </div>
       {cell.status !== 'na' && (
-        <div className="text-xl font-semibold tabular-nums">{formatCell(cell, true)}</div>
+        <div className="text-xl font-semibold tabular-nums">
+          {formatCell(cell, true)}
+          {cell.status === 'unscored' && (
+            <span className="ml-1.5 text-sm font-normal text-muted-foreground">
+              vs a year earlier
+            </span>
+          )}
+        </div>
       )}
       <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
         {cell.secondary && <p>{cell.secondary}</p>}

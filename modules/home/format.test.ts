@@ -18,6 +18,7 @@ describe('formatTrend', () => {
 
   it('compares points with a year ago when the basis says so', () => {
     expect(formatTrend({ trend: 0.03, trendBasis: 'yearAgo' })).toBe('▲ 3 pts vs a year ago');
+    expect(formatTrend({ trend: -0.0042, trendBasis: 'yearAgo' })).toBe('▼ 0.4 pts vs a year ago');
   });
 
   it('is empty without a trend', () => {
@@ -28,7 +29,7 @@ describe('formatTrend', () => {
   it('leaves the arrow off a change that rounds to zero', () => {
     expect(formatTrend({ trend: 0.004 })).toBe('0% last 2 weeks vs 12');
     expect(formatTrend({ trend: -0.004 })).toBe('0% last 2 weeks vs 12');
-    expect(formatTrend({ trend: 0.004, trendBasis: 'yearAgo' })).toBe('0 pts vs a year ago');
+    expect(formatTrend({ trend: 0.0004, trendBasis: 'yearAgo' })).toBe('0 pts vs a year ago');
   });
 });
 
@@ -121,6 +122,19 @@ describe('formatCell', () => {
 
   it('does not label a missing value', () => {
     expect(formatCell({ ...cell, value: null }, true)).toBe('—');
+  });
+
+  it('keeps a tenth of a percent for dropped trips under 10%', () => {
+    const dropped: Cell = { ...cell, metric: 'dropped', unit: 'pct', unitLabel: undefined };
+    expect(formatCell({ ...dropped, value: 0.0057 })).toBe('0.6%');
+    expect(formatCell({ ...dropped, value: 0.12 })).toBe('12%');
+  });
+
+  it('signs a ridership change', () => {
+    const ridership: Cell = { ...cell, metric: 'ridership', status: 'unscored', unit: 'pct' };
+    expect(formatCell({ ...ridership, value: 0.102 })).toBe('+10%');
+    expect(formatCell({ ...ridership, value: -0.04 })).toBe('−4%');
+    expect(formatCell({ ...ridership, value: 0.001 })).toBe('0%');
   });
 });
 

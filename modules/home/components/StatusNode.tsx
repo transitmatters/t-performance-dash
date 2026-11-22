@@ -10,12 +10,12 @@ interface StatusNodeProps {
 /**
  * A strip-map stop whose shape carries the status, so it reads without color: a starred stop for
  * a win, a solid stop for good, an open ring for room to grow, a dashed ring with "!" for needs
- * work, a hatched stop when there isn't enough data, and a dash when it isn't measured. Drawn in
+ * work, a hatched stop when there isn't enough data, and a dash when it isn't measured or scored. Drawn in
  * the current text color (the line's color via `text-primary`). Decorative: the label beside it
  * says the same thing in words.
  */
 export const StatusNode = ({ status, className }: StatusNodeProps) => {
-  if (status === 'na') {
+  if (status === 'na' || status === 'unscored') {
     return (
       <span
         aria-hidden="true"

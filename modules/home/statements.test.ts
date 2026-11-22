@@ -3,9 +3,9 @@ import { describe, expect, it } from 'vitest';
 import { buildLede, buildStatements } from './statements';
 import type { Cell, HomeData, MetricId, Row, Status } from './types';
 
-const THRESHOLDS: Record<MetricId, [number, number, number]> = {
+const THRESHOLDS: Partial<Record<MetricId, [number, number, number]>> = {
   service: [1, 0.92, 0.8],
-  frequency: [1, 0.9, 0.75],
+  dropped: [0.01, 0.02, 0.05],
   reliability: [0.8, 0.65, 0.5],
   delays: [0.02, 0.04, 0.08],
   speed: [1, 0.95, 0.88],
@@ -58,21 +58,20 @@ const DATA: HomeData = {
     subway('orange', ['win', 1.43], ['room', 0.545, 0.069], [44.3, -0.022]),
     subway('blue', ['win', 1.032], ['room', 0.626, 0.036], [78.1, -0.236]),
     subway('green', ['good', 0.93], ['problem', 0.362, 0.127], [59, -0.241]),
-    row('commuter-rail', [cell('service', 'win', 1.122), cell('frequency', 'na', null)]),
+    row('commuter-rail', [cell('service', 'win', 1.122), cell('dropped', 'win', 0.001)]),
     row('frequent-bus', [
       cell('service', 'room', 0.872),
-      cell('frequency', 'room', 0.892),
+      cell('dropped', 'win', 0.008),
       cell('reliability', 'problem', 0.444),
     ]),
     row('all-bus', [
       cell('service', 'good', 0.946),
-      cell('frequency', 'problem', 0.541),
+      cell('dropped', 'win', 0.005),
       cell('reliability', 'room', 0.61),
     ]),
     row('mattapan', [cell('delays', 'win', 0.004, { minutesPerDay: 4.8, trend: -0.178 })]),
   ],
   hero: [
-    { id: 'subwayFrequency', label: '', value: 0.927, unit: 'pct', direction: 'higher' },
     { id: 'service', label: '', value: 0.971, unit: 'pct', direction: 'higher' },
     {
       id: 'slowZones',
@@ -99,7 +98,6 @@ describe('buildStatements', () => {
     expect(buildStatements(DATA).map((s) => s.id)).toEqual([
       'reliability',
       'delays',
-      'frequency',
       'service',
       'slowZones',
     ]);
@@ -137,22 +135,10 @@ describe('buildStatements', () => {
     expect(delays.viz.kind === 'bars' && delays.viz.marks.map((m) => m.row)).toContain('mattapan');
   });
 
-  it('leaves Commuter Rail out of frequency', () => {
-    const { frequency } = byId(DATA);
-    expect(frequency.head).toBe(
-      'A subway train comes every 10 minutes or better for 93% of the service day; a bus, every 15, for 54%.'
-    );
-    expect(frequency.viz.kind === 'meters' && frequency.viz.marks.map((m) => m.row)).toEqual([
-      'subway',
-      'frequent-bus',
-      'all-bus',
-    ]);
-  });
-
   it('counts the lines near their best service and links to the furthest behind', () => {
     const { service } = byId(DATA);
     expect(service.head).toBe('6 of 7 lines run at least 92% of the trips they ran at their best.');
-    expect(service.link.label).toBe('Frequent Bus service');
+    expect(service.link.label).toBe('Frequent Bus scheduled service');
   });
 
   it('says what "best" is, since the Orange Line runs 143% of it', () => {
@@ -186,7 +172,7 @@ describe('buildStatements', () => {
       hero: DATA.hero.map((h) => ({ ...h, history: undefined })),
     };
     const statements = byId(older);
-    expect(Object.keys(statements)).toEqual(['reliability', 'frequency', 'service']);
+    expect(Object.keys(statements)).toEqual(['reliability', 'service']);
   });
 
   it('is empty before the data loads', () => {
@@ -234,9 +220,7 @@ const GREAT_DAY: HomeData = {
             ? { ...c, status: 'win', value: 0.85, score: 0.85, bunched: 0.02 }
             : metric === 'delays'
               ? { ...c, status: 'win', minutesPerDay: 0, trend: -0.5 }
-              : metric === 'frequency'
-                ? { ...c, status: 'win', value: 1, score: 1 }
-                : c,
+              : c,
       ])
     ),
   })),
