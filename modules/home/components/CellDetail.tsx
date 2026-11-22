@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import { Link } from '../../../common/components/general/Link';
-import { METRICS, definitionFor } from '../config';
+import { METRICS, UNSCORED_METRICS, definitionFor } from '../config';
 import { STATUS_LABELS } from '../copy';
 import {
   formatCell,
@@ -56,7 +56,10 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
   const method = METRICS[cell.metric];
   const trend = formatTrend(cell);
   const definition = definitionFor(cell.metric, row.id);
-  const sentiment = cell.direction ? trendSentiment(cell.trend, cell.direction) : 'flat';
+  const sentiment = cell.direction
+    ? trendSentiment(cell.trend, cell.direction, cell.trendBasis)
+    : 'flat';
+  const unscored = UNSCORED_METRICS.includes(cell.metric);
   const thresholds = formatThresholds(cell);
   const topCause = topCauseLabel(cell, row.line);
 
@@ -69,14 +72,23 @@ export const CellDetail = ({ row, cell }: CellDetailProps) => {
         <span
           className={cn('flex items-center gap-1.5 text-xs font-medium', STATUS_TONE[cell.status])}
         >
-          <span className="text-primary">
-            <StatusNode status={cell.status} className="size-4" />
-          </span>
+          {!unscored && (
+            <span className="text-primary">
+              <StatusNode status={cell.status} className="size-4" />
+            </span>
+          )}
           {STATUS_LABELS[cell.status]}
         </span>
       </div>
       {cell.status !== 'na' && (
-        <div className="text-xl font-semibold tabular-nums">{formatCell(cell, true)}</div>
+        <div className="text-xl font-semibold tabular-nums">
+          {formatCell(cell, true)}
+          {cell.status === 'unscored' && (
+            <span className="ml-1.5 text-sm font-normal text-muted-foreground">
+              vs a year earlier
+            </span>
+          )}
+        </div>
       )}
       <div className="flex flex-col gap-0.5 text-xs text-muted-foreground">
         {cell.secondary && <p>{cell.secondary}</p>}

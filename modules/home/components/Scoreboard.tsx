@@ -1,3 +1,4 @@
+import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { Link } from '../../../common/components/general/Link';
@@ -7,10 +8,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../../common/compone
 import { RouteBullet } from '../../../common/components/transit/RouteBullet';
 import { RouteLine } from '../../../common/components/transit/RouteLine';
 import { cn } from '../../../common/utils/cn';
-import { METRICS, METRIC_ORDER, ROWS } from '../config';
+import { METRICS, UNSCORED_METRICS, ROWS, SCORED_METRICS } from '../config';
 import type { RowConfig } from '../config';
 import { HEADLINE_LABELS, STATUS_LABELS } from '../copy';
-import { formatCell } from '../format';
+import { formatCell, roundedPercent } from '../format';
 import type { Cell, HeadlineKind, MetricId, Row } from '../types';
 import type { HomeState } from '../useHomeData';
 import { CellDetail } from './CellDetail';
@@ -59,48 +60,81 @@ const RowTitle = ({ line: { config, row }, state }: { line: ScoreboardLine; stat
 );
 
 const cellLabel = (row: Row, cell: Cell) =>
-  `${row.label} ${METRICS[cell.metric].label}: ${STATUS_LABELS[cell.status]}${
-    cell.status === 'na' ? '' : `, ${formatCell(cell, true)}`
-  }. Show details.`;
+  UNSCORED_METRICS.includes(cell.metric) && cell.status === 'unscored'
+    ? `${row.label} ${METRICS[cell.metric].label}: ${formatCell(cell, true)} from a year earlier. Show details.`
+    : `${row.label} ${METRICS[cell.metric].label}: ${STATUS_LABELS[cell.status]}${
+        cell.status === 'na' ? '' : `, ${formatCell(cell, true)}`
+      }. Show details.`;
 
-/** One stop on the strip: the node opens the detail, with the figure and its status beneath. */
-const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 'row' }) => (
-  <Popover>
-    <PopoverTrigger
-      aria-label={cellLabel(row, cell)}
-      className={cn(
-        'group tm-fade-in flex rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        layout === 'column'
-          ? 'w-full flex-col items-center gap-1.5 px-1 py-0.5 text-center'
-          : 'w-full items-center gap-3 py-2 text-left'
-      )}
-    >
-      <span
+/**
+ * One stop on the strip: the node opens the detail, with the figure and its status beneath. An
+ * unscored measure (ridership) isn't a stop on the line: it has no node, just its figure.
+ */
+const Stop = ({ row, cell, layout }: { row: Row; cell: Cell; layout: 'column' | 'row' }) => {
+  const unscored = UNSCORED_METRICS.includes(cell.metric);
+  return (
+    <Popover>
+      <PopoverTrigger
+        aria-label={cellLabel(row, cell)}
         className={cn(
-          'relative z-10 flex text-primary transition-transform group-hover:scale-110',
-          layout === 'row' && 'w-5 justify-center'
+          'group tm-fade-in flex rounded-md outline-none focus-visible:ring-2 focus-visible:ring-ring',
+          layout === 'column'
+            ? 'w-full flex-col items-center gap-1.5 px-1 py-0.5 text-center'
+            : 'w-full items-center gap-3 py-2 text-left'
         )}
       >
-        <StatusNode status={cell.status} />
-      </span>
-      {layout === 'row' && (
-        <span className="flex-1 text-sm font-medium">{METRICS[cell.metric].label}</span>
-      )}
-      {/* The node's shape carries the status (see the legend); the label names it in words. */}
-      <span
-        className={cn(
-          'text-sm font-semibold tabular-nums',
-          cell.status === 'na' && 'font-normal text-muted-foreground'
+        {unscored ? (
+          <ChangeIcon cell={cell} />
+        ) : (
+          <span
+            className={cn(
+              'relative z-10 flex text-primary transition-transform group-hover:scale-110',
+              layout === 'row' && 'w-5 justify-center'
+            )}
+          >
+            <StatusNode status={cell.status} />
+          </span>
         )}
-      >
-        {formatCell(cell)}
-      </span>
-    </PopoverTrigger>
-    <PopoverContent className="w-80" align="center">
-      <CellDetail row={row} cell={cell} />
-    </PopoverContent>
-  </Popover>
-);
+        {layout === 'row' && (
+          <span className="flex-1 text-sm font-medium">{METRICS[cell.metric].label}</span>
+        )}
+        {/* The node's shape carries the status (see the legend); the label names it in words. */}
+        <span
+          className={cn(
+            'text-sm font-semibold tabular-nums',
+            unscored && 'decoration-dotted underline-offset-4 group-hover:underline',
+            (cell.status === 'na' || cell.status === 'insufficient') &&
+              'font-normal text-muted-foreground'
+          )}
+        >
+          {formatCell(cell)}
+        </span>
+      </PopoverTrigger>
+      <PopoverContent className="w-80" align="center">
+        <CellDetail row={row} cell={cell} />
+      </PopoverContent>
+    </Popover>
+  );
+};
+
+/**
+ * Sits where a scored stop's node does, so the figure lines up beneath it: which way the change
+ * went, in a neutral color, since it isn't good or bad for the score.
+ */
+const ChangeIcon = ({ cell }: { cell: Cell }) => {
+  // No figure (stale or too little history): nothing to point either way, so just hold the place.
+  if (cell.status !== 'unscored' || cell.value === null) {
+    return <span aria-hidden="true" className="size-5 shrink-0" />;
+  }
+  const change = roundedPercent(cell.value);
+  const Icon = change > 0 ? TrendingUp : change < 0 ? TrendingDown : Minus;
+  return (
+    <Icon
+      aria-hidden="true"
+      className="size-5 shrink-0 text-muted-foreground transition-transform group-hover:scale-110"
+    />
+  );
+};
 
 /**
  * Holds a stop's place until its data lands: an unlit stop on the line, with bars where the figure
@@ -132,6 +166,7 @@ const PendingStop = ({
           aria-hidden="true"
           className={cn(
             'inline-block size-5 rounded-full border-2 border-current bg-card opacity-40',
+            UNSCORED_METRICS.includes(metric) && 'invisible',
             pulse && 'animate-pulse motion-reduce:animate-none'
           )}
         />
@@ -173,6 +208,16 @@ const LineStop = ({
     <PendingStop metric={metric} layout={layout} state={state} />
   );
 
+/** Ridership sits apart from the scored measures, in its own tinted column. */
+const UNSCORED_CELL = 'border-l border-dashed bg-muted/40 px-1 lg:pr-4';
+
+const MetricHeader = ({ metric }: { metric: MetricId }) => (
+  <span className="inline-flex items-center gap-1">
+    {METRICS[metric].label}
+    <InfoTooltip info={METRICS[metric].summary} className="leading-none" />
+  </span>
+);
+
 const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeState }) => {
   const renderRow = (line: ScoreboardLine, index: number) => (
     <tr
@@ -184,18 +229,24 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
       <th scope="row" className="w-56 py-3 pr-2 pl-6 text-left align-top font-normal">
         <RowTitle line={line} state={state} />
       </th>
-      {METRIC_ORDER.map((metric, i) => (
+      {SCORED_METRICS.map((metric, i) => (
         <td key={metric} className="relative px-1 py-3 align-top">
           {/* The line runs through its stops; it starts and ends at the first and last one. */}
           <span
             className={cn(
               'pointer-events-none absolute top-[22px] text-primary opacity-40',
               i === 0 ? 'left-1/2' : 'left-0',
-              i === METRIC_ORDER.length - 1 ? 'right-1/2' : 'right-0'
+              i === SCORED_METRICS.length - 1 ? 'right-1/2' : 'right-0'
             )}
           >
             <RouteLine />
           </span>
+          <LineStop line={line} metric={metric} layout="column" state={state} />
+        </td>
+      ))}
+      <td aria-hidden="true" />
+      {UNSCORED_METRICS.map((metric) => (
+        <td key={metric} className={cn(UNSCORED_CELL, 'py-3 align-top')}>
           <LineStop line={line} metric={metric} layout="column" state={state} />
         </td>
       ))}
@@ -209,12 +260,26 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
           <th scope="col" className="w-56 pb-2 pl-6 text-left">
             <span className="sr-only">Line</span>
           </th>
-          {METRIC_ORDER.map((metric) => (
-            <th scope="col" key={metric} className="pb-2 text-xs font-medium text-muted-foreground">
-              <span className="inline-flex items-center gap-1">
-                {METRICS[metric].label}
-                <InfoTooltip info={METRICS[metric].summary} className="leading-none" />
-              </span>
+          {SCORED_METRICS.map((metric) => (
+            <th
+              scope="col"
+              key={metric}
+              className="pb-2 align-bottom text-xs font-medium text-muted-foreground"
+            >
+              <MetricHeader metric={metric} />
+            </th>
+          ))}
+          <th aria-hidden="true" className="w-4" />
+          {UNSCORED_METRICS.map((metric) => (
+            <th
+              scope="col"
+              key={metric}
+              className={cn(
+                UNSCORED_CELL,
+                'pb-2 align-bottom text-xs font-medium text-muted-foreground'
+              )}
+            >
+              <MetricHeader metric={metric} />
             </th>
           ))}
         </tr>
@@ -239,13 +304,20 @@ const MobileStrips = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
             <RouteLine orientation="vertical" />
           </span>
           <ul>
-            {METRIC_ORDER.map((metric) => (
+            {SCORED_METRICS.map((metric) => (
               <li key={metric}>
                 <LineStop line={line} metric={metric} layout="row" state={state} />
               </li>
             ))}
           </ul>
         </div>
+        <ul className="mt-1 border-t border-dashed pt-1" aria-label="Not scored">
+          {UNSCORED_METRICS.map((metric) => (
+            <li key={metric}>
+              <LineStop line={line} metric={metric} layout="row" state={state} />
+            </li>
+          ))}
+        </ul>
       </li>
     ))}
   </ul>
