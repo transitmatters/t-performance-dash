@@ -19,7 +19,7 @@ import {
   lineColorVar,
   needsDarkTextOn,
 } from '../../../common/styles/general';
-import { useDelimitatedRoute, useUpdateQuery } from '../../../common/utils/router';
+import { usePageRoute, useUpdateQuery } from '../../../common/utils/router';
 import type { Period } from '../types';
 import { useShownPeriod } from '../useBusSpeedParams';
 import {
@@ -75,7 +75,7 @@ export const PeriodDateControl = () => {
     page,
     colorKey,
     query: { date },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const { minDate, maxDate } = getDatePickerBounds(tab, page);
   const { shown: period, setValue: setPeriod, options, lockedToMonth } = useShownPeriod();
   const updateQueryParams = useUpdateQuery();

@@ -2,7 +2,7 @@ import { faArrowRight, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button } from '../inputs/Button';
 import { StationSelector } from '../inputs/StationSelector';
-import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
+import { usePageRoute, useUpdateQuery } from '../../utils/router';
 import {
   getStationInOptions,
   getStationForInvalidFromSelection,
@@ -35,7 +35,7 @@ export const useTripStations = ({
   const lineShort = LINE_OBJECTS[line].short;
   const {
     query: { from, to },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
 
   const stations = optionsStation(lineShort, busRoute, crRoute, ferryRoute);
   const { defaultFrom, defaultTo } = findValidDefaultStations(stations);

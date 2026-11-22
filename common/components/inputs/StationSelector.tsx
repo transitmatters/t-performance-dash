@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 import type { Station } from '../../types/stations';
-import { useDelimitatedRoute } from '../../utils/router';
+import { usePageRoute } from '../../utils/router';
 import { optionsForField, stopIdsForStations, stopNoun } from '../../utils/stations';
 import { lineColorVar } from '../../styles/general';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '../ui/command';
@@ -29,7 +29,7 @@ export const StationSelector = ({ type, fromStation, toStation, setStation }: St
     colorKey,
     lineShort,
     query: { busRoute, crRoute, ferryRoute },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const [open, setOpen] = useState(false);
   const station = type === 'from' ? fromStation : toStation;
   const noun = stopNoun(lineShort);

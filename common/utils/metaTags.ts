@@ -51,7 +51,7 @@ function getPageName(pathname: string): string | undefined {
   return PAGE_DISPLAY_NAMES[lastSegment];
 }
 
-/** `startCase(toLower(...))` of the path segment, matching how useDelimitatedRoute derives it. */
+/** `startCase(toLower(...))` of the path segment, matching how usePageRoute derives it. */
 export function lineShortFor(linePath: string | undefined) {
   if (!linePath) return undefined;
   const words = linePath.replace('-', ' ').toLowerCase().split(' ');

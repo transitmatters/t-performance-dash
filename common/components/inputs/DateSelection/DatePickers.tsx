@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { getDatePickerBounds } from '../../../constants/dates';
 import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../../styles/general';
 import type { QueryTypeOptions } from '../../../types/router';
-import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
+import { usePageRoute, useUpdateQuery } from '../../../utils/router';
 import { DateField } from './DateField';
 
 interface DatePickerProps {
@@ -17,7 +17,7 @@ interface DatePickerProps {
  */
 export const DatePickers = ({ type }: DatePickerProps) => {
   const updateQueryParams = useUpdateQuery();
-  const { query, line, tab, page } = useDelimitatedRoute();
+  const { query, line, tab, page } = usePageRoute();
   const { startDate, endDate, date } = query;
   const range = type === 'range';
   const { minDate, maxDate } = getDatePickerBounds(

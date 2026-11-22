@@ -14,7 +14,7 @@ import {
   getBusRouteSelectionItemHref,
   getCommuterRailRouteSelectionItemHref,
   getFerryRouteSelectionItemHref,
-  useDelimitatedRoute,
+  usePageRoute,
 } from '../../utils/router';
 
 /** Labels are what riders search by, and are unique, so they double as the combobox value. */
@@ -46,7 +46,7 @@ const optionsForLine = (line: Line): { key: string; label: string }[] => {
  * cmdk list with no positioning logic of its own — nothing here for either to fight over.
  */
 export const RouteSelector = ({ className }: { className?: string }) => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
   // Some pages take routes outside the station files, like the speed map's route 117.
   const { routeName } = usePageHeading();
   const descriptionId = useId();

@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Outlet, createRootRoute, useMatches } from '@tanstack/react-router';
-import { useDelimitatedRoute, useIsNotFound } from '../common/utils/router';
+import { usePageRoute, useIsNotFound } from '../common/utils/router';
 import { Layouts } from '../common/layouts/Layouts';
 import { AppProviders } from '../common/layouts/AppProviders';
 import { NavLayout } from '../common/layouts/NavLayout';
@@ -22,7 +22,7 @@ const RootComponent = () => {
     select: (matches) => matches[matches.length - 1]?.staticData ?? {},
   });
   // An embed's host page picks its theme (light unless `?theme=dark`), not the visitor's preference.
-  const { theme } = useDelimitatedRoute().query;
+  const { theme } = usePageRoute().query;
   useApplyTheme(embed ? (theme === 'dark' ? 'dark' : 'light') : undefined);
   // Remount the page when colorblind mode flips, so charts redraw in its palette
   const colorVisionKey = useColorVisionKey();

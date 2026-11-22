@@ -1,8 +1,7 @@
 // These throw on a URL the router should have fixed, so a bug shows as an error, not empty charts.
-import { useMatch } from '@tanstack/react-router';
 import type { DateRange, LinePage, PageDates, SingleDate, TripPage } from '../utils/pageParams';
 import { parseLinePage, parsePageDates, parseTripPage } from '../utils/pageParams';
-import { routeFromLocation } from '../utils/router';
+import { routeFromLocation, useRenderedLocation } from '../utils/router';
 
 export class PageParamsError extends Error {
   constructor(expected: string, pathname: string) {
@@ -16,11 +15,8 @@ const orThrow = <T>(value: T | undefined, expected: string, pathname: string): T
   return value;
 };
 
-// The page this component renders in. useLocation moves to the next URL as soon as a navigation
-// starts, while the page being left is still on screen and would read the wrong page.
 const useRenderedPage = () => {
-  const pathname = useMatch({ strict: false, select: (match) => match.pathname });
-  const search = useMatch({ strict: false, select: (match) => match.search });
+  const { pathname, search } = useRenderedLocation();
   return { pathname, route: routeFromLocation(pathname, search) };
 };
 

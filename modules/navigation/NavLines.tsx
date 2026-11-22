@@ -16,7 +16,7 @@ import {
 } from '../../common/components/ui/sidebar';
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { lineColorVar } from '../../common/styles/general';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { usePageRoute } from '../../common/utils/router';
 import { NavPageItems } from './NavPageItems';
 import { NAV_LINES, hrefForLine, lineIcon, pagesForLine } from './lineNav';
 
@@ -25,7 +25,7 @@ interface NavLinesProps {
 }
 
 export const NavLines = ({ close }: NavLinesProps) => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
 
   return (
     <SidebarGroup>

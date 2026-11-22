@@ -1,5 +1,5 @@
-import { useLocation, useMatches, useNavigate, useRouter } from '@tanstack/react-router';
-import { useCallback, useMemo } from 'react';
+import { useMatches, useNavigate, useRouter } from '@tanstack/react-router';
+import { useCallback } from 'react';
 import { isEqual, pickBy, startCase, toLower } from '@lodash-utils';
 import type { Line, LineColorKey, LinePath, LineShort } from '../types/lines';
 import { COMMUTER_RAIL_ROUTES, FERRY_ROUTES, RAIL_LINES } from '../types/lines';
@@ -168,10 +168,27 @@ export const withDefaultRouteParam = (pathname: string, search: SearchObject): S
 export const routeFromLocation = (pathname: string, search: SearchObject): Route =>
   routeWithQuery(pathname, { ...search, ...validateAnySearch(search) });
 
-export const useDelimitatedRoute = (): Route => {
-  const { pathname, search } = useLocation();
-  const query: QueryParams = useMemo(() => ({ ...search, ...validateAnySearch(search) }), [search]);
-  return routeWithQuery(pathname, query);
+const NO_SEARCH: SearchObject = {};
+
+/**
+ * The path and search of the page on screen. useLocation moves to the next URL as soon as a
+ * navigation starts, while the page being left is still rendered. The last match, not the nearest,
+ * so chrome outside the page's Outlet reads the page too.
+ */
+export const useRenderedLocation = () => {
+  const pathname = useMatches({
+    select: (matches) => matches[matches.length - 1]?.pathname ?? '/',
+  });
+  const search = useMatches({
+    select: (matches) => matches[matches.length - 1]?.search ?? NO_SEARCH,
+  });
+  return { pathname, search };
+};
+
+/** The page on screen, for chrome that renders on every kind of page. Pages use usePageParams. */
+export const usePageRoute = (): Route => {
+  const { pathname, search } = useRenderedLocation();
+  return routeFromLocation(pathname, search);
 };
 
 const routeWithQuery = (pathname: string, query: QueryParams): Route => {
@@ -195,7 +212,7 @@ const routeWithQuery = (pathname: string, query: QueryParams): Route => {
  * page's line, so the bus line turns silver on a Silver Line route, and `line` itself otherwise.
  */
 export const useLineColorKey = (line: Line | null | undefined): LineColorKey | undefined => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
   if (!line) return undefined;
   return line === route.line ? route.colorKey : line;
 };
@@ -392,7 +409,7 @@ export const useGenerateHref = () => {
 
 // TODO: We should probably use this anywhere we have links to consolidate the logic. i.e. components like <LineSelection>
 export const useHandleConfigStore = () => {
-  const { page, query, line } = useDelimitatedRoute();
+  const { page, query, line } = usePageRoute();
   const currentPage = ALL_PAGES[page];
   const dateStore = useDateStore();
   const stationStore = useStationStore();

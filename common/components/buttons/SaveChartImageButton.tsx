@@ -4,7 +4,7 @@ import type { Chart } from 'chart.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileImage } from '@fortawesome/free-solid-svg-icons';
 import type { Location } from '../../types/charts';
-import { useDelimitatedRoute } from '../../utils/router';
+import { usePageRoute } from '../../utils/router';
 import { useChartBusRoute } from '../../hooks/useChartBusRoute';
 import { Button } from '../ui/button';
 import { getImageFilename } from '../../utils/csv';
@@ -54,7 +54,7 @@ export const SaveChartImageButton = ({
   chartTitle,
   chartSubtitle,
 }: SaveChartImageButtonProps) => {
-  const { line, colorKey } = useDelimitatedRoute();
+  const { line, colorKey } = usePageRoute();
   const busRoute = useChartBusRoute();
 
   const handleClick = useCallback(

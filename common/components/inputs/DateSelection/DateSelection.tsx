@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay, faCalendarWeek, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../../styles/general';
-import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
+import { usePageRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
 import { getRangePresets, SINGLE_PRESETS } from '../../../constants/dates';
 import { checkForPreset } from '../../../utils/datePresets';
@@ -17,7 +17,7 @@ interface DateSelectionProps {
 }
 
 export const DateSelection = ({ type }: DateSelectionProps) => {
-  const { page, tab, query } = useDelimitatedRoute();
+  const { page, tab, query } = usePageRoute();
   const range = type === 'range';
   const [open, setOpen] = useState<boolean>(false);
   const datePreset = checkForPreset(query);

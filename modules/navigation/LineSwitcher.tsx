@@ -14,7 +14,7 @@ import { LINE_OBJECTS } from '../../common/constants/lines';
 import { headingMenuTrigger, lineColorVar } from '../../common/styles/general';
 import type { Line } from '../../common/types/lines';
 import { SUBWAY_LINES } from '../../common/types/lines';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { usePageRoute } from '../../common/utils/router';
 import { NAV_LINES, hrefForLine, lineIcon } from './lineNav';
 
 const LineLabel = ({ line, current }: { line: Line; current: boolean }) => (
@@ -45,7 +45,7 @@ export const LineSwitcher = ({
   className?: string;
   compact?: boolean | 'belowLg';
 }) => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
   const descriptionId = useId();
   const { line, colorKey } = route;
   if (!line) return null;

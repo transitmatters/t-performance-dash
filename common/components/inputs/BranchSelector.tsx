@@ -1,6 +1,6 @@
 import { ButtonGroup } from '../general/ButtonGroup';
 import type { LineRouteId } from '../../types/lines';
-import { useDelimitatedRoute } from '../../utils/router';
+import { usePageRoute } from '../../utils/router';
 
 interface BranchSelectorProps {
   routeId: LineRouteId;
@@ -15,7 +15,7 @@ enum GreenLineBranchOptions {
 }
 
 export const BranchSelector = ({ routeId, setRouteId }: BranchSelectorProps) => {
-  const { line } = useDelimitatedRoute();
+  const { line } = usePageRoute();
   const selectedIndex = Object.keys(GreenLineBranchOptions).findIndex((route) => route === routeId);
 
   return (

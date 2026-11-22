@@ -9,7 +9,7 @@ import {
   getBusRouteSelectionItemHref,
   getCommuterRailRouteSelectionItemHref,
   getFerryRouteSelectionItemHref,
-  useDelimitatedRoute,
+  usePageRoute,
   useGenerateHref,
   useHandleConfigStore,
 } from '../../common/utils/router';
@@ -53,7 +53,7 @@ const tripEndFor = (line: Line, from: Station, options: Station[] | undefined) =
  * selector use, so dates and remembered stations carry over the same way.
  */
 export const useResolveCommand = () => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
   const generateHref = useGenerateHref();
   const handlePageConfig = useHandleConfigStore();
 

@@ -16,7 +16,7 @@ import { LINE_OBJECTS } from '../../common/constants/lines';
 import { useThemeStore } from '../../common/state/themeStore';
 import type { Line } from '../../common/types/lines';
 import { readableOn } from '../../common/utils/general';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { usePageRoute } from '../../common/utils/router';
 import type { Command } from './commandIndex';
 import { getCommandById, getCommandIndex } from './commandIndex';
 import { groupResults, searchCommands } from './search';
@@ -122,7 +122,7 @@ export const CommandPalette = () => {
   const open = useCommandPaletteStore((state) => state.open);
   const setOpen = useCommandPaletteStore((state) => state.setOpen);
   const recentIds = useRecentCommandsStore((state) => state.ids);
-  const { line } = useDelimitatedRoute();
+  const { line } = usePageRoute();
   const runCommand = useRunCommand();
   const query = useCommandPaletteStore((state) => state.query);
   const setQuery = useCommandPaletteStore((state) => state.setQuery);

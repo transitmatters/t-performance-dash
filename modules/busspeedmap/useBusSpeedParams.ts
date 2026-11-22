@@ -1,6 +1,6 @@
 import { getBusRouteDisplayName } from '../../common/constants/lines';
 import { useOption } from '../../common/hooks/useChartToggle';
-import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../common/utils/router';
+import { getBusSpeedMapRouteHref, usePageRoute } from '../../common/utils/router';
 import {
   ALL_ROUTES,
   DAY_TYPES,
@@ -55,7 +55,7 @@ export const useDirection = () =>
 export const useDirectionAndDays = () => {
   const {
     query: { date },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const { shown: period } = useShownPeriod();
   const { value: dayType } = useDayType();
   const { value: direction } = useDirection();
@@ -95,7 +95,7 @@ export const useRankings = () => {
  * in, keeping the chosen period for when another metric is picked.
  */
 export const useShownPeriod = () => {
-  const { page } = useDelimitatedRoute();
+  const { page } = usePageRoute();
   const period = usePeriod();
   const { metric } = useRankings();
   const lockedToMonth = page === 'leaderboard' && Boolean(metric.monthlyOnly);
@@ -107,14 +107,14 @@ export const useShownPeriod = () => {
 export const usePeriodDateLabel = () => {
   const {
     query: { date },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const { shown } = useShownPeriod();
   return periodLabel(date, shown);
 };
 
 /** Links a Rankings route to its speed map, showing the period Rankings shows. */
 export const useSpeedMapRouteHref = () => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
   const { shown } = useShownPeriod();
   const period = shown === DEFAULT_PERIOD ? undefined : shown;
   return (busRoute: string) => getBusSpeedMapRouteHref(busRoute, route, period);
