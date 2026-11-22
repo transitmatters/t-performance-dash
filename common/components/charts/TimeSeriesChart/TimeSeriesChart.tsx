@@ -3,6 +3,7 @@ import type { RefObject } from 'react';
 import type { Chart, TooltipItem } from 'chart.js';
 import { Line as LineChart } from '@chartjs-components';
 import Annotation from 'chartjs-plugin-annotation';
+import type { PartialEventContext } from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import 'chartjs-adapter-date-fns';
 
@@ -237,7 +238,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         yMin: benchmark.value,
         yMax: benchmark.value,
         borderColor: color,
-        display: (ctx) => ctx.chart.isDatasetVisible(datasetIndex),
+        display: (ctx: PartialEventContext) => ctx.chart.isDatasetVisible(datasetIndex),
         borderWidth: 2,
         label: {
           display: Boolean(benchmark.goodSide),
@@ -263,7 +264,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
           backgroundColor: CHART_COLORS.TARGET_ZONE,
           borderWidth: 0,
           drawTime: 'beforeDatasetsDraw' as const,
-          display: (ctx) => ctx.chart.isDatasetVisible(datasetIndex),
+          display: (ctx: PartialEventContext) => ctx.chart.isDatasetVisible(datasetIndex),
         },
       ];
     });
@@ -304,14 +305,14 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
           position: 'nearest' as const,
           callbacks: {
             hoverCard,
-            title: (datasets) => {
+            title: (datasets: TooltipItem<'line'>[]) => {
               const { label } = datasets[0];
               if (timeAxis.granularity === 'week') {
                 return `Week of ${label}`;
               }
               return label;
             },
-            label: (context) => {
+            label: (context: TooltipItem<'line'>) => {
               const dataset = data[context.datasetIndex];
               const style = appliedStyles.get(dataset)!;
               const point = dataset.data[context.dataIndex];

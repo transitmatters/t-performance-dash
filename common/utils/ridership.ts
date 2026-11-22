@@ -31,6 +31,6 @@ export const getRidershipLineId = (
   } else if (line === 'line-ferry' && ferryRoute) {
     return `line-${ferryRoute}`;
   } else {
-    return RIDERSHIP_KEYS[line ?? ''];
+    return line ? RIDERSHIP_KEYS[line] : undefined;
   }
 };

@@ -41,24 +41,18 @@ export const configToQueryParams = (search: URLSearchParams) => {
   const lineOrRoute = getLineOrRoute(configArr[0]);
   if (!lineOrRoute) return;
 
-  const query = {
+  const startDate = configArr[3] || undefined;
+  const endDate = configArr[4] || undefined;
+  const singleOrMulti = !endDate ? 'single' : 'multi';
+  const query: Record<string, string | undefined> = {
     from: configArr[1] || undefined,
     to: configArr[2] || undefined,
-    startDate: configArr[3] || undefined,
-    endDate: configArr[4] || undefined,
+    ...(endDate ? { startDate, endDate } : { date: startDate }),
   };
 
-  const singleOrMulti = !query.endDate ? 'single' : 'multi';
-
-  if (singleOrMulti === 'single') {
-    query['date'] = query.startDate;
-    delete query.startDate;
-  }
-
-  const queryArr = Object.entries(query).filter((pair) => pair[1] !== undefined) as [
-    string,
-    string,
-  ][];
+  const queryArr = Object.entries(query).filter(
+    (pair): pair is [string, string] => pair[1] !== undefined
+  );
   if (lineOrRoute.type === 'bus') queryArr.push(['busRoute', lineOrRoute.value]);
   if (lineOrRoute.type === 'cr') queryArr.push(['crRoute', lineOrRoute.value]);
   if (lineOrRoute.type === 'ferry') queryArr.push(['ferryRoute', lineOrRoute.value]);

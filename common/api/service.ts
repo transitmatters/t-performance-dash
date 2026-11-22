@@ -28,8 +28,8 @@ export const fetchServiceHours = async (
   if (!params.start_date) return undefined;
   const url = new URL(`${APP_DATA_BASE_PATH}/api/service_hours`, window.location.origin);
   const weekParams = withWeekStart(params);
-  Object.keys(weekParams).forEach((paramKey) => {
-    url.searchParams.append(paramKey, weekParams[paramKey]);
+  Object.entries(weekParams).forEach(([paramKey, value]) => {
+    url.searchParams.append(paramKey, String(value));
   });
   const response = await fetchOrThrow(url.toString(), undefined, 'Failed to fetch service hours');
   return await response.json();

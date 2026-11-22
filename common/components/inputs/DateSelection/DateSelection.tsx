@@ -47,7 +47,7 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
               aria-hidden
             />
             <span className="truncate font-medium">
-              {datePreset && presets[datePreset] ? presets[datePreset].name : 'Custom'}
+              {(datePreset !== 'custom' && presets[datePreset]?.name) || 'Custom'}
             </span>
           </span>
           <FontAwesomeIcon

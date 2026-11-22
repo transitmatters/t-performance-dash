@@ -11,7 +11,11 @@ import type { DayDelayTotals } from '../../../common/types/dataPoints';
 import type { LineShort, Line as TrainLine } from '../../../common/types/lines';
 import { SUBWAY_LINES } from '../../../common/types/lines';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
-import { getTimeUnitSlowzones, toChartDateBound } from '../../../common/utils/slowZoneUtils';
+import {
+  getDayDelayTotal,
+  getTimeUnitSlowzones,
+  toChartDateBound,
+} from '../../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartDiv } from '../../../common/components/charts/ChartDiv';
@@ -68,7 +72,7 @@ export const TotalSlowTime = ({
     ? [
         {
           label: `${lineShort} Line`,
-          data: data?.map((d) => (d[lineShort] / 60).toFixed(2)),
+          data: data?.map((d) => ((getDayDelayTotal(d, lineShort) ?? NaN) / 60).toFixed(2)),
           borderColor: LINE_COLORS[line],
           backgroundColor: LINE_COLORS[line],
           pointRadius: 0,

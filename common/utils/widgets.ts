@@ -7,7 +7,6 @@ import {
   type SingleDayDataPoint,
   MetricFieldKeys,
 } from '../types/charts';
-import type { DataPoint } from '../types/dataPoints';
 import { BUNCHED_RATIO, isOnTimeHeadwayRatio } from './chartTheme';
 
 const BUNCHED_HEADWAYS =
@@ -33,15 +32,15 @@ const getAverage = (data: (number | undefined)[]) => {
  * schedule are left out, and it's undefined when none has one.
  */
 const getHeadwayShare = (data: SingleDayDataPoint[], matches: (ratio: number) => boolean) => {
-  const scheduled = data.filter((point: DataPoint) =>
+  const scheduled = data.filter((point) =>
     Boolean(point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec])
   );
   if (scheduled.length === 0) return undefined;
-  const matching = scheduled.filter((point: DataPoint) =>
-    matches(
-      point[MetricFieldKeys.headwayTimeSec] / point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec]
-    )
-  );
+  const matching = scheduled.filter((point) => {
+    const headway = point[MetricFieldKeys.headwayTimeSec];
+    const benchmark = point[BenchmarkFieldKeys.benchmarkHeadwayTimeSec];
+    return headway !== undefined && benchmark ? matches(headway / benchmark) : false;
+  });
   return matching.length / scheduled.length;
 };
 
@@ -53,15 +52,15 @@ const isBunchedHeadwayRatio = (ratio: number) => ratio <= BUNCHED_RATIO;
  * bound counts. Returns undefined when the line has no benchmark data to compare against.
  */
 const getOnTimeTravelPercentage = (data: SingleDayDataPoint[]) => {
-  const comparable = data.filter((point: DataPoint) => {
+  const comparable = data.filter((point) => {
     const benchmark = point[BenchmarkFieldKeys.benchmarkTravelTimeSec];
     return Boolean(benchmark) && Number.isFinite(point[MetricFieldKeys.travelTimeSec]);
   });
   if (comparable.length === 0) return undefined;
-  const onTime = comparable.filter((point: DataPoint) => {
-    const ratio =
-      point[MetricFieldKeys.travelTimeSec] / point[BenchmarkFieldKeys.benchmarkTravelTimeSec];
-    return ratio <= 1.25;
+  const onTime = comparable.filter((point) => {
+    const travelTime = point[MetricFieldKeys.travelTimeSec];
+    const benchmark = point[BenchmarkFieldKeys.benchmarkTravelTimeSec];
+    return travelTime !== undefined && benchmark ? travelTime / benchmark <= 1.25 : false;
   });
   return onTime.length / comparable.length;
 };

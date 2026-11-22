@@ -1,7 +1,7 @@
 export const PRODUCTION = 'dashboard.transitmatters.org';
 export const BETA = 'dashboard-beta.labs.transitmatters.org';
 const BETA_API = 'https://dashboard-api-beta.labs.transitmatters.org';
-const FRONTEND_TO_BACKEND_MAP = {
+const FRONTEND_TO_BACKEND_MAP: Record<string, string> = {
   [PRODUCTION]: 'https://dashboard-api.labs.transitmatters.org',
   [BETA]: BETA_API,
 };

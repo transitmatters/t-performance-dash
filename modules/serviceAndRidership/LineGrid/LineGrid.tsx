@@ -34,7 +34,7 @@ const LINE_KIND_OPTIONS: [LineKindOption, string][] = [
 ];
 
 const pagination = 12;
-const defaultFilter = (x) => !!x;
+const defaultFilter = (x: LineData) => !!x;
 
 const getDocumentElement = () => {
   if (typeof document !== 'undefined') {
@@ -44,7 +44,7 @@ const getDocumentElement = () => {
 };
 
 const sortOnKey = (data: LineData[], sortFn: SortFn) => {
-  const keys = {};
+  const keys: Record<string, number> = {};
   data.forEach((line) => {
     keys[line.id] = sortFn(line);
   });

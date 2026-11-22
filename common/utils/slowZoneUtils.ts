@@ -17,6 +17,7 @@ import type {
 import { DATE_FORMAT } from '../constants/dates';
 import type { LineShort } from '../types/lines';
 import { getParentStationForStopId } from './stations';
+import { hasKey } from './hasKey';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -146,9 +147,13 @@ export const getWorstSlowZoneSegment = (
   return formatSlowZones([worst])[0];
 };
 
+/** A day's total slow zone delay on a line, or undefined on a line that has no slow zones. */
+export const getDayDelayTotal = (totals: DayDelayTotals, lineShort: LineShort | undefined) =>
+  lineShort && hasKey(totals, lineShort) ? totals[lineShort] : undefined;
+
 export const getSlowZoneDelayDelta = (
   totals: DayDelayTotals[],
-  lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>
+  lineShort: Exclude<keyof DayDelayTotals, 'date'>
 ) => {
   if (!totals.length) return 0;
   return totals[totals.length - 1][lineShort] - totals[0][lineShort];

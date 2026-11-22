@@ -37,10 +37,13 @@ export interface LineMap {
   service_end?: string;
 }
 
-export type StationMap = {
-  [key in Exclude<LineShort, 'The RIDE'>]:
-    | LineMap
-    | { [key in CommuterRailRoute]: LineMap }
-    | { [key in BusRoute]: LineMap }
-    | { [key in FerryRoute]: LineMap };
+export type RapidTransitLineShort = Exclude<
+  LineShort,
+  'Bus' | 'Commuter Rail' | 'Ferry' | 'The RIDE'
+>;
+
+export type StationMap = { [key in RapidTransitLineShort]: LineMap } & {
+  Bus: { [key in BusRoute]: LineMap };
+  'Commuter Rail': { [key in CommuterRailRoute]: LineMap };
+  Ferry: { [key in FerryRoute]: LineMap };
 };

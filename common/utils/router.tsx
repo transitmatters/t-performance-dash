@@ -28,6 +28,7 @@ import type { DateStore, TripPage } from '../state/dateStore';
 import { getLineColorKey, LINE_COLORS } from '../constants/colors';
 import type { SearchObject } from './searchParams';
 import { validateAnySearch } from './searchSchemas';
+import { hasKey } from './hasKey';
 
 export const linePathToKeyMap: Record<LinePath, Line> = {
   red: 'line-red',
@@ -87,12 +88,16 @@ export const useIsEmbed = () =>
 export const parseRoutePath = (pathname: string) => {
   // Page detection expects trailing-slash paths; a hand-typed `/red/speed` still has to work.
   const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
-  const tab = getTab((pathItems[1] as LinePath) ?? 'System');
+  const linePath = pathItems[1];
+  const tab = getTab((linePath as LinePath) ?? 'System');
   return {
     pathItems,
     tab,
     page: getPage(pathItems, tab) as Page,
-    line: linePathToKeyMap[pathItems[1]] as Line | undefined,
+    line:
+      linePath !== undefined && hasKey(linePathToKeyMap, linePath)
+        ? linePathToKeyMap[linePath]
+        : undefined,
   };
 };
 
@@ -402,7 +407,9 @@ export const useGenerateHref = () => {
       query: QueryParams,
       linePath: LinePath
     ) => {
-      const currentPage = ALL_PAGES[currentPageName] ?? undefined;
+      const currentPage = hasKey(ALL_PAGES, currentPageName)
+        ? ALL_PAGES[currentPageName]
+        : undefined;
       const newQuery = getQueryParams(
         currentPage,
         newPage,

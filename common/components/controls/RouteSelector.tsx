@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { getBusRoutes, getCommuterRailRoutes, getFerryRoutes } from '../../constants/stations';
 import type { Line } from '../../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../../types/lines';
+import { hasKey } from '../../utils/hasKey';
 import { headingMenuTrigger } from '../../styles/general';
 import { usePageHeading } from '../../hooks/usePageHeading';
 import {
@@ -25,10 +26,13 @@ const optionsForLine = (line: Line): { key: string; label: string }[] => {
     case 'line-commuter-rail':
       return getCommuterRailRoutes().map((key) => ({
         key,
-        label: COMMUTER_RAIL_LINE_NAMES[key] ?? key,
+        label: hasKey(COMMUTER_RAIL_LINE_NAMES, key) ? COMMUTER_RAIL_LINE_NAMES[key] : key,
       }));
     case 'line-ferry':
-      return getFerryRoutes().map((key) => ({ key, label: FERRY_LINE_NAMES[key] ?? key }));
+      return getFerryRoutes().map((key) => ({
+        key,
+        label: hasKey(FERRY_LINE_NAMES, key) ? FERRY_LINE_NAMES[key] : key,
+      }));
     default:
       return [];
   }

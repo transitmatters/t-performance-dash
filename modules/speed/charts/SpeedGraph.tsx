@@ -168,7 +168,9 @@ export const SpeedGraph = ({
                           yMax: peak,
                           borderColor: CHART_COLORS.ANNOTATIONS,
                           // corresponds to null dataset index.
-                          display: (ctx) => ctx.chart.isDatasetVisible(1),
+                          display: (ctx: {
+                            chart: { isDatasetVisible: (index: number) => boolean };
+                          }) => ctx.chart.isDatasetVisible(1),
                           borderWidth: 2,
                           borderDash: peakLineDashed ? [6, 6] : undefined,
                         },

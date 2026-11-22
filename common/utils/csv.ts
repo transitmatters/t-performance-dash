@@ -2,7 +2,7 @@ import { flatten } from '@lodash-utils';
 import type { Location } from '../types/charts';
 import type { SpeedTripMetrics, TimePredictionWeek } from '../types/dataPoints';
 
-const directionAbbrs = {
+const directionAbbrs: Partial<Record<Location['direction'], string>> = {
   northbound: 'NB',
   southbound: 'SB',
   eastbound: 'EB',

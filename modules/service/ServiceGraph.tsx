@@ -10,6 +10,7 @@ import { ChartActions } from '../../common/components/charts/ChartActions';
 import { explainGapBlocks, usePageShutdowns } from '../shutdowns';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { HoverCardContent } from '../../common/components/charts/hoverCard/types';
+import type { DataPoint } from '../../common/components/charts/TimeSeriesChart/types';
 import { hideBlocksExplainedByEvents, useMajorEvents } from '../../common/utils/majorEvents';
 import { ScheduledAndDeliveredGraph } from './ScheduledAndDeliveredGraph';
 import { getNoDataSinceLatestBlock, getShuttlingBlockAnnotations } from './utils/graphUtils';
@@ -102,8 +103,8 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
       data: roundTrips.map(({ date, scheduled }) => ({ date, value: scheduled })),
       style: {
         fillPattern: 'striped' as const,
-        tooltipLabel: (point) => {
-          const percentOfPeak = `${((100 * point.value) / peak).toFixed(1)}%`;
+        tooltipLabel: (point: DataPoint) => {
+          const percentOfPeak = `${((100 * (point.value ?? 0)) / peak).toFixed(1)}%`;
           return `Scheduled: ${point.value} (${percentOfPeak} of peak)`;
         },
       },
@@ -115,8 +116,8 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
       label: 'Daily round trips',
       data: roundTrips.map(({ date, delivered }) => ({ date, value: delivered })),
       style: {
-        tooltipLabel: (point) => {
-          const percentOfPeak = `${((100 * point.value) / peak).toFixed(1)}%`;
+        tooltipLabel: (point: DataPoint) => {
+          const percentOfPeak = `${((100 * (point.value ?? 0)) / peak).toFixed(1)}%`;
           return `Actual: ${point.value} (${percentOfPeak} of peak)`;
         },
       },

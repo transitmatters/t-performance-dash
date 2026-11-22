@@ -54,7 +54,7 @@ export function SlowZonesDetails() {
     lineShort === 'Mattapan';
   const isDesktop = useBreakpoint('lg');
 
-  const isRapidTransit = lineShort !== 'Commuter Rail' && lineShort !== 'Bus';
+  const isRapidTransit = canShowSlowZonesMap;
   const stats =
     delayTotals.data && allSlow.data && isRapidTransit
       ? getSlowZoneStats(delayTotals.data.data, allSlow.data, startDateUTC, endDateUTC, lineShort)
