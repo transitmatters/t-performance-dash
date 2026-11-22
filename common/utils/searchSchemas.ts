@@ -143,7 +143,17 @@ export const validateBusSpeedSearch = (search: RawSearch) => ({
   ...busSpeedSearch(search),
 });
 
+/** The system slow zones page's line map shows one line at a time. */
+const systemSlowZonesSearch = (search: RawSearch) => ({
+  mapLine: str(search.mapLine),
+});
+
 export const validateSystemSearch = dateSearch;
+
+export const validateSystemSlowZonesSearch = (search: RawSearch) => ({
+  ...dateSearch(search),
+  ...systemSlowZonesSearch(search),
+});
 
 export const validateEmbedSearch = (search: RawSearch) => ({
   ...dateSearch(search),
@@ -197,6 +207,7 @@ export const validateAnySearch = (search: RawSearch) => ({
   ...delaysSearch(search),
   ...reliabilitySearch(search),
   ...busSpeedSearch(search),
+  ...systemSlowZonesSearch(search),
   ...validateEmbedSearch(search),
   ...trendSearch(search),
 });
