@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import type { ReactNode } from 'react';
 import { cn } from '../../../../common/utils/cn';
 import { NEGLIGIBLE_TREND } from '../../config';
-import { formatChange } from '../../format';
+import { formatChange, formatDroppedShare } from '../../format';
 import type { Mark, Viz } from '../../statements';
 
 // Small charts beside each statement. Each row wears its line's color through `data-line`; the
@@ -146,41 +146,39 @@ const Bars = ({ viz }: { viz: Extract<Viz, { kind: 'bars' }> }) => {
   );
 };
 
-/** A share under 10% to a tenth of a point: "0.5%". */
-const finePct = (value: number) =>
-  value < 0.1 ? `${Math.round(value * 1000) / 10}%` : `${Math.round(value * 100)}%`;
-
-/** Shares of trips, with the change in points from a year earlier: down is better. */
+/**
+ * Shares of trips, with the change in points from a year earlier: down is better. Marks carry a
+ * trend only when it's worth an arrow (the statement drops negligible ones).
+ */
 const Shares = ({ viz }: { viz: Extract<Viz, { kind: 'shares' }> }) => {
   // A floor on the scale, so a fraction of a percent doesn't fill the track.
   const max = Math.max(...viz.marks.map((m) => m.value), 0.05);
   return (
     <>
       {viz.marks.map((mark) => {
-        const points = Math.round((mark.trend ?? 0) * 1000) / 10;
         return (
           <MarkRow
             key={mark.row}
             mark={mark}
-            value={finePct(mark.value)}
-            title={`${mark.label}: ${finePct(mark.value)} of scheduled trips ${viz.noun}`}
+            value={formatDroppedShare(mark.value)}
+            title={`${mark.label}: ${formatDroppedShare(mark.value)} of scheduled trips ${viz.noun}`}
           >
             <span className="flex items-center">
               <span
                 className="h-3 min-w-0.5 rounded-r bg-primary"
                 style={{ width: `${(mark.value / max) * 100}%` }}
               />
-              {points !== 0 && (
+              {mark.trend != null && (
                 <span
                   className={cn(
                     'ml-1 text-xs font-semibold whitespace-nowrap tabular-nums',
-                    points > 0
+                    mark.trend > 0
                       ? 'text-red-700 dark:text-red-400'
                       : 'text-green-700 dark:text-green-400'
                   )}
                 >
-                  {points > 0 ? '▲' : '▼'}
-                  {Math.abs(points)} pts
+                  {mark.trend > 0 ? '▲' : '▼'}
+                  {Math.abs(mark.trend * 100).toFixed(1)} pts
                 </span>
               )}
             </span>

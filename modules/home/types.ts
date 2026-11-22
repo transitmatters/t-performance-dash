@@ -19,6 +19,8 @@ export type Unit = 'pct' | 'mph' | 'seconds' | 'years' | 'count';
 
 /** One of the measures a cell is judged on; the cell takes the worst of its parts' statuses. */
 export interface CellPart {
+  /** Stable key, e.g. `speed` or `slowZones`; `label` is display copy. */
+  id?: string;
   label: string;
   status: Status;
   /** Shown as the figure, in `scoreUnit`. */

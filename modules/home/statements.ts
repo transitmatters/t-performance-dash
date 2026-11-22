@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import type { Line } from '../../common/types/lines';
-import { ROWS } from './config';
-import { formatChange } from './format';
+import { NEGLIGIBLE_POINTS, ROWS } from './config';
+import { formatChange, formatDroppedShare, roundedPercent } from './format';
 import type { Cell, HomeData, MetricId } from './types';
 
 // The "Across the system" statements and the line under the page title: sentences filled in from
@@ -46,12 +46,11 @@ export interface Statement {
 }
 
 const pct = (value: number) => `${Math.round(value * 100)}%`;
-/** A share under 10% to a tenth of a point: "0.5%". */
-const finePct = (value: number) => (value < 0.1 ? `${Math.round(value * 1000) / 10}%` : pct(value));
 const isNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
 const isGood = (cell?: Cell) => cell?.status === 'good' || cell?.status === 'win';
-const isMeasured = (cell?: Cell) => cell?.status !== 'na' && cell?.status !== 'insufficient';
+const isMeasured = (cell?: Pick<Cell, 'status'>) =>
+  cell?.status !== 'na' && cell?.status !== 'insufficient';
 
 const rowConfig = (id: string) => ROWS.find((row) => row.id === id);
 const labelOf = (id: string) => rowConfig(id)?.label ?? id;
@@ -200,6 +199,15 @@ function service({ cell, mark, link }: Reader): Statement | undefined {
   };
 }
 
+/**
+ * A cell's change in points from a year earlier, or undefined when it has none worth saying: its
+ * trend is another kind (2 weeks against 12) or under NEGLIGIBLE_POINTS.
+ */
+const yearAgoChange = (c: Cell) =>
+  c.trendBasis === 'yearAgo' && isNumber(c.trend) && Math.abs(c.trend) >= NEGLIGIBLE_POINTS
+    ? c.trend
+    : undefined;
+
 /** Rows that count dropped trips, in scoreboard order. Subway rows join once they have figures. */
 const DROPPED_ROWS = [...SUBWAY, 'commuter-rail', 'frequent-bus', 'all-bus', 'mattapan'];
 
@@ -209,23 +217,25 @@ function dropped({ cell, mark }: Reader): Statement | undefined {
   );
   const bus = lines.find((l) => l.id === 'all-bus')?.cell;
   if (!bus || !isNumber(bus.value)) return undefined;
-  const then = isNumber(bus.trend) ? bus.value - bus.trend : undefined;
+  const change = yearAgoChange(bus);
+  const now = formatDroppedShare(bus.value);
+  const then = change === undefined ? undefined : formatDroppedShare(bus.value - change);
   const since =
-    then === undefined || Math.abs(bus.trend as number) < 0.001
+    then === undefined || then === now
       ? ''
-      : then > bus.value
-        ? `, down from ${finePct(then)} a year ago`
-        : `, up from ${finePct(then)} a year ago`;
+      : (change as number) < 0
+        ? `, down from ${then} a year ago`
+        : `, up from ${then} a year ago`;
   const cr = lines.find((l) => l.id === 'commuter-rail')?.cell;
   return {
     id: 'dropped',
     head:
-      `Buses drop ${finePct(bus.value)} of scheduled trips${since}.` +
-      (cr && isNumber(cr.value) ? ` Commuter Rail cancels ${finePct(cr.value)}.` : ''),
+      `Buses drop ${now} of scheduled trips${since}.` +
+      (cr && isNumber(cr.value) ? ` Commuter Rail cancels ${formatDroppedShare(cr.value)}.` : ''),
     viz: {
       kind: 'shares',
       noun: 'dropped',
-      marks: lines.map((l) => mark(l.id, l.cell?.value as number, l.cell?.trend)),
+      marks: lines.map((l) => mark(l.id, l.cell?.value as number, l.cell && yearAgoChange(l.cell))),
     },
     note: 'A bus trip counts as dropped when no bus was seen running it.',
     link: { href: bus.href ?? '/bus', label: 'Dropped bus trips' },
@@ -238,21 +248,26 @@ const slowZoneSentence = (hero: Reader['hero']) => {
   const series = stat?.history ?? [];
   if (!isNumber(stat?.value) || series.length < 12) return undefined;
   const peak = series.reduce((a, b) => (b[1] > a[1] ? b : a));
-  const then = `down from ${formatMinutes(peak[1])} a day in ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')}.`;
+  // The peak is a monthly mean and the value last week's, so a bad week can top it.
+  const then =
+    stat.value < peak[1]
+      ? `, down from ${formatMinutes(peak[1])} a day in ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')}.`
+      : '.';
   // Under 3 seconds a day rounds to "0.0 minutes", so call it none.
   const text =
     stat.value < 0.05
-      ? `There are no slow zones on the subway right now, ${then}`
-      : `Slow zones add ${formatMinutes(stat.value)} a day across the subway, ${then}`;
+      ? `There are no slow zones on the subway right now${then}`
+      : `Slow zones add ${formatMinutes(stat.value)} a day across the subway${then}`;
   return { text, viz: { kind: 'area' as const, series, peak, now: stat.value } };
 };
 
 /** Each subway line's speed against its best, with slow zones in the sentence. */
 function speed({ cell, hero, mark, link }: Reader): Statement | undefined {
-  const lines = SUBWAY.map((id) => ({
-    id,
-    score: cell(id, 'speed')?.parts?.find((part) => part.label === 'Speed')?.score,
-  }));
+  const lines = SUBWAY.map((id) => {
+    const part = cell(id, 'speed')?.parts?.find((p) => p.id === 'speed');
+    // A stale or thin part keeps its old score, but the scoreboard shows "—" for it.
+    return { id, score: part && isMeasured(part) ? part.score : undefined };
+  });
   const slowZones = slowZoneSentence(hero);
   if (!lines.every((l) => isNumber(l.score))) {
     // No speed baselines: slow zones still tell the story on their own.
@@ -269,7 +284,7 @@ function speed({ cell, hero, mark, link }: Reader): Statement | undefined {
   const [low, high] = [Math.min(...scores), Math.max(...scores)];
   const slowest = lines[scores.indexOf(low)];
   const head =
-    low >= 1
+    Math.round(low * 100) >= 100
       ? 'Every subway line runs as fast as it did at its best, or faster.'
       : pct(low) === pct(high)
         ? `Subway trains run at ${pct(low)} of their best speeds.`
@@ -302,7 +317,7 @@ function ridership({ cell, mark }: Reader): Statement | undefined {
   );
   if (!SUBWAY.every((id) => lines.some((l) => l.id === id))) return undefined;
   const changes = lines.map((l) => l.cell?.value as number);
-  const up = changes.filter((c) => Math.round(c * 100) > 0).length;
+  const up = changes.filter((c) => roundedPercent(c) > 0).length;
   const most = lines[changes.indexOf(Math.max(...changes))];
   return {
     id: 'ridership',

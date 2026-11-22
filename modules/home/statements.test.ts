@@ -42,8 +42,8 @@ const speed = (score: number): Cell =>
   cell('speed', 'room', 20, {
     unit: 'mph',
     parts: [
-      { label: 'Speed', status: 'room', score, scoreUnit: 'pct' },
-      { label: 'Slow zones', status: 'win', score: 10, scoreUnit: 'seconds' },
+      { id: 'speed', label: 'Speed', status: 'room', score, scoreUnit: 'pct' },
+      { id: 'slowZones', label: 'Slow zones', status: 'win', score: 10, scoreUnit: 'seconds' },
     ],
   });
 
@@ -129,7 +129,7 @@ describe('buildStatements', () => {
   it('leads dropped trips with buses and the year before', () => {
     const { dropped } = byId(DATA);
     expect(dropped.head).toBe(
-      'Buses drop 0.5% of scheduled trips, down from 4% a year ago. Commuter Rail cancels 0.1%.'
+      'Buses drop 0.5% of scheduled trips, down from 4.0% a year ago. Commuter Rail cancels 0.1%.'
     );
     expect(dropped.viz.kind === 'shares' && dropped.viz.marks.map((m) => m.row)).toEqual([
       'commuter-rail',
@@ -222,28 +222,75 @@ describe('buildStatements', () => {
     expect(speed.viz.kind).toBe('area');
   });
 
-  it('leaves out a statement whose numbers an older file lacks', () => {
+  it('leaves out what a file from before dropped trips and ridership lacks', () => {
+    // No dropped or ridership cells, speed parts without ids, and no delay minutes.
     const older: HomeData = {
       ...DATA,
       rows: DATA.rows.map((r) => ({
         ...r,
         cells: Object.fromEntries(
-          Object.entries(r.cells).map(([m, c]) => [
-            m,
-            { ...c, minutesPerDay: undefined, bunched: undefined },
-          ])
+          Object.entries(r.cells)
+            .filter(([m]) => m !== 'dropped' && m !== 'ridership')
+            .map(([m, c]) => [
+              m,
+              {
+                ...c,
+                minutesPerDay: undefined,
+                parts: c.parts?.map((part) => ({ ...part, id: undefined })),
+              },
+            ])
         ),
       })),
-      hero: DATA.hero.map((h) => ({ ...h, history: undefined })),
     };
     const statements = byId(older);
-    expect(Object.keys(statements)).toEqual([
-      'service',
-      'dropped',
-      'reliability',
-      'speed',
-      'ridership',
-    ]);
+    expect(Object.keys(statements)).toEqual(['service', 'reliability', 'speed']);
+    // Without speed parts it can find, the speed statement falls back to slow zones.
+    expect(statements.speed.viz.kind).toBe('area');
+  });
+
+  it('says nothing about a year ago when the figures would print the same', () => {
+    const withBus = (dropped: Partial<Cell>) => ({
+      ...DATA,
+      rows: DATA.rows.map((r) =>
+        r.id === 'all-bus' && r.cells.dropped
+          ? { ...r, cells: { ...r.cells, dropped: { ...r.cells.dropped, ...dropped } } }
+          : r
+      ),
+    });
+    expect(byId(withBus({ value: 0.12, trend: 0.003 })).dropped.head).toBe(
+      'Buses drop 12% of scheduled trips. Commuter Rail cancels 0.1%.'
+    );
+    // A 2-week trend isn't a change from a year ago.
+    expect(byId(withBus({ trend: 0.2, trendBasis: undefined })).dropped.head).toBe(
+      'Buses drop 0.5% of scheduled trips. Commuter Rail cancels 0.1%.'
+    );
+  });
+
+  it('leaves a stale speed out rather than quoting its old score', () => {
+    const rows = DATA.rows.map((r) =>
+      r.id === 'blue' && r.cells.speed
+        ? {
+            ...r,
+            cells: {
+              ...r.cells,
+              speed: {
+                ...r.cells.speed,
+                parts: r.cells.speed.parts?.map((p) =>
+                  p.id === 'speed' ? { ...p, status: 'insufficient' as const, score: 0.5 } : p
+                ),
+              },
+            },
+          }
+        : r
+    );
+    expect(byId({ ...DATA, rows }).speed.viz.kind).toBe('area');
+  });
+
+  it('only says slow zones are down when they are', () => {
+    const hero = DATA.hero.map((h) => (h.id === 'slowZones' ? { ...h, value: 150 } : h));
+    expect(byId({ ...DATA, hero }).speed.head).toMatch(
+      /Slow zones add 2\.5 hours a day across the subway\.$/
+    );
   });
 
   it('is empty before the data loads', () => {
