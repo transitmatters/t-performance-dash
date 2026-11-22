@@ -1,4 +1,7 @@
-import { useTripExplorerQueries } from '../../common/api/hooks/tripExplorer';
+import {
+  useMultiDayTripMetrics,
+  useSingleDayTripMetrics,
+} from '../../common/api/hooks/tripExplorer';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -74,15 +77,19 @@ export const SubwayTripGraphs = ({
     { paramKey: 'dwDays' }
   );
 
-  const { traveltimes, headways, dwells } = useTripExplorerQueries(
-    'subway',
-    parameters,
-    // @ts-expect-error The overloading doesn't seem to handle this const
-    aggregate,
-    enabled,
-    undefined,
-    fromStation?.terminus ? [QueryNameKeys.dwells] : []
-  );
+  // Only the view on screen fetches; the other hook stays disabled.
+  const single = useSingleDayTripMetrics({
+    routeType: 'subway',
+    params: parameters,
+    enabled: enabled && !aggregate,
+    skip: fromStation?.terminus ? [QueryNameKeys.dwells] : [],
+  });
+  const multi = useMultiDayTripMetrics({
+    routeType: 'subway',
+    params: parameters,
+    enabled: enabled && aggregate,
+    skip: fromStation?.terminus ? [QueryNameKeys.dwells] : [],
+  });
   const location = getLocationDetails(fromStation, toStation);
 
   return (
@@ -101,7 +108,7 @@ export const SubwayTripGraphs = ({
                   action={travelTimeControl}
                 />
                 <SpeedBetweenStationsAggregateWrapper
-                  query={traveltimes}
+                  query={multi.traveltimes}
                   fromStation={fromStation}
                   toStation={toStation}
                 />
@@ -122,7 +129,7 @@ export const SubwayTripGraphs = ({
                   }
                 />
                 <TravelTimesAggregateWrapper
-                  query={traveltimes}
+                  query={multi.traveltimes}
                   fromStation={fromStation}
                   toStation={toStation}
                   dayFilter={travelTimesDayFilter}
@@ -140,7 +147,7 @@ export const SubwayTripGraphs = ({
             />
 
             <HeadwaysAggregateWrapper
-              query={headways}
+              query={multi.headways}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={headwaysDayFilter}
@@ -155,7 +162,7 @@ export const SubwayTripGraphs = ({
               action={dwellsDayFilterControl}
             />
             <DwellsAggregateWrapper
-              query={dwells}
+              query={multi.dwells}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={dwellsDayFilter}
@@ -164,14 +171,14 @@ export const SubwayTripGraphs = ({
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
               title="Travel times by hour"
-              subtitle={newestChunkSubtitle(traveltimes.chunks)}
+              subtitle={newestChunkSubtitle(multi.traveltimes.chunks)}
               location={location}
               line={line}
               both
               action={peakTimeControl}
             />
             <AggregateChartWrapper
-              query={traveltimes}
+              query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}
@@ -194,7 +201,7 @@ export const SubwayTripGraphs = ({
                   action={travelTimeControl}
                 />
                 <SpeedBetweenStationsSingleWrapper
-                  query={traveltimes}
+                  query={single.traveltimes}
                   fromStation={fromStation}
                   toStation={toStation}
                 />
@@ -210,7 +217,7 @@ export const SubwayTripGraphs = ({
                   action={travelTimeControl}
                 />
                 <TravelTimesSingleWrapper
-                  query={traveltimes}
+                  query={single.traveltimes}
                   fromStation={fromStation}
                   toStation={toStation}
                 />
@@ -225,7 +232,7 @@ export const SubwayTripGraphs = ({
               line={line}
             />
             <HeadwaysSingleWrapper
-              query={headways}
+              query={single.headways}
               toStation={toStation}
               fromStation={fromStation}
             />
@@ -237,7 +244,11 @@ export const SubwayTripGraphs = ({
               location={location}
               line={line}
             />
-            <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
+            <DwellsSingleWrapper
+              query={single.dwells}
+              toStation={toStation}
+              fromStation={fromStation}
+            />
           </WidgetDiv>
           <WidgetDiv>
             <WidgetTitle
@@ -248,7 +259,7 @@ export const SubwayTripGraphs = ({
               both
             />
             <TravelTimesByVehicleWrapper
-              query={traveltimes}
+              query={single.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               vehicleNoun="Train"
@@ -262,7 +273,7 @@ export const SubwayTripGraphs = ({
               line={line}
             />
             <HeadwaysHistogramWrapper
-              query={headways}
+              query={single.headways}
               toStation={toStation}
               fromStation={fromStation}
             />
