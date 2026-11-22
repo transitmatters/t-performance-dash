@@ -99,14 +99,12 @@ export const fetchBusSpeedSegmentsUrl = async ({
   return url.toString();
 };
 
-let latestBusSpeedDate: Promise<string> | undefined;
-
 /**
  * The newest day with published segments: yesterday once its ingest has run, otherwise the day
- * before. Checked once per page load, so opening the speed map again doesn't repeat the request.
+ * before. Cached for the page load by `latestBusSpeedDateQuery`.
  */
-export const getLatestBusSpeedDate = (): Promise<string> => {
-  latestBusSpeedDate ??= fetch(
+export const fetchLatestBusSpeedDate = (): Promise<string> =>
+  fetch(
     new URL(
       busSpeedSegmentsPath(YESTERDAY_STRING, 'daily', 'all_day'),
       window.location.origin
@@ -115,8 +113,6 @@ export const getLatestBusSpeedDate = (): Promise<string> => {
   )
     .then((response) => (response.ok ? YESTERDAY_STRING : TWO_DAYS_AGO_STRING))
     .catch(() => TWO_DAYS_AGO_STRING);
-  return latestBusSpeedDate;
-};
 
 /**
  * Like fetchBusSpeedSegmentsUrl, for the dwell points beside the segments. Resolves to null

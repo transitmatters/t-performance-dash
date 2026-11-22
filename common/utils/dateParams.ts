@@ -5,6 +5,7 @@ import { isEqual, pickBy } from '@lodash-utils';
 import { DATE_FORMAT, getDatePickerBounds } from '../constants/dates';
 import type { DateStoreSection, Page } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
+import { queryClient } from '../api/queryClient';
 import { getDefaultDates } from '../state/defaults/dateDefaults';
 import { useDateStore } from '../state/dateStore';
 import { getDateStoreSection } from '../state/utils/dateStoreUtils';
@@ -201,7 +202,7 @@ export const redirectToCanonicalSearch = ({ location }: { location: ParsedLocati
   if (!opensOnLatestBusSpeedDate(location.pathname, location.search)) {
     return throwCanonicalRedirect(location);
   }
-  return import('../api/busSpeedSegments')
-    .then(({ getLatestBusSpeedDate }) => getLatestBusSpeedDate())
+  return import('../api/hooks/busSpeedSegments')
+    .then(({ latestBusSpeedDateQuery }) => queryClient.ensureQueryData(latestBusSpeedDateQuery))
     .then((latestDate) => throwCanonicalRedirect(location, latestDate));
 };
