@@ -173,7 +173,7 @@ def headways(stop_ids: list, start_date: date, end_date: date, single_day=False)
         current_dep_dt, headway_time_sec, benchmark_headway_time_sec,
         vehicle_consist, occupancy_status, occupancy_percentage, and vehicle_label.
     """
-    rows_by_time = s3.download_events(start_date, end_date, stop_ids, single_day)
+    rows_by_time = s3.download_events(start_date, end_date, stop_ids, single_day, EVENT_DEPARTURE)
 
     only_departures = filter(lambda row: row["event_type"] in EVENT_DEPARTURE, rows_by_time)
 
@@ -250,8 +250,8 @@ def travel_times(stops_a: list, stops_b: list, start_date: date, end_date: date,
     from concurrent.futures import ThreadPoolExecutor
 
     with ThreadPoolExecutor(max_workers=2) as executor:
-        fut_a = executor.submit(s3.download_events, start_date, end_date, stops_a, single_day)
-        fut_b = executor.submit(s3.download_events, start_date, end_date, stops_b, single_day)
+        fut_a = executor.submit(s3.download_events, start_date, end_date, stops_a, single_day, EVENT_DEPARTURE)
+        fut_b = executor.submit(s3.download_events, start_date, end_date, stops_b, single_day, EVENT_ARRIVAL)
         rows_by_time_a = fut_a.result()
         rows_by_time_b = fut_b.result()
 
