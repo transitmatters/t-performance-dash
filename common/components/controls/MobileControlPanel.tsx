@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSliders } from '@fortawesome/free-solid-svg-icons';
 import { PeriodDateControl } from '../../../modules/busspeedmap/controls/PeriodDateControl';
+import { guideAnchor } from '../../../modules/guide/anchors';
 import { usePeriodDateLabel } from '../../../modules/busspeedmap/useBusSpeedParams';
 import { usePageControls } from '../../hooks/usePageControls';
 import { usePageHeading } from '../../hooks/usePageHeading';
@@ -93,6 +94,7 @@ export const MobileControlPanel = () => {
           )}
         </div>
         <SheetTrigger
+          {...guideAnchor('stations', 'dates', 'tripMode')}
           className={classNames('flex h-10 shrink-0 items-center gap-x-2 px-4', lineButton)}
         >
           <FontAwesomeIcon icon={faSliders} className="size-3.5" aria-hidden />

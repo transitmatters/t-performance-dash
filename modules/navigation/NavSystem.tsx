@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
 } from '../../common/components/ui/sidebar';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { guideAnchor } from '../guide/anchors';
 
 const SYSTEM_ITEMS = [
   { page: 'landing', name: 'Home', href: '/', icon: faHouse },
@@ -29,7 +30,7 @@ export const NavSystem = ({ close }: NavSystemProps) => {
   const { page } = useDelimitatedRoute();
 
   return (
-    <SidebarGroup>
+    <SidebarGroup {...guideAnchor('system')}>
       <SidebarGroupLabel>System</SidebarGroupLabel>
       <SidebarMenu>
         {SYSTEM_ITEMS.map((item) => (

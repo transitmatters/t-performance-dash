@@ -3,6 +3,9 @@ import { useNavigate } from '@tanstack/react-router';
 import { hrefToString } from '../../common/components/general/Link';
 import { useSidebar } from '../../common/components/ui/sidebar';
 import { useThemeStore } from '../../common/state/themeStore';
+import { useDelimitatedRoute } from '../../common/utils/router';
+import { useGuideStore } from '../guide/store';
+import { pageNode } from '../guide/tree';
 import type { Command } from './commandIndex';
 import { useCommandPaletteStore, useRecentCommandsStore } from './store';
 import { useResolveCommand } from './useResolveCommand';
@@ -16,6 +19,8 @@ export const useRunCommand = () => {
   const toggleTheme = useThemeStore((state) => state.toggle);
   const toggleColorblind = useThemeStore((state) => state.toggleColorblind);
   const { isMobile, setOpenMobile, toggleSidebar } = useSidebar();
+  const { page, line } = useDelimitatedRoute();
+  const openGuide = useGuideStore((state) => state.openAt);
 
   return useCallback(
     (command: Command) => {
@@ -26,6 +31,7 @@ export const useRunCommand = () => {
         if (target.action === 'colorblind') toggleColorblind();
         if (target.action === 'sidebar') toggleSidebar();
         if (target.action === 'copyLink') void navigator.clipboard?.writeText(window.location.href);
+        if (target.action === 'guide') openGuide(pageNode(page, line));
         return;
       }
       addRecent(command.id);
@@ -44,6 +50,9 @@ export const useRunCommand = () => {
       toggleSidebar,
       isMobile,
       setOpenMobile,
+      page,
+      line,
+      openGuide,
     ]
   );
 };

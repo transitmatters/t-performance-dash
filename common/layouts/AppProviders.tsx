@@ -13,7 +13,8 @@ interface AppProvidersProps {
 export const AppProviders = ({ children }: AppProvidersProps) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools buttonPosition="bottom-right" />
+      {/* Dev only. Bottom right is where Dash, the guide, sits. */}
+      <ReactQueryDevtools buttonPosition="bottom-left" />
       <TooltipProvider>
         <div className="flex h-screen flex-col">
           <div className="relative h-full">{children}</div>

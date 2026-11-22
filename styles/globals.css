@@ -378,3 +378,71 @@ a {
     animation: none;
   }
 }
+
+/*
+  Dash, the guide (modules/guide). Its bubble opens like any overlay, growing out of the corner
+  Dash sits in. Dash hops when it has something new to say and blinks now and then. The spotlight
+  ring is two-tone (page ground inside, line color outside) so it shows on a line-colored band too.
+*/
+@keyframes tm-guide-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+.tm-guide-pop {
+  transform-origin: bottom right;
+  animation: tm-guide-pop var(--duration-fast) var(--ease-smooth-out) both;
+}
+
+@keyframes tm-guide-hop {
+  40% {
+    transform: translateY(-5px);
+  }
+}
+
+.tm-guide-hop {
+  animation: tm-guide-hop 360ms var(--ease-smooth-out);
+}
+
+@keyframes tm-guide-blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  97% {
+    transform: scaleY(0.1);
+  }
+}
+
+.tm-guide-eyes {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: tm-guide-blink 6s infinite;
+}
+
+@keyframes tm-guide-pulse {
+  50% {
+    box-shadow:
+      0 0 0 2px var(--background),
+      0 0 0 9px color-mix(in oklch, var(--primary), transparent 60%);
+  }
+}
+
+.tm-guide-spotlight {
+  box-shadow:
+    0 0 0 2px var(--background),
+    0 0 0 5px var(--primary);
+  animation: tm-guide-pulse 1.6s var(--ease-smooth-out) 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tm-guide-pop,
+  .tm-guide-hop,
+  .tm-guide-eyes,
+  .tm-guide-spotlight {
+    animation: none;
+  }
+}

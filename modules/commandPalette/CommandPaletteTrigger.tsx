@@ -7,6 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '../../common/components/ui/sidebar';
+import { guideAnchor } from '../guide/anchors';
 import { useCommandPaletteStore } from './store';
 import { shortcutLabel } from './useCommandPaletteShortcut';
 
@@ -20,6 +21,7 @@ export const SidebarCommandTrigger = () => {
         <SidebarMenuItem>
           <SidebarMenuButton
             onClick={() => setOpen(true)}
+            {...guideAnchor('search')}
             tooltip={`Search (${shortcut})`}
             className="border border-sidebar-border bg-sidebar-accent/60 text-sidebar-foreground/80 hover:text-sidebar-foreground"
           >
@@ -43,6 +45,7 @@ export const HeaderCommandTrigger = () => {
       variant="ghost"
       size="icon-sm"
       onClick={() => setOpen(true)}
+      {...guideAnchor('search')}
       aria-label="Search lines, routes and stations"
       className="ml-auto hover:bg-sidebar-accent hover:text-sidebar-foreground"
     >

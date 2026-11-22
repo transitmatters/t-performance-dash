@@ -17,6 +17,7 @@ import {
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import { lineColorVar } from '../../common/styles/general';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { guideAnchor } from '../guide/anchors';
 import { NavPageItems } from './NavPageItems';
 import { NAV_LINES, hrefForLine, lineIcon, pagesForLine } from './lineNav';
 
@@ -28,7 +29,7 @@ export const NavLines = ({ close }: NavLinesProps) => {
   const route = useDelimitatedRoute();
 
   return (
-    <SidebarGroup>
+    <SidebarGroup {...guideAnchor('lines')}>
       <SidebarGroupLabel>Lines</SidebarGroupLabel>
       <SidebarMenu>
         {NAV_LINES.map((line) => {

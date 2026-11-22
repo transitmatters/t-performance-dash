@@ -8,6 +8,8 @@ import { useCommandPaletteShortcut } from '../../modules/commandPalette/useComma
 import { useDelimitatedRoute } from '../utils/router';
 import { useColorVisionKey } from '../utils/colorVision';
 import { SiteFooter } from '../../modules/navigation/SiteFooter';
+import { Guide } from '../../modules/guide/Guide';
+import { guideAnchor } from '../../modules/guide/anchors';
 
 interface NavLayoutProps {
   children: ReactNode;
@@ -30,7 +32,7 @@ export const NavLayout = ({ children }: NavLayoutProps) => {
             h-12 is load-bearing: MobileHeader (modules/dashboard/MobileHeader.tsx) stacks its own
             sticky header at top-12, so this one must be exactly 48px or a gap opens between them. */}
         <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b bg-sidebar px-2 text-sidebar-foreground md:hidden">
-          <SidebarTrigger />
+          <SidebarTrigger {...guideAnchor('lines', 'system')} />
           <Link href="/" className="flex items-center">
             <img src="/TMLogo.svg" alt="TransitMatters" width={208} height={19.5} />
           </Link>
@@ -39,6 +41,7 @@ export const NavLayout = ({ children }: NavLayoutProps) => {
         <main className="flex flex-1 flex-col">{children}</main>
         <SiteFooter />
         <CommandPalette key={colorVisionKey} />
+        <Guide />
       </SidebarInset>
     </SidebarProvider>
   );

@@ -2,6 +2,7 @@ import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import {
   faBars,
   faCircleHalfStroke,
+  faCircleQuestion,
   faEye,
   faLink,
   faLocationDot,
@@ -21,7 +22,7 @@ import type { Station } from '../../common/types/stations';
 import { LINE_ENTRY_PATHS, NAV_LINES, lineIcon, pagesForLine } from '../navigation/lineNav';
 
 export type RouteLine = 'line-bus' | 'line-commuter-rail' | 'line-ferry';
-export type CommandAction = 'theme' | 'colorblind' | 'sidebar' | 'copyLink';
+export type CommandAction = 'theme' | 'colorblind' | 'sidebar' | 'copyLink' | 'guide';
 
 export type CommandTarget =
   | { kind: 'href'; href: string }
@@ -256,6 +257,15 @@ const stationCommands = (): Command[] => [
 ];
 
 const actionCommands = (): Command[] => [
+  command({
+    id: 'action:guide',
+    group: 'Actions',
+    label: 'Show the guide',
+    icon: faCircleQuestion,
+    rank: 5,
+    target: { kind: 'action', action: 'guide' },
+    extraTerms: ['dash', 'help', 'tour', 'tutorial', 'explain', 'what', 'how'],
+  }),
   command({
     id: 'action:theme',
     group: 'Actions',

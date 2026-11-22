@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '../../../common/compone
 import { RouteBullet } from '../../../common/components/transit/RouteBullet';
 import { RouteLine } from '../../../common/components/transit/RouteLine';
 import { cn } from '../../../common/utils/cn';
+import { guideAnchor } from '../../guide/anchors';
 import { METRICS, METRIC_ORDER, ROWS } from '../config';
 import type { RowConfig } from '../config';
 import { HEADLINE_LABELS, STATUS_LABELS } from '../copy';
@@ -267,7 +268,12 @@ export const Scoreboard = ({
     return { config, row: row && { ...row, label: config.label } };
   });
   return (
-    <Card id="card" aria-busy={state === 'loading'} className="scroll-mt-6">
+    <Card
+      id="card"
+      aria-busy={state === 'loading'}
+      className="scroll-mt-6"
+      {...guideAnchor('scoreboard')}
+    >
       <CardHeader>
         <CardTitle>Every line, every measure</CardTitle>
       </CardHeader>

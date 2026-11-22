@@ -1,3 +1,4 @@
+import { guideAnchor } from '../../guide/anchors';
 import { STATUS_LABELS } from '../copy';
 import type { Status } from '../types';
 import { StatusNode } from './StatusNode';
@@ -5,7 +6,10 @@ import { StatusNode } from './StatusNode';
 const ORDER: Status[] = ['win', 'good', 'room', 'problem', 'insufficient', 'na'];
 
 export const StatusLegend = () => (
-  <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
+  <ul
+    className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground"
+    {...guideAnchor('statusLegend')}
+  >
     {ORDER.map((status) => (
       <li key={status} className="flex items-center gap-1.5">
         <span className="flex w-5 justify-center text-foreground">
