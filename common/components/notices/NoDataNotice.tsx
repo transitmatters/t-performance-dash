@@ -1,8 +1,10 @@
 import { faMagnifyingGlassChart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSearch } from '@tanstack/react-router';
 import type { TripMetric } from '../../utils/dataCoverage';
 import { getNoDataReason } from '../../utils/dataCoverage';
-import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
+import { useLinePage } from '../../hooks/usePageParams';
+import { useUpdateQuery } from '../../utils/router';
 import { Button } from '../ui/button';
 import { usePageShutdowns, shutdownDates } from '../../../modules/shutdowns';
 
@@ -47,7 +49,9 @@ export const NoDataNotice = ({
   shutdownScope,
   message,
 }: NoDataNoticeProps) => {
-  const { tab, query } = useDelimitatedRoute();
+  const { tab } = useLinePage();
+  // Embeds don't get their dates filled in, so these can be missing.
+  const query = useSearch({ strict: false });
   const updateQueryParams = useUpdateQuery();
   const { title, detail, jumpTo, jumpLabel } = getNoDataReason({
     tab,
