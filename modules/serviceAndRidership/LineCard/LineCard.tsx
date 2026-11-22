@@ -30,7 +30,7 @@ type Props = {
   lineData: LineData;
 };
 
-const serviceDayItems = [
+const serviceDayItems: { value: ServiceDay; label: string }[] = [
   { value: 'weekday', label: 'Weekdays' },
   { value: 'saturday', label: 'Saturday' },
   { value: 'sunday', label: 'Sunday' },
@@ -147,7 +147,7 @@ export const LineCard = (props: Props) => {
     <Widget title={title} titleHref={href} details={renderDetails()} className="pb-16">
       {renderSectionLabel('Current service levels')}
       <ButtonGroup
-        options={serviceDayItems.map((item) => [item.value, item.label])}
+        options={serviceDayItems.map((item): [ServiceDay, string] => [item.value, item.label])}
         pressFunction={setServiceDay}
         selectedIndex={serviceDayItems.findIndex((item) => item.value === serviceDay)}
         additionalDivClass="mb-2"

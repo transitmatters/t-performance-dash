@@ -7,23 +7,23 @@ interface BranchSelectorProps {
   setRouteId: (routeId: LineRouteId) => void;
 }
 
-enum GreenLineBranchOptions {
-  'Green-B' = 'B',
-  'Green-C' = 'C',
-  'Green-D' = 'D',
-  'Green-E' = 'E',
-}
+const GREEN_LINE_BRANCH_OPTIONS: [LineRouteId, string][] = [
+  ['Green-B', 'B'],
+  ['Green-C', 'C'],
+  ['Green-D', 'D'],
+  ['Green-E', 'E'],
+];
 
 export const BranchSelector = ({ routeId, setRouteId }: BranchSelectorProps) => {
   const { line } = usePageRoute();
-  const selectedIndex = Object.keys(GreenLineBranchOptions).findIndex((route) => route === routeId);
+  const selectedIndex = GREEN_LINE_BRANCH_OPTIONS.findIndex(([route]) => route === routeId);
 
   return (
     <ButtonGroup
       line={line}
       selectedIndex={selectedIndex}
       pressFunction={setRouteId}
-      options={Object.entries(GreenLineBranchOptions)}
+      options={GREEN_LINE_BRANCH_OPTIONS}
       additionalDivClass="w-auto"
       additionalButtonClass="flex-none px-3"
     />
