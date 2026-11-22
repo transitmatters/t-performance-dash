@@ -81,7 +81,7 @@ export const ServiceRidershipChart = (props: Props) => {
   const data = useMemo((): Dataset[] => {
     const service: Dataset = {
       label: 'Service levels',
-      data: getNormalizedData(serviceHistory, startDate, endDate, baselineMode),
+      data: getNormalizedData(serviceHistory ?? {}, startDate, endDate, baselineMode),
       style: {
         fillPattern: 'striped' as const,
         tooltipLabel(point) {

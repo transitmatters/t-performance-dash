@@ -1,60 +1,39 @@
+import type { Schemas } from '../../common/types/apiSchemas';
+
 export type Time = number;
 
-export type LineKind =
-  | 'red'
-  | 'green'
-  | 'orange'
-  | 'blue'
-  | 'silver'
-  | 'regional-rail'
-  | 'bus'
-  | 'boat';
+export const LINE_KINDS = [
+  'red',
+  'green',
+  'orange',
+  'blue',
+  'silver',
+  'regional-rail',
+  'bus',
+  'boat',
+] as const;
+
+export type LineKind = (typeof LINE_KINDS)[number];
+
+export const isLineKind = (value: string): value is LineKind =>
+  LINE_KINDS.some((kind) => kind === value);
 
 export type ModeKind = 'rapid-transit' | 'regional-rail' | 'bus' | 'boat';
 
 export type ServiceDay = 'weekday' | 'saturday' | 'sunday';
 export type ServiceRegime = 'baseline' | 'current' | 'oneYearAgo';
 
-export type TripsPerHour = readonly number[] & { length: 24 };
+/** Trips in each hour of the day, 0 through 23. */
+export type TripsPerHour = readonly number[];
 
 export type WeeklyMedianTimeseries = Record<string, number>;
 
-export type ServiceLevels = {
-  cancelled: boolean;
-  tripsPerHour?: TripsPerHour;
-  totalTrips: number;
-};
+export type ServiceLevels = Schemas['DashboardServiceDay'];
 
-export type LineData = {
-  id: string;
-  shortName: string;
-  longName: string;
-  totalTrips: number;
-  serviceFraction: number;
-  routeIds: string[];
-  ridershipHistory: null | WeeklyMedianTimeseries;
-  serviceHistory: WeeklyMedianTimeseries;
-  lineKind: LineKind;
-  serviceRegimes: Record<ServiceRegime, Record<ServiceDay, ServiceLevels>>;
-  startDate: string;
-};
+export type LineData = Schemas['DashboardLine'] & { lineKind: LineKind };
 
-export type SummaryData = {
-  totalRidershipHistory: null | WeeklyMedianTimeseries;
-  totalServiceHistory: null | WeeklyMedianTimeseries;
-  totalRidershipPercentage: number;
-  totalServicePercentage: number;
-  totalPassengers: number;
-  totalTrips: number;
-  totalRoutesCancelled: number;
-  totalReducedService: number;
-  totalIncreasedService: number;
-  startDate: string;
-  endDate: string;
-};
+export type SummaryData = Schemas['DashboardSummary'];
 
-export type DashboardData = {
+export type DashboardData = Schemas['ServiceRidershipDashboardResponse'] & {
   lineData: Record<string, LineData>;
-  modeData: Record<string, SummaryData>;
-  summaryData: SummaryData;
 };

@@ -9,7 +9,7 @@ import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
 
 type Props = {
   summaryData: SummaryData;
-  modeData: Record<ModeKind, SummaryData>;
+  modeData: Partial<Record<ModeKind, SummaryData>>;
 };
 
 type Selection = 'total' | ModeKind;
@@ -44,8 +44,8 @@ export const SummaryCard = (props: Props) => {
     }
     const selectedModeData = modeData[selection];
     return {
-      serviceHistory: selectedModeData.totalServiceHistory ?? {},
-      ridershipHistory: selectedModeData.totalRidershipHistory ?? {},
+      serviceHistory: selectedModeData?.totalServiceHistory ?? {},
+      ridershipHistory: selectedModeData?.totalRidershipHistory ?? {},
     };
   }, [selection, summaryData, modeData]);
 
