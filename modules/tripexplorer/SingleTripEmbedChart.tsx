@@ -1,4 +1,4 @@
-import { useTripExplorerQueries } from '../../common/api/hooks/tripExplorer';
+import { useSingleDayTripMetrics } from '../../common/api/hooks/tripExplorer';
 import { EmbedMessage } from '../../common/components/embed/EmbedMessage';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import type { TripEmbedChart } from '../../common/constants/staticRoutes';
@@ -35,18 +35,17 @@ export const SingleTripEmbedChart = ({
 }: SingleTripEmbedChartProps) => {
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
   const queryName = CHART_QUERIES[chart];
-  const result = useTripExplorerQueries(
+  const result = useSingleDayTripMetrics({
     routeType,
-    {
+    params: {
       [SingleDayAPIParams.stop]: fromStopIds,
       [SingleDayAPIParams.fromStop]: fromStopIds,
       [SingleDayAPIParams.toStop]: toStopIds,
       [SingleDayAPIParams.date]: date,
     },
-    false,
-    Boolean(fromStopIds && toStopIds && date),
-    [queryName]
-  )[queryName];
+    enabled: Boolean(fromStopIds && toStopIds && date),
+    only: [queryName],
+  })[queryName];
 
   if (!result.data) return <ChartPlaceHolder query={result} />;
   if (result.data.length < 1)

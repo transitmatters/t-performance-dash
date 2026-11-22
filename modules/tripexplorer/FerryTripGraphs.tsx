@@ -1,4 +1,7 @@
-import { useTripExplorerQueries } from '../../common/api/hooks/tripExplorer';
+import {
+  useMultiDayTripMetrics,
+  useSingleDayTripMetrics,
+} from '../../common/api/hooks/tripExplorer';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
 import type { Station } from '../../common/types/stations';
 import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
@@ -51,13 +54,17 @@ export const FerryTripGraphs = ({
     { paramKey: 'hwDays' }
   );
 
-  const { traveltimes, headways } = useTripExplorerQueries(
-    'ferry',
-    parameters,
-    // @ts-expect-error The overloading doesn't seem to handle this const
-    aggregate,
-    enabled
-  );
+  // Only the view on screen fetches; the other hook stays disabled.
+  const single = useSingleDayTripMetrics({
+    routeType: 'ferry',
+    params: parameters,
+    enabled: enabled && !aggregate,
+  });
+  const multi = useMultiDayTripMetrics({
+    routeType: 'ferry',
+    params: parameters,
+    enabled: enabled && aggregate,
+  });
   const location = getLocationDetails(fromStation, toStation);
 
   return (
@@ -75,7 +82,7 @@ export const FerryTripGraphs = ({
                 action={travelTimesDayFilterControl}
               />
               <TravelTimesAggregateWrapper
-                query={traveltimes}
+                query={multi.traveltimes}
                 fromStation={fromStation}
                 toStation={toStation}
                 dayFilter={travelTimesDayFilter}
@@ -92,7 +99,7 @@ export const FerryTripGraphs = ({
             />
 
             <HeadwaysAggregateWrapper
-              query={headways}
+              query={multi.headways}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={headwaysDayFilter}
@@ -101,14 +108,14 @@ export const FerryTripGraphs = ({
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
               title="Travel times by hour"
-              subtitle={newestChunkSubtitle(traveltimes.chunks)}
+              subtitle={newestChunkSubtitle(multi.traveltimes.chunks)}
               location={location}
               line={line}
               both
               action={peakTimeControl}
             />
             <AggregateChartWrapper
-              query={traveltimes}
+              query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}
@@ -128,7 +135,7 @@ export const FerryTripGraphs = ({
               both
             />
             <TravelTimesSingleWrapper
-              query={traveltimes}
+              query={single.traveltimes}
               fromStation={fromStation}
               toStation={toStation}
             />
@@ -141,7 +148,7 @@ export const FerryTripGraphs = ({
               line={line}
             />
             <HeadwaysSingleWrapper
-              query={headways}
+              query={single.headways}
               toStation={toStation}
               fromStation={fromStation}
             />
@@ -154,7 +161,7 @@ export const FerryTripGraphs = ({
               line={line}
             />
             <HeadwaysHistogramWrapper
-              query={headways}
+              query={single.headways}
               toStation={toStation}
               fromStation={fromStation}
             />

@@ -1,44 +1,62 @@
-import type * as ReactQuery from '@tanstack/react-query';
+/**
+ * The trip explorer's data: travel times, headways and dwells for a trip between two stops.
+ *
+ * - `useSingleDayTripMetrics` fetches one day: one request per metric.
+ * - `useMultiDayTripMetrics` fetches a date range. Long ranges go out as several shorter requests
+ *   so each finishes in time, and each metric's pieces are merged back into one result.
+ */
+import type { UseQueryResult } from '@tanstack/react-query';
 import { useQueries } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
-import { QUERIES, AggregateAPIParams, SingleDayAPIParams } from '../../types/api';
+import { pickBy } from '@lodash-utils';
+import { QUERIES } from '../../types/api';
 import type {
   AggregateAPIOptions,
   PartialAggregateAPIOptions,
   PartialSingleDayAPIOptions,
-  QueryNameOptions,
+  QueryNameKeys,
   RouteType,
   SingleDayAPIOptions,
-  QueryNameKeys,
 } from '../../types/api';
-import type {
-  AggregateDataResponse,
-  ChunkedAggregateQueryResult,
-  SingleDayDataPoint,
-} from '../../types/charts';
+import type { ChunkedAggregateQueryResult, SingleDayDataPoint } from '../../types/charts';
 import { ONE_MINUTE } from '../../constants/time';
 import { hasReliableCommuterRailBenchmarks } from '../../constants/dates';
-import type { DateChunk } from '../../utils/dateChunks';
-import { joinAdjacentChunks, splitDateRange } from '../../utils/dateChunks';
+import { splitDateRange } from '../../utils/dateChunks';
 import { fetchAggregateData, fetchSingleDayData } from '../datadashboard';
+import { mergeChunks } from '../utils/mergeChunks';
 
-/** One trip metric's query, for the trip explorer and anything else that shows the same data. */
+type TripMetric = QueryNameKeys;
+
+/** The stops each metric is measured at: travel times between two, the others at one. */
+const STOP_PARAMS: Record<TripMetric, string[]> = {
+  traveltimes: ['from_stop', 'to_stop'],
+  headways: ['stop'],
+  dwells: ['stop'],
+};
+
+/** Just the params a metric's request takes, so its cache key doesn't change with the others'. */
+const paramsFor = <T extends object>(params: T, metric: TripMetric, dateKeys: string[]) =>
+  pickBy<T>(
+    params,
+    (value, key) => Boolean(value) && [...STOP_PARAMS[metric], ...dateKeys].includes(key)
+  );
+
+/** One day of one metric. Shared with the home page's hero chart, which shows the same data. */
 export const singleDayTripMetricQuery = (
-  name: QueryNameKeys,
+  metric: TripMetric,
   params: PartialSingleDayAPIOptions
 ) => ({
-  queryKey: ['tripMetric', name, params] as const,
-  queryFn: () => fetchSingleDayData(name, params),
+  queryKey: ['tripMetric', metric, params] as const,
+  queryFn: () => fetchSingleDayData(metric, params),
   staleTime: ONE_MINUTE,
 });
 
-const aggregateTripMetricQuery = (name: QueryNameKeys, params: PartialAggregateAPIOptions) => ({
-  queryKey: ['tripMetric', name, 'aggregate', params] as const,
-  queryFn: ({ signal }: { signal: AbortSignal }) => fetchAggregateData(name, params, signal),
+const multiDayTripMetricQuery = (metric: TripMetric, params: PartialAggregateAPIOptions) => ({
+  queryKey: ['tripMetric', metric, 'aggregate', params] as const,
+  queryFn: ({ signal }: { signal: AbortSignal }) => fetchAggregateData(metric, params, signal),
   staleTime: ONE_MINUTE,
 });
 
-// Drops a day's benchmarks so charts and widgets treat it as having none
+/** Commuter Rail's schedule benchmarks are unreliable on some days; charts then show none. */
 const withoutBenchmarks = (data: SingleDayDataPoint[]): SingleDayDataPoint[] =>
   data.map((point) => ({
     ...point,
@@ -46,184 +64,82 @@ const withoutBenchmarks = (data: SingleDayDataPoint[]): SingleDayDataPoint[] =>
     benchmark_headway_time_sec: null,
   }));
 
-// Object to contain the name of each single day query and the parameters/keys it takes.
-const singleDayQueryDependencies: { [key in QueryNameOptions]: SingleDayAPIParams[] } = {
-  traveltimes: [SingleDayAPIParams.fromStop, SingleDayAPIParams.toStop, SingleDayAPIParams.date],
-  headways: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
-  dwells: [SingleDayAPIParams.stop, SingleDayAPIParams.date],
-};
+interface TripMetricsOptions<Params> {
+  routeType: RouteType;
+  params: Params;
+  enabled?: boolean;
+  /** Fetch only these metrics, as an embed does for its one chart. Defaults to all the mode has. */
+  only?: TripMetric[];
+  /** Metrics the page won't show, so they aren't fetched. */
+  skip?: TripMetric[];
+}
 
-// Object to contain name of each aggregate query and the parameters/keys it takes.
-const aggregateQueryDependencies: { [key in QueryNameKeys]: AggregateAPIParams[] } = {
-  traveltimes: [
-    AggregateAPIParams.fromStop,
-    AggregateAPIParams.toStop,
-    AggregateAPIParams.startDate,
-    AggregateAPIParams.endDate,
-  ],
-  headways: [AggregateAPIParams.stop, AggregateAPIParams.startDate, AggregateAPIParams.endDate],
-  dwells: [AggregateAPIParams.stop, AggregateAPIParams.startDate, AggregateAPIParams.endDate],
-};
+export type SingleDayTripMetrics = Record<TripMetric, UseQueryResult<SingleDayDataPoint[]>>;
+export type MultiDayTripMetrics = Record<TripMetric, ChunkedAggregateQueryResult>;
 
-// Combines one query's date-range chunks (newest first) into a single result. The chart renders as
-// soon as any chunk has rows; it only errors once nothing is pending and no rows came back.
-const mergeChunks = (
-  results: ReactQuery.UseQueryResult<AggregateDataResponse>[],
-  chunks: DateChunk[]
-): ChunkedAggregateQueryResult => {
-  const [newest] = results;
-  if (results.length === 1) return newest;
-
-  const loaded = results.filter((result) => result.data);
-  const failed = results.filter((result) => result.isError);
-  const pending = results.filter((result) => !result.data && !result.isError);
-  const merged = {
-    // Oldest chunk first keeps by_date in date order within each peak bucket.
-    by_date: [...results].reverse().flatMap((result) => result.data?.by_date ?? []),
-    by_time: newest.data?.by_time ?? [],
-  };
-  // Hold off on an empty result until the remaining chunks could still fill it.
-  const data =
-    loaded.length && (merged.by_date.length || (!pending.length && !failed.length))
-      ? merged
-      : undefined;
-  const isError = !data && !pending.length;
-  const isFetching = results.some((result) => result.isFetching);
-
-  return {
-    ...newest,
-    data,
-    error: isError ? failed[0].error : null,
-    isError,
-    isPending: !data && !isError,
-    isLoading: !data && !isError && isFetching,
-    isSuccess: Boolean(data),
-    status: data ? 'success' : isError ? 'error' : 'pending',
-    isFetching,
-    refetch: () =>
-      Promise.all((failed.length ? failed : results).map((result) => result.refetch())).then(
-        () => newest
-      ),
-    chunks: {
-      total: results.length,
-      loaded: loaded.length,
-      failed: failed.length,
-      pending: pending.length,
-      pendingRanges: joinAdjacentChunks(
-        chunks.filter((_, i) => !results[i].data && !results[i].isError)
-      ),
-      byTimeRange: chunks[0],
-      byTimeStatus: newest.data ? 'success' : newest.isError ? 'error' : 'pending',
-    },
-  } as ChunkedAggregateQueryResult;
-};
-
-// Overload call to specify type for single day queries
-type UseQueriesOverload = {
-  (
-    routeType: RouteType,
-    parameters: SingleDayAPIOptions,
-    aggregate: false,
-    enabled?: boolean,
-    queryNames?: QueryNameOptions[],
-    skip?: QueryNameKeys[]
-  ): {
-    [key in QueryNameKeys]: ReactQuery.UseQueryResult<SingleDayDataPoint[]>;
-  };
-  (
-    routeType: RouteType,
-    parameters: AggregateAPIOptions,
-    aggregate: true,
-    enabled?: boolean,
-    queryNames?: QueryNameOptions[],
-    skip?: QueryNameKeys[]
-  ): {
-    [key in QueryNameKeys]: ChunkedAggregateQueryResult;
-  };
-};
-
-// Return type `any` because the return type is specified in the overload in `UseQueriesOverload`
-// Queries named in `skip` aren't fetched, for charts the page won't show.
-export const useTripExplorerQueries: UseQueriesOverload = (
-  routeType: RouteType,
-  parameters: SingleDayAPIOptions | AggregateAPIOptions,
-  aggregate: boolean,
+export const useSingleDayTripMetrics = ({
+  routeType,
+  params,
   enabled = true,
-  // An embed shows one chart, so it fetches only that chart's data.
-  queryNames?: QueryNameOptions[],
-  // Queries named here aren't fetched, for charts the page won't show.
-  skip: QueryNameKeys[] = []
-): any => {
-  const queryTypes = queryNames ?? QUERIES[routeType];
-  const dependencies = aggregate ? aggregateQueryDependencies : singleDayQueryDependencies;
-  // Create objects with keys of query names which contains keys and parameters.
-  const queries = {};
-  queryTypes.forEach((queryName) => {
-    const params: Partial<SingleDayAPIOptions | AggregateAPIOptions> = {};
-    dependencies[queryName].forEach((field: Partial<AggregateAPIParams | SingleDayAPIParams>) => {
-      if (parameters[field]) {
-        params[field] = parameters[field];
-      }
-    });
-    queries[queryName] = { params };
+  only,
+  skip = [],
+}: TripMetricsOptions<SingleDayAPIOptions>): SingleDayTripMetrics => {
+  const metrics = only ?? QUERIES[routeType];
+  const { date } = params;
+  const hideBenchmarks =
+    routeType === 'cr' && typeof date === 'string' && !hasReliableCommuterRailBenchmarks(date);
+
+  return useQueries({
+    queries: metrics.map((metric) => ({
+      ...singleDayTripMetricQuery(metric, paramsFor(params, metric, ['date'])),
+      select: hideBenchmarks ? withoutBenchmarks : undefined,
+      enabled: enabled && !skip.includes(metric),
+    })),
+    combine: (results) =>
+      Object.fromEntries(metrics.map((metric, i) => [metric, results[i]])) as SingleDayTripMetrics,
+  });
+};
+
+export const useMultiDayTripMetrics = ({
+  routeType,
+  params,
+  enabled = true,
+  only,
+  skip = [],
+}: TripMetricsOptions<AggregateAPIOptions>): MultiDayTripMetrics => {
+  const metrics = only ?? QUERIES[routeType];
+  const { start_date: startDate, end_date: endDate } = params;
+  // Newest first. A short range is a single chunk; with no dates yet there are none.
+  const chunks =
+    typeof startDate === 'string' && typeof endDate === 'string'
+      ? splitDateRange(startDate, endDate)
+      : [];
+  const chunksPerMetric = Math.max(chunks.length, 1);
+
+  // Every metric's chunks in one list, metric by metric, so `combine` can slice them back apart.
+  const queries = metrics.flatMap((metric) => {
+    const metricParams = paramsFor(params, metric, ['start_date', 'end_date']);
+    const requests = chunks.length
+      ? chunks.map((chunk) => ({
+          ...metricParams,
+          start_date: chunk.startDate,
+          end_date: chunk.endDate,
+        }))
+      : [metricParams];
+    return requests.map((requestParams) => ({
+      ...multiDayTripMetricQuery(metric, requestParams),
+      enabled: enabled && !skip.includes(metric),
+    }));
   });
 
-  const date = 'date' in parameters ? parameters.date : undefined;
-  const hideBenchmarks =
-    routeType === 'cr' &&
-    !aggregate &&
-    typeof date === 'string' &&
-    !hasReliableCommuterRailBenchmarks(date);
-
-  // Long aggregate ranges are fetched as several smaller requests so each one finishes in time.
-  const startDate = 'start_date' in parameters ? parameters.start_date : undefined;
-  const endDate = 'end_date' in parameters ? parameters.end_date : undefined;
-  const chunks = useMemo(
-    () =>
-      aggregate && typeof startDate === 'string' && typeof endDate === 'string'
-        ? splitDateRange(startDate, endDate)
-        : [],
-    [aggregate, startDate, endDate]
-  );
-  const chunkCount = Math.max(chunks.length, 1);
-
-  const combine = useCallback(
-    (results: ReactQuery.UseQueryResult[]) =>
-      Object.fromEntries(
-        queryTypes.map((name, i) => {
-          const queryResults = results.slice(i * chunkCount, (i + 1) * chunkCount);
-          return [
-            name,
-            aggregate
-              ? mergeChunks(
-                  queryResults as ReactQuery.UseQueryResult<AggregateDataResponse>[],
-                  chunks
-                )
-              : queryResults[0],
-          ];
-        })
-      ),
-    [queryTypes, chunkCount, aggregate, chunks]
-  );
-
-  // Create one query per name and chunk, grouped back by name in `combine`.
   return useQueries({
-    queries: queryTypes.flatMap((name) => {
-      const chunkParams = chunks.length
-        ? chunks.map((chunk) => ({
-            ...queries[name].params,
-            start_date: chunk.startDate,
-            end_date: chunk.endDate,
-          }))
-        : [queries[name].params];
-      return chunkParams.map((params) => ({
-        ...(aggregate
-          ? aggregateTripMetricQuery(name, params)
-          : singleDayTripMetricQuery(name, params)),
-        select: hideBenchmarks ? withoutBenchmarks : undefined,
-        enabled: enabled && !skip.includes(name),
-      }));
-    }),
-    combine,
+    queries,
+    combine: (results) =>
+      Object.fromEntries(
+        metrics.map((metric, i) => [
+          metric,
+          mergeChunks(results.slice(i * chunksPerMetric, (i + 1) * chunksPerMetric), chunks),
+        ])
+      ) as MultiDayTripMetrics,
   });
 };
