@@ -2,14 +2,14 @@ import type { FetchBusSpeedLeaderboardOptions, FetchBusTripMetricsOptions } from
 import { FetchBusTripMetricsParams } from '../types/api';
 import type { BusSpeedLeaderboardEntry, DeliveredTripMetricsBus } from '../types/dataPoints';
 import { withWeekStart } from '../utils/date';
-import { apiFetch } from './utils/fetch';
+import { apiFetchUnchecked } from './utils/fetch';
 
 export const fetchBusTripMetricsByRoute = async (
   options: FetchBusTripMetricsOptions
 ): Promise<DeliveredTripMetricsBus[]> => {
   if (!options[FetchBusTripMetricsParams.route]) return [];
 
-  return await apiFetch({
+  return await apiFetchUnchecked({
     path: '/api/bustripmetrics',
     options: withWeekStart(options),
     errorMessage: 'Failed to fetch bus trip metrics',
@@ -21,7 +21,7 @@ export const fetchBusSpeedLeaderboard = async (
 ): Promise<BusSpeedLeaderboardEntry[]> => {
   if (!options.start_date || !options.end_date) return [];
 
-  return await apiFetch({
+  return await apiFetchUnchecked({
     path: '/api/busspeedleaderboard',
     options,
     errorMessage: 'Failed to fetch bus speed leaderboard',

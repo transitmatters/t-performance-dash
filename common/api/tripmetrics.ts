@@ -2,6 +2,7 @@ import type { FetchDeliveredTripMetricsOptions } from '../types/api';
 import { FetchDeliveredTripMetricsParams } from '../types/api';
 import type { DeliveredTripMetrics } from '../types/dataPoints';
 import { withWeekStart } from '../utils/date';
+import { isLine } from '../utils/isLine';
 import { apiFetch } from './utils/fetch';
 
 export const fetchActualTripsByLine = async (
@@ -9,9 +10,21 @@ export const fetchActualTripsByLine = async (
 ): Promise<DeliveredTripMetrics[]> => {
   if (!options[FetchDeliveredTripMetricsParams.line]) return [];
 
-  return await apiFetch({
+  const rows = await apiFetch({
     path: '/api/tripmetrics',
     options: withWeekStart(options),
     errorMessage: 'Failed to fetch trip metrics',
   });
+  return rows.flatMap(({ line, avg_car_age, pct_new_trips, ...row }) =>
+    isLine(line)
+      ? [
+          {
+            ...row,
+            line,
+            avg_car_age: avg_car_age ?? undefined,
+            pct_new_trips: pct_new_trips ?? undefined,
+          },
+        ]
+      : []
+  );
 };

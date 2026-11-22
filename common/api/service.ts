@@ -7,7 +7,7 @@ import { FetchScheduledServiceParams } from '../types/api';
 import type { ScheduledService } from '../types/dataPoints';
 import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { withWeekStart } from '../utils/date';
-import { apiFetch } from './utils/fetch';
+import { apiFetchUnchecked } from './utils/fetch';
 import { fetchOrThrow } from './utils/ApiError';
 
 export const fetchScheduledService = async (
@@ -15,7 +15,7 @@ export const fetchScheduledService = async (
 ): Promise<ScheduledService | undefined> => {
   if (!options[FetchScheduledServiceParams.routeId]) return undefined;
 
-  return await apiFetch({
+  return await apiFetchUnchecked({
     path: '/api/scheduledservice',
     options: withWeekStart(options),
     errorMessage: 'Failed to fetch trip counts',

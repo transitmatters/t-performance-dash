@@ -1,18 +1,10 @@
+import type { Schemas } from './apiSchemas';
+
 export type ShutdownEffect = 'SHUTTLE' | 'SUSPENSION' | 'STATION_CLOSURE';
 
-export type ShutdownPeriod = {
-  start: string;
-  end: string;
-};
-
-export type Shutdown = {
-  line: string;
-  alert_id: string;
+export type Shutdown = Schemas['ShutdownEntry'] & {
   effect: ShutdownEffect;
   cause: string | null;
-  header: string;
-  stops: string[];
-  periods: ShutdownPeriod[];
-  first_start: string;
-  last_end: string;
 };
+
+export type ShutdownPeriod = Schemas['ShutdownPeriod'];

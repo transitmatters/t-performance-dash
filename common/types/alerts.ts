@@ -1,4 +1,5 @@
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from './lines';
+import type { Filled, Schemas } from './apiSchemas';
 
 /** Whose alerts to show: a page's line and route, or a whole line. */
 export interface AlertsScope {
@@ -8,19 +9,10 @@ export interface AlertsScope {
   ferryRoute?: FerryRoute;
 }
 
-export type AlertTime = {
-  end: string | null;
-  start: string | null;
-  upcoming: boolean;
-  current: boolean;
-};
-export interface HistoricalAlert {
-  /** Null when the feed had neither a header nor a short header. */
-  text: string | null;
-  valid_from: string;
-  /** Null for an alert with no announced end. */
-  valid_to: string | null;
-}
+export type AlertTime = Schemas['AlertActivePeriod'];
+
+/** `text` is null when the feed had neither a header nor a short header; `valid_to`, with no announced end. */
+export type HistoricalAlert = Filled<Schemas['Alert']>;
 
 export type UpcomingOrCurrent = 'upcoming' | 'current';
 
@@ -32,17 +24,15 @@ export interface FormattedAlert {
   stops: string[];
   routes?: string[];
   header: string;
-  description?: string;
+  description?: string | null;
 }
 
-export interface AlertsResponse {
-  id: string;
+/** A live alert, with its effect narrowed to the ones we know and stop IDs as strings. */
+export type AlertsResponse = Schemas['LiveAlert'] & {
   type: AlertEffect;
-  active_period: AlertTime[];
   stops: string[];
   routes?: string[];
-  header: string;
-}
+};
 
 export enum AlertEffect {
   ACCESS_ISSUE = 'ACCESS_ISSUE',
