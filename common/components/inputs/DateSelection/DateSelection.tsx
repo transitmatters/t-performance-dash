@@ -1,14 +1,12 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendarDay, faCalendarWeek, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../../styles/general';
 import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
 import type { DatePresetKey } from '../../../constants/dates';
 import { getRangePresets, SINGLE_PRESETS } from '../../../constants/dates';
-import { useDatePresetStore } from '../../../state/datePresetStore';
-import { checkForPreset, useSelectedPreset } from '../../../state/utils/datePresetUtils';
-import { ALL_PAGES } from '../../../constants/pages';
+import { checkForPreset } from '../../../utils/datePresets';
 import type { QueryTypeOptions } from '../../../types/router';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { DatePickers } from './DatePickers';
@@ -22,9 +20,7 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
   const { page, tab, query } = useDelimitatedRoute();
   const range = type === 'range';
   const [open, setOpen] = useState<boolean>(false);
-  const { dateStoreSection } = ALL_PAGES[page];
-  const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
-  const datePreset = useSelectedPreset();
+  const datePreset = checkForPreset(query);
   const updateQueryParams = useUpdateQuery();
   const presets = range ? getRangePresets(tab, page) : SINGLE_PRESETS[tab];
   const presetDateArray = Object.values(presets);
@@ -32,18 +28,7 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
   const handleSelection = (datePresetKey: DatePresetKey) => {
     const selectedPreset = presets[datePresetKey];
     if (selectedPreset?.input) updateQueryParams(selectedPreset.input, false);
-    setDatePreset(datePresetKey, dateStoreSection, range);
   };
-
-  const clearPreset = () => {
-    setDatePreset('custom', dateStoreSection, range);
-  };
-
-  useEffect(() => {
-    if (checkForPreset(query) !== datePreset) {
-      setDatePreset(checkForPreset(query), dateStoreSection, range);
-    }
-  }, [datePreset, dateStoreSection, query, range, setDatePreset]);
 
   return (
     <div className="flex w-full flex-col gap-2 md:w-auto md:flex-row md:items-center">
@@ -82,7 +67,7 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
           </div>
         </PopoverContent>
       </Popover>
-      <DatePickers clearPreset={clearPreset} type={type} />
+      <DatePickers type={type} />
     </div>
   );
 };

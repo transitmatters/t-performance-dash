@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { getRangePresets, SINGLE_PRESETS } from '../../../constants/dates';
-import { checkForPreset } from '../../../state/utils/datePresetUtils';
+import { checkForPreset } from '../../../utils/datePresets';
 import type { QueryTypeOptions } from '../../../types/router';
 import { useDelimitatedRoute } from '../../../utils/router';
 
