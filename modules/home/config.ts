@@ -8,6 +8,8 @@ const SCHEDULED_SERVICE =
   'Scheduled trips per day (the 12-week median), compared with the most scheduled in any 12-week stretch at least 3 years ago.';
 const BUS_DELIVERED =
   'Also shows the share of scheduled trips delivered over the last 4 complete weeks; a trip with no bus location data counts as missed.';
+const SUBWAY_DROPPED =
+  "Share of trips scheduled through each stop that no train stopped for, over the last 4 complete weeks. Each line takes its typical stop, so one stop missing a day's data can't move it. Trains the MBTA runs off schedule count in place of the trips they replace, and Green Line branches count only at stops their branch serves alone.";
 const BUS_DROPPED =
   "Share of scheduled trips with no bus location data at all over the last 4 complete weeks, the same estimate as the bus leaderboard's dropped trips. A bus whose tracker is off counts as dropped, so this can run a little high.";
 const RIDERSHIP_DEFINITION =
@@ -48,8 +50,9 @@ export const METRICS: Record<MetricId, MetricMethod> = {
     id: 'dropped',
     label: 'Trips dropped',
     summary:
-      "Share of scheduled trips that didn't run, over the last 4 complete weeks. Buses count trips no bus was seen on; Commuter Rail counts the MBTA's cancellations. Subway is coming soon.",
+      "Share of scheduled trips that didn't run, over the last 4 complete weeks. The subway counts trips scheduled through a stop that no train stopped for; buses count trips no bus was seen on; Commuter Rail counts the MBTA's cancellations.",
     definitions: {
+      subway: SUBWAY_DROPPED,
       commuterRail:
         "Share of scheduled trains the MBTA reports as cancelled over the last 4 complete weeks of its published counts. The MBTA publishes these in batches, so they're often weeks behind.",
       frequentBus: BUS_DROPPED,
