@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { Link } from '../../common/components/general/Link';
 import {
@@ -13,7 +13,7 @@ import { Widget } from '../../common/components/widgets';
 import { filterAllSlow, formatSegments } from '../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
-import { useChartToggle } from '../../common/hooks/useChartToggle';
+import { useChartToggle, useOption } from '../../common/hooks/useChartToggle';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { formatDateTodayCheck } from '../../common/state/utils/dateStoreUtils';
 import type { Direction } from '../../common/types/dataPoints';
@@ -45,7 +45,8 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
     DIRECTION_OPTIONS
   );
 
-  const [lineShort, setLineShort] = useState<SlowZonesLineName>('Red');
+  // In the URL, so a link to the map opens on the line it showed
+  const { value: lineShort, setValue: setLineShort } = useOption('Red', LINE_OPTIONS, 'mapLine');
   const line = `line-${lineShort.toLowerCase()}` as Line;
   const isDesktop = useBreakpoint('lg');
 
