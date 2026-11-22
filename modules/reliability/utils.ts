@@ -10,7 +10,7 @@ import type {
 type Point = DataPoint & { date: string };
 
 /** Percent, or undefined when nothing was measured (so the chart shows a gap, not 0%). */
-export const percent = (numerator?: number, denominator?: number) =>
+export const percent = (numerator?: number | null, denominator?: number | null) =>
   numerator != null && denominator ? (100 * numerator) / denominator : undefined;
 
 /**
@@ -19,7 +19,7 @@ export const percent = (numerator?: number, denominator?: number) =>
  */
 export const toPoints = <Entry extends { date: string }>(
   data: Entry[],
-  value: (entry: Entry) => number | undefined
+  value: (entry: Entry) => number | null | undefined
 ): Point[] =>
   data.map((entry) => {
     const v = value(entry);
@@ -27,13 +27,17 @@ export const toPoints = <Entry extends { date: string }>(
   });
 
 /** Average per service day, so partial weeks/months don't read as dips. */
-export const perDay = (entry: ReliabilityEntry, count?: number) =>
+export const perDay = (entry: ReliabilityEntry, count?: number | null) =>
   count != null && entry.days ? count / entry.days : undefined;
 
-const sum = (data: ReliabilityEntry[], value: (entry: ReliabilityEntry) => number | undefined) =>
-  data.reduce((total, entry) => total + (value(entry) ?? 0), 0);
+const sum = (
+  data: ReliabilityEntry[],
+  value: (entry: ReliabilityEntry) => number | null | undefined
+) => data.reduce((total, entry) => total + (value(entry) ?? 0), 0);
 
-const sumCounts = (counts: (ReliabilityCounts | undefined)[]): ReliabilityCounts => ({
+type PartialCounts = { [K in keyof ReliabilityCounts]?: number | null };
+
+const sumCounts = (counts: (PartialCounts | null | undefined)[]): ReliabilityCounts => ({
   otpNumerator: counts.reduce((t, c) => t + (c?.otpNumerator ?? 0), 0),
   otpDenominator: counts.reduce((t, c) => t + (c?.otpDenominator ?? 0), 0),
   cancelled: counts.reduce((t, c) => t + (c?.cancelled ?? 0), 0),
@@ -53,7 +57,7 @@ export const getTheRideStats = (data: ReliabilityEntry[]) => {
 };
 
 export const getCommuterRailStats = (data: ReliabilityEntry[]) => {
-  const total = sumCounts(data.map((e) => e as ReliabilityCounts));
+  const total = sumCounts(data);
   const peak = sumCounts(data.map((e) => e.peak));
   return {
     onTime: percent(total.otpNumerator, total.otpDenominator),
@@ -70,6 +74,9 @@ export const formatCount = (value?: number) =>
 
 export type HeadwayField = keyof HeadwayCounts;
 
+/** Headway counts as the API sends them, where any count can be missing or null. */
+export type PartialHeadwayCounts = { [K in HeadwayField]?: number | null } | null | undefined;
+
 export const HEADWAY_FIELDS: HeadwayField[] = [
   'headways_under_50',
   'headways_50_75',
@@ -82,15 +89,14 @@ export const ON_TIME: HeadwayField[] = ['headways_75_125'];
 export const BUNCHED: HeadwayField[] = ['headways_under_50'];
 export const LONG_GAP: HeadwayField[] = ['headways_over_150'];
 
-const sumFields = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
+const sumFields = (counts: PartialHeadwayCounts, fields: HeadwayField[]) =>
   fields.reduce((total, field) => total + (counts?.[field] ?? 0), 0);
 
 /** Percent of headways in `fields`, or undefined when no headways were counted. */
-export const headwayShare = (counts: Partial<HeadwayCounts> | undefined, fields: HeadwayField[]) =>
+export const headwayShare = (counts: PartialHeadwayCounts, fields: HeadwayField[]) =>
   percent(sumFields(counts, fields), sumFields(counts, HEADWAY_FIELDS));
 
-export const headwayCount = (counts: Partial<HeadwayCounts> | undefined) =>
-  sumFields(counts, HEADWAY_FIELDS);
+export const headwayCount = (counts: PartialHeadwayCounts) => sumFields(counts, HEADWAY_FIELDS);
 
 export interface HeadwayBucket {
   field: HeadwayField;
@@ -184,7 +190,7 @@ export type { HeadwayDirection };
 /** One period's headway counts, for every headway or just one direction's. */
 export interface HeadwayRow {
   date: string;
-  counts?: Partial<HeadwayCounts>;
+  counts?: PartialHeadwayCounts;
 }
 
 export const toHeadwayRows = (

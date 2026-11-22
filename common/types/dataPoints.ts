@@ -293,25 +293,7 @@ export type HeadwayCounts = {
 };
 
 /** One day, week, or month of reliability counts; see server/chalicelib/reliability.py. */
-export type ReliabilityEntry = Partial<HeadwayCounts> & {
-  date: string;
-  // Service days with data in the period; partial periods and gaps in MBTA's data have fewer.
-  days: number;
-  // The RIDE. requests is recorded from Sep 2025, noShows and missed from Jan 2026.
-  completed?: number;
-  onTime?: number;
-  requests?: number;
-  noShows?: number;
-  missed?: number;
-  // Commuter rail
-  otpNumerator?: number;
-  otpDenominator?: number;
-  cancelled?: number;
-  peak?: ReliabilityCounts;
-  offPeak?: ReliabilityCounts;
-  // Subway: the headway counts above, and per GTFS direction_id ("0", "1")
-  byDirection?: Record<string, HeadwayCounts>;
-};
+export type ReliabilityEntry = Schemas['ReliabilityEntry'];
 
 /**
  * Riders and their passenger-weighted minutes, summed over a period; see

@@ -1,12 +1,12 @@
 import type { FetchExcessTripTimeOptions, FetchReliabilityOptions } from '../types/api';
 import type { ExcessTripTimeEntry, ReliabilityEntry } from '../types/dataPoints';
 import { withWeekStart } from '../utils/date';
-import { apiFetch, apiFetchUnchecked } from './utils/fetch';
+import { apiFetch } from './utils/fetch';
 
 export const fetchReliability = async (
   options: FetchReliabilityOptions
 ): Promise<ReliabilityEntry[]> => {
-  return await apiFetchUnchecked({
+  return await apiFetch({
     path: '/api/reliability',
     options: withWeekStart(options),
     errorMessage: 'Failed to fetch reliability data',
