@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
+import { LINE_COLORS } from '../constants/colors';
 import { getCanonicalSearchHref } from './dateParams';
-import { parseLinePage, parsePageDates, parseTripPage } from './pageParams';
+import { asDateRange, parseLinePage, parsePageDates, parseTripPage } from './pageParams';
 import { routeFromLocation } from './router';
 import { parseSearch } from './searchParams';
 
@@ -22,6 +23,12 @@ describe('parseLinePage', () => {
       lineShort: 'Bus',
       busRoute: '1',
     });
+  });
+
+  it('colors a Silver Line route silver', () => {
+    expect(parseLinePage(route('/bus/?busRoute=SL1'))?.colorKey).toBe('line-silver');
+    expect(parseLinePage(route('/bus/?busRoute=1'))?.colorKey).toBe('line-bus');
+    expect(parseLinePage(route('/red/'))?.color).toBe(LINE_COLORS['line-red']);
   });
 
   it('is undefined off a line', () => {
@@ -46,6 +53,19 @@ describe('parsePageDates', () => {
     expect(parsePageDates(route('/red/trips/single/'))).toBeUndefined();
     expect(parsePageDates(route('/red/speed/?startDate=2026-01-01'))).toBeUndefined();
     expect(parsePageDates(route('/red/trips/single/?date=2026-02-31'))).toBeUndefined();
+  });
+});
+
+describe('asDateRange', () => {
+  it('reads a single date as a one-day range', () => {
+    expect(asDateRange({ kind: 'single', date: '2026-01-05' })).toEqual({
+      startDate: '2026-01-05',
+      endDate: '2026-01-05',
+    });
+    expect(asDateRange({ kind: 'range', startDate: '2026-01-01', endDate: '2026-02-01' })).toEqual({
+      startDate: '2026-01-01',
+      endDate: '2026-02-01',
+    });
   });
 });
 

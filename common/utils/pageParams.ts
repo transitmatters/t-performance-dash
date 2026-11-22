@@ -3,12 +3,14 @@
  * components don't re-check it.
  */
 import type { Page } from '../constants/pages';
+import { getLineColorKey, LINE_COLORS } from '../constants/colors';
 import { LINE_OBJECTS } from '../constants/lines';
 import type {
   BusRoute,
   CommuterRailRoute,
   FerryRoute,
   Line,
+  LineColorKey,
   LinePath,
   LineShort,
 } from '../types/lines';
@@ -21,6 +23,8 @@ export interface LinePage {
   line: Line;
   lineShort: LineShort;
   linePath: LinePath;
+  colorKey: LineColorKey;
+  color: string;
   tab: Tab;
   page: Page;
   busRoute?: BusRoute;
@@ -39,6 +43,11 @@ export interface SingleDate {
 
 export type PageDates = ({ kind: 'single' } & SingleDate) | ({ kind: 'range' } & DateRange);
 
+export const asDateRange = (dates: PageDates): DateRange =>
+  dates.kind === 'range'
+    ? { startDate: dates.startDate, endDate: dates.endDate }
+    : { startDate: dates.date, endDate: dates.date };
+
 export interface TripPage extends LinePage {
   dates: PageDates;
   fromStation: Station;
@@ -51,10 +60,13 @@ export interface TripPage extends LinePage {
 export const parseLinePage = ({ line, tab, page, query }: Route): LinePage | undefined => {
   if (!line) return undefined;
   const { short, path } = LINE_OBJECTS[line];
+  const colorKey = getLineColorKey(line, query.busRoute);
   return {
     line,
     lineShort: short,
     linePath: path,
+    colorKey,
+    color: LINE_COLORS[colorKey],
     tab,
     page,
     busRoute: query.busRoute,
