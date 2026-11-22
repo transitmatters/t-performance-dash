@@ -61,11 +61,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
 
   const graphData = useMemo(() => {
     if (allData.data && startDateUTC && endDateUTC) {
-      const fitleredData = filterAllSlow(
-        Array.isArray(allData.data) ? allData.data : allData.data.data,
-        startDateUTC,
-        endDateUTC
-      );
+      const fitleredData = filterAllSlow(allData.data.data, startDateUTC, endDateUTC);
       return formatSegments(fitleredData, startDateUTC, direction);
     } else return [];
   }, [allData.data, endDateUTC, startDateUTC, direction]);
@@ -88,7 +84,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
         >
           {delayTotals.data && (
             <TotalSlowTime
-              data={Array.isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
+              data={delayTotals.data.data}
               startDateUTC={startDateUTC}
               endDateUTC={endDateUTC}
               showTitle={showTitle}

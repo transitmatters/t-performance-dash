@@ -186,15 +186,13 @@ export const useTripExplorerQueries: UseQueriesOverload = (
   // Create objects with keys of query names which contains keys and parameters.
   const queries = {};
   queryTypes.forEach((queryName) => {
-    const keys = [queryName];
     const params: Partial<SingleDayAPIOptions | AggregateAPIOptions> = {};
     dependencies[queryName].forEach((field: Partial<AggregateAPIParams | SingleDayAPIParams>) => {
       if (parameters[field]) {
-        keys.push(parameters[field].toString());
         params[field] = parameters[field];
       }
-      queries[queryName] = { keys: keys, params: params };
     });
+    queries[queryName] = { params };
   });
 
   const date = 'date' in parameters ? parameters.date : undefined;

@@ -82,7 +82,7 @@ export const optionsStation = (
       return undefined;
     }
 
-    return stations[line][busRoute].stations.sort((a, b) => a.order - b.order);
+    return stations[line][busRoute].stations.toSorted((a, b) => a.order - b.order);
   }
 
   if (isCommuterRailLine(line)) {
@@ -90,12 +90,11 @@ export const optionsStation = (
       return undefined;
     }
 
-    return stations[line][crRoute].stations.sort((a, b) => a.order - b.order);
+    return stations[line][crRoute].stations.toSorted((a, b) => a.order - b.order);
   }
 
-  // Fixed: Access rtStations directly for rapid transit lines
   if (isRapidTransitLine(line)) {
-    return rtStations[line].stations.sort((a, b) => a.order - b.order);
+    return rtStations[line].stations.toSorted((a, b) => a.order - b.order);
   }
 
   if (isFerryLine(line)) {
@@ -103,7 +102,7 @@ export const optionsStation = (
       return undefined;
     }
 
-    return ferryStations[ferryRoute].stations.sort((a, b) => a.order - b.order);
+    return ferryStations[ferryRoute].stations.toSorted((a, b) => a.order - b.order);
   }
 
   return undefined;

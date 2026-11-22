@@ -67,7 +67,7 @@ export function SlowZonesDetails() {
     delayTotals.data && allSlow.data && isRapidTransit
       ? getSlowZoneStats(
           delayTotals.data.data,
-          Array.isArray(allSlow.data) ? allSlow.data : allSlow.data.data,
+          allSlow.data.data,
           startDateUTC,
           endDateUTC,
           lineShort
@@ -150,7 +150,7 @@ export function SlowZonesDetails() {
         >
           {allSlow.data && (
             <SlowZonesSegmentsWrapper
-              data={Array.isArray(allSlow.data) ? allSlow.data : allSlow.data.data}
+              data={allSlow.data.data}
               lineShort={lineShort}
               linePath={linePath}
               endDateUTC={endDateUTC}
