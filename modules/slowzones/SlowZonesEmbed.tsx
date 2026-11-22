@@ -47,7 +47,7 @@ export const SlowZonesEmbed = ({ line }: SlowZonesEmbedProps) => {
     >
       {delayTotals.data ? (
         <TotalSlowTime
-          data={Array.isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
+          data={delayTotals.data.data}
           startDateUTC={startDateUTC}
           endDateUTC={endDateUTC}
           line={lineKey}

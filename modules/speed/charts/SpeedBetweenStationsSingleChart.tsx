@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { MetricFieldKeys, PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
@@ -26,23 +25,19 @@ export const SpeedBetweenStationsSingleChart = ({
 
   const location = getLocationDetails(fromStation, toStation);
 
-  const chart = useMemo(() => {
-    return (
-      <SingleDayLineChart
-        chartId={`speed-between-stations-chart-${linePath}`}
-        data={traveltimes}
-        date={date}
-        metricField={MetricFieldKeys.speedMph}
-        pointField={PointFieldKeys.depDt}
-        includeBothStopsForLocation={true}
-        location={location}
-        units={'MPH'}
-        fname={'speeds'}
-        chartTitle="Speeds"
-        showLegend={true}
-      />
-    );
-  }, [linePath, traveltimes, date, fromStation, toStation, showLegend]);
-
-  return chart;
+  return (
+    <SingleDayLineChart
+      chartId={`speed-between-stations-chart-${linePath}`}
+      data={traveltimes}
+      date={date}
+      metricField={MetricFieldKeys.speedMph}
+      pointField={PointFieldKeys.depDt}
+      includeBothStopsForLocation={true}
+      location={location}
+      units={'MPH'}
+      fname={'speeds'}
+      chartTitle="Speeds"
+      showLegend={showLegend}
+    />
+  );
 };
