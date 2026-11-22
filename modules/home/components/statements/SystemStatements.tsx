@@ -50,8 +50,9 @@ export const SystemStatements = ({
                 key={statement.id}
                 className={cn(
                   'tm-fade-in flex min-w-0 flex-col gap-2.5 border-t py-6',
-                  // The first statement leads, across the full width.
-                  i === 0 &&
+                  // The first statement leads across the full width, and so does a last one that
+                  // would otherwise sit alone beside an empty column.
+                  (i === 0 || (i === statements.length - 1 && i % 2 === 1)) &&
                     'md:col-span-2 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-center md:gap-12'
                 )}
               >
