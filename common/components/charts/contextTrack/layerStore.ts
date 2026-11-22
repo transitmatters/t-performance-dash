@@ -3,8 +3,10 @@ import { create } from 'zustand';
 interface LayerStore {
   // Context track segments shaded onto the charts, by segment key
   pinned: Record<string, true>;
-  temperature: boolean;
-  slowZones: boolean;
+  // Whether the temperature and slow zone rows are pinned onto the plot. Whether those rows show
+  // at all is the reader's display setting (displayStore.showTemperature/showSlowZones).
+  temperaturePinned: boolean;
+  slowZonesPinned: boolean;
   toggle: (key: string) => void;
   toggleTemperature: () => void;
   toggleSlowZones: () => void;
@@ -13,8 +15,8 @@ interface LayerStore {
 /** Shared by every chart on the page, so pinning on one chart pins on all of them. */
 export const useLayerStore = create<LayerStore>((set) => ({
   pinned: {},
-  temperature: false,
-  slowZones: false,
+  temperaturePinned: false,
+  slowZonesPinned: false,
   toggle: (key) =>
     set(({ pinned }) => {
       const next = { ...pinned };
@@ -22,6 +24,7 @@ export const useLayerStore = create<LayerStore>((set) => ({
       else next[key] = true;
       return { pinned: next };
     }),
-  toggleTemperature: () => set(({ temperature }) => ({ temperature: !temperature })),
-  toggleSlowZones: () => set(({ slowZones }) => ({ slowZones: !slowZones })),
+  toggleTemperature: () =>
+    set(({ temperaturePinned }) => ({ temperaturePinned: !temperaturePinned })),
+  toggleSlowZones: () => set(({ slowZonesPinned }) => ({ slowZonesPinned: !slowZonesPinned })),
 }));

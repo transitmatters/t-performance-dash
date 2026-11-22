@@ -54,10 +54,10 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
   } = layers;
   const daily = granularity === 'daily';
   const pinned = useLayerStore((store) => store.pinned);
-  const temperaturePinned = useLayerStore((store) => store.temperature);
+  const temperaturePinned = useLayerStore((store) => store.temperaturePinned);
   const toggle = useLayerStore((store) => store.toggle);
   const toggleTemperature = useLayerStore((store) => store.toggleTemperature);
-  const slowZonesPinned = useLayerStore((store) => store.slowZones);
+  const slowZonesPinned = useLayerStore((store) => store.slowZonesPinned);
   const toggleSlowZones = useLayerStore((store) => store.toggleSlowZones);
   const rowsRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
