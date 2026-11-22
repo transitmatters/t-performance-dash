@@ -5,7 +5,7 @@ import { fetchScheduledService, fetchServiceHours } from '../service';
 
 export const useScheduledService = (options: FetchScheduledServiceOptions, enabled?: boolean) => {
   return useQuery({
-    queryKey: ['scheduledservice', options],
+    queryKey: ['scheduledService', options],
     queryFn: () => fetchScheduledService(options),
     enabled: enabled,
     staleTime: ONE_HOUR,
@@ -14,9 +14,9 @@ export const useScheduledService = (options: FetchScheduledServiceOptions, enabl
 
 export const useServiceHours = (params: FetchServiceHoursOptions, enabled?: boolean) => {
   return useQuery({
-    queryKey: ['service_hours', params],
+    queryKey: ['serviceHours', params],
     queryFn: () => fetchServiceHours(params),
     enabled: enabled,
-    staleTime: 0,
+    staleTime: ONE_HOUR,
   });
 };

@@ -48,7 +48,7 @@ export const useAlertsData = (
   crRoute?: CommuterRailRoute
 ): UseQueryResult<AlertsResponse[]> => {
   return useQuery({
-    queryKey: ['alerts', line, busRoute, crRoute],
+    queryKey: ['currentAlerts', line, busRoute, crRoute],
     queryFn: () => fetchAlerts(line, busRoute, crRoute),
     staleTime: ONE_MINUTE,
   });
