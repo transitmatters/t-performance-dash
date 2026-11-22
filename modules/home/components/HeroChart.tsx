@@ -1,14 +1,12 @@
-import { useEffect, useMemo } from 'react';
-import { useHistoricalAlertsData } from '../../../common/api/hooks/alerts';
+import { useMemo } from 'react';
+import { useMatchingAlerts } from '../../../common/api/hooks/alerts';
 import { useWeatherData } from '../../../common/api/hooks/weather';
-import { findMatch } from '../../../common/components/alerts/AlertFilter';
 import { serviceDay } from '../../../common/components/charts/contextTrack/segments';
 import { Link } from '../../../common/components/general/Link';
 import { RouteBullet } from '../../../common/components/transit/RouteBullet';
 import { Card } from '../../../common/components/ui/card';
 import { getLocationDetails } from '../../../common/utils/stations';
 import { HeadwaysSingleChart } from '../../headways/charts/HeadwaysSingleChart';
-import { useAlertStore } from '../../tripexplorer/alertStore';
 import type { HeroPick } from '../heroChart';
 import { exploreHref, minutesText, timeText, worstLabel } from '../heroChart';
 import { useHeroChart } from '../useHeroChart';
@@ -19,15 +17,11 @@ import { Placeholder } from './Placeholder';
  * rebuilds itself when either arrives, which would restart its draw-in, so it waits for both.
  */
 const useDayLayers = (pick: HeroPick | undefined, date: string) => {
-  const { data, isLoading } = useHistoricalAlertsData(
+  // The same request the chart's context track makes, so it finds the answer already in the cache.
+  const { isLoading } = useMatchingAlerts(
     pick ? date : undefined,
     pick?.station.lineShort ?? 'Red'
   );
-  const alerts = useMemo(() => data?.filter(findMatch), [data]);
-  const setAlerts = useAlertStore((store) => store.setAlerts);
-  useEffect(() => {
-    if (pick) setAlerts(alerts, isLoading);
-  }, [pick, alerts, isLoading, setAlerts]);
   // The same request the chart makes, so it finds the answer already in the cache.
   const weather = useWeatherData(
     { start_date: date, end_date: serviceDay(date).close.format('YYYY-MM-DD') },
@@ -114,6 +108,7 @@ export const HeroChart = () => {
         callout={callout}
         actions={false}
         intro
+        alertsLine={station.lineShort}
       />
     </Card>
   );

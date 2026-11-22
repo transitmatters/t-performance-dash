@@ -2,6 +2,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { TimeUnit } from 'chart.js';
 import type { HoverCardRow } from '../components/charts/hoverCard/types';
 import type { TripEmbedChart } from '../constants/staticRoutes';
+import type { LineShort } from './lines';
 import type { Station } from './stations';
 
 export interface SingleDayDataPoint {
@@ -172,6 +173,8 @@ export interface SingleDayLineProps extends LineProps {
   actions?: boolean;
   /** Draws the series in, point by point, the first time the chart appears. */
   intro?: boolean;
+  /** Whose alerts the context track shows, where it isn't the page's line. */
+  alertsLine?: LineShort;
 }
 
 export interface ChartCallout {
@@ -193,4 +196,5 @@ export interface HeadwaysChartProps {
   /** Off where the chart isn't on a line's page; see SingleDayLineProps. */
   actions?: boolean;
   intro?: boolean;
+  alertsLine?: LineShort;
 }
