@@ -37,28 +37,48 @@ const row = (id: string, cells: Cell[]): Row => ({
   cells: Object.fromEntries(cells.map((c) => [c.metric, c])),
 });
 
+/** Speed against the line's best, judged together with slow zones. */
+const speed = (score: number): Cell =>
+  cell('speed', 'room', 20, {
+    unit: 'mph',
+    parts: [
+      { label: 'Speed', status: 'room', score, scoreUnit: 'pct' },
+      { label: 'Slow zones', status: 'win', score: 10, scoreUnit: 'seconds' },
+    ],
+  });
+
+const ridership = (value: number): Cell => cell('ridership', 'unscored', value);
+
 const subway = (
   id: string,
   service: [Status, number],
   reliability: [Status, number, number],
-  delays: [number, number]
+  delays: [number, number],
+  speedScore: number,
+  riders: number
 ) =>
   row(id, [
     cell('service', ...service),
     cell('reliability', reliability[0], reliability[1], { bunched: reliability[2] }),
     cell('delays', 'room', 0.05, { minutesPerDay: delays[0], trend: delays[1] }),
+    speed(speedScore),
+    ridership(riders),
   ]);
 
-/** Trimmed from the November 17, 2026 overview.json. */
+/** Trimmed from the November 17, 2026 overview.json, with the November 21 speeds and ridership. */
 const DATA: HomeData = {
   schemaVersion: 1,
   generatedAt: '2026-11-17T12:00:00.000Z',
   rows: [
-    subway('red', ['good', 0.988], ['problem', 0.384, 0.098], [102.2, 0.657]),
-    subway('orange', ['win', 1.43], ['room', 0.545, 0.069], [44.3, -0.022]),
-    subway('blue', ['win', 1.032], ['room', 0.626, 0.036], [78.1, -0.236]),
-    subway('green', ['good', 0.93], ['problem', 0.362, 0.127], [59, -0.241]),
-    row('commuter-rail', [cell('service', 'win', 1.122), cell('dropped', 'win', 0.001)]),
+    subway('red', ['good', 0.988], ['problem', 0.384, 0.098], [102.2, 0.657], 0.95, 0.102),
+    subway('orange', ['win', 1.43], ['room', 0.545, 0.069], [44.3, -0.022], 1.093, 0.111),
+    subway('blue', ['win', 1.032], ['room', 0.626, 0.036], [78.1, -0.236], 0.915, 0.059),
+    subway('green', ['good', 0.93], ['problem', 0.362, 0.127], [59, -0.241], 0.829, 0.032),
+    row('commuter-rail', [
+      cell('service', 'win', 1.122),
+      cell('dropped', 'win', 0.001),
+      ridership(0.158),
+    ]),
     row('frequent-bus', [
       cell('service', 'room', 0.872),
       cell('dropped', 'win', 0.008),
@@ -66,8 +86,9 @@ const DATA: HomeData = {
     ]),
     row('all-bus', [
       cell('service', 'good', 0.946),
-      cell('dropped', 'win', 0.005),
+      cell('dropped', 'win', 0.005, { trend: -0.035, trendBasis: 'yearAgo' }),
       cell('reliability', 'room', 0.61),
+      ridership(0.06),
     ]),
     row('mattapan', [cell('delays', 'win', 0.004, { minutesPerDay: 4.8, trend: -0.178 })]),
   ],
@@ -94,13 +115,46 @@ const DATA: HomeData = {
 const byId = (data: HomeData) => Object.fromEntries(buildStatements(data).map((s) => [s.id, s]));
 
 describe('buildStatements', () => {
-  it('writes every statement, reliability first', () => {
+  it('writes every statement, in the scoreboard order', () => {
     expect(buildStatements(DATA).map((s) => s.id)).toEqual([
+      'service',
+      'dropped',
       'reliability',
       'delays',
-      'service',
-      'slowZones',
+      'speed',
+      'ridership',
     ]);
+  });
+
+  it('leads dropped trips with buses and the year before', () => {
+    const { dropped } = byId(DATA);
+    expect(dropped.head).toBe(
+      'Buses drop 0.5% of scheduled trips, down from 4% a year ago. Commuter Rail cancels 0.1%.'
+    );
+    expect(dropped.viz.kind === 'shares' && dropped.viz.marks.map((m) => m.row)).toEqual([
+      'commuter-rail',
+      'frequent-bus',
+      'all-bus',
+    ]);
+  });
+
+  it('leaves the year before out of dropped trips without one', () => {
+    const rows = DATA.rows.map((r) =>
+      r.id === 'all-bus' && r.cells.dropped
+        ? { ...r, cells: { ...r.cells, dropped: { ...r.cells.dropped, trend: null } } }
+        : r
+    );
+    expect(byId({ ...DATA, rows }).dropped.head).toBe(
+      'Buses drop 0.5% of scheduled trips. Commuter Rail cancels 0.1%.'
+    );
+  });
+
+  it('says how much ridership changed and where it grew most', () => {
+    const { ridership } = byId(DATA);
+    expect(ridership.head).toBe(
+      'Every line carries more riders than a year ago, up to +16% on Commuter Rail.'
+    );
+    expect(ridership.viz.kind === 'changes' && ridership.viz.marks).toHaveLength(6);
   });
 
   it('says how evenly trains are spaced and links to the line furthest off', () => {
@@ -151,10 +205,21 @@ describe('buildStatements', () => {
     );
   });
 
-  it('compares slow zones now with their peak', () => {
-    expect(byId(DATA).slowZones.head).toBe(
+  it('gives the range of subway speeds and compares slow zones now with their peak', () => {
+    const { speed } = byId(DATA);
+    expect(speed.head).toBe(
+      'Subway trains run at 83% to 109% of their best speeds. Slow zones add 1.3 minutes a day across the subway, down from 2 hours a day in April 2023.'
+    );
+    expect(speed.link.label).toBe('Green Line speed');
+  });
+
+  it('falls back to slow zones alone without speed baselines', () => {
+    const rows = DATA.rows.map((r) => ({ ...r, cells: { ...r.cells, speed: undefined } }));
+    const { speed } = byId({ ...DATA, rows });
+    expect(speed.head).toBe(
       'Slow zones add 1.3 minutes a day across the subway, down from 2 hours a day in April 2023.'
     );
+    expect(speed.viz.kind).toBe('area');
   });
 
   it('leaves out a statement whose numbers an older file lacks', () => {
@@ -172,7 +237,13 @@ describe('buildStatements', () => {
       hero: DATA.hero.map((h) => ({ ...h, history: undefined })),
     };
     const statements = byId(older);
-    expect(Object.keys(statements)).toEqual(['reliability', 'service']);
+    expect(Object.keys(statements)).toEqual([
+      'service',
+      'dropped',
+      'reliability',
+      'speed',
+      'ridership',
+    ]);
   });
 
   it('is empty before the data loads', () => {
@@ -220,7 +291,9 @@ const GREAT_DAY: HomeData = {
             ? { ...c, status: 'win', value: 0.85, score: 0.85, bunched: 0.02 }
             : metric === 'delays'
               ? { ...c, status: 'win', minutesPerDay: 0, trend: -0.5 }
-              : c,
+              : metric === 'speed'
+                ? { ...c, parts: c.parts?.map((p) => ({ ...p, score: 1.05 })) }
+                : c,
       ])
     ),
   })),
@@ -240,8 +313,8 @@ describe('a great day', () => {
     expect(statements.service.head).toBe(
       'Every line runs as many trips as it did at its best, or more.'
     );
-    expect(statements.slowZones.head).toBe(
-      'There are no slow zones on the subway right now, down from 2 hours a day in April 2023.'
+    expect(statements.speed.head).toBe(
+      'Every subway line runs as fast as it did at its best, or faster. There are no slow zones on the subway right now, down from 2 hours a day in April 2023.'
     );
   });
 
