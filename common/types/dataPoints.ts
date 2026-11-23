@@ -199,20 +199,12 @@ export type BusStopRidershipDirection = Schemas['BusStopRidershipDirection'];
 /** A bus route's ridership by stop, from the MBTA's seasonal counts of every trip */
 export type BusStopRidership = Schemas['BusStopRidershipResponse'];
 
-export type ReliabilityCounts = {
-  otpNumerator: number;
-  otpDenominator: number;
-  cancelled: number;
-};
+// The spec marks the schema nullable because `peak` and `offPeak` can be null, and OpenAPI 3.0
+// can't mark a reference nullable; the counts themselves never are.
+export type ReliabilityCounts = NonNullable<Schemas['ReliabilityCounts']>;
 
 /** Headways by their ratio to the scheduled headway: ≤50%, 50–75%, 75–125% (exclusive), 125–150%, ≥150%. */
-export type HeadwayCounts = {
-  headways_under_50: number;
-  headways_50_75: number;
-  headways_75_125: number;
-  headways_125_150: number;
-  headways_over_150: number;
-};
+export type HeadwayCounts = Schemas['HeadwayCounts'];
 
 /** One day, week, or month of reliability counts; see server/chalicelib/reliability.py. */
 export type ReliabilityEntry = Schemas['ReliabilityEntry'];

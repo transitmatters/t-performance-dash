@@ -35,7 +35,10 @@ const sum = (
   value: (entry: ReliabilityEntry) => number | null | undefined
 ) => data.reduce((total, entry) => total + (value(entry) ?? 0), 0);
 
-type PartialCounts = { [K in keyof ReliabilityCounts]?: number | null };
+// Named, not keyof: the spec's types also allow extra keys.
+type PartialCounts = {
+  [K in 'otpNumerator' | 'otpDenominator' | 'cancelled']?: ReliabilityCounts[K] | null;
+};
 
 const sumCounts = (counts: (PartialCounts | null | undefined)[]): ReliabilityCounts => ({
   otpNumerator: counts.reduce((t, c) => t + (c?.otpNumerator ?? 0), 0),
@@ -72,28 +75,29 @@ export const formatPercent = (value?: number) =>
 export const formatCount = (value?: number) =>
   value == null || !Number.isFinite(value) ? '—' : Math.round(value).toLocaleString('en-us');
 
-export type HeadwayField = keyof HeadwayCounts;
-
-/** Headway counts as the API sends them, where any count can be missing or null. */
-export type PartialHeadwayCounts = { [K in HeadwayField]?: number | null } | null | undefined;
-
-export const HEADWAY_FIELDS: HeadwayField[] = [
+// Listed, not keyof: the spec's types also allow extra keys.
+export const HEADWAY_FIELDS = [
   'headways_under_50',
   'headways_50_75',
   'headways_75_125',
   'headways_125_150',
   'headways_over_150',
-];
+] as const satisfies readonly (keyof HeadwayCounts)[];
+
+export type HeadwayField = (typeof HEADWAY_FIELDS)[number];
+
+/** Headway counts as the API sends them, where any count can be missing or null. */
+export type PartialHeadwayCounts = { [K in HeadwayField]?: number | null } | null | undefined;
 
 export const ON_TIME: HeadwayField[] = ['headways_75_125'];
 export const BUNCHED: HeadwayField[] = ['headways_under_50'];
 export const LONG_GAP: HeadwayField[] = ['headways_over_150'];
 
-const sumFields = (counts: PartialHeadwayCounts, fields: HeadwayField[]) =>
+const sumFields = (counts: PartialHeadwayCounts, fields: readonly HeadwayField[]) =>
   fields.reduce((total, field) => total + (counts?.[field] ?? 0), 0);
 
 /** Percent of headways in `fields`, or undefined when no headways were counted. */
-export const headwayShare = (counts: PartialHeadwayCounts, fields: HeadwayField[]) =>
+export const headwayShare = (counts: PartialHeadwayCounts, fields: readonly HeadwayField[]) =>
   percent(sumFields(counts, fields), sumFields(counts, HEADWAY_FIELDS));
 
 export const headwayCount = (counts: PartialHeadwayCounts) => sumFields(counts, HEADWAY_FIELDS);

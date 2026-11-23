@@ -2,6 +2,7 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { TimeUnit } from 'chart.js';
 import type { HoverCardRow } from '../components/charts/hoverCard/types';
 import type { TripEmbedChart } from '../constants/staticRoutes';
+import type { Schemas } from './apiSchemas';
 import type { AlertsScope } from './alerts';
 import type { LineShort } from './lines';
 import type { Station } from './stations';
@@ -29,26 +30,22 @@ export interface SingleDayDataPoint {
   vehicle_label?: string;
 }
 
-export interface AggregateDataPoint {
-  '25%': number;
-  '50%': number;
-  '75%': number;
-  count: number;
-  bunched?: number;
-  on_time?: number;
-  /** Headways with a scheduled headway, which `bunched` and `on_time` are shares of. Older responses lack it. */
-  scheduled?: number | null;
-  max: number;
-  mean: number;
-  min: number;
-  std?: number;
-  service_date?: string;
-  dep_time_from_epoch?: string;
-  is_peak_day?: boolean;
-  peak?: string;
-  holiday?: boolean;
-  weekend?: boolean;
-}
+/**
+ * One point of an aggregate trip chart: a day (`service_date`) or a time of day
+ * (`dep_time_from_epoch`), with the fields of the spec's aggregate schemas that the charts read.
+ * Headway days add `bunched`, `on_time` and `scheduled`; a speed chart's points have no `std`.
+ */
+export type AggregateDataPoint = Pick<
+  Schemas['AggregateByDate'],
+  'count' | 'mean' | 'min' | 'max' | '25%' | '50%' | '75%'
+> &
+  Partial<
+    Pick<
+      Schemas['HeadwayAggregateByDate'],
+      'std' | 'service_date' | 'peak' | 'holiday' | 'weekend' | 'bunched' | 'on_time' | 'scheduled'
+    >
+  > &
+  Partial<Pick<Schemas['AggregateByTime'], 'dep_time_from_epoch' | 'is_peak_day'>>;
 
 export interface AggregateDataResponse {
   by_date: AggregateDataPoint[];

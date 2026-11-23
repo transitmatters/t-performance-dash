@@ -1,6 +1,6 @@
 import type { ApiQuery } from './apiSchemas';
 import type { ServiceHours } from './dataPoints';
-import type { Line, LineRouteId } from './lines';
+import type { Line } from './lines';
 
 export enum QueryNameKeys {
   traveltimes = 'traveltimes',
@@ -45,11 +45,7 @@ export type FetchSpeedRestrictionsOptions = {
   date: string;
 };
 
-export type FetchPredictionsParams = {
-  route_id: LineRouteId;
-  start_date?: string;
-  end_date?: string;
-};
+export type FetchPredictionsParams = ApiQuery<'/api/time_predictions'>;
 
 export type FetchServiceHoursOptions = Partial<ApiQuery<'/api/service_hours'>>;
 
