@@ -20,7 +20,6 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
-.eslintcache
 .envrc
 
 **/data

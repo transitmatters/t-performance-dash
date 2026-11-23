@@ -124,13 +124,13 @@ To run frontend tests, run `npm test`
 
 To run backend tests, run `cd server && uv run pytest`
 
-Frontend code uses ESLint and oxfmt, enforced import ordering, and type imports (`import type { Foo }`). Backend code uses Ruff with a 120 character line length.
+Frontend code uses oxlint (with type-aware rules) and oxfmt, sorted imports, and type imports (`import type { Foo }`). Backend code uses Ruff with a 120 character line length.
 
 Frontend formatting uses [oxfmt](https://oxc.rs/docs/guide/usage/formatter.html). Run `npm run format` to format everything.
 
 #### VSCode
 
-If you're using VSCode, `.vscode` contains a based default workspace setup. It also includes recommended extentions that will improve the dev experience. This config is meant to be as small as possible to enable an "out of the box" easy experience for handling eslint and oxfmt.
+If you're using VSCode, `.vscode` contains a based default workspace setup. It also includes recommended extentions that will improve the dev experience. This config is meant to be as small as possible to enable an "out of the box" easy experience for handling oxlint and oxfmt.
 
 ## 🗂️ Data Maintenance
 
