@@ -101,7 +101,7 @@ export const TripSlowZonesCallout = ({
                 : `added by ${zones} on ${formatDate(summary.endDate)}`}
             </span>
           </p>
-          {(delta || showPeak || cleared) && (
+          {(delta !== undefined || showPeak || cleared) && (
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-muted-foreground">
               {cleared && <Badge variant="success">Cleared</Badge>}
               {cleared && <span>All had cleared by {formatDate(summary.endDate)}</span>}

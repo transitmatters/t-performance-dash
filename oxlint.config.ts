@@ -91,6 +91,12 @@ export default defineConfig({
     'typescript/no-unsafe-call': 'error',
     'typescript/no-unsafe-member-access': 'error',
     'typescript/no-unsafe-return': 'error',
+    // On primitives `||` is used on purpose: '' falls back to a default, 0 hides a value, and
+    // booleans are or'd. `??` would change all three. Not on by category (pedantic).
+    'typescript/prefer-nullish-coalescing': [
+      'error',
+      { ignorePrimitives: true, ignoreBooleanCoercion: true },
+    ],
     'typescript/restrict-template-expressions': 'error',
     'typescript/switch-exhaustiveness-check': [
       'error',
@@ -121,7 +127,6 @@ export default defineConfig({
     'typescript/no-unnecessary-condition': 'off', // 217
     'typescript/no-unnecessary-type-conversion': 'off', // 10
     'typescript/no-unnecessary-boolean-literal-compare': 'off', // 2
-    'typescript/prefer-nullish-coalescing': 'off', // 38; || -> ?? changes behavior for '' and 0
     'typescript/consistent-return': 'off', // 30
   },
   overrides: [

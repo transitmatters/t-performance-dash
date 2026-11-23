@@ -68,7 +68,7 @@ export const ChartActions = ({
       )}
     >
       <CopyLinkButton />
-      {fileDate && (chartRef || svgRef) && (
+      {fileDate && (chartRef ?? svgRef) && (
         <SaveChartImageButton
           chartRef={chartRef}
           svgRef={svgRef}
