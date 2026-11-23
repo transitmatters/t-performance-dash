@@ -2,13 +2,15 @@ import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
-import { useLinePage } from '../../common/hooks/usePageParams';
+import { parseLinePage } from '../../common/utils/pageParams';
+import { useDelimitatedRoute } from '../../common/utils/router';
 import { stopNoun } from '../../common/utils/stations';
 
 /** Shown in place of the charts when the route has no stations to pick between. */
 export const TripSetupNotice = () => {
   const isMobile = !useBreakpoint('md');
-  const noun = stopNoun(useLinePage().lineShort);
+  // Not useLinePage: while leaving for a page without a line, this renders once with the new URL.
+  const noun = stopNoun(parseLinePage(useDelimitatedRoute())?.lineShort);
   // The controls live in the sticky header on desktop and in the docked panel on mobile.
   const where = isMobile ? 'in the panel at the bottom of the screen' : 'in the bar above';
   const title = `Choose a start and end ${noun}`;
