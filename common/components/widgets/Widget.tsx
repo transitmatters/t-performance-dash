@@ -10,11 +10,11 @@ import { ChartPlaceHolder } from '../graphics/ChartPlaceHolder';
 import { WidgetDiv } from './WidgetDiv';
 import { WidgetTitle } from './WidgetTitle';
 
-type ReadyDependency = unknown | UseQueryResult;
 type ReadyState = 'ready' | 'waiting' | 'error';
 
 interface Props {
-  ready?: ReadyDependency | ReadyDependency[];
+  /** Queries (or plain values) the content waits on; a plain value is ready once truthy. */
+  ready?: unknown;
   title: ReactNode;
   subtitle?: ReactNode;
   /** A control that acts on this card's chart — a view switch or a filter. */
@@ -32,10 +32,9 @@ const isUseQueryResult = (obj: unknown): obj is UseQueryResult => {
   return !!obj && typeof obj === 'object' && 'isLoading' in obj && 'isError' in obj;
 };
 
-const toArray = (ready: ReadyDependency | ReadyDependency[]): unknown[] =>
-  Array.isArray(ready) ? ready : [ready];
+const toArray = (ready: unknown): unknown[] => (Array.isArray(ready) ? ready : [ready]);
 
-const getReadyState = (ready: ReadyDependency | ReadyDependency[]) => {
+const getReadyState = (ready: unknown) => {
   const eachState: ReadyState[] = toArray(ready).map((entry) =>
     isUseQueryResult(entry)
       ? entry.isError

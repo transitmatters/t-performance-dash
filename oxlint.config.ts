@@ -122,7 +122,6 @@ export default defineConfig({
     'eslint/no-shadow': 'off', // 54
     'jsx-a11y/prefer-tag-over-role': 'off', // 17
     'react/no-unstable-nested-components': 'off', // 11; map popups and shadcn's calendar
-    'typescript/no-redundant-type-constituents': 'off', // 10
   },
   overrides: [
     {

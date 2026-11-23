@@ -13,7 +13,7 @@ import {
 import { TODAY_STRING } from '../constants/dates';
 
 const getLineOrRoute = (
-  lineString: string | BusRoute
+  lineString: string
 ):
   | {
       type: 'rail' | 'bus' | 'cr' | 'ferry';

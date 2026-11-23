@@ -401,12 +401,7 @@ export const useGenerateHref = () => {
   const stationStore = useStationStore();
 
   const generateHref = useCallback(
-    (
-      newPage: PageMetadata,
-      currentPageName: Page | string,
-      query: QueryParams,
-      linePath: LinePath
-    ) => {
+    (newPage: PageMetadata, currentPageName: string, query: QueryParams, linePath: LinePath) => {
       const currentPage = hasKey(ALL_PAGES, currentPageName)
         ? ALL_PAGES[currentPageName]
         : undefined;
@@ -545,14 +540,14 @@ export const getQueryParams = (
  * The speed map and Rankings share the single-day trips date section without being trip views, so
  * the section alone can't say whether a page is one.
  */
-const isTripPage = (page: Page | string): page is TripPage =>
+const isTripPage = (page: string): page is TripPage =>
   page === 'singleTrips' || page === 'multiTrips';
 
 /**
  * Where the sidebar's Trips item goes: the trip view already open, or else the one last used, so a
  * picked date range is still there on the way back.
  */
-export const getNavTripPage = (currentPage: Page | string, tripPage: TripPage): PageMetadata =>
+export const getNavTripPage = (currentPage: string, tripPage: TripPage): PageMetadata =>
   isTripPage(currentPage) ? ALL_PAGES[currentPage] : ALL_PAGES[tripPage];
 
 const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
