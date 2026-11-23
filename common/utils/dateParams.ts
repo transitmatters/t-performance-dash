@@ -5,6 +5,7 @@ import { isEqual, pickBy } from '@lodash-utils';
 import { DATE_FORMAT, getDatePickerBounds } from '../constants/dates';
 import type { DateStoreSection, Page } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
+import { queryClient } from '../api/queryClient';
 import { getDefaultDates } from '../state/defaults/dateDefaults';
 import { useDateStore } from '../state/dateStore';
 import { getDateStoreSection } from '../state/utils/dateStoreUtils';
@@ -20,11 +21,21 @@ type DateQuery = { date?: string; startDate?: string; endDate?: string };
 const RANGE_SECTIONS: DateStoreSection[] = ['line', 'system', 'multiTrips'];
 const SINGLE_SECTIONS: DateStoreSection[] = ['singleTrips'];
 
+/** Whether a page's dates are a range (`startDate`, `endDate`) or one day (`date`), if it has any. */
+export const dateKindOf = (page: Page): 'range' | 'single' | undefined => {
+  const section = ALL_PAGES[page]?.dateStoreSection;
+  if (!section) return undefined;
+  if (RANGE_SECTIONS.includes(section)) return 'range';
+  if (SINGLE_SECTIONS.includes(section)) return 'single';
+  return undefined;
+};
+
 /** Only used if a tab has no default range for the section, which none do today. */
 const FALLBACK_WINDOW_DAYS = 7;
 
 /** The value as a date if it is a real `YYYY-MM-DD` day; empty, malformed and rolled-over dates aren't. */
-const asDate = (value: unknown): string | undefined =>
+/** The value, if it is a real `YYYY-MM-DD` date. */
+export const asDate = (value: unknown): string | undefined =>
   typeof value === 'string' &&
   /^\d{4}-\d{2}-\d{2}$/.test(value) &&
   dayjs(value).format(DATE_FORMAT) === value
@@ -201,7 +212,7 @@ export const redirectToCanonicalSearch = ({ location }: { location: ParsedLocati
   if (!opensOnLatestBusSpeedDate(location.pathname, location.search)) {
     return throwCanonicalRedirect(location);
   }
-  return import('../api/busSpeedSegments')
-    .then(({ getLatestBusSpeedDate }) => getLatestBusSpeedDate())
+  return import('../api/hooks/busSpeedSegments')
+    .then(({ latestBusSpeedDateQuery }) => queryClient.ensureQueryData(latestBusSpeedDateQuery))
     .then((latestDate) => throwCanonicalRedirect(location, latestDate));
 };

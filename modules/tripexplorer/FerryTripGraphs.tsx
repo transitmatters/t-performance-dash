@@ -1,7 +1,5 @@
-import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripPage } from '../../common/hooks/usePageParams';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
-import type { Station } from '../../common/types/stations';
-import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
@@ -11,30 +9,15 @@ import {
   useChartToggle,
 } from '../../common/hooks/useChartToggle';
 import { getLocationDetails } from '../../common/utils/stations';
-import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWrapper';
+import { useTripMetrics } from './useTripMetrics';
 
-interface FerryTripGraphsProps {
-  fromStation: Station;
-  toStation: Station;
-  parameters: SingleDayAPIOptions | AggregateAPIOptions; // TODO
-  aggregate: boolean;
-  enabled: boolean;
-  line: Line | undefined;
-}
-
-export const FerryTripGraphs = ({
-  fromStation,
-  toStation,
-  parameters,
-  aggregate,
-  enabled,
-  line,
-}: FerryTripGraphsProps) => {
+export const FerryTripGraphs = () => {
+  const { line, fromStation, toStation } = useTripPage();
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -51,13 +34,8 @@ export const FerryTripGraphs = ({
     { paramKey: 'hwDays' }
   );
 
-  const { traveltimes, headways } = useTripExplorerQueries(
-    'ferry',
-    parameters,
-    // @ts-expect-error The overloading doesn't seem to handle this const
-    aggregate,
-    enabled
-  );
+  const { aggregate, single, multi } = useTripMetrics('ferry');
+
   const location = getLocationDetails(fromStation, toStation);
 
   return (
@@ -75,7 +53,7 @@ export const FerryTripGraphs = ({
                 action={travelTimesDayFilterControl}
               />
               <TravelTimesAggregateWrapper
-                query={traveltimes}
+                query={multi.traveltimes}
                 fromStation={fromStation}
                 toStation={toStation}
                 dayFilter={travelTimesDayFilter}
@@ -92,7 +70,7 @@ export const FerryTripGraphs = ({
             />
 
             <HeadwaysAggregateWrapper
-              query={headways}
+              query={multi.headways}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={headwaysDayFilter}
@@ -101,14 +79,14 @@ export const FerryTripGraphs = ({
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
               title="Travel times by hour"
-              subtitle={newestChunkSubtitle(traveltimes.chunks)}
+              subtitle={newestChunkSubtitle(multi.traveltimes.chunks)}
               location={location}
               line={line}
               both
               action={peakTimeControl}
             />
             <AggregateChartWrapper
-              query={traveltimes}
+              query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}
@@ -128,7 +106,7 @@ export const FerryTripGraphs = ({
               both
             />
             <TravelTimesSingleWrapper
-              query={traveltimes}
+              query={single.traveltimes}
               fromStation={fromStation}
               toStation={toStation}
             />
@@ -141,7 +119,7 @@ export const FerryTripGraphs = ({
               line={line}
             />
             <HeadwaysSingleWrapper
-              query={headways}
+              query={single.headways}
               toStation={toStation}
               fromStation={fromStation}
             />
@@ -154,7 +132,7 @@ export const FerryTripGraphs = ({
               line={line}
             />
             <HeadwaysHistogramWrapper
-              query={headways}
+              query={single.headways}
               toStation={toStation}
               fromStation={fromStation}
             />

@@ -42,7 +42,7 @@ export const useSlowzoneZoneDelays = (lineShort: LineShort | undefined) => {
 // since 2026-05-31. The backend clamps out-of-range dates to the latest row
 // and still reports it as "available", so left on this silently renders
 // 4-month-stale restrictions as current. Disabled here pending a reply from
-// the T on whether the dataset moved; restore `options.date !== undefined`
+// the T on whether the dataset moved; restore `Boolean(lineId && date)`
 // once it's live again.
 //
 // `initialData: []` keeps this query in a resolved state (isLoading: false,
@@ -50,10 +50,14 @@ export const useSlowzoneZoneDelays = (lineShort: LineShort | undefined) => {
 // SystemSlowZonesDetails pass this straight into <Widget ready={...}>, which
 // treats a disabled, never-fetched query as perpetually "waiting" and never
 // renders the map. This was shipped broken in #1180.
-export const useSpeedRestrictionData = (options: FetchSpeedRestrictionsOptions) => {
+export const useSpeedRestrictionData = ({
+  lineId,
+  date,
+}: Partial<FetchSpeedRestrictionsOptions>) => {
   return useQuery({
-    queryKey: ['speedRestrictions', options],
-    queryFn: () => fetchSpeedRestrictions(options),
+    queryKey: ['speedRestrictions', { lineId, date }],
+    queryFn: () =>
+      lineId && date ? fetchSpeedRestrictions({ lineId, date }) : ([] as SpeedRestriction[]),
     enabled: false,
     initialData: [] as SpeedRestriction[],
     staleTime: ONE_HOUR,
