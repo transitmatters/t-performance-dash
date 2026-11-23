@@ -1,4 +1,4 @@
-import type { Line } from '../types/lines';
+import type { CommuterRailRoute, FerryRoute, Line } from '../types/lines';
 import type { RidershipKey } from '../types/ridership';
 
 // These are manually chosen based off the peak *monthly* scheduled service. Selecting highest value "
@@ -25,10 +25,18 @@ export const PEAK_SPEED: Partial<Record<Line, number>> = {
   'line-mattapan': 18.96,
 };
 
+/**
+ * Ridership series with a hard-coded peak. Commuter Rail and ferries have none: their history is
+ * COVID-era or seasonal, which is why baselines.json holds their baselines back, and any peak
+ * taken from it misleads just as much (#1605).
+ */
+export type PeakRidershipKey = Exclude<
+  RidershipKey,
+  CommuterRailRoute | FerryRoute | 'line-commuter-rail' | 'line-ferry'
+>;
+
 // These are manually chosen based off the peak value. Need to be updated when all data is generated.
-export const PEAK_RIDERSHIP: {
-  [key in RidershipKey]: number;
-} = {
+export const PEAK_RIDERSHIP: Record<PeakRidershipKey, number> = {
   'line-red': 213703,
   'line-orange': 169578,
   'line-blue': 60129,
@@ -162,30 +170,6 @@ export const PEAK_RIDERSHIP: {
   CT3171: 1800,
   SL1SL2SL3SLW: 25670,
   SL4SL5: 16817,
-  'CR-Fitchburg': 9302,
-  'CR-Franklin': 11671,
-  'CR-Greenbush': 6114,
-  'CR-Haverhill': 7112,
-  'CR-Lowell': 10925,
-  'CR-Worcester': 18637,
-  'CR-Fairmount': 2652,
-  'CR-Kingston': 6089,
-  'CR-Middleborough': 6863,
-  'CR-Needham': 6690,
-  'CR-Newburyport': 14972,
-  'CR-NewBedford': 6863, // Using same value as former Middleborough
-  'CR-Providence': 25728,
-  'CR-CapeFlyer': 0,
-  'line-commuter-rail': 126755,
   'line-RIDE': 34102,
-  'line-ferry': 41782,
-  'Boat-F1': 16281,
-  'Boat-F2H': 0,
-  'Boat-F4': 11861,
-  'Boat-F6': 1761,
-  'Boat-F7': 1610,
-  'Boat-F10': 0,
-  'Boat-EastBoston': 7757,
-  'Boat-Lynn': 2512,
   DEFAULT: 520580,
 };

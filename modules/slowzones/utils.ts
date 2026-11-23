@@ -2,10 +2,11 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import type { DayDelayTotals, SlowZoneResponse } from '../../common/types/dataPoints';
+import type { DayDelayTotals, SlowZoneAllSlowResponse } from '../../common/types/dataPoints';
 import type { LineShort } from '../../common/types/lines';
 import {
   filterAllSlow,
+  getSlowZoneDataEndDate,
   getSlowZoneDelayDelta,
   getStationPairName,
   getWorstSlowZoneSegment,
@@ -33,7 +34,7 @@ export interface SlowZoneStats {
 
 export const getSlowZoneStats = (
   delayTotals: DayDelayTotals[],
-  allSlow: SlowZoneResponse[],
+  allSlow: SlowZoneAllSlowResponse,
   startDateUTC: dayjs.Dayjs,
   endDateUTC: dayjs.Dayjs,
   lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>
@@ -45,13 +46,17 @@ export const getSlowZoneStats = (
   const currentSlowTime = filteredTotals[filteredTotals.length - 1]?.[lineShort] ?? NaN;
   const slowTimeDelta = getSlowZoneDelayDelta(filteredTotals, lineShort);
 
-  // Active-zone counts mirror useSlowZoneQuantityDelta, but line-wide (both directions).
-  const zones = filterAllSlow(allSlow, startDateUTC, endDateUTC, lineShort);
-  const activeZones = zones.filter((sz) => isSlowZoneActiveAsOf(sz, endDateUTC)).length;
-  const startZones = zones.filter((sz) => dayjs.utc(sz.start).isSameOrBefore(startDateUTC)).length;
+  // Line-wide (both directions). Dates past the data's last day count as of that day, so a range
+  // starting after it, like today alone before the morning run, still finds the zones reaching it.
+  const dataEndDateUTC = getSlowZoneDataEndDate(allSlow.updated_on);
+  const end = endDateUTC.isAfter(dataEndDateUTC) ? dataEndDateUTC : endDateUTC;
+  const start = startDateUTC.isAfter(end) ? end : startDateUTC;
+  const zones = filterAllSlow(allSlow.data, start, end, lineShort);
+  const activeZones = zones.filter((sz) => isSlowZoneActiveAsOf(sz, end, dataEndDateUTC)).length;
+  const startZones = zones.filter((sz) => dayjs.utc(sz.start).isSameOrBefore(start)).length;
   const zonesDelta = activeZones - startZones;
 
-  const worst = getWorstSlowZoneSegment(allSlow, startDateUTC, endDateUTC, lineShort);
+  const worst = getWorstSlowZoneSegment(allSlow.data, start, end, dataEndDateUTC, lineShort);
   const worstSegment = worst
     ? { title: getStationPairName(worst.from, worst.to, true), delay: worst.delay }
     : null;

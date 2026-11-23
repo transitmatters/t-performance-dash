@@ -95,7 +95,7 @@ const withoutEmbedPrefix = (pathname: string) =>
   pathname.startsWith('/embed/') ? pathname.slice('/embed'.length) : pathname;
 
 /** Query keys that pick a route within a mode. Each one only means something on its own mode. */
-const ROUTE_PARAMS = ['busRoute', 'crRoute', 'ferryRoute'];
+export const ROUTE_PARAMS = ['busRoute', 'crRoute', 'ferryRoute'];
 
 const ROUTE_PARAM_FOR_LINE: Partial<Record<Line, 'busRoute' | 'crRoute' | 'ferryRoute'>> = {
   'line-bus': 'busRoute',
@@ -117,7 +117,7 @@ export const stripForeignRouteParams = (pathname: string, search: SearchObject):
 };
 
 /** The route a mode's pages open on when the URL doesn't name one. */
-const DEFAULT_ROUTE_FOR_LINE: Partial<Record<Line, string>> = {
+export const DEFAULT_ROUTE_FOR_LINE: Partial<Record<Line, string>> = {
   'line-bus': '1',
   'line-commuter-rail': 'CR-Fairmount',
   'line-ferry': 'Boat-F6',
