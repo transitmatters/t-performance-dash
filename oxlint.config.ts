@@ -53,6 +53,8 @@ export default defineConfig({
     'import/max-dependencies': ['warn', { max: 20, ignoreTypeImports: false }],
 
     'react/jsx-no-target-blank': 'warn',
+    // Render props (fallbackRender, label `content`) are called, not mounted.
+    'react/no-unstable-nested-components': ['error', { allowAsProps: true }],
     'react/rules-of-hooks': 'error',
     'react/exhaustive-deps': 'error',
     // React Compiler rules; native in oxlint but marked experimental upstream.
@@ -122,7 +124,6 @@ export default defineConfig({
     'typescript/prefer-nullish-coalescing': 'off', // 38; || -> ?? changes behavior for '' and 0
     'typescript/consistent-return': 'off', // 30
     'eslint/no-shadow': 'off', // 54
-    'react/no-unstable-nested-components': 'off', // 11; map popups and shadcn's calendar
   },
   overrides: [
     {
@@ -160,6 +161,7 @@ export default defineConfig({
         'jsx-a11y/click-events-have-key-events': 'off',
         'jsx-a11y/no-noninteractive-element-interactions': 'off',
         'react/jsx-no-constructed-context-values': 'off',
+        'react/no-unstable-nested-components': 'off',
       },
     },
   ],
