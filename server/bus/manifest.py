@@ -6,6 +6,7 @@ import pandas as pd
 import json
 
 from bus2train import load_data
+from gtfs_archive import get_gtfs_archive, get_services, to_dateint
 
 CSV_MIN_COUNT = 100
 GTFS_MIN_COUNT = 5
@@ -51,9 +52,6 @@ def load_gtfs_data(start_date, days, routes):
     `start_date`. Only checkpoint stops are kept, which matches what the LAMP bus ingest stores.
     Each row is one scheduled stop, so counts are scheduled trips rather than observed events.
     """
-    # gtfs_archive downloads the archive index on import, so only pay for it in GTFS mode
-    from gtfs_archive import get_gtfs_archive, get_services, to_dateint
-
     dates = [start_date + datetime.timedelta(days=offset) for offset in range(days)]
     dates_by_archive = {}
     for date in dates:

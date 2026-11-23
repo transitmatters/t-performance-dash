@@ -14,6 +14,7 @@ import { HERO_LINE_WIDTH } from '../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../common/utils/general';
 import type { ParamsType } from '../speed/constants/speeds';
 import {
+  flatRidershipMaximum,
   useRidershipBaseline,
   useSeasonalRidershipMaximums,
 } from '../../common/api/hooks/baselines';
@@ -57,7 +58,6 @@ export const RidershipGraph = ({
   const isMobile = !useBreakpoint('md');
   const ref = useRef(null);
   const linePeak = useRidershipBaseline(line, busRoute, crRoute, ferryRoute);
-  const peak = stationName ? 0 : linePeak;
   const seasonal = useSeasonalRidershipMaximums(line, busRoute, crRoute, ferryRoute);
   const seasonalMaximumFor = stationName ? undefined : seasonal.maximumFor;
   const seasonalPending = !stationName && seasonal.isPending;
@@ -72,7 +72,11 @@ export const RidershipGraph = ({
     const seasonalPeaks = seasonalMaximumFor
       ? data.map((point) => seasonalMaximumFor(point.date))
       : undefined;
-    const showFlatPeak = !seasonalPeaks && !seasonalPending && peak > 0;
+    const peak = flatRidershipMaximum(linePeak, {
+      isStation: Boolean(stationName),
+      hasSeasonal: Boolean(seasonalPeaks) || seasonalPending,
+    });
+    const showFlatPeak = peak > 0;
 
     return (
       <ChartStack>
@@ -285,7 +289,7 @@ export const RidershipGraph = ({
       </ChartStack>
     );
   }, [
-    peak,
+    linePeak,
     seasonalMaximumFor,
     seasonalPending,
     stationName,
