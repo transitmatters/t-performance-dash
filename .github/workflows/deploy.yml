@@ -7,6 +7,14 @@ on:
   push:
     branches:
       - main
+    # Redeploy when a release is tagged so Datadog and the site report the new version
+    tags:
+      - '*'
+
+# A tag pushed right after a merge to main would otherwise run a second CloudFormation update at the same time
+concurrency:
+  group: deploy
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -26,6 +34,16 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-tags: true
+      - name: Only deploy tags that are on main
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          status=$(gh api "repos/${{ github.repository }}/compare/main...${{ github.sha }}" --jq .status)
+          if [[ "$status" != "identical" && "$status" != "behind" ]]; then
+            echo "::error::Tag ${{ github.ref_name }} isn't on main, so it won't be deployed to production"
+            exit 1
+          fi
       - name: Set up Node/Python via mise
         uses: jdx/mise-action@v5
       - name: Install uv
