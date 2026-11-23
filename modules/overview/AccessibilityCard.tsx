@@ -97,8 +97,7 @@ export const AccessibilityCard = ({ lineShort }: AccessibilityCardProps) => {
         {current.length > 0 && (
           // Busy lines (Red has 15+ outages) outgrow the card, so the list scrolls. Focusable so
           // keyboard users can scroll it too, and labelled for screen readers.
-          <div
-            role="region"
+          <section
             aria-label="Out-of-service elevators and escalators"
             // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
             tabIndex={0}
@@ -129,7 +128,7 @@ export const AccessibilityCard = ({ lineShort }: AccessibilityCardProps) => {
                 </div>
               );
             })}
-          </div>
+          </section>
         )}
         {!notTracked && !isLoading && !isError && !current.length && (
           <p className="py-2 text-sm text-muted-foreground">No open accessibility alerts.</p>

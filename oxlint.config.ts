@@ -104,6 +104,8 @@ export default defineConfig({
     'eslint/no-underscore-dangle': 'off', // Chart.js and TanStack Router expose `_`-prefixed fields
     'react/exhaustive-effect-dependencies': 'off', // duplicates react/exhaustive-deps
     'jsx-a11y/control-has-associated-label': 'off', // flags empty table cells
+    // Wants <img> for role="img" on chart canvases and <fieldset> for role="group" divs.
+    'jsx-a11y/prefer-tag-over-role': 'off',
     'vitest/valid-expect': 'off', // flags Vitest's expect(value, message) form
     'vitest/require-mock-type-parameters': 'off',
     'vitest/require-to-throw-message': 'off',
@@ -120,7 +122,6 @@ export default defineConfig({
     'typescript/prefer-nullish-coalescing': 'off', // 38; || -> ?? changes behavior for '' and 0
     'typescript/consistent-return': 'off', // 30
     'eslint/no-shadow': 'off', // 54
-    'jsx-a11y/prefer-tag-over-role': 'off', // 17
     'react/no-unstable-nested-components': 'off', // 11; map popups and shadcn's calendar
   },
   overrides: [
