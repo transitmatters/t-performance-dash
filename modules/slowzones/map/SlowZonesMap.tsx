@@ -162,7 +162,9 @@ export const SlowZonesMap = ({
         seg.segmentLocation.toStationId === toStationId
     );
     if (slowSegment) {
-      return <SlowZonesTooltip side={side} segment={slowSegment} color={line.color} />;
+      return (
+        <SlowZonesTooltip side={side} segment={slowSegment} line={line.key} color={line.color} />
+      );
     }
 
     return null;
