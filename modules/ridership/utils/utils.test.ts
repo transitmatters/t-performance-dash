@@ -32,4 +32,9 @@ describe('getRidershipStats', () => {
     expect(stats.percentage).toBe(0.5);
     expect(stats.seasonalPeak).toBeUndefined();
   });
+
+  it('has no share without a maximum, as for a held-back baseline', () => {
+    const ridership = [{ date: '2026-05-25', count: 4_000 }] as unknown as RidershipCount[];
+    expect(getRidershipStats(ridership, undefined).percentage).toBeNaN();
+  });
 });
