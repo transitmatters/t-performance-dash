@@ -315,6 +315,22 @@ export const findNextValidStation = (
   );
 
 /**
+ * The closest station that a trip runs to from `station` (`end: 'from'`) or from it to `station`
+ * (`end: 'to'`). Stations sharing its order are skipped, since order is what sets the direction.
+ */
+export const findNearestConnectingStation = (
+  station: Station,
+  stations: Station[] | undefined,
+  end: 'from' | 'to'
+): Station | undefined =>
+  stations
+    ?.filter(
+      (s) =>
+        s.order !== station.order && (end === 'from' ? connects(station, s) : connects(s, station))
+    )
+    .sort((a, b) => Math.abs(a.order - station.order) - Math.abs(b.order - station.order))[0];
+
+/**
  * The GTFS stop_ids our station list has for a bus route, e.g. '29005' from '747-1-29005'. They
  * outlast the route itself, which drops out of MBTA's current feed once it's retired.
  */

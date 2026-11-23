@@ -3,7 +3,7 @@ import type { ModeKind, SummaryData } from '../types';
 
 import { Widget } from '../../../common/components/widgets/Widget';
 import { ServiceRidershipChart } from '../LineCard/ServiceRidershipChart';
-import { useServiceAndRidershipContext } from '../useServiceAndRidershipContext';
+import { useDelimitatedRoute } from '../../../common/utils/router';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
 
@@ -33,7 +33,9 @@ const colorsBySelection: Partial<Record<Selection, string>> = {
 export const SummaryCard = (props: Props) => {
   const { summaryData, modeData } = props;
   const [selection, setSelection] = useState<Selection>('total');
-  const { startDate, endDate } = useServiceAndRidershipContext();
+  const {
+    query: { startDate, endDate },
+  } = useDelimitatedRoute();
 
   const { serviceHistory, ridershipHistory } = useMemo(() => {
     if (selection === 'total') {

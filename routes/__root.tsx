@@ -5,7 +5,6 @@ import { useDelimitatedRoute, useIsNotFound } from '../common/utils/router';
 import { Layouts } from '../common/layouts/Layouts';
 import { AppProviders } from '../common/layouts/AppProviders';
 import { NavLayout } from '../common/layouts/NavLayout';
-import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
 import { DynamicMetaTags } from '../common/components/DynamicMetaTags';
 import { useApplyTheme } from '../common/hooks/useApplyTheme';
 import { useGoatCounter } from '../common/hooks/useGoatCounter';
@@ -45,14 +44,12 @@ const RootComponent = () => {
   return (
     <AppProviders>
       <DynamicMetaTags />
-      <LoadPresetsLayout>
-        <NavLayout>
-          <SecondaryLayout key={colorVisionKey}>
-            <Outlet />
-          </SecondaryLayout>
-          <BetaNotices />
-        </NavLayout>
-      </LoadPresetsLayout>
+      <NavLayout>
+        <SecondaryLayout key={colorVisionKey}>
+          <Outlet />
+        </SecondaryLayout>
+        <BetaNotices />
+      </NavLayout>
     </AppProviders>
   );
 };

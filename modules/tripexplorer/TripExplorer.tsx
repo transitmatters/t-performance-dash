@@ -1,6 +1,3 @@
-import { useEffect, useMemo } from 'react';
-import { useHistoricalAlertsData } from '../../common/api/hooks/alerts';
-import { findMatch } from '../../common/components/alerts/AlertFilter';
 import { SameDayNotice } from '../../common/components/notices/SameDayNotice';
 import { CoverageGapNotice } from '../../common/components/notices/CoverageGapNotice';
 import { TerminusNotice } from '../../common/components/notices/TerminusNotice';
@@ -11,7 +8,6 @@ import { TripDataNotes } from '../../common/components/notices/TripDataNotes';
 import { BetaAccuracyNotice } from '../../common/components/notices/BetaAccuracyNotice';
 import { PokeySchleppieAwardBanner } from '../../common/components/notices/PokeySchleppieAwardBanner';
 import { BnrdBanner } from '../../common/components/notices/BnrdBanner';
-import { useAlertStore } from './alertStore';
 import { TripGraphs, TripSlowZonesBanner } from './TripGraphs';
 import { TripSetupNotice } from './TripSetupNotice';
 import { TripGraphsBoundary } from './TripGraphsBoundary';
@@ -28,23 +24,10 @@ export const TripExplorer = () => {
     lineShort,
     query: { to, from, date, startDate, endDate, busRoute, crRoute, ferryRoute },
   } = useDelimitatedRoute();
-  const { data: alerts, isLoading: isAlertsLoading } = useHistoricalAlertsData(
-    date,
-    lineShort,
-    busRoute,
-    crRoute,
-    ferryRoute
-  );
-
   // Stops from another line wait here until the station selector swaps in this line's defaults.
   const stations = optionsStation(lineShort, busRoute, crRoute, ferryRoute);
   const fromStation = getStationInOptions(from, stations);
   const toStation = getStationInOptions(to, stations);
-  const matchingAlerts = useMemo(() => alerts?.filter(findMatch), [alerts]);
-  const setAlerts = useAlertStore((store) => store.setAlerts);
-  useEffect(() => {
-    setAlerts(matchingAlerts, isAlertsLoading);
-  }, [matchingAlerts, isAlertsLoading, setAlerts]);
 
   return (
     <>

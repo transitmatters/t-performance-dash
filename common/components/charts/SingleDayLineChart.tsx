@@ -69,6 +69,7 @@ export const SingleDayLineChart = ({
   callout,
   actions = true,
   intro = false,
+  alertsLine,
 }: SingleDayLineProps) => {
   const ref = useRef(null);
   const { pending: introPending, options: introOptions } = useIntroAnimation(intro, data.length);
@@ -86,6 +87,7 @@ export const SingleDayLineChart = ({
     // Embeds have no track, so they skip the request
     enabled: Boolean(date) && !fill,
     withAlerts: true,
+    alertsLine,
   });
   const { weather } = layers;
   const temperaturePoints = useMemo(

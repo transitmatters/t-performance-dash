@@ -3,7 +3,9 @@ import dayjs from 'dayjs';
 import type { Plugin } from 'chart.js';
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 import { useWeatherData } from '../../../api/hooks/weather';
-import { useAlertStore } from '../../../../modules/tripexplorer/alertStore';
+import { useMatchingAlerts } from '../../../api/hooks/alerts';
+import { useDelimitatedRoute } from '../../../utils/router';
+import type { LineShort } from '../../../types/lines';
 import type {
   PlacedWeatherRun,
   WeatherGranularity,
@@ -36,6 +38,8 @@ interface UseChartLayersOptions {
   enabled: boolean;
   // Only single-day trip charts have the day's alerts
   withAlerts?: boolean;
+  // Whose alerts to show; defaults to the page's line and route
+  alertsLine?: LineShort;
   // Date-range charts can shade other lines' shutdowns, when the reader turns them on
   withOtherShutdowns?: boolean;
   // A subway trip, whose slow zones get a row on its travel time and speed charts
@@ -69,9 +73,14 @@ export const useChartLayers = ({
   granularity,
   enabled,
   withAlerts = false,
+  alertsLine,
   withOtherShutdowns = false,
   slowZonesTrip,
 }: UseChartLayersOptions) => {
+  const {
+    lineShort,
+    query: { busRoute, crRoute, ferryRoute },
+  } = useDelimitatedRoute();
   const showTemperature = useDisplayStore((store) => store.showTemperature);
   const hourly = granularity === 'hourly';
   // Past a year the days' weather runs together into a solid bar, so only temperature shows
@@ -109,13 +118,19 @@ export const useChartLayers = ({
         : [],
     [showWeather, weather, granularity, windowStart, windowEnd]
   );
-  const alerts = useAlertStore((store) => store.alerts);
-  const isAlertsLoading = useAlertStore((store) => store.isLoading);
+  const { data: alerts, isLoading: isAlertsLoading } = useMatchingAlerts(
+    enabled && withAlerts ? startDate : undefined,
+    alertsLine ?? lineShort,
+    // Another line's alerts are that whole line's, not this page's route
+    alertsLine ? undefined : busRoute,
+    alertsLine ? undefined : crRoute,
+    alertsLine ? undefined : ferryRoute
+  );
   const pinned = useLayerStore((store) => store.pinned);
   const temperatureEnabled =
-    useLayerStore((store) => store.temperature) && enabled && showTemperature;
+    useLayerStore((store) => store.temperaturePinned) && enabled && showTemperature;
   const slowZones = useTripSlowZones(enabled ? slowZonesTrip : undefined, startDate, endDate);
-  const slowZonesPinned = useLayerStore((store) => store.slowZones);
+  const slowZonesPinned = useLayerStore((store) => store.slowZonesPinned);
   const slowZoneRuns = slowZones?.runs;
   const placedSlowZones = useMemo(
     () => (slowZoneRuns ? placeSlowZoneRuns(slowZoneRuns) : undefined),
