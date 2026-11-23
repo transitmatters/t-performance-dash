@@ -83,19 +83,22 @@ export function RidershipDetails() {
               value={`${Math.round(stats.average).toLocaleString('en-us')}`}
               delta={ridershipDelta(stats.averageBefore, stats.averageAfter)}
             />
-            <StatCard
-              label={
-                stats.seasonalPeak
-                  ? `Of the maximum for ${stats.seasonalPeak.season}`
-                  : 'Of historical maximum'
-              }
-              value={
-                // Wait for the seasonal maximum rather than flash the all-time one
-                !seasonal.isPending && Number.isFinite(stats.percentage)
-                  ? `${Math.round(stats.percentage * 100)}%`
-                  : '—'
-              }
-            />
+            {/* Wait for the seasonal maximum rather than flash the all-time one. A line with no
+                maximum at all, as when its baseline is held back, gets no card. */}
+            {seasonal.isPending ? (
+              <StatCard label="Of historical maximum" value="—" />
+            ) : (
+              Number.isFinite(stats.percentage) && (
+                <StatCard
+                  label={
+                    stats.seasonalPeak
+                      ? `Of the maximum for ${stats.seasonalPeak.season}`
+                      : 'Of historical maximum'
+                  }
+                  value={`${Math.round(stats.percentage * 100)}%`}
+                />
+              )
+            )}
             <StatCard
               label={
                 // Each point is a week's average weekday ridership, so the peak is a week, not a day.
