@@ -81,6 +81,32 @@ class AlertsByDateParams(BaseModel):
     route: List[str] = Field(default=[], description=_ROUTE_ID_DESC)
 
 
+class LiveAlertsParams(BaseModel):
+    """Query parameters for `/api/alerts`.
+
+    Each is passed to the MBTA v3 API as a `filter[...]`, so a list is one comma-separated value.
+
+    Attributes:
+        route: Comma-separated route IDs.
+        route_type: Comma-separated GTFS route types.
+        activity: Comma-separated rider activities an alert affects.
+        stop: Comma-separated stop IDs.
+    """
+
+    route: str | None = Field(
+        default=None, description="Comma-separated MBTA route IDs (e.g. `Red`, `CR-Fairmount` or `1,66`)."
+    )
+    route_type: str | None = Field(
+        default=None,
+        description="Comma-separated GTFS route types: `0` light rail, `1` subway, `2` commuter rail, `3` bus, `4` ferry.",
+    )
+    activity: str | None = Field(
+        default=None,
+        description="Comma-separated rider activities an alert affects (e.g. `BOARD,EXIT,RIDE` or `USING_WHEELCHAIR`).",
+    )
+    stop: str | None = Field(default=None, description="Comma-separated MBTA stop IDs.")
+
+
 class AggregateTravelTimesParams(BaseModel):
     """Query parameters for `/api/aggregate/traveltimes` and `/api/aggregate/traveltimes2`.
 
@@ -1018,13 +1044,34 @@ class TripMetricsResponse(RootModel[List[TripMetricsEntry]]):
     """Response for `/api/tripmetrics`: delivered trip metrics at the requested aggregation level."""
 
 
+class BusBandTotals(BaseModel):
+    """A bus route's totals for one time band, as in `BusTripMetricsEntry.time_bands`.
+
+    Attributes:
+        count: Trips delivered.
+        n_traversals: Segment traversals measured.
+        n_interpolated: Traversals whose times were interpolated.
+        miles_covered: Total miles covered.
+        total_time: Total trip time in seconds.
+        total_dwell: Seconds spent around the stops in `n_dwell_stops`.
+        n_dwell_stops: Stops with an observed dwell.
+    """
+
+    model_config = ConfigDict(extra="allow")
+    count: float
+    n_traversals: float
+    n_interpolated: float | None = None
+    miles_covered: float
+    total_time: float
+    total_dwell: float | None = None
+    n_dwell_stops: float | None = None
+
+
 class BusTripMetricsEntry(BaseModel):
     """Delivered trip metrics for a bus route (or group of routes) over one day, week or month.
 
-    Entries can also have fleet fields: `fleet_trips` (trips with a known vehicle), `avg_bus_age`,
-    `pct_<type>_trips` and per-propulsion shares named `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`).
-    These are omitted when unknown. Daily entries for the whole day (no `time_band`) also have
-    `median_speed_mph` and `mean_speed_mph`.
+    Entries can also have `pct_<type>_trips` fields and per-propulsion shares named
+    `fleet_mix_<type>` (e.g. `fleet_mix_hybrid`), omitted when unknown.
 
     The `headways_*` fields count headways at mid-route timepoints by their ratio to the scheduled
     headway, in the same buckets as `/api/reliability`. They're counted from 2025-12-24 and for the
@@ -1051,6 +1098,15 @@ class BusTripMetricsEntry(BaseModel):
             written before the pipeline recorded dwell.
         n_dwell_stops: Stops with an observed dwell, leaving out each trip's first stop (layover).
             Average dwell per stop is `total_dwell / n_dwell_stops`.
+        n_interpolated: Traversals whose times were interpolated.
+        median_speed_mph: Median traversal speed. Daily, whole-day entries only.
+        mean_speed_mph: Mean traversal speed. Daily, whole-day entries only.
+        day_type: `business_day` or `weekend_or_holiday`, on daily entries.
+        fleet_trips: Trips with a known vehicle. Omitted when unknown.
+        avg_bus_age: Average bus age in years. Omitted when unknown.
+        pct_battery_trips: Percentage of trips run by battery buses. Omitted when unknown.
+        time_bands: The same totals by departure window, keyed by time band (`am_peak`, ...).
+            Absent before 2025-12-24 and when a `time_band` is requested.
     """
 
     model_config = ConfigDict(extra="allow")
@@ -1060,6 +1116,14 @@ class BusTripMetricsEntry(BaseModel):
     total_time: float
     miles_covered: float
     n_traversals: float
+    n_interpolated: float | None = None
+    median_speed_mph: float | None = None
+    mean_speed_mph: float | None = None
+    day_type: str | None = None
+    fleet_trips: float | None = None
+    avg_bus_age: float | None = None
+    pct_battery_trips: float | None = None
+    time_bands: Dict[str, BusBandTotals] | None = None
     headways_under_50: int | None = None
     headways_50_75: int | None = None
     headways_75_125: int | None = None
@@ -1079,19 +1143,20 @@ class BusTripMetricsResponse(RootModel[List[BusTripMetricsEntry]]):
 class CrTripMetricsEntry(BaseModel):
     """Commuter Rail fleet metrics for a route over one day, week or month.
 
-    Entries also have per-fleet shares named `fleet_mix_<type>` (e.g. `fleet_mix_rotem`), and
-    `avg_cab_car_age` when known.
+    Entries also have per-fleet shares named `fleet_mix_<type>` (e.g. `fleet_mix_rotem`).
 
     Attributes:
         date: Day, Monday of the week, or first day of the month (`YYYY-MM-DD`).
         route: Route ID, or `all`.
         fleet_trips: Trips with a known cab car.
+        avg_cab_car_age: Average cab car age in years, when known.
     """
 
     model_config = ConfigDict(extra="allow")
     date: str
     route: str
     fleet_trips: float | None = None
+    avg_cab_car_age: float | None = None
 
 
 class CrTripMetricsResponse(RootModel[List[CrTripMetricsEntry]]):

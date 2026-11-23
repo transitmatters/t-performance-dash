@@ -3,21 +3,18 @@ import type {
   FetchServiceHoursOptions,
   FetchServiceHoursResponse,
 } from '../types/api';
-import { FetchScheduledServiceParams } from '../types/api';
 import type { ScheduledService } from '../types/dataPoints';
-import { APP_DATA_BASE_PATH } from '../utils/constants';
 import { withWeekStart } from '../utils/date';
-import { apiFetchUnchecked } from './utils/fetch';
-import { fetchOrThrow } from './utils/ApiError';
+import { apiFetch } from './utils/fetch';
 
 export const fetchScheduledService = async (
   options: FetchScheduledServiceOptions
 ): Promise<ScheduledService | undefined> => {
-  if (!options[FetchScheduledServiceParams.routeId]) return undefined;
-
-  return await apiFetchUnchecked({
+  const { start_date, end_date, route_id, agg } = withWeekStart(options);
+  if (!start_date || !end_date || !route_id || !agg) return undefined;
+  return await apiFetch({
     path: '/api/scheduledservice',
-    options: withWeekStart(options),
+    options: { start_date, end_date, route_id, agg },
     errorMessage: 'Failed to fetch trip counts',
   });
 };
@@ -25,12 +22,11 @@ export const fetchScheduledService = async (
 export const fetchServiceHours = async (
   params: FetchServiceHoursOptions
 ): Promise<FetchServiceHoursResponse | undefined> => {
-  if (!params.start_date) return undefined;
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/service_hours`, window.location.origin);
-  const weekParams = withWeekStart(params);
-  Object.entries(weekParams).forEach(([paramKey, value]) => {
-    url.searchParams.append(paramKey, String(value));
+  const { line_id, start_date, end_date, agg } = withWeekStart(params);
+  if (!line_id || !start_date || !end_date || !agg) return undefined;
+  return await apiFetch({
+    path: '/api/service_hours',
+    options: { line_id, start_date, end_date, agg },
+    errorMessage: 'Failed to fetch service hours',
   });
-  const response = await fetchOrThrow(url.toString(), undefined, 'Failed to fetch service hours');
-  return await response.json();
 };

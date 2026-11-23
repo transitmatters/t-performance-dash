@@ -14,6 +14,7 @@ import type { BusRoute } from '../../common/types/lines';
 import type { DatedValue } from '../../common/utils/dateAggregation';
 import type { AggType } from '../speed/constants/speeds';
 import { ReliabilityGraph } from '../reliability/charts/ReliabilityGraph';
+import type { HeadwayField } from '../reliability/utils';
 import { BUNCHED, headwayShare, ON_TIME } from '../reliability/utils';
 import { CHART_CONFIG, buildRow, chartWindowStart, toSlot } from './scorecardUtils';
 import type { OverviewWindow } from './scorecardUtils';
@@ -35,7 +36,10 @@ const frequentSubset = (busRoute: BusRoute) => {
 };
 
 /** Each period's share of headways in `fields`, skipping periods with no headways counted. */
-const toHeadwayPoints = (data: DeliveredTripMetricsBus[], fields: typeof ON_TIME): DatedValue[] =>
+const toHeadwayPoints = (
+  data: Pick<DeliveredTripMetricsBus, 'date' | HeadwayField>[],
+  fields: typeof ON_TIME
+): DatedValue[] =>
   data.flatMap((entry) => {
     const share = headwayShare(entry, fields);
     return share === undefined ? [] : [{ date: entry.date, value: share }];

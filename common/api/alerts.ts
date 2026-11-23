@@ -1,6 +1,6 @@
 import type { AlertsResponse, HistoricalAlert } from '../types/alerts';
 import { AlertEffect } from '../types/alerts';
-import type { Schemas } from '../types/apiSchemas';
+import type { ApiQuery, Schemas } from '../types/apiSchemas';
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import { getStationKeysFromStations } from '../utils/stations';
 import { getBusRouteDataIds } from '../constants/lines';
@@ -25,16 +25,12 @@ const toAlertsResponse = (alert: Schemas['LiveAlert']): AlertsResponse => ({
   routes: alert.routes ?? undefined,
 });
 
-const fetchLiveAlerts = async (options: object, errorMessage: string) =>
-  (await apiFetch({ path: '/api/alerts', options: { ...options }, errorMessage })).map(
-    toAlertsResponse
-  );
+type LiveAlertsQuery = ApiQuery<'/api/alerts'>;
 
-type RouteOptions = {
-  route?: string;
-  activity: string;
-  route_type?: string;
-};
+const fetchLiveAlerts = async (options: LiveAlertsQuery, errorMessage: string) =>
+  (await apiFetch({ path: '/api/alerts', options, errorMessage })).map(toAlertsResponse);
+
+type RouteOptions = LiveAlertsQuery & { activity: string };
 
 export const fetchAlerts = async (
   line: LineShort,

@@ -16,17 +16,6 @@ export type HistoricalAlert = Filled<Schemas['Alert']>;
 
 export type UpcomingOrCurrent = 'upcoming' | 'current';
 
-export interface FormattedAlert {
-  id: string;
-  type: AlertEffect;
-  active_period: AlertTime[];
-  relevantTimes: AlertTime[];
-  stops: string[];
-  routes?: string[];
-  header: string;
-  description?: string | null;
-}
-
 /** A live alert, with its effect narrowed to the ones we know and stop IDs as strings. */
 export type AlertsResponse = Schemas['LiveAlert'] & {
   type: AlertEffect;

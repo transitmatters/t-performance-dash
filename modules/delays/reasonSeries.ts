@@ -4,6 +4,9 @@ import type { Line } from '../../common/types/lines';
 import type { DelayReasonKey } from './constants/reasons';
 import { DELAY_REASONS, reasonFill, reasonLabel } from './constants/reasons';
 
+/** One period's delay minutes by cause. */
+type ReasonCounts = Record<DelayReasonKey, number>;
+
 export interface ReasonSeries {
   id: DelayReasonKey;
   label: string;
@@ -14,7 +17,7 @@ export interface ReasonSeries {
   total: number;
 }
 
-export const reasonTotals = (data: LineDelays[]): Record<DelayReasonKey, number> =>
+export const reasonTotals = (data: ReasonCounts[]): Record<DelayReasonKey, number> =>
   Object.fromEntries(
     DELAY_REASONS.map(({ key }) => [key, data.reduce((sum, point) => sum + point[key], 0)])
   ) as Record<DelayReasonKey, number>;
@@ -24,7 +27,7 @@ export const rankReasons = (totals: Record<DelayReasonKey, number>, line?: Line)
     .sort((a, b) => totals[b.key] - totals[a.key])
     .map((reason) => ({ ...reason, label: reasonLabel(reason, line) }));
 
-export const buildSeries = (data: LineDelays[], line?: Line): ReasonSeries[] => {
+export const buildSeries = (data: ReasonCounts[], line?: Line): ReasonSeries[] => {
   const totals = reasonTotals(data);
   return rankReasons(totals, line).map(({ key, label, color }) => ({
     id: key,
@@ -37,7 +40,7 @@ export const buildSeries = (data: LineDelays[], line?: Line): ReasonSeries[] => 
 };
 
 /** Sum of every reason in one period: the denominator for share views. */
-export const periodTotals = (data: LineDelays[]): number[] =>
+export const periodTotals = (data: ReasonCounts[]): number[] =>
   data.map((point) => DELAY_REASONS.reduce((sum, { key }) => sum + point[key], 0));
 
 /**
@@ -74,7 +77,7 @@ export interface CauseRow {
 }
 
 /** Every cause that occurred in the range, biggest first, with its share of all delay time. */
-export const causeRows = (data: LineDelays[], line?: Line): CauseRow[] => {
+export const causeRows = (data: ReasonCounts[], line?: Line): CauseRow[] => {
   const totals = reasonTotals(data);
   const ranked = rankReasons(totals, line);
   const grand = ranked.reduce((sum, reason) => sum + totals[reason.key], 0);

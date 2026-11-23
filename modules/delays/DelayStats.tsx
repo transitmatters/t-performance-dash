@@ -2,12 +2,12 @@ import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard
 import type { Line } from '../../common/types/lines';
 import { halvesDetail, statDelta } from '../../common/utils/statDelta';
 import { type DelayAgg, AGG_PERIOD, formatDelay } from './format';
-import type { RangeRow } from './range';
+import type { StatsRow } from './utils';
 import { getDelayStats } from './utils';
 
 interface DelayStatsProps {
   /** Rows covering exactly the selected dates. */
-  data: RangeRow[];
+  data: StatsRow[];
   agg: DelayAgg;
   line?: Line;
 }

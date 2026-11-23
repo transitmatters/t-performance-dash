@@ -1,3 +1,4 @@
+import type { FetchExcessTripTimeOptions } from '../../common/types/api';
 import type { HeadwayDirection } from '../../common/hooks/usePageFilters';
 import type {
   ExcessTripTimeEntry,
@@ -8,11 +9,18 @@ import type {
 import type { Line } from '../../common/types/lines';
 import { percent } from './utils';
 
-/** The lines the MBTA publishes excess trip time for. It plans to add the Green Line. */
-export const EXCESS_TRIP_TIME_LINES: Line[] = ['line-red', 'line-orange', 'line-blue'];
+/** The lines the MBTA publishes excess trip time for, as the API accepts them. */
+export type ExcessTripTimeLine = NonNullable<FetchExcessTripTimeOptions['line']>;
 
-export const hasExcessTripTime = (line?: Line) =>
-  line !== undefined && EXCESS_TRIP_TIME_LINES.includes(line);
+/** The lines the MBTA publishes excess trip time for. It plans to add the Green Line. */
+export const EXCESS_TRIP_TIME_LINES: ExcessTripTimeLine[] = [
+  'line-red',
+  'line-orange',
+  'line-blue',
+];
+
+export const hasExcessTripTime = (line?: Line): line is ExcessTripTimeLine =>
+  EXCESS_TRIP_TIME_LINES.some((ettLine) => ettLine === line);
 
 export const PERIODS: { key: ExcessTripTimePeriod; label: string }[] = [
   { key: 'amPeak', label: 'AM peak' },

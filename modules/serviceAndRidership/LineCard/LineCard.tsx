@@ -38,14 +38,12 @@ const serviceDayItems: { value: ServiceDay; label: string }[] = [
 
 const getHighestTphValue = (lineData: LineData) => {
   let max = 0;
-  Object.entries(lineData.serviceRegimes).forEach(([key, regime]) => {
-    if (key === 'baseline' || key === 'current') {
-      Object.values(regime).forEach((serviceLevel) => {
-        if (serviceLevel.tripsPerHour) {
-          max = Math.max(max, ...serviceLevel.tripsPerHour);
-        }
-      });
-    }
+  const { baseline, current } = lineData.serviceRegimes;
+  [baseline, current].forEach((regime) => {
+    serviceDayItems.forEach(({ value }) => {
+      const tph = regime[value].tripsPerHour;
+      if (tph) max = Math.max(max, ...tph);
+    });
   });
   return max;
 };

@@ -16,7 +16,7 @@ const halvesMeans = (values: number[]) => {
 
 const averageWithDelta = (
   data: FleetMetrics[],
-  read: (datapoint: FleetMetrics) => number | undefined
+  read: (datapoint: FleetMetrics) => number | null | undefined
 ) => {
   const values = finiteValues(data.map(read));
   const { before, after } = halvesMeans(values);

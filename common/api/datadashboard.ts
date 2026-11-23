@@ -1,48 +1,48 @@
 import { QueryNameKeys } from '../types/api';
-import type { PartialAggregateAPIOptions, PartialSingleDayAPIOptions } from '../types/api';
-import { APP_DATA_BASE_PATH } from '../utils/constants';
-import { getCurrentDate } from '../utils/date';
+import type { ApiPath } from '../types/apiSchemas';
 import type { AggregateDataResponse, SingleDayDataPoint } from '../types/charts';
-import { fetchOrThrow } from './utils/ApiError';
+import { apiFetch } from './utils/fetch';
+
+type Stops = Partial<Record<'stop' | 'from_stop' | 'to_stop', string[]>>;
+
+const SINGLE_DAY_PATHS = {
+  [QueryNameKeys.traveltimes]: '/api/traveltimes/{user_date}',
+  [QueryNameKeys.headways]: '/api/headways/{user_date}',
+  [QueryNameKeys.dwells]: '/api/dwells/{user_date}',
+} as const satisfies Record<QueryNameKeys, ApiPath>;
 
 // Fetch data for all single day charts.
 export const fetchSingleDayData = async (
   name: QueryNameKeys,
-  options: PartialSingleDayAPIOptions
-): Promise<SingleDayDataPoint[]> => {
-  const date = options.date ?? getCurrentDate();
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/${name}/${date}`, window.location.origin);
-  Object.entries(options).forEach(([key, value]) => {
-    // options includes date which is a string. Date is never used as a parameter since it is part of the URL, so it can be excluded.
-    if (!(typeof value === 'string') && key !== 'date')
-      value.forEach((subvalue) => url.searchParams.append(key, subvalue));
+  { date, ...stops }: Stops & { date: string }
+): Promise<SingleDayDataPoint[]> =>
+  apiFetch({
+    path: SINGLE_DAY_PATHS[name],
+    pathParams: { user_date: date },
+    options: stops,
+    errorMessage: `Failed to fetch ${name}`,
   });
-  const response = await fetchOrThrow(url.toString(), undefined, `Failed to fetch ${name}`);
-  return await response.json();
-};
 
-// Fetch data for all aggregate charts except traveltimes.
+// Fetch data for all aggregate charts. Travel times come by date and by time of day; the others
+// only by date.
 export const fetchAggregateData = async (
   name: QueryNameKeys,
-  options: PartialAggregateAPIOptions,
+  options: Stops & { start_date: string; end_date: string },
   signal?: AbortSignal
 ): Promise<AggregateDataResponse> => {
-  const method = name === QueryNameKeys.traveltimes ? 'traveltimes2' : name;
-
-  const url = new URL(`${APP_DATA_BASE_PATH}/api/aggregate/${method}`, window.location.origin);
-  // Loop through each option and append values to searchParams.
-  Object.entries(options).forEach(([key, value]) => {
-    if (Array.isArray(value)) {
-      value.forEach((subvalue) => url.searchParams.append(key, subvalue));
-    } else {
-      url.searchParams.append(key, value.toString());
-    }
+  if (name === QueryNameKeys.traveltimes) {
+    return apiFetch({
+      path: '/api/aggregate/traveltimes2',
+      options,
+      errorMessage: 'Failed to fetch aggregate traveltimes2',
+      signal,
+    });
+  }
+  const byDate = await apiFetch({
+    path: name === QueryNameKeys.headways ? '/api/aggregate/headways' : '/api/aggregate/dwells',
+    options,
+    errorMessage: `Failed to fetch aggregate ${name}`,
+    signal,
   });
-  const response = await fetchOrThrow(
-    url.toString(),
-    { signal },
-    `Failed to fetch aggregate ${method}`
-  );
-  const responseJson = await response.json();
-  return name === QueryNameKeys.traveltimes ? responseJson : { by_date: responseJson, by_time: [] };
+  return { by_date: byDate, by_time: [] };
 };

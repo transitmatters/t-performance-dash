@@ -35,7 +35,7 @@ const StopComparisons = ({
   directionId,
   stopId,
 }: {
-  route: BusStopRidershipData;
+  route: Pick<BusStopRidershipData, 'seasons'>;
   season: string;
   directionId: number;
   stopId: string;

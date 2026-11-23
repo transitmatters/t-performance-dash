@@ -8,12 +8,14 @@ const isShutdownEffect = (value: string): value is ShutdownEffect =>
 
 // The spec leaves effects open; one this page doesn't know how to draw is left out.
 export const fetchShutdowns = async (options: FetchShutdownsOptions): Promise<Shutdown[]> => {
+  const { start_date, end_date, line } = options;
+  if (!start_date || !end_date || !line) return [];
   const shutdowns = await apiFetch({
     path: '/api/shutdowns',
-    options,
+    options: { start_date, end_date, line },
     errorMessage: 'Failed to fetch shutdowns',
   });
-  return shutdowns.flatMap(({ effect, cause, ...shutdown }) =>
-    isShutdownEffect(effect) ? [{ ...shutdown, effect, cause: cause ?? null }] : []
+  return shutdowns.flatMap(({ effect, ...shutdown }) =>
+    isShutdownEffect(effect) ? [{ ...shutdown, effect }] : []
   );
 };

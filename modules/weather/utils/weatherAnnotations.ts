@@ -12,6 +12,8 @@ import type {
 import { ONE_HOUR } from '../../../common/constants/time';
 import { describeWeather, weatherRows } from './weatherDetails';
 
+type ConditionReading = Pick<WeatherHourly, 'timestamp' | 'condition'>;
+
 export type WeatherGranularity = 'hourly' | 'daily';
 
 export type SignificantCondition = Exclude<WeatherCondition, 'clear' | 'cloudy' | 'unknown'>;
@@ -65,11 +67,11 @@ const SEVERITY: Record<SignificantCondition, number> = {
 };
 
 const isSignificant = (
-  h: WeatherHourly
+  h: ConditionReading
 ): h is WeatherHourly & { condition: SignificantCondition } =>
   h.condition !== null && h.condition in SEVERITY;
 
-const hourlyRuns = (hours: WeatherHourly[]): WeatherRun[] => {
+const hourlyRuns = (hours: ConditionReading[]): WeatherRun[] => {
   const runs: WeatherRun[] = [];
   let current: { start: string; last: string; condition: SignificantCondition } | null = null;
 
@@ -101,7 +103,7 @@ const hourlyRuns = (hours: WeatherHourly[]): WeatherRun[] => {
   return runs;
 };
 
-const dailyRuns = (hours: WeatherHourly[]): WeatherRun[] => {
+const dailyRuns = (hours: ConditionReading[]): WeatherRun[] => {
   const worstByDay = new Map<string, SignificantCondition>();
   hours.forEach((h) => {
     if (!isSignificant(h)) return;
@@ -129,7 +131,7 @@ const dailyRuns = (hours: WeatherHourly[]): WeatherRun[] => {
 };
 
 export const getWeatherRuns = (
-  hours: WeatherHourly[],
+  hours: ConditionReading[],
   granularity: WeatherGranularity
 ): WeatherRun[] => (granularity === 'daily' ? dailyRuns(hours) : hourlyRuns(hours));
 

@@ -1,5 +1,6 @@
 import type { Line } from '../../common/types/lines';
 import type { DelayAgg } from './format';
+import type { DelayReasonKey } from './constants/reasons';
 import type { RangeRow } from './range';
 import { causeRows } from './reasonSeries';
 
@@ -8,15 +9,18 @@ const PERIOD_DAYS: Record<DelayAgg, number> = { daily: 1, weekly: 7, monthly: 36
 
 const sum = (values: number[]) => values.reduce((total, v) => total + v, 0);
 
+/** What the stats read from each row. */
+export type StatsRow = Pick<RangeRow, 'total_delay_time' | 'days' | DelayReasonKey>;
+
 /**
  * Minutes delayed per period, from the days the rows cover. A week with only two days of data so
  * far counts as two days, not a quiet week.
  */
-const perPeriod = (rows: RangeRow[], periodDays: number) =>
+const perPeriod = (rows: StatsRow[], periodDays: number) =>
   (sum(rows.map((row) => row.total_delay_time)) / sum(rows.map((row) => row.days))) * periodDays;
 
 /** The rows before and after the point where half the days have gone by. */
-const halves = (rows: RangeRow[]): [RangeRow[], RangeRow[]] => {
+const halves = <Row extends Pick<RangeRow, 'days'>>(rows: Row[]): [Row[], Row[]] => {
   const half = sum(rows.map((row) => row.days)) / 2;
   let days = 0;
   let mid = 0;
@@ -28,7 +32,7 @@ const halves = (rows: RangeRow[]): [RangeRow[], RangeRow[]] => {
 };
 
 /** Stats for rows that cover exactly the selected dates (see `coverRange`). */
-export const getDelayStats = (data: RangeRow[], agg: DelayAgg, line?: Line) => {
+export const getDelayStats = (data: StatsRow[], agg: DelayAgg, line?: Line) => {
   const periodDays = PERIOD_DAYS[agg];
   const [leading, trailing] = halves(data);
 

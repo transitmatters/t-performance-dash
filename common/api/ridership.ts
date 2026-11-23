@@ -1,4 +1,3 @@
-import { FetchRidershipParams } from '../types/api';
 import type { FetchRidershipOptions } from '../types/api';
 import type { BusStopRidership, RidershipCount, StationRidershipWeek } from '../types/dataPoints';
 import { RIDERSHIP_KEYS } from '../types/lines';
@@ -21,19 +20,17 @@ function sumByDate(arrays: RidershipCount[][]) {
 export const fetchRidership = async (
   options: FetchRidershipOptions
 ): Promise<RidershipCount[] | undefined> => {
-  const startDate = options[FetchRidershipParams.startDate];
-  const params: FetchRidershipOptions = {
-    ...options,
-    ...(startDate && { [FetchRidershipParams.startDate]: getWeekStart(startDate) }),
-  };
+  const { start_date, end_date, line_id } = options;
+  if (!start_date || !end_date) return undefined;
+  const dates = { start_date: getWeekStart(start_date), end_date };
 
   // If we don't have a lineId, return a systemwide merged total
-  if (!params[FetchRidershipParams.lineId]) {
+  if (!line_id) {
     const ridershipCounts = await Promise.all(
       Object.values(RIDERSHIP_KEYS).map((lineId) =>
         apiFetch({
           path: '/api/ridership',
-          options: { ...params, [FetchRidershipParams.lineId]: lineId },
+          options: { ...dates, line_id: lineId },
           errorMessage: 'Failed to fetch ridership counts',
         })
       )
@@ -43,7 +40,7 @@ export const fetchRidership = async (
 
   return await apiFetch({
     path: '/api/ridership',
-    options: params,
+    options: { ...dates, line_id },
     errorMessage: 'Failed to fetch ridership counts',
   });
 };
@@ -51,13 +48,11 @@ export const fetchRidership = async (
 export const fetchStationRidership = async (
   options: FetchRidershipOptions
 ): Promise<StationRidershipWeek[]> => {
-  const startDate = options[FetchRidershipParams.startDate];
+  const { start_date, end_date, line_id } = options;
+  if (!start_date || !end_date || !line_id) return [];
   return await apiFetch({
     path: '/api/station_ridership',
-    options: {
-      ...options,
-      ...(startDate && { [FetchRidershipParams.startDate]: getWeekStart(startDate) }),
-    },
+    options: { start_date: getWeekStart(start_date), end_date, line_id },
     errorMessage: 'Failed to fetch station ridership',
   });
 };

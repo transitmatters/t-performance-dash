@@ -7,9 +7,11 @@ import { useDateRange } from '../../../common/hooks/usePageParams';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
 
+type Histories = Pick<SummaryData, 'totalServiceHistory' | 'totalRidershipHistory'>;
+
 type Props = {
-  summaryData: SummaryData;
-  modeData: Record<ModeKind, SummaryData>;
+  summaryData: Histories;
+  modeData: Partial<Record<ModeKind, Histories>>;
 };
 
 type Selection = 'total' | ModeKind;
@@ -44,8 +46,8 @@ export const SummaryCard = (props: Props) => {
     }
     const selectedModeData = modeData[selection];
     return {
-      serviceHistory: selectedModeData.totalServiceHistory ?? {},
-      ridershipHistory: selectedModeData.totalRidershipHistory ?? {},
+      serviceHistory: selectedModeData?.totalServiceHistory ?? {},
+      ridershipHistory: selectedModeData?.totalRidershipHistory ?? {},
     };
   }, [selection, summaryData, modeData]);
 

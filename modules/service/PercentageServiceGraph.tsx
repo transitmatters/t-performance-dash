@@ -26,7 +26,7 @@ import {
 import { getNoDataSinceLatestAnnotation, getShuttlingBlockAnnotations } from './utils/graphUtils';
 
 interface PercentageServiceGraphProps {
-  data: DeliveredTripMetrics[];
+  data: Pick<DeliveredTripMetrics, 'date' | 'miles_covered'>[];
   calculatedData: { scheduled: number[]; peak: number[] };
   config: ParamsType;
   startDate: string;

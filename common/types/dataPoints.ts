@@ -93,63 +93,46 @@ export interface SlowZoneDailyDelaysResponse {
   updated_on: string;
 }
 
-/** Fleet stats from data-ingestion. Each mode fills in its own share and age fields. */
-export interface FleetMetrics {
+/** Per-fleet shares, `fleet_mix_<type>`. The spec describes them but can't list keys that vary by line. */
+export type FleetMix = { [key: `fleet_mix_${string}`]: number | undefined };
+
+/** What the fleet charts read from any mode's trip metrics. Each mode fills in its own fields. */
+export interface FleetMetrics extends FleetMix {
   date: string;
-  fleet_trips?: number;
-  avg_car_age?: number;
-  pct_new_trips?: number;
-  avg_bus_age?: number;
-  pct_battery_trips?: number;
-  avg_cab_car_age?: number;
-  [key: `fleet_mix_${string}`]: number | undefined;
+  fleet_trips?: number | null;
+  avg_car_age?: number | null;
+  pct_new_trips?: number | null;
+  avg_bus_age?: number | null;
+  pct_battery_trips?: number | null;
+  avg_cab_car_age?: number | null;
 }
 
-export interface SpeedTripMetrics extends FleetMetrics {
+/** What the speed charts read from any mode's trip metrics. */
+export interface SpeedTripMetrics {
+  date: string;
   miles_covered: number;
   total_time: number;
   count: number;
   miles_per_hour?: string;
 }
 
-export interface DeliveredTripMetrics extends SpeedTripMetrics {
-  line: Line;
-}
+export type DeliveredTripMetrics = Schemas['TripMetricsEntry'] &
+  FleetMix & {
+    line: Line;
+    avg_car_age?: number;
+    pct_new_trips?: number;
+    miles_per_hour?: string;
+  };
 
 /**
- * Daily speed metrics for a single bus route, from the DeliveredTripMetricsBus table.
- * Unlike rail, miles_covered/total_time are summed directly from observed segments
- * rather than extrapolated, but the mph formula (miles_covered / (total_time / 3600))
- * is the same.
+ * Speed metrics for a bus route, from the DeliveredTripMetricsBus table. Unlike rail,
+ * miles_covered/total_time are summed directly from observed segments rather than extrapolated,
+ * but the mph formula (miles_covered / (total_time / 3600)) is the same.
  */
-export interface DeliveredTripMetricsBus
-  extends SpeedTripMetrics, BusTripCounts, Partial<HeadwayCounts> {
-  route: string;
-  n_traversals: number;
-  n_interpolated: number;
-  // The headway counts are at mid-route timepoints, whole day only, and from 2025-12-24 on.
-  // Whole-day, daily rows only: a median or mean can't be split by time band or summed into a
-  // week or month.
-  median_speed_mph?: number;
-  mean_speed_mph?: number;
-  // Fleet fields, daily rows only (the `fleet_mix_*` shares are on SpeedTripMetrics). Route `all`
-  // is the whole system and carries only these.
-  fleet_trips?: number;
-  pct_battery_trips?: number;
-  avg_bus_age?: number;
-  // The same totals split by departure window (keys are TIME_BANDS minus `all_day`), on daily rows
-  // and weekly/monthly rollups alike. Absent before the pipeline began recording it (2025-12-24) and
-  // when the request set `time_band`; a band with no traversals is zeros or missing.
-  time_bands?: Partial<Record<string, BusBandTotals>>;
-}
+export type DeliveredTripMetricsBus = Schemas['BusTripMetricsEntry'] &
+  FleetMix & { miles_per_hour?: string };
 
-export interface BusBandTotals {
-  count: number;
-  n_traversals: number;
-  n_interpolated: number;
-  miles_covered: number;
-  total_time: number;
-}
+export type BusBandTotals = Schemas['BusBandTotals'];
 
 /**
  * Every trip LAMP scheduled, the ones with no observed stop (an estimate of trips dropped, since a
@@ -157,41 +140,20 @@ export interface BusBandTotals {
  * 2025-12-24, whole day only, and left off when not measured rather than sent as zero.
  */
 export interface BusTripCounts {
-  scheduled_trips?: number;
-  unobserved_trips?: number;
-  unobserved_waived_trips?: number;
+  scheduled_trips?: number | null;
+  unobserved_trips?: number | null;
+  unobserved_waived_trips?: number | null;
 }
 
 /** Commuter Rail cab-car fleet stats for one route, or `all`, from DeliveredTripMetricsCR. */
-export interface DeliveredTripMetricsCR extends FleetMetrics {
-  route: string;
-}
+export type DeliveredTripMetricsCR = Schemas['CrTripMetricsEntry'] & FleetMix;
 
 /**
- * One route's totals over a date range, as ranked by /api/busspeedleaderboard. mph is
- * derived client-side the same way as everywhere else (miles_covered / (total_time / 3600))
- * from figures summed across the range, not averaged day-by-day.
- *
- * total_time runs arrival to arrival, so it includes the time around stops in total_dwell.
- * Average dwell is total_dwell / n_dwell_stops. The dwell fields and n_days (days with speed
- * data) are missing from leaderboards computed before they were added.
- *
- * Routes with fleet data also have its stats for the range, each day weighted by the trips it
- * sampled (`fleet_trips`). The API sends avg_bus_age and the fleet_mix_* shares too; only the
- * fields the leaderboard ranks by are typed here.
+ * One route's totals over a date range, as ranked by /api/busspeedleaderboard. mph is derived
+ * client-side the same way as everywhere else (miles_covered / (total_time / 3600)) from figures
+ * summed across the range, not averaged day-by-day.
  */
-export interface BusSpeedLeaderboardEntry extends BusTripCounts, Partial<HeadwayCounts> {
-  route: string;
-  miles_covered: number;
-  total_time: number;
-  count: number;
-  n_traversals: number;
-  total_dwell?: number;
-  n_dwell_stops?: number;
-  n_days?: number;
-  fleet_trips?: number;
-  pct_battery_trips?: number;
-}
+export type BusSpeedLeaderboardEntry = Schemas['BusSpeedLeaderboardEntry'];
 
 export type LineSegmentData = {
   duration: number;
@@ -206,63 +168,25 @@ export type LineSegmentData = {
   color: string;
 };
 
-export type SpeedRestriction = {
-  id: string;
-  line: Exclude<LineShort, 'Bus'>;
-  description: string;
-  reason: string;
-  fromStopId: null | string;
-  toStopId: null | string;
-  reported: string;
-  speedMph: number;
-  trackFeet: number;
-  lineId: Line;
+/** A speed restriction zone, with when its data is from (`currentAsOf`) and was fetched (`validAsOf`). */
+export type SpeedRestriction = Schemas['SpeedRestrictionZone'] & {
   currentAsOf: Date;
   validAsOf: Date;
 };
 
-export interface TimePrediction {
-  mode: 'subway' | 'bus';
-  arrival_departure: string;
-  route_id: string;
-  bin: PredictionBin;
-  weekly: string;
-  num_accurate_predictions: number;
-  num_predictions: number;
-  accuracy_percentage?: string;
-}
+/** One week's predictions in one bin (`0-3 min`, `3-6 min`, `6-12 min` or `12-30 min`). */
+export type TimePrediction = Schemas['TimePredictionBucket'];
 
-export type PredictionBin = '0-3 min' | '3-6 min' | '6-12 min' | '12-30 min';
-
-export interface TimePredictionWeek {
-  week: string;
-  prediction: TimePrediction[];
-  routeId: string;
-}
+export type TimePredictionWeek = Schemas['TimePredictionWeek'];
 
 export type DayKind = 'weekday' | 'saturday' | 'sunday';
 
-export type ServiceLevels = {
-  /** Null when the range has no day of this kind. */
-  [key in DayKind]: {
-    date: string;
-    service_levels: number[] | undefined;
-  } | null;
-};
+/** A day kind is missing or null when the range has none of it. */
+export type ServiceLevels = Schemas['ServiceLevelsByDayKind'];
 
-export type ScheduledService = {
-  start_date: string;
-  end_date: string;
-  start_date_service_levels: ServiceLevels;
-  end_date_service_levels: ServiceLevels;
-  counts: { date: string; count: number }[];
-};
+export type ScheduledService = Schemas['GetScheduledServiceResponse'];
 
-export type ServiceHours = {
-  date: string;
-  scheduled: number;
-  delivered: number;
-};
+export type ServiceHours = Schemas['ServiceHoursEntry'];
 
 export type RidershipCount = Schemas['RidershipEntry'];
 
@@ -277,41 +201,15 @@ export type BusStopRidershipDirection = Schemas['BusStopRidershipDirection'];
 /** A bus route's ridership by stop, from the MBTA's seasonal counts of every trip */
 export type BusStopRidership = Schemas['BusStopRidershipResponse'];
 
-export type ReliabilityCounts = {
-  otpNumerator: number;
-  otpDenominator: number;
-  cancelled: number;
-};
+// The spec marks the schema nullable because `peak` and `offPeak` can be null, and OpenAPI 3.0
+// can't mark a reference nullable; the counts themselves never are.
+export type ReliabilityCounts = NonNullable<Schemas['ReliabilityCounts']>;
 
 /** Headways by their ratio to the scheduled headway: ≤50%, 50–75%, 75–125% (exclusive), 125–150%, ≥150%. */
-export type HeadwayCounts = {
-  headways_under_50: number;
-  headways_50_75: number;
-  headways_75_125: number;
-  headways_125_150: number;
-  headways_over_150: number;
-};
+export type HeadwayCounts = Schemas['HeadwayCounts'];
 
 /** One day, week, or month of reliability counts; see server/chalicelib/reliability.py. */
-export type ReliabilityEntry = Partial<HeadwayCounts> & {
-  date: string;
-  // Service days with data in the period; partial periods and gaps in MBTA's data have fewer.
-  days: number;
-  // The RIDE. requests is recorded from Sep 2025, noShows and missed from Jan 2026.
-  completed?: number;
-  onTime?: number;
-  requests?: number;
-  noShows?: number;
-  missed?: number;
-  // Commuter rail
-  otpNumerator?: number;
-  otpDenominator?: number;
-  cancelled?: number;
-  peak?: ReliabilityCounts;
-  offPeak?: ReliabilityCounts;
-  // Subway: the headway counts above, and per GTFS direction_id ("0", "1")
-  byDirection?: Record<string, HeadwayCounts>;
-};
+export type ReliabilityEntry = Schemas['ReliabilityEntry'];
 
 /**
  * Riders and their passenger-weighted minutes, summed over a period; see
@@ -328,29 +226,7 @@ export type ExcessTripTimePeriod = keyof ExcessTripTimeScope['byPeriod'];
 export type ExcessTripTimeEntry = Schemas['ExcessTripTimeEntry'];
 
 /** One direction's schedule, measured at its Boston terminal; see server/chalicelib/regional_rail.py. */
-export type ScorecardDirection = {
-  trips: number;
-  // Seconds after midnight; null on days without service
-  firstTrip: number | null;
-  lastTrip: number | null;
-  // Minutes
-  maxGapMidday: number;
-  maxGapEvening: number;
-  // Of the 20 hours from 5am to 1am, those with a train at least every 30 minutes
-  hoursAtTarget: number;
-  // Share of trains with another exactly an hour before or after; null with too few trains
-  clockFaceShare: number | null;
-  byHour: (number | null)[];
-};
+export type ScorecardDirection = Schemas['CrScorecardDirection'];
 
 /** A period of one line's schedule (with `date`), or a line's summary over the range (with `routeId`). */
-export type CrScorecardEntry = {
-  date?: string;
-  routeId?: string;
-  // Days of the requested kind averaged into this entry
-  days: number;
-  outbound: ScorecardDirection;
-  inbound: ScorecardDirection;
-  peakTrips: number;
-  reversePeakTrips: number;
-};
+export type CrScorecardEntry = Schemas['CrScorecardEntry'];

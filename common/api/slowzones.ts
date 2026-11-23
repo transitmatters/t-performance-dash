@@ -4,11 +4,11 @@ import type {
   SlowZoneDayTotalsResponse,
   SpeedRestriction,
 } from '../types/dataPoints';
-import type { FetchSpeedRestrictionsOptions, FetchSpeedRestrictionsResponse } from '../types/api';
+import type { FetchSpeedRestrictionsOptions } from '../types/api';
 import type { SlowZonesLineName } from '../../modules/slowzones/types';
 import { getGtfsRailLineId } from '../utils/lines';
 import { fetchOrThrow } from './utils/ApiError';
-import { apiFetchUnchecked } from './utils/fetch';
+import { apiFetch } from './utils/fetch';
 
 export const fetchDelayTotals = async (): Promise<SlowZoneDayTotalsResponse> => {
   const url = new URL(`/static/slowzones/delay_totals.json`, window.location.origin);
@@ -40,19 +40,18 @@ export const fetchSpeedRestrictions = async (
     available,
     date: resolvedDate,
     zones,
-  }: FetchSpeedRestrictionsResponse = await apiFetchUnchecked({
-    path: `/api/speed_restrictions`,
+  } = await apiFetch({
+    path: '/api/speed_restrictions',
     options: { line_id: getGtfsRailLineId(lineId), date: requestedDate },
     errorMessage: 'Failed to fetch speed restrictions',
   });
 
+  // The server omits the date and zones when it has no data for the line.
+  if (!available || !zones || !resolvedDate) return [];
   const today = new Date();
-  if (available) {
-    return zones.map((zone) => ({
-      ...zone,
-      currentAsOf: new Date(resolvedDate),
-      validAsOf: today,
-    }));
-  }
-  return [];
+  return zones.map((zone) => ({
+    ...zone,
+    currentAsOf: new Date(resolvedDate),
+    validAsOf: today,
+  }));
 };

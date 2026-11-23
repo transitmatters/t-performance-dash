@@ -8,6 +8,20 @@ export type ApiPath = {
   [P in keyof paths]: paths[P] extends { get: unknown } ? P : never;
 }[keyof paths];
 
+type QueryOf<P extends ApiPath> = paths[P]['get']['parameters'] extends { query?: infer Query }
+  ? Exclude<Query, undefined>
+  : never;
+
+/** The query parameters a GET route takes; a route that takes none takes an empty object. */
+export type ApiQuery<P extends ApiPath> = [QueryOf<P>] extends [never]
+  ? Record<string, never>
+  : QueryOf<P>;
+
+/** The values for a route's `{name}` path segments; never for a route without any. */
+export type ApiPathParams<P extends ApiPath> = paths[P]['parameters'] extends { path: infer Params }
+  ? Params
+  : never;
+
 /** The JSON body a GET route returns on success. */
 export type ApiResponse<P extends ApiPath> =
   paths[P]['get']['responses'][200]['content']['application/json'];

@@ -6,7 +6,7 @@ import { ServiceGraph } from './ServiceGraph';
 
 interface ServiceGraphWrapperProps {
   data: DeliveredTripMetrics[];
-  predictedData: ScheduledService;
+  predictedData: Pick<ScheduledService, 'counts'>;
   config: ParamsType;
   startDate: string;
   endDate: string;

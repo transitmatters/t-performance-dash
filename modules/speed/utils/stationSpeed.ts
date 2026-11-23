@@ -1,7 +1,10 @@
 import type { AggregateDataPoint, SingleDayDataPoint } from '../../../common/types/charts';
 import { getStationDistance } from '../../../common/utils/stationDistances';
 
-function convertSecondsToMph(travelTimeSec: number | undefined, distanceMiles: number | undefined) {
+function convertSecondsToMph(
+  travelTimeSec: number | null | undefined,
+  distanceMiles: number | undefined
+) {
   if (distanceMiles && travelTimeSec) {
     return (3600 * distanceMiles) / travelTimeSec;
   }

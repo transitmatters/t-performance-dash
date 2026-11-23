@@ -80,7 +80,7 @@ export const stationForStop = (lineId: string, stopId: string): Station | undefi
     );
   });
 
-const shutdownStations = (shutdown: Shutdown, lineId: string): Station[] => {
+const shutdownStations = (shutdown: Pick<Shutdown, 'stops'>, lineId: string): Station[] => {
   const byId = new Map<string, Station>();
   shutdown.stops.forEach((stopId) => {
     const station = stationForStop(lineId, stopId);
@@ -109,7 +109,7 @@ const serviceWindow = (day: dayjs.Dayjs) => ({
   end: day.add(1, 'day').hour(SERVICE_END_HOUR),
 });
 
-export const shutdownDays = (shutdown: Shutdown): string[] => {
+export const shutdownDays = (shutdown: Pick<Shutdown, 'periods'>): string[] => {
   const days = new Set<string>();
   shutdown.periods.forEach((period) => {
     const start = wallClock(period.start);

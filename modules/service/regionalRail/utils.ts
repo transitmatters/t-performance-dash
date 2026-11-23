@@ -1,5 +1,5 @@
 import type { DataPoint } from '../../../common/components/charts/TimeSeriesChart';
-import type { CrScorecardEntry, ScorecardDirection } from '../../../common/types/dataPoints';
+import type { CrScorecardEntry } from '../../../common/types/dataPoints';
 
 /** Each direction is measured at its Boston terminal: outbound leaving it, inbound reaching it. */
 export const DIRECTIONS = [
@@ -14,6 +14,15 @@ export const TARGET_HEADWAY_MINUTES = 30;
 export const SPAN_HOURS = 20;
 
 type Value = (entry: CrScorecardEntry) => number | null | undefined;
+
+type DirectionField =
+  | 'trips'
+  | 'firstTrip'
+  | 'lastTrip'
+  | 'maxGapMidday'
+  | 'maxGapEvening'
+  | 'hoursAtTarget'
+  | 'clockFaceShare';
 
 /** Map each period to a point, dropping periods without a value. */
 export const toPoints = (
@@ -41,14 +50,14 @@ export const weightedMean = (data: CrScorecardEntry[], value: Value): number | u
 export const directionMean = (
   data: CrScorecardEntry[],
   direction: Direction,
-  field: keyof Omit<ScorecardDirection, 'byHour'>
+  field: DirectionField
 ) => weightedMean(data, (entry) => entry[direction][field]);
 
 /** Average trains in each hour of the day, 0 through 23. */
 export const averageByHour = (data: CrScorecardEntry[], direction: Direction): number[] =>
   Array.from(
     { length: 24 },
-    (_, hour) => weightedMean(data, (entry) => entry[direction].byHour[hour]) ?? 0
+    (_, hour) => weightedMean(data, (entry) => entry[direction].byHour?.[hour]) ?? 0
   );
 
 // The Regional Rail span, 5am through the hour starting at midnight, as byHour indexes
@@ -56,8 +65,8 @@ export const SPAN_HOUR_INDEXES = [...Array.from({ length: 19 }, (_, i) => i + 5)
 
 /** Trains in each hour for the direction with fewer, since Regional Rail is measured both ways. */
 export const weakerByHour = (entry: CrScorecardEntry): (number | null)[] =>
-  entry.outbound.byHour.map((outbound, hour) => {
-    const inbound = entry.inbound.byHour[hour];
+  (entry.outbound.byHour ?? []).map((outbound, hour) => {
+    const inbound = entry.inbound.byHour?.[hour];
     return outbound == null || inbound == null ? null : Math.min(outbound, inbound);
   });
 
@@ -97,7 +106,7 @@ export const serviceSpan = (data: CrScorecardEntry[]) => {
 
 /** Regional Rail is measured both ways, so a line scores its weaker direction. */
 export const getScorecardStats = (data: CrScorecardEntry[]) => {
-  const both = (field: keyof Omit<ScorecardDirection, 'byHour'>) =>
+  const both = (field: DirectionField) =>
     DIRECTIONS.map(({ key }) => directionMean(data, key, field)).filter(
       (v): v is number => v != null
     );
@@ -106,7 +115,11 @@ export const getScorecardStats = (data: CrScorecardEntry[]) => {
   const eveningGap = both('maxGapEvening');
   const clockFace = both('clockFaceShare');
   return {
-    tripsPerDay: weightedMean(data, (entry) => entry.outbound.trips + entry.inbound.trips),
+    // A direction without a trip count adds none.
+    tripsPerDay: weightedMean(
+      data,
+      (entry) => (entry.outbound.trips ?? 0) + (entry.inbound.trips ?? 0)
+    ),
     hoursAtTarget: hoursAtTarget.length ? Math.min(...hoursAtTarget) : undefined,
     maxGapMidday: middayGap.length ? Math.max(...middayGap) : undefined,
     maxGapEvening: eveningGap.length ? Math.max(...eveningGap) : undefined,

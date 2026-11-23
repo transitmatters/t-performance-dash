@@ -1,7 +1,6 @@
-import type { DayType, TimeBand } from '../../modules/busspeedmap/types';
-import type { AggType } from '../../modules/speed/constants/speeds';
-import type { ServiceHours, SpeedRestriction } from './dataPoints';
-import type { Line, LineRouteId } from './lines';
+import type { ApiQuery } from './apiSchemas';
+import type { ServiceHours } from './dataPoints';
+import type { Line } from './lines';
 
 export enum QueryNameKeys {
   traveltimes = 'traveltimes',
@@ -19,184 +18,37 @@ export const QUERIES: { [key in RouteType]: QueryNameOptions[] } = {
   ferry: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
 };
 
-export enum SingleDayAPIParams {
-  stop = 'stop',
-  fromStop = 'from_stop',
-  toStop = 'to_stop',
-  date = 'date',
-}
-export type SingleDayAPIOptions = { [key in SingleDayAPIParams]?: string[] | string };
-export type PartialSingleDayAPIOptions = Partial<SingleDayAPIOptions>;
+export type FetchDeliveredTripMetricsOptions = Partial<ApiQuery<'/api/tripmetrics'>>;
 
-export enum AggregateAPIParams {
-  stop = 'stop',
-  fromStop = 'from_stop',
-  toStop = 'to_stop',
-  startDate = 'start_date',
-  endDate = 'end_date',
-}
+export type FetchBusTripMetricsOptions = Partial<ApiQuery<'/api/bustripmetrics'>>;
 
-export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | string };
-export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;
+export type FetchCrTripMetricsOptions = Partial<ApiQuery<'/api/crtripmetrics'>>;
 
-export type FetchDeliveredTripMetricsOptions = {
-  agg: AggType;
-  start_date?: string;
-  end_date?: string;
-  line?: Line;
-};
+export type FetchBusSpeedLeaderboardOptions = Partial<ApiQuery<'/api/busspeedleaderboard'>>;
 
-export type FetchBusTripMetricsOptions = {
-  start_date?: string;
-  end_date?: string;
-  route?: string;
-  agg?: AggType;
-  /** One band's figures in place of the whole day's. Left off for "All day". */
-  time_band?: Exclude<TimeBand, 'all_day'>;
-  /** Only business days, or only weekends and MBTA holidays. Left off for every day. */
-  day_type?: DayType;
-};
+export type FetchAlertDelaysByLineOptions = Partial<ApiQuery<'/api/linedelays'>>;
 
-export enum FetchBusTripMetricsParams {
-  startDate = 'start_date',
-  endDate = 'end_date',
-  route = 'route',
-  agg = 'agg',
-  timeBand = 'time_band',
-  dayType = 'day_type',
-}
+export type FetchScheduledServiceOptions = Partial<ApiQuery<'/api/scheduledservice'>>;
 
-export type FetchCrTripMetricsOptions = {
-  start_date?: string;
-  end_date?: string;
-  route?: string;
-  agg?: AggType;
-};
+export type FetchRidershipOptions = Partial<ApiQuery<'/api/ridership'>>;
 
-export type FetchBusSpeedLeaderboardOptions = {
-  start_date?: string;
-  end_date?: string;
-  limit?: number;
-};
+export type FetchReliabilityOptions = Partial<ApiQuery<'/api/reliability'>>;
 
-export type FetchAlertDelaysByLineOptions = {
-  start_date?: string;
-  end_date?: string;
-  /** A rail line, comma-separated bus route ids (e.g. `114,116,117`), or `Bus` for every route. */
-  line?: string;
-  agg?: 'daily' | 'weekly';
-};
+export type FetchExcessTripTimeOptions = Partial<ApiQuery<'/api/excess_trip_time'>>;
 
-export enum FetchDeliveredTripMetricsParams {
-  startDate = 'start_date',
-  endDate = 'end_date',
-  agg = 'agg',
-  line = 'line',
-}
+export type FetchWeatherOptions = Partial<ApiQuery<'/api/weather'>>;
 
-export enum FetchAlertDelaysByLineParams {
-  startDate = 'start_date',
-  endDate = 'end_date',
-  line = 'line',
-  agg = 'agg',
-}
-
-export type FetchScheduledServiceOptions = {
-  [key in FetchScheduledServiceParams]?: string;
-};
-
-export enum FetchScheduledServiceParams {
-  startDate = 'start_date',
-  endDate = 'end_date',
-  routeId = 'route_id',
-  agg = 'agg',
-}
-
-export type FetchRidershipOptions = {
-  [key in FetchRidershipParams]?: string;
-};
-
-export enum FetchRidershipParams {
-  lineId = 'line_id',
-  startDate = 'start_date',
-  endDate = 'end_date',
-}
-
-export type FetchReliabilityOptions = {
-  [key in FetchReliabilityParams]?: string;
-};
-
-export enum FetchReliabilityParams {
-  routeId = 'route_id',
-  startDate = 'start_date',
-  endDate = 'end_date',
-  agg = 'agg',
-}
-
-export type FetchExcessTripTimeOptions = {
-  [key in FetchExcessTripTimeParams]?: string;
-};
-
-export enum FetchExcessTripTimeParams {
-  line = 'line',
-  startDate = 'start_date',
-  endDate = 'end_date',
-  agg = 'agg',
-}
-
-export type FetchWeatherOptions = {
-  [key in FetchWeatherParams]?: string;
-};
-
-export enum FetchWeatherParams {
-  startDate = 'start_date',
-  endDate = 'end_date',
-}
-
-export type FetchShutdownsOptions = {
-  [key in FetchShutdownsParams]?: string;
-};
-
-export enum FetchShutdownsParams {
-  startDate = 'start_date',
-  endDate = 'end_date',
-  line = 'line',
-}
+export type FetchShutdownsOptions = Partial<ApiQuery<'/api/shutdowns'>>;
 
 export type FetchSpeedRestrictionsOptions = {
   lineId: Line;
   date: string;
 };
 
-export type FetchPredictionsParams = {
-  route_id: LineRouteId;
-  start_date?: string;
-  end_date?: string;
-};
+export type FetchPredictionsParams = ApiQuery<'/api/time_predictions'>;
 
-export type FetchSpeedRestrictionsResponse = {
-  available: boolean;
-  date: string;
-  zones: SpeedRestriction[];
-};
-
-export type FetchServiceHoursOptions = Partial<{
-  start_date: string;
-  end_date: string;
-  line_id: string;
-  agg: AggType;
-}>;
+export type FetchServiceHoursOptions = Partial<ApiQuery<'/api/service_hours'>>;
 
 export type FetchServiceHoursResponse = ServiceHours[];
 
-export type FetchCrScorecardOptions = {
-  [key in FetchCrScorecardParams]?: string;
-};
-
-export enum FetchCrScorecardParams {
-  routeId = 'route_id',
-  startDate = 'start_date',
-  endDate = 'end_date',
-  agg = 'agg',
-  dayKind = 'day_kind',
-}
+export type FetchCrScorecardOptions = Partial<ApiQuery<'/api/crscorecard'>>;
