@@ -220,39 +220,38 @@ const subwayDroppedSentence = (shares: number[]) => {
 };
 
 function dropped({ cell, mark }: Reader): Statement | undefined {
-  const lines = DROPPED_ROWS.map((id) => ({ id, cell: cell(id, 'dropped') })).filter(
-    (l) => isNumber(l.cell?.value) && isMeasured(l.cell)
-  );
-  const bus = lines.find((l) => l.id === 'all-bus')?.cell;
-  if (!bus || !isNumber(bus.value)) return undefined;
-  const change = yearAgoChange(bus);
+  const lines = DROPPED_ROWS.flatMap((id) => {
+    const c = cell(id, 'dropped');
+    return c && isNumber(c.value) && isMeasured(c) ? [{ id, cell: c, value: c.value }] : [];
+  });
+  const bus = lines.find((l) => l.id === 'all-bus');
+  if (!bus) return undefined;
+  const change = yearAgoChange(bus.cell);
   const now = formatDroppedShare(bus.value);
   const then = change === undefined ? undefined : formatDroppedShare(bus.value - change);
   const since =
-    then === undefined || then === now
+    change === undefined || then === now
       ? ''
-      : (change as number) < 0
+      : change < 0
         ? `, down from ${then} a year ago`
         : `, up from ${then} a year ago`;
-  const cr = lines.find((l) => l.id === 'commuter-rail')?.cell;
-  const subwayShares = lines
-    .filter((l) => SUBWAY.includes(l.id))
-    .map((l) => l.cell?.value as number);
+  const cr = lines.find((l) => l.id === 'commuter-rail');
+  const subwayShares = lines.filter((l) => SUBWAY.includes(l.id)).map((l) => l.value);
   return {
     id: 'dropped',
     head:
       `Buses drop ${now} of scheduled trips${since}.` +
-      (cr && isNumber(cr.value) ? ` Commuter Rail cancels ${formatDroppedShare(cr.value)}.` : '') +
+      (cr ? ` Commuter Rail cancels ${formatDroppedShare(cr.value)}.` : '') +
       subwayDroppedSentence(subwayShares),
     viz: {
       kind: 'shares',
       noun: 'dropped',
-      marks: lines.map((l) => mark(l.id, l.cell?.value as number, l.cell && yearAgoChange(l.cell))),
+      marks: lines.map((l) => mark(l.id, l.value, yearAgoChange(l.cell))),
     },
     note: subwayShares.length
       ? 'A bus trip counts as dropped when no bus was seen running it, and a subway trip when no train stopped for it.'
       : 'A bus trip counts as dropped when no bus was seen running it.',
-    link: { href: bus.href ?? '/bus', label: 'Dropped bus trips' },
+    link: { href: bus.cell.href ?? '/bus', label: 'Dropped bus trips' },
   };
 }
 
