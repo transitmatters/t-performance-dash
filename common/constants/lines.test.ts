@@ -34,6 +34,6 @@ describe('retired "-legacy" bus routes', () => {
     const labelUsers = Object.entries(sources)
       .filter(([, source]) => source.includes('getBusRouteIds('))
       .map(([path]) => path.slice(1));
-    expect(labelUsers.sort()).toEqual([...LABEL_USERS].sort());
+    expect(labelUsers.toSorted()).toEqual([...LABEL_USERS].toSorted());
   });
 });

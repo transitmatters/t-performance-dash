@@ -72,7 +72,7 @@ export const SegmentPopupContent = ({ segments, period }: SegmentPopupContentPro
   // with it is still listed.
   const routeNames = (pooled ? pooled.route_id.split(',') : routes.map((route) => route.route_id))
     .map(getBusRouteDisplayName)
-    .sort(compareRouteNames);
+    .toSorted(compareRouteNames);
   return (
     <div className="text-xs text-stone-900">
       <p className="font-semibold">

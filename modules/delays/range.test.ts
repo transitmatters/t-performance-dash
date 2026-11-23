@@ -84,7 +84,7 @@ describe('coverRange', () => {
     // June 3 to September 8: 98 days
     expect(covered).toBe(98);
     expect(total).toBe(980);
-    expect(rows.map((r) => r.date)).toEqual(rows.map((r) => r.date).sort());
+    expect(rows.map((r) => r.date)).toEqual(rows.map((r) => r.date).toSorted());
   });
 });
 

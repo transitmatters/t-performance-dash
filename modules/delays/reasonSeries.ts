@@ -24,7 +24,7 @@ export const reasonTotals = (data: ReasonCounts[]): Record<DelayReasonKey, numbe
 
 export const rankReasons = (totals: Record<DelayReasonKey, number>, line?: Line) =>
   DELAY_REASONS.filter((reason) => totals[reason.key] > 0)
-    .sort((a, b) => totals[b.key] - totals[a.key])
+    .toSorted((a, b) => totals[b.key] - totals[a.key])
     .map((reason) => ({ ...reason, label: reasonLabel(reason, line) }));
 
 export const buildSeries = (data: ReasonCounts[], line?: Line): ReasonSeries[] => {
@@ -64,7 +64,7 @@ export const shareValues = (values: number[], totals: number[], floor: number): 
 
 /** The median of periods that had any delay at all: what a normal day or week looks like. */
 export const medianPeriodTotal = (totals: number[]): number => {
-  const busy = totals.filter((total) => total > 0).sort((a, b) => a - b);
+  const busy = totals.filter((total) => total > 0).toSorted((a, b) => a - b);
   return busy.length ? busy[Math.floor(busy.length / 2)] : 0;
 };
 
@@ -181,7 +181,7 @@ export const toMonthly = (weeks: DelayRow[]): DelayRow[] => {
   }
   return [...months.entries()]
     .filter(([month, { days }]) => days === dayjs(`${month}-01`).daysInMonth())
-    .sort(([a], [b]) => a.localeCompare(b))
+    .toSorted(([a], [b]) => a.localeCompare(b))
     .map(([month, { parts }]) => {
       const entries = [...parts.entries()];
       const [first] = entries[0];

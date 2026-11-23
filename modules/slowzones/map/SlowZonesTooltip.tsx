@@ -104,7 +104,7 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
       const [oldest] = speedRestrictions
         .filter((sr) => sr.reported)
         .map((sr) => sr.reported)
-        .sort();
+        .toSorted();
       const oldestString = prettyDate(oldest, false);
       return (
         <div className={classNames(styles.speedRestriction, 'stone bg-slate-200 text-xs')}>

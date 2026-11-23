@@ -67,7 +67,7 @@ export const BusSpeedSegmentLeaderboardSection = ({
             Object.values(byBand).flat()
           );
     const routes = new Set(allEntries.map((entry) => getBusRouteGroup(entry.route_id, date)));
-    return [...routes].sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
+    return [...routes].toSorted((a, b) => a.localeCompare(b, 'en', { numeric: true }));
   }, [leaderboard.data, period, date]);
 
   const renderList = () => {

@@ -109,7 +109,7 @@ export const getDailyTemperatureSeries = (hours: TemperatureReading[]): DailyTem
     }
   });
 
-  const days = Array.from(byDay.keys()).sort();
+  const days = Array.from(byDay.keys()).toSorted();
   const min: DailyTempPoint[] = [];
   const max: DailyTempPoint[] = [];
   const mean: DailyTempPoint[] = [];

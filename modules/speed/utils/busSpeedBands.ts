@@ -98,6 +98,6 @@ export const bandExtremes = (
     return totals.miles && totals.hours ? [{ band: key, mph: totals.miles / totals.hours }] : [];
   });
   if (speeds.length === 0) return undefined;
-  const sorted = [...speeds].sort((a, b) => a.mph - b.mph);
+  const sorted = [...speeds].toSorted((a, b) => a.mph - b.mph);
   return { slowest: sorted[0], fastest: sorted[sorted.length - 1] };
 };

@@ -29,7 +29,7 @@ export const toFraction = (time: number, { min, max }: Domain) =>
 export const packLanes = <T extends Span>(spans: T[]): (T & { lane: number })[] => {
   const laneEnds: number[] = [];
   return [...spans]
-    .sort((a, b) => a.start - b.start)
+    .toSorted((a, b) => a.start - b.start)
     .map((span) => {
       let lane = laneEnds.findIndex((end) => end <= span.start);
       if (lane === -1) lane = laneEnds.length;

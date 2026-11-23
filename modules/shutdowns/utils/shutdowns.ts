@@ -86,7 +86,7 @@ const shutdownStations = (shutdown: Pick<Shutdown, 'stops'>, lineId: string): St
     const station = stationForStop(lineId, stopId);
     if (station) byId.set(station.station, station);
   });
-  return [...byId.values()].sort((a, b) => a.order - b.order);
+  return [...byId.values()].toSorted((a, b) => a.order - b.order);
 };
 
 // Drops the branch from names like "JFK/UMass (Ashmont)"; the line already says which branch.
@@ -125,7 +125,7 @@ export const shutdownDays = (shutdown: Pick<Shutdown, 'periods'>): string[] => {
       day = day.add(1, 'day');
     }
   });
-  return [...days].sort();
+  return [...days].toSorted();
 };
 
 const toRanges = (days: string[]): [string, string][] => {
@@ -260,7 +260,7 @@ const splitGap = (
       }))
     )
     .filter(({ start, end }) => start <= end)
-    .sort((a, b) => (a.start < b.start ? -1 : 1));
+    .toSorted((a, b) => (a.start < b.start ? -1 : 1));
 
   const segments: Segment[] = [];
   let cursorDay = first;

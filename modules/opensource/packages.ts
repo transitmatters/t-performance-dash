@@ -72,13 +72,13 @@ export const toPackages = (
       licenseText: info.licenseText.trim(),
       direct: isDirect(info.name),
     }))
-    .sort(byDirectThenName);
+    .toSorted(byDirectThenName);
 
 /** License name to package count, most common first. */
 export const countByLicense = (packages: OssPackage[]): [string, number][] => {
   const counts = new Map<string, number>();
   for (const pkg of packages) counts.set(pkg.license, (counts.get(pkg.license) ?? 0) + 1);
-  return [...counts].sort(([a, countA], [b, countB]) => countB - countA || a.localeCompare(b));
+  return [...counts].toSorted(([a, countA], [b, countB]) => countB - countA || a.localeCompare(b));
 };
 
 export const filterPackages = (packages: OssPackage[], query: string, license?: string) => {

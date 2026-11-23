@@ -39,7 +39,7 @@ export const LinesHourGrid = ({ data, dayLabel, startDate, endDate }: LinesHourG
       hours: weakerByHour(entry),
       ...getScorecardStats([entry]),
     }))
-    .sort(
+    .toSorted(
       (a, b) =>
         (b.hoursAtTarget ?? 0) - (a.hoursAtTarget ?? 0) ||
         (a.maxGapMidday ?? Infinity) - (b.maxGapMidday ?? Infinity)

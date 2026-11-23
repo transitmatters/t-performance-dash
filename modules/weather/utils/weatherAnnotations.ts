@@ -117,7 +117,7 @@ const dailyRuns = (hours: ConditionReading[]): WeatherRun[] => {
   // Back-to-back days with the same worst condition share one run
   const runs: WeatherRun[] = [];
   Array.from(worstByDay.entries())
-    .sort(([a], [b]) => (a < b ? -1 : 1))
+    .toSorted(([a], [b]) => (a < b ? -1 : 1))
     .forEach(([day, condition]) => {
       const end = dayjs(day).add(1, 'day').format('YYYY-MM-DD');
       const last = runs[runs.length - 1];

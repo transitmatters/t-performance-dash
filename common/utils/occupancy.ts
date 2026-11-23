@@ -114,7 +114,7 @@ export const consistHoverContent = (
   const addToLegend = (label: string, color?: string) => {
     if (!legend.some((entry) => entry.label === label)) legend.push({ label, color });
   };
-  const sorted = [...cars].sort(
+  const sorted = [...cars].toSorted(
     (a, b) => (a.level ? rank(a.level) : Infinity) - (b.level ? rank(b.level) : Infinity)
   );
   for (const car of sorted) {

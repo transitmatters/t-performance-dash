@@ -261,7 +261,7 @@ export const segmentSpeedRange = (
  */
 export const sharedRouteKeys = (routeIds: string[]): string[] =>
   [...new Set(routeIds)]
-    .sort()
+    .toSorted()
     .reduce<string[][]>(
       (combinations, routeId) => [
         ...combinations,
@@ -315,7 +315,7 @@ export const stopDwellsByRoute = (dwells: (StopDwell | undefined)[]): StopDwell[
     const current = busiest.get(dwell.route_id);
     if (!current || dwell.n_trips > current.n_trips) busiest.set(dwell.route_id, dwell);
   }
-  return [...busiest.values()].sort((a, b) =>
+  return [...busiest.values()].toSorted((a, b) =>
     compareRouteNames(getBusRouteDisplayName(a.route_id), getBusRouteDisplayName(b.route_id))
   );
 };
@@ -455,7 +455,7 @@ export const summarizeDwell = (entries: GroupedBusSpeedLeaderboardEntry[]): BusD
     (entry) => entry.n_days > 0 && entry.n_dwell_stops >= MIN_DWELL_STOPS_PER_DAY * entry.n_days
   );
   const top = (value: (entry: GroupedBusSpeedLeaderboardEntry) => number) =>
-    [...ranked].sort((a, b) => value(b) - value(a)).slice(0, DWELL_SUMMARY_SIZE);
+    [...ranked].toSorted((a, b) => value(b) - value(a)).slice(0, DWELL_SUMMARY_SIZE);
   return {
     overall: withDwell.length
       ? { averageDwell: totalDwell / totalStops, dwellShare: totalDwell / totalTime }
@@ -492,7 +492,7 @@ export const rankLeaderboard = (
             },
           ];
     })
-    .sort((a, b) => (metric.order === 'ascending' ? a.value - b.value : b.value - a.value));
+    .toSorted((a, b) => (metric.order === 'ascending' ? a.value - b.value : b.value - a.value));
 
 /**
  * The routes `metric` ranks, and the ones it sets aside to list below them (see its `setAside`),

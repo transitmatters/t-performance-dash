@@ -31,7 +31,7 @@ export const groupByCalendarMonth = <T extends { date: string }>(
     byMonth.set(month, monthItems);
   }
   return [...byMonth.entries()]
-    .sort(([a], [b]) => a.localeCompare(b))
+    .toSorted(([a], [b]) => a.localeCompare(b))
     .map(([month, monthItems]) => ({ month, items: monthItems }));
 };
 

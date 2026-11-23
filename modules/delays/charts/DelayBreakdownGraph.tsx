@@ -66,7 +66,7 @@ export const DelayBreakdownGraph = ({
   const timeAxis = delayTimeAxis(agg);
 
   // ISO date strings sort chronologically
-  const sortedDates = [...labels].sort();
+  const sortedDates = [...labels].toSorted();
   const remainingBlocks = getRemainingBlockAnnotation(
     sortedDates.length
       ? dayjs(sortedDates[sortedDates.length - 1]).format(DATE_FORMAT)

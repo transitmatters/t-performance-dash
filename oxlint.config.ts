@@ -120,7 +120,6 @@ export default defineConfig({
     'typescript/prefer-nullish-coalescing': 'off', // 38; || -> ?? changes behavior for '' and 0
     'typescript/consistent-return': 'off', // 30
     'eslint/no-shadow': 'off', // 54
-    'unicorn/no-array-sort': 'off', // 50
     'jsx-a11y/prefer-tag-over-role': 'off', // 17
     'react/no-unstable-nested-components': 'off', // 11; map popups and shadcn's calendar
     'typescript/no-redundant-type-constituents': 'off', // 10

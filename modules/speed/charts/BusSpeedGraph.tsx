@@ -123,7 +123,7 @@ export const BusSpeedGraph = ({
                     // Chronological, All day first, whatever order Chart.js found the points in.
                     return {
                       rows: [...shown]
-                        .sort((a, b) => a.datasetIndex - b.datasetIndex)
+                        .toSorted((a, b) => a.datasetIndex - b.datasetIndex)
                         .map((item) => {
                           const band = TIME_BANDS[item.datasetIndex];
                           return {

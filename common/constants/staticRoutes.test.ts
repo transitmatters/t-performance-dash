@@ -29,7 +29,7 @@ describe('LINE_PAGE_LINES', () => {
       const routeLines = LINE_PAGE_LINES[route as LinePageKey].map(
         (line) => linePathToKeyMap[line as LinePath]
       );
-      expect([...routeLines].sort()).toEqual([...ALL_PAGES[page].lines].sort());
+      expect([...routeLines].toSorted()).toEqual([...ALL_PAGES[page].lines].toSorted());
     }
   );
 });

@@ -206,7 +206,7 @@ const connects = (from: Station, to: Station) => {
 const getTrunkStationFor = (from: Station, stations: Station[] | undefined) =>
   stations
     ?.filter((station) => station.station !== from.station && connects(from, station))
-    .sort(
+    .toSorted(
       (a, b) =>
         (b.branches?.length ?? 0) - (a.branches?.length ?? 0) ||
         Math.abs(a.order - from.order) - Math.abs(b.order - from.order)
@@ -342,7 +342,7 @@ export const findNearestConnectingStation = (
       (s) =>
         s.order !== station.order && (end === 'from' ? connects(station, s) : connects(s, station))
     )
-    .sort((a, b) => Math.abs(a.order - station.order) - Math.abs(b.order - station.order))[0];
+    .toSorted((a, b) => Math.abs(a.order - station.order) - Math.abs(b.order - station.order))[0];
 
 /**
  * The GTFS stop_ids our station list has for a bus route, e.g. '29005' from '747-1-29005'. They

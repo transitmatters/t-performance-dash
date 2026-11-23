@@ -449,7 +449,7 @@ const topHovered = (event: MapLayerMouseEvent): MapGeoJSONFeature | undefined =>
   return (event.features ?? [])
     .filter((feature) => feature.layer.id in HOVER_LAYERS)
     .map((feature) => ({ feature, rank: HOVER_LAYERS[feature.layer.id].rank }))
-    .sort((a, b) => a.rank - b.rank || distance(a.feature) - distance(b.feature))[0]?.feature;
+    .toSorted((a, b) => a.rank - b.rank || distance(a.feature) - distance(b.feature))[0]?.feature;
 };
 
 /**
@@ -478,7 +478,7 @@ const segmentsSharingStops = (
       (segment, index) =>
         matches.findIndex((other) => other.route_id === segment.route_id) === index
     )
-    .sort(
+    .toSorted(
       (a, b) =>
         Number(isPooledSegment(b)) - Number(isPooledSegment(a)) ||
         compareRouteNames(getBusRouteDisplayName(a.route_id), getBusRouteDisplayName(b.route_id))

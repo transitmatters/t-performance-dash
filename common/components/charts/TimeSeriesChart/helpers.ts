@@ -51,7 +51,7 @@ export const getLabelsForData = (data: Dataset[]) => {
         .filter((point) => point.value != null)
         .map((point) => ('date' in point ? point.date : point.time))
     );
-  const uniqueAndSortedPoints = [...new Set(allPoints)].sort();
+  const uniqueAndSortedPoints = [...new Set(allPoints)].toSorted();
   return uniqueAndSortedPoints;
 };
 

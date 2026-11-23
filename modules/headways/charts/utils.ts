@@ -40,7 +40,7 @@ export const getHeadwayBuckets = (headways: HeadwayTrip[]): Record<string, Headw
 
   return Object.fromEntries(
     Object.entries(counts).map(([key, count]) => {
-      const sorted = benchmarks[key].sort((a, b) => a - b);
+      const sorted = benchmarks[key].toSorted((a, b) => a - b);
       return [
         key,
         {

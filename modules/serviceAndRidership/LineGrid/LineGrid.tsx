@@ -47,7 +47,7 @@ const sortOnKey = (data: LineData[], sortFn: SortFn) => {
   data.forEach((line) => {
     keys[line.id] = sortFn(line);
   });
-  return data.sort((a, b) => {
+  return data.toSorted((a, b) => {
     const ka = keys[a.id];
     const kb = keys[b.id];
     if (ka === kb) {

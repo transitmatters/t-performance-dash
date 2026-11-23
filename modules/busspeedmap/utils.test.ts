@@ -145,7 +145,7 @@ describe('sharedRouteKeys', () => {
   });
 
   it('lists every combination of two or more', () => {
-    expect(sharedRouteKeys(['741', '742', '743', '746']).sort()).toEqual(
+    expect(sharedRouteKeys(['741', '742', '743', '746']).toSorted()).toEqual(
       [
         '741,742',
         '741,743',
@@ -158,7 +158,7 @@ describe('sharedRouteKeys', () => {
         '741,743,746',
         '742,743,746',
         '741,742,743,746',
-      ].sort()
+      ].toSorted()
     );
   });
 

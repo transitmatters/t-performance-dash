@@ -20,7 +20,9 @@ export const getScheduledAndDeliveredRoundTrips = (
   const deliveredByPeriod = new Map(
     data.map((datapoint) => [getPeriodKey(datapoint.date, agg), datapoint])
   );
-  const periods = [...new Set([...deliveredByPeriod.keys(), ...scheduledByPeriod.keys()])].sort();
+  const periods = [
+    ...new Set([...deliveredByPeriod.keys(), ...scheduledByPeriod.keys()]),
+  ].toSorted();
 
   return periods.map((period) => {
     const delivered = deliveredByPeriod.get(period);
