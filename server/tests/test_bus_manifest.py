@@ -1,15 +1,22 @@
+import datetime
 import importlib
+import shutil
 import socket
 import sys
 from pathlib import Path
 
 import pandas as pd
 
-# server/bus holds standalone scripts rather than a package, and they import each other by bare name
+# server/bus holds standalone scripts rather than a package, and they import each other by bare name.
+# This stays on sys.path for the rest of the pytest session, so a bare `import manifest` (or bus2train,
+# gtfs_archive, stop_list, active_routes, compare_manifest) anywhere else in the tests would get the
+# bus script. Server code imports through chalicelib, so nothing clashes today.
 BUS_DIR = Path(__file__).resolve().parents[1] / "bus"
 sys.path.insert(0, str(BUS_DIR))
 
-from manifest import create_manifest, order_checkpoints  # noqa: E402
+import gtfs_archive  # noqa: E402
+import manifest  # noqa: E402
+from manifest import create_manifest, load_gtfs_data, order_checkpoints  # noqa: E402
 
 
 def make_stop_times(trips):
@@ -154,6 +161,8 @@ def test_create_manifest_lists_branches_for_combined_routes(tmp_path):
         [
             ("34", 1, "110", "HHGAT", 1, 5),
             ("34E", 1, "110", "HHGAT", 1, 5),
+            # under min_count on its own, but min_count drops rarely served timepoints, not stops: a stop
+            # at a busy timepoint (a detour stop, say) keeps its trips' events in the station
             ("34E", 1, "112", "HHGAT", 1, 1),
             ("34E", 1, "72", "DUDLY", 2, 5),
         ]
@@ -185,3 +194,102 @@ def test_create_manifest_defaults_name_to_joined_routes(tmp_path):
     manifest = create_manifest(events, ["57", "57A"], None, min_count=3)
 
     assert list(manifest) == ["57/57A"]
+
+
+ARCHIVES = pd.DataFrame(
+    {
+        "feed_start_date": [20250101, 20250601],
+        "feed_end_date": [20250531, 20250630],
+        "archive_url": ["https://cdn.mbta.com/archive/20250101.zip", "https://cdn.mbta.com/archive/20250601.zip"],
+    }
+)
+
+
+def no_download(*args, **kwargs):
+    raise AssertionError("the archive is already on disk")
+
+
+def test_get_gtfs_archive_returns_an_archive_already_on_disk(monkeypatch, tmp_path):
+    main_dir = tmp_path / "gtfs_archives"
+    (main_dir / "20250601").mkdir(parents=True)
+    monkeypatch.setattr(gtfs_archive, "MAIN_DIR", main_dir)
+    monkeypatch.setattr(gtfs_archive, "_archives", lambda: ARCHIVES)
+    monkeypatch.setattr(gtfs_archive.urllib.request, "urlretrieve", no_download)
+
+    assert gtfs_archive.get_gtfs_archive(20250605) == main_dir / "20250601"
+
+
+def test_get_gtfs_archive_creates_its_folder_on_the_first_download(monkeypatch, tmp_path):
+    feed = tmp_path / "feed"
+    feed.mkdir()
+    (feed / "calendar.txt").write_text("service_id\n")
+    zip_path = shutil.make_archive(str(tmp_path / "20250601"), "zip", feed)
+    # not created on import any more, so the first download makes it
+    main_dir = tmp_path / "data" / "gtfs_archives"
+    monkeypatch.setattr(gtfs_archive, "MAIN_DIR", main_dir)
+    monkeypatch.setattr(gtfs_archive, "_archives", lambda: ARCHIVES)
+    monkeypatch.setattr(gtfs_archive.urllib.request, "urlretrieve", lambda url: (zip_path, None))
+    monkeypatch.setattr(gtfs_archive.urllib.request, "urlcleanup", lambda: None)
+
+    archive = gtfs_archive.get_gtfs_archive(20250605)
+
+    assert archive == main_dir / "20250601"
+    assert (archive / "calendar.txt").exists()
+    # extracted into place, with no temporary folder left behind
+    assert [path.name for path in main_dir.iterdir()] == ["20250601"]
+
+
+def write_archive(archive_dir):
+    archive_dir.mkdir()
+    days = "monday,tuesday,wednesday,thursday,friday,saturday,sunday"
+    (archive_dir / "calendar.txt").write_text(
+        f"service_id,{days},start_date,end_date\n"
+        "wkdy,1,1,1,1,1,0,0,20250101,20251231\n"
+        "sat,0,0,0,0,0,1,0,20250101,20251231\n"
+    )
+    (archive_dir / "calendar_dates.txt").write_text("service_id,date,exception_type\n")
+    (archive_dir / "trips.txt").write_text(
+        "route_id,service_id,trip_id,direction_id,trip_headsign\n"
+        "1,wkdy,weekday-trip,1,Harvard\n"
+        "1,sat,saturday-trip,1,Harvard\n"
+        "2,wkdy,other-route,1,Elsewhere\n"
+    )
+    (archive_dir / "stop_times.txt").write_text(
+        "trip_id,arrival_time,stop_id,stop_sequence,checkpoint_id\n"
+        "weekday-trip,08:00:00,110,1,HHGAT\n"
+        "weekday-trip,08:05:00,111,2,\n"
+        "weekday-trip,08:10:00,72,3,CNTSQ\n"
+        "saturday-trip,09:00:00,110,1,HHGAT\n"
+        "saturday-trip,09:10:00,72,2,CNTSQ\n"
+        "other-route,08:00:00,500,1,ELSWH\n"
+    )
+    (archive_dir / "checkpoints.txt").write_text("checkpoint_id,checkpoint_name\nHHGAT,Harvard\nCNTSQ,Central\n")
+
+
+def test_load_gtfs_data_counts_each_scheduled_checkpoint_stop_per_day(monkeypatch, tmp_path):
+    archive_dir = tmp_path / "20250601"
+    write_archive(archive_dir)
+    monkeypatch.setattr(manifest, "get_gtfs_archive", lambda dateint: archive_dir)
+
+    # Thursday to Saturday: the weekday trip runs twice and the Saturday trip once
+    data = load_gtfs_data(datetime.date(2025, 6, 5), 3, ["1"])
+
+    assert list(data.columns) == [
+        "route_id",
+        "stop_id",
+        "time_point_id",
+        "direction_id",
+        "time_point_order",
+        "checkpoints_file",
+    ]
+    # stop 111 isn't a checkpoint and route 2 wasn't asked for
+    assert sorted(data[["stop_id", "time_point_id"]].itertuples(index=False, name=None)) == [
+        ("110", "hhgat"),
+        ("110", "hhgat"),
+        ("110", "hhgat"),
+        ("72", "cntsq"),
+        ("72", "cntsq"),
+        ("72", "cntsq"),
+    ]
+    assert data.groupby("time_point_id").time_point_order.first().to_dict() == {"cntsq": 2, "hhgat": 1}
+    assert set(data.checkpoints_file) == {str(archive_dir / "checkpoints.txt")}
