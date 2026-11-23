@@ -133,8 +133,12 @@ export const LineSegments = ({
         maintainAspectRatio: false,
         responsive: true,
         onClick: (event, elements) => {
-          if (elements.length >= 1) {
-            const { color, x, stations } = elements[0].element['$context'].raw as LineSegmentData;
+          const clicked = elements[0];
+          const segment = clicked
+            ? Object.values(lineSegmentDataByColor)[clicked.datasetIndex]?.[clicked.index]
+            : undefined;
+          if (segment) {
+            const { color, x, stations } = segment;
             const hrefPathname = `/${color.toLowerCase()}${ALL_PAGES.multiTrips.path}`;
             const queryParams: QueryParams = {
               // Show 7 days before slowzone start for comparison

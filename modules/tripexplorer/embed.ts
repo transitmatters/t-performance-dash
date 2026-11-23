@@ -21,7 +21,9 @@ const CHART_NAMES: Record<TripEmbedChart<'single'> | TripEmbedChart<'multi'>, st
 };
 
 /** The day filter on each multi-day chart's card, which its embed keeps. */
-export const MULTI_TRIP_DAY_PARAMS: Partial<Record<TripEmbedChart<'multi'>, string>> = {
+export const MULTI_TRIP_DAY_PARAMS: Partial<
+  Record<TripEmbedChart<'multi'>, 'ttDays' | 'hwDays' | 'dwDays' | 'peak'>
+> = {
   traveltimes: 'ttDays',
   headways: 'hwDays',
   dwells: 'dwDays',

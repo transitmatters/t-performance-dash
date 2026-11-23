@@ -3,6 +3,7 @@ import { Line } from '@chartjs-components';
 
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
+import type { PartialEventContext } from 'chartjs-plugin-annotation';
 
 import { useLinePage } from '../../../common/hooks/usePageParams';
 import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
@@ -168,7 +169,7 @@ export const SpeedGraph = ({
                           yMax: peak,
                           borderColor: CHART_COLORS.ANNOTATIONS,
                           // corresponds to null dataset index.
-                          display: (ctx) => ctx.chart.isDatasetVisible(1),
+                          display: (ctx: PartialEventContext) => ctx.chart.isDatasetVisible(1),
                           borderWidth: 2,
                           borderDash: peakLineDashed ? [6, 6] : undefined,
                         },

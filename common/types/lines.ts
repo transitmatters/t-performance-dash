@@ -295,7 +295,7 @@ export type LineRouteId =
   | 'Green-E'
   | CommuterRailRoute;
 
-export const RIDERSHIP_KEYS = {
+export const RIDERSHIP_KEYS: Partial<Record<Line, string>> = {
   'line-red': 'line-Red',
   'line-orange': 'line-Orange',
   'line-blue': 'line-Blue',

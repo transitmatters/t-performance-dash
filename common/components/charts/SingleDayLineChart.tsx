@@ -3,8 +3,7 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { useMemo, useRef } from 'react';
-import type { DataPoint } from '../../types/dataPoints';
-import type { SingleDayLineProps } from '../../types/charts';
+import type { MetricField, SingleDayDataPoint, SingleDayLineProps } from '../../types/charts';
 import {
   TEMPERATURE_SCALE,
   getHourlyTemperatureSeries,
@@ -38,15 +37,17 @@ import { useIntroAnimation } from './introAnimation';
 
 /** Each point's severity against its benchmark, or undefined with no benchmark to judge it by. */
 const pointTones = (
-  data: DataPoint[],
-  metric_field: string,
+  data: SingleDayDataPoint[],
+  metricField: MetricField,
   effectiveBenchmark: (number | null)[],
   showUnderRatio?: boolean
 ) =>
-  data.map((point: DataPoint, idx: number) => {
+  data.map((point, idx) => {
     const benchmarkValue = effectiveBenchmark[idx];
+    const value = point[metricField];
     if (typeof benchmarkValue !== 'number' || !Number.isFinite(benchmarkValue)) return undefined;
-    return severityForRatio(point[metric_field] / benchmarkValue, showUnderRatio)?.tone;
+    if (value === undefined) return undefined;
+    return severityForRatio(value / benchmarkValue, showUnderRatio)?.tone;
   });
 
 export const SingleDayLineChart = ({
@@ -94,7 +95,7 @@ export const SingleDayLineChart = ({
     [tempEnabled, weather]
   );
   const isMobile = !useBreakpoint('md');
-  const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
+  const labels = useMemo(() => data.map((item) => item[pointField] ?? ''), [data, pointField]);
   const xBounds = useMemo(() => singleDayAxisBounds(date, labels), [date, labels]);
 
   // Per-point MBTA scheduled benchmark.
@@ -151,7 +152,7 @@ export const SingleDayLineChart = ({
       ? [
           {
             type: 'point',
-            xValue: labels[callout.index] as string,
+            xValue: labels[callout.index],
             yValue: calloutValue,
             radius: 8,
             backgroundColor: 'transparent',
@@ -160,7 +161,7 @@ export const SingleDayLineChart = ({
           },
           {
             type: 'label',
-            xValue: labels[callout.index] as string,
+            xValue: labels[callout.index],
             yValue: calloutValue,
             content: callout.label,
             position: { x: callout.index / data.length > 0.6 ? 'end' : 'start', y: 'center' },

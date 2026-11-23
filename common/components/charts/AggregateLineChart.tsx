@@ -3,7 +3,11 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import { useMemo, useRef, useState } from 'react';
-import type { AggregateDataPoint, AggregateLineProps } from '../../types/charts';
+import type {
+  AggregateDataPoint,
+  AggregateLineProps,
+  AggregatePointField,
+} from '../../types/charts';
 import { prettyDate } from '../../utils/date';
 import { CHART_COLORS } from '../../constants/colors';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -40,10 +44,14 @@ const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   }
 };
 
-const calculateTrendline = (data: AggregateDataPoint[], pointField: string, multiplier: number) => {
+const calculateTrendline = (
+  data: AggregateDataPoint[],
+  pointField: AggregatePointField,
+  multiplier: number
+) => {
   if (data.length < 2) return [];
 
-  const xValues = data.map((item) => new Date(item[pointField]).getTime());
+  const xValues = data.map((item) => new Date(item[pointField] ?? NaN).getTime());
   const yValues = data.map((item) => Number(item['50%']) * multiplier);
 
   const xMean = xValues.reduce((a, b) => a + b, 0) / xValues.length;
@@ -60,7 +68,7 @@ const calculateTrendline = (data: AggregateDataPoint[], pointField: string, mult
 
   // Calculate trendline value for each point
   return data.map((item) => {
-    const x = new Date(item[pointField]).getTime();
+    const x = new Date(item[pointField] ?? NaN).getTime();
     return {
       x: item[pointField],
       y: Number((slope * x + intercept).toFixed(2)),
@@ -120,7 +128,7 @@ export const AggregateLineChart = ({
     [hourly, fill, tempEnabled, weather]
   );
   const isMobile = !useBreakpoint('md');
-  const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
+  const labels = useMemo(() => data.map((item) => item[pointField] ?? ''), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
   // Charts by time of day span many dates at every point, so there's no day to mark.

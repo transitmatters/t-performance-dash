@@ -3,7 +3,6 @@ import utc from 'dayjs/plugin/utc';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import type { DayDelayTotals, SlowZoneAllSlowResponse } from '../../common/types/dataPoints';
-import type { LineShort } from '../../common/types/lines';
 import {
   filterAllSlow,
   getSlowZoneDataEndDate,
@@ -37,7 +36,7 @@ export const getSlowZoneStats = (
   allSlow: SlowZoneAllSlowResponse,
   startDateUTC: dayjs.Dayjs,
   endDateUTC: dayjs.Dayjs,
-  lineShort: Exclude<LineShort, 'Bus' | 'Commuter Rail'>
+  lineShort: Exclude<keyof DayDelayTotals, 'date'>
 ): SlowZoneStats => {
   const filteredTotals = delayTotals.filter((t) => {
     const date = dayjs.utc(t.date);

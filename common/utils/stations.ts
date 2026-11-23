@@ -1,6 +1,6 @@
 import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '../types/lines';
-import { BUS_ROUTES } from '../types/lines';
-import type { LineMap, Station } from '../types/stations';
+import { BUS_ROUTES, COMMUTER_RAIL_ROUTES } from '../types/lines';
+import type { LineMap, RapidTransitLineShort, Station } from '../types/stations';
 import type { Location } from '../types/charts';
 import {
   stations,
@@ -16,10 +16,20 @@ import type { Tab } from '../types/router';
 const isBusLine = (line: LineShort): line is 'Bus' => line === 'Bus';
 const isCommuterRailLine = (line: LineShort): line is 'Commuter Rail' => line === 'Commuter Rail';
 const isFerryLine = (line: LineShort): line is 'Ferry' => line === 'Ferry';
-const isRapidTransitLine = (
-  line: LineShort
-): line is Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry'> =>
-  !isBusLine(line) && !isCommuterRailLine(line) && !isFerryLine(line);
+const isRapidTransitLine = (line: LineShort): line is RapidTransitLineShort =>
+  !isBusLine(line) && !isCommuterRailLine(line) && !isFerryLine(line) && line !== 'The RIDE';
+const isCommuterRailRoute = (route: BusRoute | CommuterRailRoute): route is CommuterRailRoute =>
+  COMMUTER_RAIL_ROUTES.some((crRoute) => crRoute === route);
+
+const getRouteLineMap = (
+  tab: 'Bus' | 'Commuter Rail',
+  route: BusRoute | CommuterRailRoute
+): LineMap | undefined => {
+  if (isCommuterRailRoute(route)) {
+    return tab === 'Commuter Rail' ? stations['Commuter Rail'][route] : undefined;
+  }
+  return tab === 'Bus' ? stations.Bus[route] : undefined;
+};
 
 /** What riders call the places a line serves: buses and ferries have stops, rail has stations. */
 export const stopNoun = (line: LineShort | undefined): 'stop' | 'station' =>
@@ -30,12 +40,8 @@ const getStationsForLine = (
   line: LineShort,
   route?: BusRoute | CommuterRailRoute
 ): Station[] | undefined => {
-  if (isBusLine(line) && route) {
-    return stations.Bus[route]?.stations;
-  }
-
-  if (isCommuterRailLine(line) && route) {
-    return stations['Commuter Rail'][route]?.stations;
+  if ((isBusLine(line) || isCommuterRailLine(line)) && route) {
+    return getRouteLineMap(line, route)?.stations;
   }
 
   // For rapid transit lines (Red, Orange, Green, Blue, Mattapan)
@@ -73,7 +79,7 @@ export const optionsStation = (
   crRoute?: CommuterRailRoute,
   ferryRoute?: FerryRoute
 ): Station[] | undefined => {
-  if (!line || !stations[line]) {
+  if (!line || line === 'The RIDE') {
     return undefined;
   }
 
@@ -295,7 +301,7 @@ export const findValidDefaultStations = (stations: Station[] | undefined) => {
 
   // The second stop to the next one along that a trip runs between. On a combined route the next
   // stop in order can be on another branch, so it has to share one.
-  for (const dir of ['1', '0']) {
+  for (const dir of ['1', '0'] as const) {
     const validStations = stations.filter((s) => s.stops[dir]?.length > 0);
     const ordered = dir === '1' ? validStations : [...validStations].reverse();
     for (const defaultFrom of [ordered[1], ordered[0]]) {
@@ -354,9 +360,8 @@ export const getMinMaxDatesForRoute = (
   route?: BusRoute | CommuterRailRoute
 ): { minDate: string | undefined; maxDate: string | undefined } => {
   if ((tab === 'Commuter Rail' || tab === 'Bus') && route) {
-    const minDate = stations[tab][route]?.service_start;
-    const maxDate = stations[tab][route]?.service_end;
-    return { minDate, maxDate };
+    const lineMap = getRouteLineMap(tab, route);
+    return { minDate: lineMap?.service_start, maxDate: lineMap?.service_end };
   }
   return { minDate: undefined, maxDate: undefined };
 };

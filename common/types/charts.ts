@@ -112,6 +112,8 @@ export enum BenchmarkFieldKeys {
 }
 
 export type PointField = PointFieldKeys;
+export type AggregatePointField = PointFieldKeys.serviceDate | PointFieldKeys.depTimeFromEpoch;
+export type SingleDayPointField = Exclude<PointField, AggregatePointField>;
 export type MetricField = MetricFieldKeys;
 export type BenchmarkField = BenchmarkFieldKeys;
 
@@ -138,6 +140,7 @@ export interface SlowZonesTrip {
 }
 
 export interface AggregateLineProps extends LineProps {
+  pointField: AggregatePointField;
   timeUnit: TimeUnit;
   data: AggregateDataPoint[];
   timeFormat: string;
@@ -164,6 +167,7 @@ export interface AggregateLineProps extends LineProps {
 }
 
 export interface SingleDayLineProps extends LineProps {
+  pointField: SingleDayPointField;
   data: SingleDayDataPoint[];
   metricField: MetricField;
   date: string;

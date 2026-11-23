@@ -309,7 +309,7 @@ export type DatePresetKey =
 /** Where line pages' date range starts when the URL doesn't pick one. */
 export const DEFAULT_LINE_START_DATE = TODAY.subtract(365, 'days').format(DATE_FORMAT);
 
-export const RANGE_DATE_KEYS = Object.fromEntries(
+export const RANGE_DATE_KEYS: Record<string, DatePresetKey> = Object.fromEntries(
   [
     ...Object.values(RANGE_RAPID_PRESETS),
     ...Object.values(RANGE_RIDE_PRESETS),
@@ -319,7 +319,7 @@ export const RANGE_DATE_KEYS = Object.fromEntries(
     rangePreset.key,
   ])
 );
-export const SINGLE_DATE_KEYS = Object.fromEntries(
+export const SINGLE_DATE_KEYS: Record<string, DatePresetKey> = Object.fromEntries(
   Object.values(SINGLE_RAPID_PRESETS).map((singlePreset) => [
     singlePreset.input.date,
     singlePreset.key,

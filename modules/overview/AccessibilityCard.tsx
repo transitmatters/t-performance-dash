@@ -16,6 +16,7 @@ import EscalatorIcon from '../../public/Icons/EscalatorIcon.svg?react';
 import ElevatorIcon from '../../public/Icons/ElevatorIcon.svg?react';
 import { rtStations } from '../../common/constants/stations';
 import type { LineShort } from '../../common/types/lines';
+import { hasKey } from '../../common/utils/hasKey';
 import { getRelevantAlerts } from './alerts';
 
 interface AccessibilityCardProps {
@@ -32,8 +33,7 @@ export const AccessibilityCard = ({ lineShort }: AccessibilityCardProps) => {
       ? []
       : getRelevantAlerts(accessibilityAlerts.data, 'current');
 
-  const lineStations =
-    lineShort === 'Commuter Rail' || lineShort === 'Bus' ? [] : rtStations[lineShort].stations;
+  const lineStations = hasKey(rtStations, lineShort) ? rtStations[lineShort].stations : [];
 
   const affectedStops = new Set(current.flatMap((alert) => alert.stops));
   const affectedStationCount = lineStations.filter((station) =>

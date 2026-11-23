@@ -1,5 +1,6 @@
 import { CHART_COLORS, COLORS } from '../../../constants/colors';
 import { TimeSeriesChart } from './TimeSeriesChart';
+import type { DataPoint } from './types';
 
 export default {
   title: 'TimeSeriesChart',
@@ -202,8 +203,8 @@ const simpleDataByTime = [
       color: '#ccc',
       pointRadius: 4,
       pointColor: {
-        byPoint: (point) => {
-          const { value } = point;
+        byPoint: (point: DataPoint) => {
+          const value = point.value ?? 0;
           if (value > 10) {
             return CHART_COLORS.RED;
           }

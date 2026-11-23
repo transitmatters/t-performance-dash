@@ -318,7 +318,7 @@ export const LINE_PAGES = [
   ALL_PAGES.reliability,
 ];
 
-export const SUB_PAGES_MAP = {
+export const SUB_PAGES_MAP: Record<string, Record<string, Page>> = {
   trips: {
     single: 'singleTrips',
     multi: 'multiTrips',
@@ -329,7 +329,7 @@ export const SUB_PAGES_MAP = {
   },
 };
 
-export const SYSTEM_PAGES_MAP = {
+export const SYSTEM_PAGES_MAP: Record<string, Record<string, Page>> = {
   system: {
     slowzones: 'systemSlowzones',
     ridership: 'systemServiceAndRidership',

@@ -1,6 +1,6 @@
-import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
+import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import { COMMUTER_RAIL_ROUTES } from '../types/lines';
-import type { LineMap, StationMap } from '../types/stations';
+import type { LineMap, RapidTransitLineShort, StationMap } from '../types/stations';
 import stations_json from './stations.json';
 import bus_1 from './bus_constants/1.json';
 import bus_4 from './bus_constants/4.json';
@@ -154,9 +154,7 @@ import ferry_f10 from './ferry_constants/ferry_f10.json';
 import ferry_eastboston from './ferry_constants/ferry_eastboston.json';
 import ferry_lynn from './ferry_constants/ferry_lynn.json';
 
-export const rtStations: {
-  [key in Exclude<LineShort, 'Bus' | 'Commuter Rail' | 'Ferry' | 'The RIDE'>]: LineMap;
-} = stations_json;
+export const rtStations: { [key in RapidTransitLineShort]: LineMap } = stations_json;
 
 export const busStations: { [key in BusRoute]: LineMap } = {
   ...bus_1,

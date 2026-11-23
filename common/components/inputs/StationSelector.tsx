@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useState } from 'react';
 import { faBicycle, faChevronDown, faWheelchair } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import type { Line } from '../../types/lines';
 import type { Station } from '../../types/stations';
 import { usePageRoute } from '../../utils/router';
 import { optionsForField, stopIdsForStations, stopNoun } from '../../utils/stations';
@@ -17,7 +18,7 @@ interface StationSelector {
   setStation: (station: Station) => void;
 }
 
-const branchLabelWidth = {
+const branchLabelWidth: Partial<Record<Line | 'DEFAULT', string>> = {
   'line-red': 'w-8',
   'line-green': 'w-12',
   DEFAULT: 'w-0',
