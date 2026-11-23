@@ -896,12 +896,12 @@ export const BusSpeedMapView = ({
     };
     // A whole route fits its stops: the loaded tiles hold only what's near the current view, and
     // below zoom 12 only some of each route's segments.
-    const stopsArchive = stopsKey ? protocol.get(stopsKey) : undefined;
-    if (segmentStops || !stopsArchive || !routeIds) {
+    const registeredArchive = stopsKey ? protocol.get(stopsKey) : undefined;
+    if (segmentStops || !registeredArchive || !routeIds) {
       attempt(false);
       return;
     }
-    void findStopBounds(stopsArchive, routeIds, { fallbackStopIds: routeStopIds })
+    void findStopBounds(registeredArchive, routeIds, { fallbackStopIds: routeStopIds })
       .catch(() => undefined)
       .then((bounds) => {
         if (cancelled) return;

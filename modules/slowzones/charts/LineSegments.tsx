@@ -103,20 +103,20 @@ export const LineSegments = ({
       data={{
         labels: routes,
         datasets: Object.entries(lineSegmentDataByColor).map(
-          ([color, data]: [string, LineSegmentData[]]) => {
+          ([color, colorSegments]: [string, LineSegmentData[]]) => {
             const datasetObject: ChartDataset<'bar', LineSegmentData[]> = {
               borderWidth: 2,
               borderColor: COLORS.mbta[color.toLowerCase() as keyof typeof COLORS.mbta],
               backgroundColor: (context) => {
                 return hexWithAlpha(
                   COLORS.mbta[color.toLowerCase() as keyof typeof COLORS.mbta],
-                  getSlowZoneOpacity(data[context.dataIndex]?.delay)
+                  getSlowZoneOpacity(colorSegments[context.dataIndex]?.delay)
                 );
               },
               label: color,
               borderSkipped: false,
               maxBarThickness: 28,
-              data,
+              data: colorSegments,
             };
 
             // If we're in system mode

@@ -346,14 +346,16 @@ export const buildStatements = (data?: HomeData): Statement[] => {
 export const buildLede = (data?: HomeData): { lead: string; rest?: string } | undefined => {
   if (!data) return undefined;
   const { cell } = reader(data);
-  const service = SERVICE_ROWS.map((id) => cell(id, 'service')).filter((c) => isNumber(c?.score));
-  if (service.length < 5) return undefined;
-  const atBest = service.filter(isGood).length;
-  const lead = service.every((c) => (c?.score as number) >= 1)
+  const serviceCells = SERVICE_ROWS.map((id) => cell(id, 'service')).filter((c) =>
+    isNumber(c?.score)
+  );
+  if (serviceCells.length < 5) return undefined;
+  const atBest = serviceCells.filter(isGood).length;
+  const lead = serviceCells.every((c) => (c?.score as number) >= 1)
     ? 'The T is running at or above its best service.'
-    : atBest / service.length >= 0.7
+    : atBest / serviceCells.length >= 0.7
       ? 'The T is running close to its best service.'
-      : `${atBest} of ${service.length} lines run close to their best service.`;
+      : `${atBest} of ${serviceCells.length} lines run close to their best service.`;
 
   const s = spacing(cell);
   if (!s) return { lead };

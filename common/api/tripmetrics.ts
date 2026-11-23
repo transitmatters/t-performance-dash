@@ -15,12 +15,12 @@ export const fetchActualTripsByLine = async (
     options: { start_date, end_date, agg, line },
     errorMessage: 'Failed to fetch trip metrics',
   });
-  return rows.flatMap(({ line, avg_car_age, pct_new_trips, ...row }) =>
-    isLine(line)
+  return rows.flatMap(({ line: rowLine, avg_car_age, pct_new_trips, ...row }) =>
+    isLine(rowLine)
       ? [
           {
             ...withFleetMix(row),
-            line,
+            line: rowLine,
             avg_car_age: avg_car_age ?? undefined,
             pct_new_trips: pct_new_trips ?? undefined,
           },

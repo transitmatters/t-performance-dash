@@ -171,8 +171,8 @@ export const getParentStationForStopId = (stopId: string, line?: LineShort) => {
   if (line && isRapidTransitLine(line)) {
     const stationsData = getStationsForLine(line);
     const station = stationsData?.find(
-      (station: Station) =>
-        station.stops['0'].includes(stopId) || station.stops['1'].includes(stopId)
+      (candidate: Station) =>
+        candidate.stops['0'].includes(stopId) || candidate.stops['1'].includes(stopId)
     );
     if (station) {
       return station;
@@ -203,8 +203,8 @@ const connects = (from: Station, to: Station) => {
  * Where the trip should end when the new `from` station is on a branch the current `to` isn't:
  * the station on the most branches it shares a trip with (the trunk), nearest first.
  */
-const getTrunkStationFor = (from: Station, stations: Station[] | undefined) =>
-  stations
+const getTrunkStationFor = (from: Station, lineStations: Station[] | undefined) =>
+  lineStations
     ?.filter((station) => station.station !== from.station && connects(from, station))
     .toSorted(
       (a, b) =>
@@ -215,11 +215,11 @@ const getTrunkStationFor = (from: Station, stations: Station[] | undefined) =>
 export const getStationForInvalidFromSelection = (
   line: Line,
   from: Station,
-  stations: Station[] | undefined
+  lineStations: Station[] | undefined
 ): Station | undefined => {
   if (line === 'line-green') return getParentStationForStopId('70202'); // Gov. Center
   if (line === 'line-red') return getParentStationForStopId('70076'); // Park St.
-  return getTrunkStationFor(from, stations);
+  return getTrunkStationFor(from, lineStations);
 };
 
 export function stopIdsForStations(
@@ -286,12 +286,12 @@ export const getStationKeysFromStations = (
   return stationsData.map((station: Station) => station.station);
 };
 
-export const findValidDefaultStations = (stations: Station[] | undefined) => {
-  if (!stations?.length) return { defaultFrom: undefined, defaultTo: undefined };
+export const findValidDefaultStations = (lineStations: Station[] | undefined) => {
+  if (!lineStations?.length) return { defaultFrom: undefined, defaultTo: undefined };
 
-  if (stations.length === 2) {
-    const defaultFrom = stations[0];
-    const defaultTo = stations[1];
+  if (lineStations.length === 2) {
+    const defaultFrom = lineStations[0];
+    const defaultTo = lineStations[1];
 
     //if defaultFrom && defaultTo are not null and defaultFrom is not equal to defaultTo
     if (defaultFrom && defaultTo && defaultFrom.station !== defaultTo.station) {
@@ -302,7 +302,7 @@ export const findValidDefaultStations = (stations: Station[] | undefined) => {
   // The second stop to the next one along that a trip runs between. On a combined route the next
   // stop in order can be on another branch, so it has to share one.
   for (const dir of ['1', '0'] as const) {
-    const validStations = stations.filter((s) => s.stops[dir]?.length > 0);
+    const validStations = lineStations.filter((s) => s.stops[dir]?.length > 0);
     const ordered = dir === '1' ? validStations : [...validStations].toReversed();
     for (const defaultFrom of [ordered[1], ordered[0]]) {
       if (!defaultFrom) continue;
@@ -319,9 +319,9 @@ export const findValidDefaultStations = (stations: Station[] | undefined) => {
 
 export const findNextValidStation = (
   station: Station,
-  stations: Station[] | undefined
+  lineStations: Station[] | undefined
 ): Station | undefined =>
-  stations?.find(
+  lineStations?.find(
     (s) =>
       s.order > station.order &&
       s.station !== station.station &&
@@ -334,10 +334,10 @@ export const findNextValidStation = (
  */
 export const findNearestConnectingStation = (
   station: Station,
-  stations: Station[] | undefined,
+  lineStations: Station[] | undefined,
   end: 'from' | 'to'
 ): Station | undefined =>
-  stations
+  lineStations
     ?.filter(
       (s) =>
         s.order !== station.order && (end === 'from' ? connects(station, s) : connects(s, station))

@@ -100,7 +100,7 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
   const scheduled = useMemo(() => {
     return {
       label: 'Scheduled round trips',
-      data: roundTrips.map(({ date, scheduled }) => ({ date, value: scheduled })),
+      data: roundTrips.map(({ date, scheduled: count }) => ({ date, value: count })),
       style: {
         fillPattern: 'striped' as const,
         tooltipLabel: (point: DataPoint) => {
@@ -114,7 +114,7 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
   const delivered = useMemo(() => {
     return {
       label: 'Daily round trips',
-      data: roundTrips.map(({ date, delivered }) => ({ date, value: delivered })),
+      data: roundTrips.map(({ date, delivered: count }) => ({ date, value: count })),
       style: {
         tooltipLabel: (point: DataPoint) => {
           const percentOfPeak = `${((100 * (point.value ?? 0)) / peak).toFixed(1)}%`;

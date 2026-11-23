@@ -150,7 +150,7 @@ export const RidershipGraph = ({
                   callbacks: {
                     ...callbacks,
                     hoverCard: (items) => {
-                      const item = items.find((item) => item.datasetIndex === 0);
+                      const item = items.find((tooltipItem) => tooltipItem.datasetIndex === 0);
                       const count = item?.parsed.y;
                       if (!item || !count) return null;
                       const seasonalPeak = seasonalPeaks?.[item.dataIndex];
@@ -259,13 +259,13 @@ export const RidershipGraph = ({
             plugins={[
               {
                 id: 'customTitle',
-                afterDraw: (chart) => {
+                afterDraw: (chartInstance) => {
                   if (!data) {
                     // No data is present
-                    const { ctx } = chart;
-                    const { width } = chart;
-                    const { height } = chart;
-                    chart.clear();
+                    const { ctx } = chartInstance;
+                    const { width } = chartInstance;
+                    const { height } = chartInstance;
+                    chartInstance.clear();
 
                     ctx.save();
                     ctx.textAlign = 'center';
@@ -274,7 +274,7 @@ export const RidershipGraph = ({
                     ctx.fillText('No data to display', width / 2, height / 2);
                     ctx.restore();
                   }
-                  if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
+                  if (showTitle) drawSimpleTitle(`Daily round trips`, chartInstance);
                 },
               },
               Annotation,

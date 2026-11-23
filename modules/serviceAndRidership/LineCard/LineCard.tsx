@@ -125,10 +125,10 @@ export const LineCard = (props: Props) => {
     ? 'Weekday ridership and service levels'
     : 'Weekday service levels (ridership not available)';
 
-  const renderSectionLabel = (title: string, rightElement: ReactNode = null) => {
+  const renderSectionLabel = (label: string, rightElement: ReactNode = null) => {
     return (
       <h3 className={styles.sectionLabel}>
-        <div className="label">{title}</div>
+        <div className="label">{label}</div>
         {rightElement}
       </h3>
     );

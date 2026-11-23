@@ -185,7 +185,7 @@ export const toMonthly = (weeks: DelayRow[]): DelayRow[] => {
     .map(([month, { parts }]) => {
       const entries = [...parts.entries()];
       const [first] = entries[0];
-      const statedByCause = Object.fromEntries(
+      const causeTotals = Object.fromEntries(
         DELAY_REASONS.map(({ key }) => [
           key,
           entries.reduce((total, [row, share]) => total + row.stated_by_cause[key] * share, 0),
@@ -195,7 +195,7 @@ export const toMonthly = (weeks: DelayRow[]): DelayRow[] => {
         ...first,
         ...weightedSum(entries),
         date: `${month}-01`,
-        stated_by_cause: statedByCause,
+        stated_by_cause: causeTotals,
       };
     });
 };

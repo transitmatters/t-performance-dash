@@ -35,7 +35,10 @@ export const getStationAverages = (weeks: StationRidershipWeek[]) => {
     });
   });
   return Object.fromEntries(
-    Object.entries(totals).map(([stationId, { sum, weeks }]) => [stationId, sum / weeks])
+    Object.entries(totals).map(([stationId, { sum, weeks: weekCount }]) => [
+      stationId,
+      sum / weekCount,
+    ])
   );
 };
 

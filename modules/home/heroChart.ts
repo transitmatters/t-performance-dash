@@ -90,7 +90,7 @@ export const pickHero = (
   results: { station: HeroStation; rows: SingleDayDataPoint[] | undefined }[]
 ): HeroPick | undefined => {
   let best: HeroPick | undefined;
-  for (const { station, rows } of results) {
+  for (const { station: heroStation, rows } of results) {
     if (!rows) continue;
     const judged = rows.filter((row) => ratioOf(row) !== undefined);
     if (judged.length < MIN_TRIPS) continue;
@@ -102,7 +102,7 @@ export const pickHero = (
         ? row.headway_time_sec - row.benchmark_headway_time_sec
         : -Infinity;
     const worst = rows.reduce((w, row, i) => (over(row) > over(rows[w]) ? i : w), 0);
-    best = { station, rows, bad, judged: judged.length, worst };
+    best = { station: heroStation, rows, bad, judged: judged.length, worst };
   }
   return best;
 };

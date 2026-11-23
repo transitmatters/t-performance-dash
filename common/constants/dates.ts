@@ -181,7 +181,7 @@ const SINGLE_RAPID_PRESETS: {
 };
 
 export const SINGLE_PRESETS: {
-  [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
+  [key in Tab]: { [preset in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
 } = {
   Subway: SINGLE_RAPID_PRESETS,
   Bus: SINGLE_RAPID_PRESETS,
@@ -274,7 +274,7 @@ const RANGE_RIDE_RELIABILITY_PRESETS = {
 };
 
 export const RANGE_PRESETS: {
-  [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> };
+  [key in Tab]: { [preset in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> };
 } = {
   Subway: RANGE_RAPID_PRESETS,
   Bus: RANGE_RAPID_PRESETS,

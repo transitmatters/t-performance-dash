@@ -206,13 +206,13 @@ export const PercentageServiceGraph = ({
           plugins={[
             {
               id: 'customTitle',
-              afterDraw: (chart) => {
+              afterDraw: (chartInstance) => {
                 if (!data) {
                   // No data is present
-                  const { ctx } = chart;
-                  const { width } = chart;
-                  const { height } = chart;
-                  chart.clear();
+                  const { ctx } = chartInstance;
+                  const { width } = chartInstance;
+                  const { height } = chartInstance;
+                  chartInstance.clear();
 
                   ctx.save();
                   ctx.textAlign = 'center';
@@ -221,7 +221,7 @@ export const PercentageServiceGraph = ({
                   ctx.fillText('No data to display', width / 2, height / 2);
                   ctx.restore();
                 }
-                if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
+                if (showTitle) drawSimpleTitle(`Daily round trips`, chartInstance);
               },
             },
             Annotation,

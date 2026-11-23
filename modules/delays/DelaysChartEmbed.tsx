@@ -39,7 +39,7 @@ export const DelaysChartEmbed = ({ chart }: { chart: DelaysEmbedChart }) => {
       case 'causes':
         // Totals for exactly these dates, so this waits for the days at either end too
         if (!rangeData) {
-          return <ChartPlaceHolder query={rangeQueries.find((query) => !query.data)} />;
+          return <ChartPlaceHolder query={rangeQueries.find((rangeQuery) => !rangeQuery.data)} />;
         }
         return <DelayCauseBars focus={focus} {...props} data={rangeData} />;
       case 'breakdown':

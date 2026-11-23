@@ -94,14 +94,11 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
     return null;
   }
 
-  const renderSpeedRestrictions = (speedRestrictions: SpeedRestriction[]) => {
-    if (speedRestrictions.length) {
-      const minimumSpeed = speedRestrictions.reduce(
-        (min, sr) => Math.min(min, sr.speedMph),
-        Infinity
-      );
-      const totalFeet = speedRestrictions.reduce((sum, sr) => sum + sr.trackFeet, 0);
-      const [oldest] = speedRestrictions
+  const renderSpeedRestrictions = (restrictions: SpeedRestriction[]) => {
+    if (restrictions.length) {
+      const minimumSpeed = restrictions.reduce((min, sr) => Math.min(min, sr.speedMph), Infinity);
+      const totalFeet = restrictions.reduce((sum, sr) => sum + sr.trackFeet, 0);
+      const [oldest] = restrictions
         .filter((sr) => sr.reported)
         .map((sr) => sr.reported)
         .toSorted();

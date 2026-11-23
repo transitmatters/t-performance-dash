@@ -45,7 +45,7 @@ export const StationRidershipMap = ({
   const maxAverage = Math.max(...Object.values(averages));
 
   const getStations = useCallback(
-    ({ isHorizontal }: { isHorizontal: boolean }): StationRenderOptions[] =>
+    ({ isHorizontal: horizontal }: { isHorizontal: boolean }): StationRenderOptions[] =>
       Object.entries(averages).map(([stationId, average]) => {
         const isSelected = stationId === selectedStationId;
         // Scale the dot's area, not its radius, with ridership
@@ -63,14 +63,14 @@ export const StationRidershipMap = ({
             {
               mapSide: '0',
               length: 15,
-              boundingSize: isHorizontal ? 8 : 16,
+              boundingSize: horizontal ? 8 : 16,
               content: ({ width, height }) => (
                 <text
-                  x={isHorizontal ? width / 2 : distanceFromStation}
-                  y={isHorizontal ? height - distanceFromStation : height / 2}
-                  dominantBaseline={isHorizontal ? undefined : 'central'}
+                  x={horizontal ? width / 2 : distanceFromStation}
+                  y={horizontal ? height - distanceFromStation : height / 2}
+                  dominantBaseline={horizontal ? undefined : 'central'}
                   fontSize={3.5}
-                  textAnchor={isHorizontal ? 'middle' : 'start'}
+                  textAnchor={horizontal ? 'middle' : 'start'}
                   fontWeight={isSelected ? 'bold' : undefined}
                   className="fill-stone-700 dark:fill-stone-300"
                 >

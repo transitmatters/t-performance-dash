@@ -272,10 +272,10 @@ const getSingleDayNumberArray = (
   data: SingleDayDataPoint[],
   type: 'traveltimes' | 'dwells' | 'headways' | 'speeds'
 ) => {
-  if (type === 'traveltimes') return data.map((data) => data.travel_time_sec);
-  if (type === 'speeds') return data.map((data) => data.speed_mph);
-  if (type === 'dwells') return data.map((data) => data.dwell_time_sec);
-  if (type === 'headways') return data.map((data) => data.headway_time_sec);
+  if (type === 'traveltimes') return data.map((point) => point.travel_time_sec);
+  if (type === 'speeds') return data.map((point) => point.speed_mph);
+  if (type === 'dwells') return data.map((point) => point.dwell_time_sec);
+  if (type === 'headways') return data.map((point) => point.headway_time_sec);
   return [];
 };
 
