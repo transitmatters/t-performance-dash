@@ -14,12 +14,8 @@ import type { LineData, ServiceDay } from '../types';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { useGenerateHref } from '../../../common/utils/router';
 import { ALL_PAGES } from '../../../common/constants/pages';
-import {
-  BUS_ROUTES,
-  COMMUTER_RAIL_ROUTES,
-  type BusRoute,
-  type CommuterRailRoute,
-} from '../../../common/types/lines';
+import { BUS_ROUTES, COMMUTER_RAIL_ROUTES } from '../../../common/types/lines';
+import { isOneOf } from '../../../common/utils/objects';
 import { lineKindColors } from './colors';
 import { TphChart } from './TphChart';
 import { ServiceRidershipChart } from './ServiceRidershipChart';
@@ -87,34 +83,28 @@ export const LineCard = (props: Props) => {
       return generateHref(ALL_PAGES.overview, 'serviceAndRidership', {}, 'mattapan');
     }
     // Navigate to the overview page for subway lines
-    if (['red', 'blue', 'green', 'orange'].includes(lineKind)) {
-      return generateHref(
-        ALL_PAGES.overview,
-        'serviceAndRidership',
-        {},
-        lineKind as 'red' | 'blue' | 'green' | 'orange'
-      );
+    const subwayLine = (['red', 'blue', 'green', 'orange'] as const).find(
+      (line) => line === lineKind
+    );
+    if (subwayLine) {
+      return generateHref(ALL_PAGES.overview, 'serviceAndRidership', {}, subwayLine);
     }
     if (lineKind === 'regional-rail') {
-      const crRoute = id.replace('line-', 'CR-') as CommuterRailRoute;
-      if (COMMUTER_RAIL_ROUTES.includes(crRoute)) {
+      const crRoute = id.replace('line-', 'CR-');
+      if (isOneOf(COMMUTER_RAIL_ROUTES, crRoute)) {
         return generateHref(
           ALL_PAGES.singleTrips,
           'serviceAndRidership',
-          {
-            crRoute: id.replace('line-', 'CR-') as CommuterRailRoute,
-            startDate,
-            endDate,
-          },
+          { crRoute, startDate, endDate },
           'commuter-rail'
         );
       }
     }
-    if (lineKind === 'bus' && BUS_ROUTES.includes(shortName as BusRoute)) {
+    if (lineKind === 'bus' && isOneOf(BUS_ROUTES, shortName)) {
       return generateHref(
         ALL_PAGES.singleTrips,
         'serviceAndRidership',
-        { busRoute: shortName as BusRoute, startDate, endDate },
+        { busRoute: shortName, startDate, endDate },
         'bus'
       );
     }

@@ -4,9 +4,9 @@ import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { ChartActions } from '../../../common/components/charts/ChartActions';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import type { CrScorecardEntry } from '../../../common/types/dataPoints';
-import type { CommuterRailRoute } from '../../../common/types/lines';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
 import { cn } from '../../../common/utils/cn';
+import { hasKey } from '../../../common/utils/hasKey';
 import { HourGrid, HourGridHeader, HourGridLegend, HourGridRow } from './HourGrid';
 import {
   SPAN_HOURS,
@@ -33,12 +33,12 @@ export const LinesHourGrid = ({ data, dayLabel, startDate, endDate }: LinesHourG
   const { pathname } = useLocation();
   const rows = data
     // Lines the dashboard knows about; leaves out event-only service like Foxboro
-    .filter((entry) => entry.routeId && entry.routeId in COMMUTER_RAIL_LINE_NAMES)
-    .map((entry) => ({
-      routeId: entry.routeId as CommuterRailRoute,
-      hours: weakerByHour(entry),
-      ...getScorecardStats([entry]),
-    }))
+    .flatMap((entry) => {
+      const { routeId } = entry;
+      return routeId && hasKey(COMMUTER_RAIL_LINE_NAMES, routeId)
+        ? [{ routeId, hours: weakerByHour(entry), ...getScorecardStats([entry]) }]
+        : [];
+    })
     .toSorted(
       (a, b) =>
         (b.hoursAtTarget ?? 0) - (a.hoursAtTarget ?? 0) ||

@@ -2,7 +2,12 @@ import dayjs from 'dayjs';
 import type { LineDelays } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
 import type { DelayReasonKey } from './constants/reasons';
+import { hasKey } from '../../common/utils/hasKey';
+import { recordFromKeys } from '../../common/utils/objects';
 import { DELAY_REASONS, reasonFill, reasonLabel } from './constants/reasons';
+
+// In DELAY_REASONS order, which the records built from them keep.
+const REASON_KEYS = DELAY_REASONS.map(({ key }) => key);
 
 /** One period's delay minutes by cause. */
 type ReasonCounts = Record<DelayReasonKey, number>;
@@ -18,9 +23,7 @@ export interface ReasonSeries {
 }
 
 export const reasonTotals = (data: ReasonCounts[]): Record<DelayReasonKey, number> =>
-  Object.fromEntries(
-    DELAY_REASONS.map(({ key }) => [key, data.reduce((sum, point) => sum + point[key], 0)])
-  ) as Record<DelayReasonKey, number>;
+  recordFromKeys(REASON_KEYS, (key) => data.reduce((sum, point) => sum + point[key], 0));
 
 export const rankReasons = (totals: Record<DelayReasonKey, number>, line?: Line) =>
   DELAY_REASONS.filter((reason) => totals[reason.key] > 0)
@@ -97,11 +100,7 @@ export type DelayRow = LineDelays & {
   stated_by_cause: Record<DelayReasonKey, number>;
 };
 
-const statedByCause = (row: LineDelays) =>
-  Object.fromEntries(DELAY_REASONS.map(({ key }) => [key, row[key]])) as Record<
-    DelayReasonKey,
-    number
-  >;
+const statedByCause = (row: LineDelays) => recordFromKeys(REASON_KEYS, (key) => row[key]);
 
 /**
  * Use the actual delay (how long delay alerts were up) wherever the API has it: subway lines and bus
@@ -153,7 +152,9 @@ const weightedSum = (parts: [DelayRow, number][]): Record<string, unknown> => {
   const keys = new Set(parts.flatMap(([row]) => Object.keys(row)));
   const sum: Record<string, unknown> = {};
   for (const key of keys) {
-    const values = parts.map(([row, share]) => [row[key as keyof DelayRow], share] as const);
+    const values = parts.map(
+      ([row, share]) => [hasKey(row, key) ? row[key] : undefined, share] as const
+    );
     if (values.every(([value]) => typeof value !== 'number')) continue;
     sum[key] = values.reduce(
       (total, [value, share]) => total + (typeof value === 'number' ? value * share : 0),
@@ -185,12 +186,9 @@ export const toMonthly = (weeks: DelayRow[]): DelayRow[] => {
     .map(([month, { parts }]) => {
       const entries = [...parts.entries()];
       const [first] = entries[0];
-      const causeTotals = Object.fromEntries(
-        DELAY_REASONS.map(({ key }) => [
-          key,
-          entries.reduce((total, [row, share]) => total + row.stated_by_cause[key] * share, 0),
-        ])
-      ) as Record<DelayReasonKey, number>;
+      const causeTotals = recordFromKeys(REASON_KEYS, (key) =>
+        entries.reduce((total, [row, share]) => total + row.stated_by_cause[key] * share, 0)
+      );
       return {
         ...first,
         ...weightedSum(entries),

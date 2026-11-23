@@ -22,6 +22,7 @@ import {
   getDateAxisConfig,
 } from '../../../common/utils/slowZoneUtils';
 import { hexWithAlpha } from '../../../common/utils/general';
+import { hasKey } from '../../../common/utils/hasKey';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
 import { ChartActions } from '../../../common/components/charts/ChartActions';
@@ -40,6 +41,16 @@ interface LineSegmentsProps {
   endDateUTC: dayjs.Dayjs;
   direction: Direction;
 }
+
+// Tooltip items carry their point as `unknown`.
+const isLineSegment = (raw: unknown): raw is LineSegmentData =>
+  typeof raw === 'object' && raw !== null && 'delay' in raw && 'latest_delay' in raw;
+
+// Undefined for a color that isn't a line's, which the data never has.
+const lineColor = (color: string) => {
+  const key = color.toLowerCase();
+  return hasKey(COLORS.mbta, key) ? COLORS.mbta[key] : undefined;
+};
 
 const groupDataByColor = (data: LineSegmentData[]) => {
   return data.reduce((groups: Record<string, LineSegmentData[]>, item) => {
@@ -106,10 +117,10 @@ export const LineSegments = ({
           ([color, colorSegments]: [string, LineSegmentData[]]) => {
             const datasetObject: ChartDataset<'bar', LineSegmentData[]> = {
               borderWidth: 2,
-              borderColor: COLORS.mbta[color.toLowerCase() as keyof typeof COLORS.mbta],
+              borderColor: lineColor(color),
               backgroundColor: (context) => {
                 return hexWithAlpha(
-                  COLORS.mbta[color.toLowerCase() as keyof typeof COLORS.mbta],
+                  lineColor(color) ?? color,
                   getSlowZoneOpacity(colorSegments[context.dataIndex]?.delay)
                 );
               },
@@ -177,7 +188,8 @@ export const LineSegments = ({
           tooltip: {
             callbacks: {
               label: (context) => {
-                const slowzone = context.raw as LineSegmentData;
+                const slowzone = context.raw;
+                if (!isLineSegment(slowzone)) return [];
                 const delays = [` Average Delay: ${slowzone.delay.toFixed(0)} sec.`];
 
                 if (slowzone.latest_delay !== null) {

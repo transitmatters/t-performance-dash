@@ -1,5 +1,4 @@
 import { Minus, TrendingDown, TrendingUp } from 'lucide-react';
-import type { CSSProperties } from 'react';
 import { InfoTooltip } from '../../../common/components/general/InfoTooltip';
 import { Link } from '../../../common/components/general/Link';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../common/components/ui/card';
@@ -224,7 +223,7 @@ const DesktopTable = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
       key={line.config.id}
       data-line={line.config.line}
       className="tm-reveal border-b last:border-0"
-      style={{ '--reveal-index': index } as CSSProperties}
+      style={{ '--reveal-index': index }}
     >
       <th scope="row" className="w-56 py-3 pr-2 pl-6 text-left align-top font-normal">
         <RowTitle line={line} state={state} />
@@ -296,7 +295,7 @@ const MobileStrips = ({ lines, state }: { lines: ScoreboardLine[]; state: HomeSt
         key={line.config.id}
         data-line={line.config.line}
         className="tm-reveal rounded-xl border bg-card px-4 py-3"
-        style={{ '--reveal-index': index } as CSSProperties}
+        style={{ '--reveal-index': index }}
       >
         <RowTitle line={line} state={state} />
         <div className="relative mt-2">

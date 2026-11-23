@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { CSSProperties } from 'react';
 import classNames from 'classnames';
 import type { TooltipSide } from '@transitmatters/stripmap';
 
@@ -185,7 +184,7 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
 
   return (
     <div
-      style={{ '--tooltip-accent-color': color } as CSSProperties}
+      style={{ '--tooltip-accent-color': color }}
       className={classNames(
         styles.slowZonesTooltip,
         isHorizontal && styles.horizontal,

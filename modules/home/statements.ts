@@ -93,9 +93,10 @@ const isBus = (id: string) => ['frequentBus', 'bus'].includes(rowConfig(id)?.mod
  * buses are in. Undefined unless every subway line has a figure.
  */
 const spacing = (cell: Reader['cell']) => {
-  const lines = SPACING_ROWS.map((id) => ({ id, cell: cell(id, 'reliability') })).filter((l) =>
-    isNumber(l.cell?.value)
-  );
+  const lines = SPACING_ROWS.flatMap((id) => {
+    const c = cell(id, 'reliability');
+    return c && isNumber(c.value) ? [{ id, cell: c, value: c.value }] : [];
+  });
   if (!SUBWAY.every((id) => lines.some((l) => l.id === id))) return undefined;
   const buses = lines.some((l) => isBus(l.id));
   return {
@@ -126,7 +127,7 @@ function reliability({ cell, mark, link }: Reader): Statement | undefined {
     head: spacingSentence(s),
     viz: {
       kind: 'dots',
-      marks: s.lines.map((l) => mark(l.id, l.cell?.value as number)),
+      marks: s.lines.map((l) => mark(l.id, l.value)),
       rules: [
         { value: good, label: 'Good' },
         { value: win, label: 'Win' },
@@ -138,8 +139,9 @@ function reliability({ cell, mark, link }: Reader): Statement | undefined {
 
 function delays({ cell, mark, link }: Reader): Statement | undefined {
   const lines = SUBWAY.map((id) => ({ id, cell: cell(id, 'delays') }));
-  if (!lines.every((l) => isNumber(l.cell?.minutesPerDay))) return undefined;
-  const minutes = lines.map((l) => Math.round(l.cell?.minutesPerDay as number));
+  const minutesPerDay = lines.map((l) => l.cell?.minutesPerDay);
+  if (!minutesPerDay.every(isNumber)) return undefined;
+  const minutes = minutesPerDay.map((m) => Math.round(m));
   const [low, high] = [Math.min(...minutes), Math.max(...minutes)];
   const worst = lines[minutes.indexOf(high)];
   const mattapan = cell('mattapan', 'delays');
@@ -169,14 +171,15 @@ function delays({ cell, mark, link }: Reader): Statement | undefined {
 }
 
 function service({ cell, mark, link }: Reader): Statement | undefined {
-  const lines = SERVICE_ROWS.map((id) => ({ id, cell: cell(id, 'service') })).filter((l) =>
-    isNumber(l.cell?.score)
-  );
-  const good = lines[0]?.cell?.thresholds?.[1];
+  const lines = SERVICE_ROWS.flatMap((id) => {
+    const c = cell(id, 'service');
+    return c && isNumber(c.score) ? [{ id, cell: c, score: c.score }] : [];
+  });
+  const good = lines[0]?.cell.thresholds?.[1];
   if (lines.length < 5 || !isNumber(good)) return undefined;
   const atBest = lines.filter((l) => isGood(l.cell)).length;
-  const furthest = lines.reduce((a, b) => ((b.cell?.score ?? 0) < (a.cell?.score ?? 0) ? b : a));
-  const furthestScore = furthest.cell?.score as number;
+  const furthest = lines.reduce((a, b) => (b.score < a.score ? b : a));
+  const furthestScore = furthest.score;
 
   return {
     id: 'service',
@@ -189,7 +192,7 @@ function service({ cell, mark, link }: Reader): Statement | undefined {
     viz: {
       kind: 'meters',
       cap: 1.2,
-      marks: lines.map((l) => mark(l.id, l.cell?.score as number)),
+      marks: lines.map((l) => mark(l.id, l.score)),
       rule: { value: 1, label: 'Best' },
     },
     // A line's best only counts weeks at least 3 years old (data-ingestion's LOOKBACK_YEARS), so a
@@ -212,9 +215,10 @@ const yearAgoChange = (c: Cell) =>
 const DROPPED_ROWS = [...SUBWAY, 'commuter-rail', 'frequent-bus', 'all-bus', 'mattapan'];
 
 function dropped({ cell, mark }: Reader): Statement | undefined {
-  const lines = DROPPED_ROWS.map((id) => ({ id, cell: cell(id, 'dropped') })).filter(
-    (l) => isNumber(l.cell?.value) && isMeasured(l.cell)
-  );
+  const lines = DROPPED_ROWS.flatMap((id) => {
+    const c = cell(id, 'dropped');
+    return c && isNumber(c.value) && isMeasured(c) ? [{ id, cell: c, value: c.value }] : [];
+  });
   const bus = lines.find((l) => l.id === 'all-bus')?.cell;
   if (!bus || !isNumber(bus.value)) return undefined;
   const change = yearAgoChange(bus);
@@ -223,7 +227,7 @@ function dropped({ cell, mark }: Reader): Statement | undefined {
   const since =
     then === undefined || then === now
       ? ''
-      : (change as number) < 0
+      : change !== undefined && change < 0
         ? `, down from ${then} a year ago`
         : `, up from ${then} a year ago`;
   const cr = lines.find((l) => l.id === 'commuter-rail')?.cell;
@@ -235,7 +239,7 @@ function dropped({ cell, mark }: Reader): Statement | undefined {
     viz: {
       kind: 'shares',
       noun: 'dropped',
-      marks: lines.map((l) => mark(l.id, l.cell?.value as number, l.cell && yearAgoChange(l.cell))),
+      marks: lines.map((l) => mark(l.id, l.value, yearAgoChange(l.cell))),
     },
     note: 'A bus trip counts as dropped when no bus was seen running it.',
     link: { href: bus.href ?? '/bus', label: 'Dropped bus trips' },
@@ -269,7 +273,8 @@ function speed({ cell, hero, mark, link }: Reader): Statement | undefined {
     return { id, score: part && isMeasured(part) ? part.score : undefined };
   });
   const slowZones = slowZoneSentence(hero);
-  if (!lines.every((l) => isNumber(l.score))) {
+  const scores = lines.map((l) => l.score);
+  if (!scores.every(isNumber)) {
     // No speed baselines: slow zones still tell the story on their own.
     return (
       slowZones && {
@@ -280,7 +285,6 @@ function speed({ cell, hero, mark, link }: Reader): Statement | undefined {
       }
     );
   }
-  const scores = lines.map((l) => l.score as number);
   const [low, high] = [Math.min(...scores), Math.max(...scores)];
   const slowest = lines[scores.indexOf(low)];
   const head =
@@ -295,7 +299,7 @@ function speed({ cell, hero, mark, link }: Reader): Statement | undefined {
     viz: {
       kind: 'meters',
       cap: 1.2,
-      marks: lines.map((l) => mark(l.id, l.score as number)),
+      marks: lines.map((l, i) => mark(l.id, scores[i])),
       rule: { value: 1, label: 'Best' },
     },
     note: "Best means a line's fastest stretch at least 3 years ago, end to end including stops.",
@@ -312,11 +316,12 @@ const onLabel = (id: string) =>
   (labelOf(id).endsWith('Line') ? `the ${labelOf(id)}` : labelOf(id));
 
 function ridership({ cell, mark }: Reader): Statement | undefined {
-  const lines = RIDERSHIP_ROWS.map((id) => ({ id, cell: cell(id, 'ridership') })).filter(
-    (l) => l.cell?.status === 'unscored' && isNumber(l.cell.value)
-  );
+  const lines = RIDERSHIP_ROWS.flatMap((id) => {
+    const c = cell(id, 'ridership');
+    return c?.status === 'unscored' && isNumber(c.value) ? [{ id, value: c.value }] : [];
+  });
   if (!SUBWAY.every((id) => lines.some((l) => l.id === id))) return undefined;
-  const changes = lines.map((l) => l.cell?.value as number);
+  const changes = lines.map((l) => l.value);
   const up = changes.filter((c) => roundedPercent(c) > 0).length;
   const most = lines[changes.indexOf(Math.max(...changes))];
   return {
@@ -327,7 +332,7 @@ function ridership({ cell, mark }: Reader): Statement | undefined {
         : up === 0
           ? 'No line carries more riders than a year ago.'
           : `${up} of ${lines.length} lines carry more riders than a year ago.`,
-    viz: { kind: 'changes', marks: lines.map((l) => mark(l.id, l.cell?.value as number)) },
+    viz: { kind: 'changes', marks: lines.map((l) => mark(l.id, l.value)) },
     note: "Each line's latest 4 weeks of counts against the same weeks a year earlier. Modes publish on different schedules, so the weeks differ.",
     link: { href: '/system/ridership', label: 'Ridership across the system' },
   };
@@ -351,7 +356,7 @@ export const buildLede = (data?: HomeData): { lead: string; rest?: string } | un
   );
   if (serviceCells.length < 5) return undefined;
   const atBest = serviceCells.filter(isGood).length;
-  const lead = serviceCells.every((c) => (c?.score as number) >= 1)
+  const lead = serviceCells.every((c) => isNumber(c?.score) && c.score >= 1)
     ? 'The T is running at or above its best service.'
     : atBest / serviceCells.length >= 0.7
       ? 'The T is running close to its best service.'

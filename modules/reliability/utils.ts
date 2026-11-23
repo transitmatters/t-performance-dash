@@ -1,5 +1,6 @@
 import type { DataPoint } from '../../common/components/charts/TimeSeriesChart';
 import { SEVERITY_COLORS } from '../../common/utils/chartTheme';
+import { recordFromKeys } from '../../common/utils/objects';
 import type { PatternShape } from '../../common/utils/chartPatterns';
 import type {
   HeadwayCounts,
@@ -207,13 +208,10 @@ export const toHeadwayRows = (
   }));
 
 /** Every headway count summed over the range. */
-export const getHeadwayTotals = (rows: HeadwayRow[]) =>
-  Object.fromEntries(
-    HEADWAY_FIELDS.map((field) => [
-      field,
-      rows.reduce((t, row) => t + (row.counts?.[field] ?? 0), 0),
-    ])
-  ) as HeadwayCounts;
+export const getHeadwayTotals = (rows: HeadwayRow[]): HeadwayCounts =>
+  recordFromKeys(HEADWAY_FIELDS, (field) =>
+    rows.reduce((t, row) => t + (row.counts?.[field] ?? 0), 0)
+  );
 
 /** Plain headway counts per period, for the CSV download. */
 export const toCsvRows = (rows: HeadwayRow[]) =>

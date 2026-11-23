@@ -80,8 +80,8 @@ export const ServiceGraph = (props: ServiceGraphProps) => {
 
   const blocks = useMemo(() => {
     const shuttlingBlocks = getShuttlingBlockAnnotations(data).map((block) => ({
-      from: block.xMin as string,
-      to: block.xMax as string,
+      from: typeof block.xMin === 'string' ? block.xMin : undefined,
+      to: typeof block.xMax === 'string' ? block.xMax : undefined,
     }));
     return [
       ...hideBlocksExplainedByEvents(

@@ -4,6 +4,7 @@ import type { DayKind } from '../../common/types/dataPoints';
 import type { LinePath } from '../../common/types/lines';
 import type { QueryParams } from '../../common/types/router';
 import { getEmbedSnippet } from '../../common/utils/embed';
+import { objectEntries } from '../../common/utils/objects';
 import { linePathToKeyMap } from '../../common/utils/router';
 import { stringifySearch } from '../../common/utils/searchParams';
 
@@ -23,11 +24,9 @@ export const SERVICE_DAY_LABELS = {
 } as const satisfies Record<DayKind, string>;
 
 /** The labels as `useChartToggle` options. */
-export const SERVICE_COMPARISON_OPTIONS = Object.entries(SERVICE_COMPARISON_LABELS) as [
-  ServiceComparison,
-  string,
-][];
-export const SERVICE_DAY_OPTIONS = Object.entries(SERVICE_DAY_LABELS) as [DayKind, string][];
+export const SERVICE_COMPARISON_OPTIONS: [ServiceComparison, string][] =
+  objectEntries(SERVICE_COMPARISON_LABELS);
+export const SERVICE_DAY_OPTIONS: [DayKind, string][] = objectEntries(SERVICE_DAY_LABELS);
 
 const CHART_NAMES: Record<ServiceEmbedChart, string> = {
   'round-trips': 'daily round trips',

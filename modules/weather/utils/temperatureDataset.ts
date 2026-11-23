@@ -92,9 +92,11 @@ export const temperaturePointColor = ({ parsed }: ScriptableContext<'line'>) =>
 export const TEMPERATURE_SCALE = { min: 0, max: 100 };
 
 export const getHourlyTemperatureSeries = (hours: TemperatureReading[]): DailyTempPoint[] =>
-  hours
-    .filter((h) => h.temperature_f !== null && h.temperature_f !== undefined)
-    .map((h) => ({ x: h.timestamp, y: h.temperature_f as number }));
+  hours.flatMap(({ timestamp, temperature_f }) =>
+    temperature_f !== null && temperature_f !== undefined
+      ? [{ x: timestamp, y: temperature_f }]
+      : []
+  );
 
 export const getDailyTemperatureSeries = (hours: TemperatureReading[]): DailyTemperatureSeries => {
   const byDay = new Map<string, number[]>();

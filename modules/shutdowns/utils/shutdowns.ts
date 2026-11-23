@@ -5,6 +5,7 @@ import { annotationTooltip } from '../../../common/components/charts/annotationT
 import { CHART_COLORS } from '../../../common/constants/colors';
 import { LINE_OBJECTS } from '../../../common/constants/lines';
 import { hexWithAlpha } from '../../../common/utils/general';
+import { hasKey } from '../../../common/utils/hasKey';
 import { DATE_FORMAT } from '../../../common/constants/dates';
 import { prettyDate, wallClock } from '../../../common/utils/date';
 import { crStations, rtStations } from '../../../common/constants/stations';
@@ -14,8 +15,6 @@ import type { Station } from '../../../common/types/stations';
 import type { AggType } from '../../speed/constants/speeds';
 
 type Annotation = AnnotationOptions;
-type RapidTransitLine = keyof typeof rtStations;
-
 export type ShutdownView = {
   shutdown: Shutdown;
   label: string;
@@ -63,9 +62,11 @@ export const shutdownLineId = (
 };
 
 const stationsForLine = (lineId: string): Station[] =>
-  (lineId.startsWith('CR-')
-    ? crStations[lineId as CommuterRailRoute]
-    : rtStations[lineId as RapidTransitLine]
+  (hasKey(crStations, lineId)
+    ? crStations[lineId]
+    : hasKey(rtStations, lineId)
+      ? rtStations[lineId]
+      : undefined
   )?.stations ?? [];
 
 /** The station a stop belongs to on this line. Alerts list parent stations, child stops, or both. */
@@ -339,14 +340,14 @@ export const explainGaps = (
     return segments.map((segment) =>
       segment.view
         ? shutdownBox(segment, segment.view, range)
-        : ({
-            ...gap,
-            xMin: segment.from,
-            xMax: segment.to,
-            ...(gap.type === 'box' && gap.label && !leftoverLabelled(segments, segment, range)
-              ? { label: { ...gap.label, display: false } }
-              : {}),
-          } as Annotation)
+        : gap.type === 'box' && gap.label && !leftoverLabelled(segments, segment, range)
+          ? {
+              ...gap,
+              xMin: segment.from,
+              xMax: segment.to,
+              label: { ...gap.label, display: false },
+            }
+          : { ...gap, xMin: segment.from, xMax: segment.to }
     );
   });
 
