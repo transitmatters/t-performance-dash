@@ -1,7 +1,6 @@
 import { FetchAlertDelaysByLineParams, type FetchAlertDelaysByLineOptions } from '../types/api';
 import type { LineDelays } from '../types/delays';
 import { withWeekStart } from '../utils/date';
-import { isLine } from '../utils/isLine';
 import { apiFetch } from './utils/fetch';
 
 export const fetchLineDelaysByLine = async (
@@ -14,7 +13,8 @@ export const fetchLineDelaysByLine = async (
     options: withWeekStart(options),
     errorMessage: 'Failed to fetch delay metrics',
   });
-  return rows.flatMap(({ line, delay_alert_minutes, ...row }) =>
-    isLine(line) ? [{ ...row, line, delay_alert_minutes: delay_alert_minutes ?? undefined }] : []
-  );
+  return rows.map(({ delay_alert_minutes, ...row }) => ({
+    ...row,
+    delay_alert_minutes: delay_alert_minutes ?? undefined,
+  }));
 };
