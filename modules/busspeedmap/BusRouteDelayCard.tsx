@@ -1,6 +1,6 @@
 'use client';
 
-import { useBusRouteDelays } from '../../common/api/hooks/busSpeedSegments';
+import { useBusRouteDelays, useLatestBusSpeedDate } from '../../common/api/hooks/busSpeedSegments';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
@@ -9,9 +9,10 @@ import { FOCUS_RING_ON_SURFACE } from '../../common/styles/general';
 import { cn } from '../../common/utils/cn';
 import { DELAY_LOST_COLOR, DIRECTION_IDS, TIME_BANDS } from './constants';
 import type { RouteDelayRow } from './routeDelays';
-import { routeDelayRows, selectRouteDelayBands, tripMinutes } from './routeDelays';
+import { routeDelayCardContent, tripMinutes } from './routeDelays';
 import type { DayType, DirectionFilter, Period } from './types';
 import { useDirectionAndDays, useTimeBand } from './useBusSpeedParams';
+import { inProgressThrough } from './utils';
 
 interface BusRouteDelayCardProps {
   date: string;
@@ -23,6 +24,11 @@ interface BusRouteDelayCardProps {
 }
 
 const FREE_FLOW_BAR = 'bg-stone-300 dark:bg-stone-600';
+
+const DAY_TYPE_SERVICE: Record<DayType, string> = {
+  business_day: 'weekday',
+  weekend_or_holiday: 'weekend or holiday',
+};
 
 const Legend = () => (
   <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
@@ -121,6 +127,7 @@ export const BusRouteDelayCard = ({
   routeIds,
 }: BusRouteDelayCardProps) => {
   const delays = useBusRouteDelays({ date, period }, Boolean(date));
+  const { data: latestDate } = useLatestBusSpeedDate();
   const directionAndDays = useDirectionAndDays();
 
   if (delays.isLoading || delays.data === null) return null;
@@ -128,14 +135,25 @@ export const BusRouteDelayCard = ({
   const renderBody = () => {
     if (delays.isError || !delays.data) return <ChartPlaceHolder query={delays} />;
 
-    const bands = selectRouteDelayBands(delays.data, period, dayType);
-    const routes = routeIds
-      .map((routeId) => ({
-        routeId,
-        rows: routeDelayRows(bands, routeId, DIRECTION_IDS[direction]),
-      }))
-      .filter(({ rows }) => rows.some(({ entry }) => entry));
-    if (!routes.length) {
+    const content = routeDelayCardContent(
+      delays.data,
+      period,
+      dayType,
+      routeIds,
+      DIRECTION_IDS[direction]
+    );
+    if (content.kind === 'noDays') {
+      const unit = period === 'monthly' ? 'month' : 'week';
+      const service = DAY_TYPE_SERVICE[dayType];
+      return (
+        <p className="text-sm text-muted-foreground">
+          {inProgressThrough(date, period, latestDate)
+            ? `No ${service} service has run yet this ${unit}.`
+            : `No ${service} service this ${unit}.`}
+        </p>
+      );
+    }
+    if (content.kind === 'tooFew') {
       return (
         <p className="text-sm text-muted-foreground">
           Not enough trips with a free-flow time for these days and this direction. A route needs
@@ -144,23 +162,17 @@ export const BusRouteDelayCard = ({
       );
     }
 
-    const longest = Math.max(
-      ...routes.flatMap(({ rows }) =>
-        rows.map(({ entry }) => (entry ? tripMinutes(entry).running : 0))
-      )
-    );
-
     return (
       <>
         <Legend />
-        {routes.map(({ routeId, rows }) => (
+        {content.routes.map(({ routeId, rows }) => (
           <section key={routeId} className="flex flex-col gap-1">
-            {routes.length > 1 || routeIds.length > 1 ? (
+            {content.showRouteNames ? (
               <h3 className="text-sm font-semibold text-foreground">
                 Route {getBusRouteDisplayName(routeId)}
               </h3>
             ) : null}
-            <BandRows rows={rows} longest={longest} />
+            <BandRows rows={rows} longest={content.longest} />
           </section>
         ))}
       </>

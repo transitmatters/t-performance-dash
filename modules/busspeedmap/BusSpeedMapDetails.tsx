@@ -53,8 +53,10 @@ export function BusSpeedMapDetails() {
   ]
     .filter(Boolean)
     .join(' · ');
-  // Each route of a combined route like SL4/SL5, unless the header narrows it to one.
-  const routeIds = routeId === ALL_ROUTES ? (busRoute ? getBusRouteIds(busRoute) : []) : [routeId];
+  // Each route of a combined route like SL4/SL5, unless the header narrows it to one. The ids the
+  // data is filed under, so a retired route like 60/65-legacy finds its trips.
+  const routeIds =
+    routeId === ALL_ROUTES ? (busRoute ? getBusRouteDataIds(busRoute) : []) : [routeId];
 
   const mapBox = 'h-[28rem] w-full overflow-hidden rounded-lg md:h-[36rem]';
 

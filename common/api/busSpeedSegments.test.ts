@@ -173,12 +173,15 @@ describe('fetchBusRouteDelays', () => {
     );
   });
 
-  it('resolves to null for an archive published before there were route delays', async () => {
-    fetchMock.mockResolvedValue(new Response(null, { status: 403 }));
-    await expect(
-      fetchBusRouteDelays({ date: '2026-09-15', period: 'monthly' })
-    ).resolves.toBeNull();
-  });
+  it.each([403, 404])(
+    'resolves to null for an archive published before there were route delays (%i)',
+    async (status) => {
+      fetchMock.mockResolvedValue(new Response(null, { status }));
+      await expect(
+        fetchBusRouteDelays({ date: '2026-09-15', period: 'monthly' })
+      ).resolves.toBeNull();
+    }
+  );
 
   it('throws on any other failure', async () => {
     fetchMock.mockResolvedValue(new Response(null, { status: 500 }));

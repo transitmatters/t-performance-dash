@@ -53,3 +53,44 @@ export const tripMinutes = (entry: BusRouteDelayEntry) => {
   const freeFlow = Math.round(entry.free_flow_running_time_seconds / 60);
   return { running, freeFlow, lost: Math.max(0, running - freeFlow) };
 };
+
+export type RouteDelayCardContent =
+  /** A week or month whose file has none of the chosen day type yet, e.g. no Saturday so far. */
+  | { kind: 'noDays' }
+  /** The days ran, but no route direction had enough trips with a free flow in any band. */
+  | { kind: 'tooFew' }
+  | {
+      kind: 'routes';
+      /** Each route with at least one band to show, in the order asked for. */
+      routes: { routeId: string; rows: RouteDelayRow[] }[];
+      /** The longest running time across every route, in minutes, so all share one scale. */
+      longest: number;
+      /** Name each route, for a combined route like SL4/SL5, even if only one has trips. */
+      showRouteNames: boolean;
+    };
+
+/** What the delay card shows for the route_ids and direction on the speed map. */
+export const routeDelayCardContent = (
+  data: BusRouteDelaysResponse,
+  period: Period,
+  dayType: DayType,
+  routeIds: string[],
+  directionId: number
+): RouteDelayCardContent => {
+  if (period !== 'daily' && !(data as BusRouteDelaysByDayType)[dayType]) return { kind: 'noDays' };
+
+  const bands = selectRouteDelayBands(data, period, dayType);
+  const routes = routeIds
+    .map((routeId) => ({ routeId, rows: routeDelayRows(bands, routeId, directionId) }))
+    .filter(({ rows }) => rows.some(({ entry }) => entry));
+  if (!routes.length) return { kind: 'tooFew' };
+
+  // At least a minute, so the bars can't divide by zero if every trip rounds down to nothing.
+  const longest = Math.max(
+    1,
+    ...routes.flatMap(({ rows }) =>
+      rows.map(({ entry }) => (entry ? tripMinutes(entry).running : 0))
+    )
+  );
+  return { kind: 'routes', routes, longest, showRouteNames: routeIds.length > 1 };
+};
