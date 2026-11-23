@@ -2,6 +2,7 @@ import type { BusRoute, CommuterRailRoute, Line, LineShort, FerryRoute } from '.
 import { BUS_ROUTES, COMMUTER_RAIL_ROUTES } from '../types/lines';
 import type { LineMap, RapidTransitLineShort, Station } from '../types/stations';
 import type { Location } from '../types/charts';
+import { DIRECTIONS } from '../types/charts';
 import {
   stations,
   rtStations,
@@ -11,6 +12,8 @@ import {
 } from '../constants/stations';
 import { getBusRouteDisplayName, getBusRouteIds } from '../constants/lines';
 import type { Tab } from '../types/router';
+import { hasKey } from './hasKey';
+import { isOneOf } from './objects';
 
 // Type guards for line types
 const isBusLine = (line: LineShort): line is 'Bus' => line === 'Bus';
@@ -253,7 +256,7 @@ const travelDirection = (from: Station, to: Station): Location['direction'] => {
   const key = from.order < to.order ? '1' : '0';
   const [stopId] = [...from.stops[key], ...from.stops[key === '1' ? '0' : '1']];
   const name = stopId ? directionNamesIndex[stopId]?.[key] : undefined;
-  return (name as Location['direction'] | undefined) ?? (key === '1' ? 'southbound' : 'northbound');
+  return isOneOf(DIRECTIONS, name) ? name : key === '1' ? 'southbound' : 'northbound';
 };
 
 export const getLocationDetails = (
@@ -350,7 +353,7 @@ export const findNearestConnectingStation = (
  * outlast the route itself, which drops out of MBTA's current feed once it's retired.
  */
 export const getBusRouteStopIds = (busRoute: string): string[] =>
-  (stations.Bus[busRoute as BusRoute]?.stations ?? []).flatMap(({ stops }) =>
+  (hasKey(stations.Bus, busRoute) ? stations.Bus[busRoute].stations : []).flatMap(({ stops }) =>
     [...(stops['0'] ?? []), ...(stops['1'] ?? [])].map(
       (stopId) => stopId.split('-').pop() ?? stopId
     )
@@ -358,13 +361,16 @@ export const getBusRouteStopIds = (busRoute: string): string[] =>
 
 export const getMinMaxDatesForRoute = (
   tab: Tab,
-  route?: BusRoute | CommuterRailRoute
+  route?: string
 ): { minDate: string | undefined; maxDate: string | undefined } => {
-  if ((tab === 'Commuter Rail' || tab === 'Bus') && route) {
-    const lineMap = getRouteLineMap(tab, route);
-    return { minDate: lineMap?.service_start, maxDate: lineMap?.service_end };
-  }
-  return { minDate: undefined, maxDate: undefined };
+  const lineMap = !route
+    ? undefined
+    : tab === 'Commuter Rail' && hasKey(crStations, route)
+      ? crStations[route]
+      : tab === 'Bus' && hasKey(busStations, route)
+        ? busStations[route]
+        : undefined;
+  return { minDate: lineMap?.service_start, maxDate: lineMap?.service_end };
 };
 
 /**

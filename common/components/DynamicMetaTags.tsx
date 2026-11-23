@@ -1,4 +1,6 @@
 import { useLocation } from '@tanstack/react-router';
+import { rtStations } from '../constants/stations';
+import { hasKey } from '../utils/hasKey';
 import { getMetaTagEntries, getMetaTags, lineShortFor } from '../utils/metaTags';
 import { useIsNotFound } from '../utils/router';
 import { getParentStationForStopId } from '../utils/stations';
@@ -8,9 +10,11 @@ function getTripSummary(query: Record<string, unknown>, lineShort: string | unde
   const from = typeof query.from === 'string' ? query.from : undefined;
   const to = typeof query.to === 'string' ? query.to : undefined;
   if (!from || !to) return undefined;
+  // Only rapid transit lines change which station a shared stop id resolves to.
+  const line = lineShort && hasKey(rtStations, lineShort) ? lineShort : undefined;
   try {
-    const fromStation = getParentStationForStopId(from, lineShort as never);
-    const toStation = getParentStationForStopId(to, lineShort as never);
+    const fromStation = getParentStationForStopId(from, line);
+    const toStation = getParentStationForStopId(to, line);
     if (!fromStation?.stop_name || !toStation?.stop_name) return undefined;
     return `${fromStation.stop_name} to ${toStation.stop_name}`;
   } catch {

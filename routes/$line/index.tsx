@@ -1,6 +1,7 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { Layout } from '../../common/layouts/layoutTypes';
-import type { LinePath } from '../../common/types/lines';
+import { hasKey } from '../../common/utils/hasKey';
+import { hrefRedirect } from '../../common/utils/hrefRedirect';
 import { requireLine } from '../../common/utils/lineRoute';
 import { redirectV3Route } from '../../common/utils/middleware';
 import { linePathToKeyMap } from '../../common/utils/router';
@@ -12,10 +13,13 @@ export const Route = createFileRoute('/$line/')({
   validateSearch: validateLineSearch,
   beforeLoad: (context) => {
     // Ferry and The RIDE have no overview, so their line URL opens the page the nav links to.
-    const entryPath = LINE_ENTRY_PATHS[linePathToKeyMap[context.params.line as LinePath]];
+    const { line } = context.params;
+    const entryPath = hasKey(linePathToKeyMap, line)
+      ? LINE_ENTRY_PATHS[linePathToKeyMap[line]]
+      : undefined;
     if (entryPath) {
       const href = `${entryPath}${context.location.searchStr}`;
-      throw redirect({ href, replace: true } as Parameters<typeof redirect>[0]);
+      throw hrefRedirect(href);
     }
     requireLine('')(context);
     redirectV3Route(context);

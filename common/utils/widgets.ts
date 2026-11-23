@@ -17,8 +17,8 @@ const ON_TIME_HEADWAYS =
 const getAverage = (data: (number | undefined)[]) => {
   // Filter out undefined, null, NaN, and non-finite values
   const validData = data.filter(
-    (val) => val !== undefined && val !== null && typeof val === 'number' && Number.isFinite(val)
-  ) as number[];
+    (val): val is number => typeof val === 'number' && Number.isFinite(val)
+  );
 
   if (validData.length >= 1) {
     const totalSum = validData.reduce((a, b) => a + b, 0);
@@ -68,8 +68,8 @@ const getOnTimeTravelPercentage = (data: SingleDayDataPoint[]) => {
 const getPeaks = (data: (number | undefined)[]) => {
   // Filter out undefined, null, NaN, and non-finite values
   const validData = data.filter(
-    (val) => val !== undefined && val !== null && typeof val === 'number' && Number.isFinite(val)
-  ) as number[];
+    (val): val is number => typeof val === 'number' && Number.isFinite(val)
+  );
 
   validData.sort((a, b) => a - b);
 

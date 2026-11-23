@@ -3,6 +3,7 @@ import type { Location } from '../types/charts';
 import { LINE_COLORS, LINE_COLORS_ON_DARK } from '../constants/colors';
 import { SMALL_DATE_FORMAT } from '../constants/dates';
 import { useThemeStore } from '../state/themeStore';
+import { hasKey } from './hasKey';
 
 /**
  * The chart is copied out of a canvas Chart.js has already painted, using whichever theme was
@@ -131,7 +132,8 @@ export function downloadChartAsImage(
   let locationWidth = 0;
   if (location) {
     const lineColor =
-      theme.lineColors[line as keyof typeof LINE_COLORS] ?? theme.lineColors.default;
+      (line && hasKey(theme.lineColors, line) ? theme.lineColors[line] : undefined) ??
+      theme.lineColors.default;
     const locationY = headerPadding + dateFontSize + 4 * dpr;
     const rightEdge = width - headerPadding;
 

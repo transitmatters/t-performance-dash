@@ -1,33 +1,29 @@
 import type { ParsedLocation } from '@tanstack/react-router';
-import { redirect } from '@tanstack/react-router';
 import {
   type CommuterRailRoute,
   type BusRoute,
   type FerryRoute,
-  type LinePath,
   COMMUTER_RAIL_ROUTES,
   BUS_ROUTES,
   FERRY_ROUTES,
   RAIL_LINES,
 } from '../types/lines';
 import { TODAY_STRING } from '../constants/dates';
+import { hrefRedirect } from './hrefRedirect';
+import { isOneOf } from './objects';
 
-const getLineOrRoute = (
-  lineString: string
-):
-  | {
-      type: 'rail' | 'bus' | 'cr' | 'ferry';
-      value: LinePath | BusRoute | CommuterRailRoute | FerryRoute;
-    }
-  | undefined => {
-  if (RAIL_LINES.includes(lineString.toLowerCase()))
-    return { type: 'rail', value: lineString.toLowerCase() as LinePath };
-  if (BUS_ROUTES.includes(lineString.toString() as BusRoute))
-    return { type: 'bus', value: lineString as BusRoute };
-  if (COMMUTER_RAIL_ROUTES.includes(lineString.toString() as CommuterRailRoute))
-    return { type: 'cr', value: lineString as CommuterRailRoute };
-  if (FERRY_ROUTES.includes(lineString.toString() as FerryRoute))
-    return { type: 'ferry', value: lineString as FerryRoute };
+type LineOrRoute =
+  | { type: 'rail'; value: string }
+  | { type: 'bus'; value: BusRoute }
+  | { type: 'cr'; value: CommuterRailRoute }
+  | { type: 'ferry'; value: FerryRoute };
+
+const getLineOrRoute = (lineString: string): LineOrRoute | undefined => {
+  const linePath = lineString.toLowerCase();
+  if (RAIL_LINES.includes(linePath)) return { type: 'rail', value: linePath };
+  if (isOneOf(BUS_ROUTES, lineString)) return { type: 'bus', value: lineString };
+  if (isOneOf(COMMUTER_RAIL_ROUTES, lineString)) return { type: 'cr', value: lineString };
+  if (isOneOf(FERRY_ROUTES, lineString)) return { type: 'ferry', value: lineString };
   return undefined;
 };
 
@@ -129,5 +125,5 @@ export const getV3RedirectHref = (pathname: string, search: URLSearchParams) => 
 export const redirectV3Route = ({ location }: { location: ParsedLocation }) => {
   const href = getV3RedirectHref(location.pathname, new URLSearchParams(location.searchStr));
   // Replace rather than push, so Back doesn't land on the v3 URL and bounce forward again.
-  if (href) throw redirect({ href, replace: true } as Parameters<typeof redirect>[0]);
+  if (href) throw hrefRedirect(href);
 };

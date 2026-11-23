@@ -1,4 +1,5 @@
 import { RAIL_LINES } from '../types/lines';
+import { isOneOf } from '../utils/objects';
 
 const ALL_MODES = [...RAIL_LINES, 'bus', 'commuter-rail', 'ferry'];
 // Ferry has no line overview, Blue and Mattapan no Fleet page, and Mattapan no ridership data.
@@ -67,7 +68,7 @@ export const EMBED_DELAYS_CHARTS = ['total', 'causes', 'breakdown'] as const;
 export type DelaysEmbedChart = (typeof EMBED_DELAYS_CHARTS)[number];
 
 export const isDelaysEmbed = (line: string, chart: string): chart is DelaysEmbedChart =>
-  EMBED_DELAYS_CHARTS.includes(chart as DelaysEmbedChart) && LINE_PAGE_LINES.delays.includes(line);
+  isOneOf(EMBED_DELAYS_CHARTS, chart) && LINE_PAGE_LINES.delays.includes(line);
 
 /** Trip charts that can be iframed, by trip page, and the modes whose trip page shows each one. */
 export const EMBED_TRIP_CHART_LINES = {

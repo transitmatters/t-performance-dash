@@ -91,8 +91,9 @@ export type Benchmark = {
 };
 
 export type Block = {
-  from: string;
-  to: string;
+  // Undefined runs the block to the edge of the chart
+  from: string | undefined;
+  to: string | undefined;
   // Defaults to 'No data'; an empty string draws the block without a label
   label?: string;
   fillColor?: string;

@@ -1,8 +1,8 @@
-import type { PeakRidershipKey } from '../constants/baselines';
 import { PEAK_RIDERSHIP } from '../constants/baselines';
 import type { BaselineMetric, HistoricalBaselines } from '../types/baselines';
 import type { BusRoute, CommuterRailRoute, FerryRoute, Line } from '../types/lines';
 import { RIDERSHIP_KEYS } from '../types/lines';
+import { hasKey } from './hasKey';
 
 /**
  * Published historical best for a series, or `fallback` (the hard-coded peak) when baselines.json
@@ -22,6 +22,10 @@ export const getBaseline = <
 ): number | Fallback | HeldBackFallback => {
   const series = seriesId ? baselines?.metrics[metric]?.series[seriesId] : undefined;
   if (typeof series?.value === 'number' && series.value > 0) return series.value;
+  // TODO: an omitted or undefined heldBackFallback isn't reflected in HeldBackFallback, so this can
+  // return undefined where callers' types say number (useScheduledServiceBaseline for a held-back
+  // line other than Green). Typing it honestly needs those callers to handle a missing peak.
+  // oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- see above
   return series?.heldBack ? (heldBackFallback as HeldBackFallback) : fallback;
 };
 
@@ -43,6 +47,6 @@ export const ridershipFallbackPeak = (
   if (crRoute || ferryRoute || line === 'line-commuter-rail' || line === 'line-ferry') {
     return undefined;
   }
-  const key = (busRoute ? busRoute.replaceAll('/', '') : line) as PeakRidershipKey | undefined;
-  return PEAK_RIDERSHIP[key ?? 'DEFAULT'];
+  const key = busRoute ? busRoute.replaceAll('/', '') : (line ?? 'DEFAULT');
+  return hasKey(PEAK_RIDERSHIP, key) ? PEAK_RIDERSHIP[key] : undefined;
 };

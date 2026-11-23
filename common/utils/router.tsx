@@ -57,7 +57,7 @@ const getPage = (pathItems: string[], tab: Tab): string => {
   return pageArray[0];
 };
 
-const getTab = (path: LinePath): Tab => {
+const getTab = (path: string): Tab => {
   if (RAIL_LINES.includes(path)) {
     return 'Subway';
   } else if (path === 'bus') {
@@ -89,10 +89,14 @@ export const parseRoutePath = (pathname: string) => {
   // Page detection expects trailing-slash paths; a hand-typed `/red/speed` still has to work.
   const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
   const linePath = pathItems[1];
-  const tab = getTab((linePath as LinePath) ?? 'System');
+  const tab = getTab(linePath ?? 'System');
   return {
     pathItems,
     tab,
+    // TODO: Page doesn't cover every page name a URL can hold ('v3Redirect', or anything on a 404),
+    // and neither do Route's linePath and lineShort (see routeWithQuery). Typing them as possibly
+    // unknown means handling that wherever a route is read.
+    // oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- see above
     page: getPage(pathItems, tab) as Page,
     line:
       linePath !== undefined && hasKey(linePathToKeyMap, linePath)
@@ -217,8 +221,11 @@ const routeWithQuery = (pathname: string, query: QueryParams): Route => {
 
   return {
     line,
-    linePath: pathItems[1] as LinePath, //TODO: Remove as
-    lineShort: startCase(toLower(pathItems[1]).replace('-', ' ')) as LineShort, //TODO: Remove as
+    // Unchecked URL segments; see parseRoutePath.
+    // oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- see above
+    linePath: pathItems[1] as LinePath,
+    // oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- see above
+    lineShort: startCase(toLower(pathItems[1]).replace('-', ' ')) as LineShort,
     page: page,
     tab,
     query,

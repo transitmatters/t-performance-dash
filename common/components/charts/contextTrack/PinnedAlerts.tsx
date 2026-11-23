@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import type { HistoricalAlert } from '../../../types/alerts';
@@ -17,7 +16,7 @@ export const PinnedAlerts = ({ alerts, indent, onRemove }: PinnedAlertsProps) =>
     // Lines up with the plot, except on phones where the indent would squeeze the text
     <ul
       className="flex flex-col gap-1 text-xs sm:pl-(--plot-left)"
-      style={{ '--plot-left': `${indent}px` } as CSSProperties}
+      style={{ '--plot-left': `${indent}px` }}
     >
       {alerts.map((alert) => {
         const key = alertKey(alert);

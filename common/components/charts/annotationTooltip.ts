@@ -7,7 +7,7 @@ export type AnnotationTooltipContent = { title: string; lines: string[] };
 
 type Hook = () => void;
 
-const cards = new WeakMap<Hook, AnnotationTooltipContent>();
+const cards = new WeakMap<object, AnnotationTooltipContent>();
 
 /**
  * Gives a box annotation a hover card, shown by annotationHoverCardPlugin. The annotation plugin's
@@ -25,8 +25,15 @@ export const annotationTooltip = (content: AnnotationTooltipContent) => {
 type AnnotationElement = ReturnType<typeof Annotation.getAnnotations>[number];
 
 // Cards are keyed by their annotation's enter hook, which is compared by identity, never called.
-// oxlint-disable-next-line typescript/unbound-method
-const hookOf = (element: AnnotationElement) => element.options.enter as Hook;
+const cardOf = (element: AnnotationElement) => {
+  // oxlint-disable-next-line typescript/unbound-method
+  const hook = element.options.enter;
+  return hook && cards.get(hook);
+};
+
+// The annotation plugin's types leave out the Chart.js Element methods its elements have.
+const hasInRange = (element: object): element is { inRange: (x: number, y: number) => boolean } =>
+  'inRange' in element && typeof element.inRange === 'function';
 
 /** Shows the card for whichever annotation box is under the pointer. */
 export const annotationHoverCardPlugin: Plugin = {
@@ -36,12 +43,10 @@ export const annotationHoverCardPlugin: Plugin = {
     const hit =
       event.type === 'mousemove' && x !== null && y !== null
         ? Annotation.getAnnotations(chart).find(
-            (element) =>
-              cards.has(hookOf(element)) &&
-              (element as unknown as { inRange: (x: number, y: number) => boolean }).inRange(x, y)
+            (element) => cardOf(element) && hasInRange(element) && element.inRange(x, y)
           )
         : undefined;
-    const content = hit && cards.get(hookOf(hit));
+    const content = hit && cardOf(hit);
     if (!hit || !content) {
       hideHoverCard('annotation', chart);
       return;

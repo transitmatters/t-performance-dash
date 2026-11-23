@@ -2,11 +2,13 @@ import { createFileRoute, notFound } from '@tanstack/react-router';
 import { EMBED_SLOWZONES_LINES } from '../../../common/constants/staticRoutes';
 import { validateEmbedSearch } from '../../../common/utils/searchSchemas';
 import { SlowZonesEmbed } from '../../../modules/slowzones/SlowZonesEmbed';
-import type { SlowZonesEmbedLine } from '../../../modules/slowzones/embed';
+import { isSlowZonesEmbedLine } from '../../../modules/slowzones/embed';
 
 function SlowZonesEmbedPage() {
   const { line } = Route.useParams();
-  return <SlowZonesEmbed line={line as SlowZonesEmbedLine} />;
+  // beforeLoad 404s any other line
+  if (!isSlowZonesEmbedLine(line)) return null;
+  return <SlowZonesEmbed line={line} />;
 }
 
 export const Route = createFileRoute('/embed/$line/slowzones')({

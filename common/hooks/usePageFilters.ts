@@ -3,6 +3,7 @@ import { rtStations } from '../constants/stations';
 import type { DayKind } from '../types/dataPoints';
 import type { LineShort } from '../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES } from '../types/lines';
+import { hasKey } from '../utils/hasKey';
 import { usePageRoute } from '../utils/router';
 import { useOption } from './useChartToggle';
 
@@ -13,7 +14,7 @@ export type HeadwayDirection = 'both' | '0' | '1';
 
 /** stations.json keys directions the other way round from GTFS direction_id. */
 const directionName = (lineShort: LineShort, directionId: '0' | '1') => {
-  const names = rtStations[lineShort as keyof typeof rtStations]?.direction;
+  const names = hasKey(rtStations, lineShort) ? rtStations[lineShort].direction : undefined;
   return startCase(names?.[directionId === '0' ? '1' : '0'] ?? `Direction ${directionId}`);
 };
 

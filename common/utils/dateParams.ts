@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import type { ParsedLocation } from '@tanstack/react-router';
-import { redirect } from '@tanstack/react-router';
-import { isEqual, pickBy } from '@lodash-utils';
+import { isEqual } from '@lodash-utils';
 import { DATE_FORMAT, getDatePickerBounds } from '../constants/dates';
 import type { DateStoreSection, Page } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
@@ -9,11 +8,11 @@ import { queryClient } from '../api/queryClient';
 import { getDefaultDates } from '../state/defaults/dateDefaults';
 import { useDateStore } from '../state/dateStore';
 import { getDateStoreSection } from '../state/utils/dateStoreUtils';
-import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
 import { parseRoutePath, stripForeignRouteParams, withDefaultRouteParam } from './router';
 import type { SearchObject } from './searchParams';
 import { withCanonicalStations } from './stationParams';
+import { hrefRedirect } from './hrefRedirect';
 import { stringifySearch } from './searchParams';
 import type { DateRange, SingleDate } from './pageParams';
 
@@ -108,13 +107,12 @@ interface NormalizeDateParamsArgs {
  * the page doesn't take dates.
  */
 const boundsAndDefaults = ({ section, tab, page, search }: NormalizeDateParamsArgs) => {
-  const route = (search.busRoute ?? search.crRoute ?? search.ferryRoute) as
-    | BusRoute
-    | CommuterRailRoute
-    | FerryRoute
-    | undefined;
+  const route = search.busRoute ?? search.crRoute ?? search.ferryRoute;
   const defaults: DateQuery = getDefaultDates(section, tab) ?? {};
-  return { bounds: getDatePickerBounds(tab, page, route), defaults };
+  return {
+    bounds: getDatePickerBounds(tab, page, typeof route === 'string' ? route : undefined),
+    defaults,
+  };
 };
 
 /** The range a range page shows for this search: complete, ordered and in bounds. */
@@ -142,10 +140,15 @@ export const normalizeDateParams = (args: NormalizeDateParamsArgs): SearchObject
   if (!isRange && !SINGLE_SECTIONS.includes(section)) return undefined;
   const dates: DateQuery = isRange ? canonicalDateRange(args) : canonicalSingleDate(args);
 
-  const normalized = pickBy(
-    { ...search, date: undefined, startDate: undefined, endDate: undefined, ...dates },
-    (value) => value !== undefined
-  ) as SearchObject;
+  const normalized: SearchObject = Object.fromEntries(
+    Object.entries({
+      ...search,
+      date: undefined,
+      startDate: undefined,
+      endDate: undefined,
+      ...dates,
+    }).filter(([, value]) => value !== undefined)
+  );
   return isEqual(normalized, search) ? undefined : normalized;
 };
 
@@ -161,7 +164,7 @@ export const getDateRedirectHref = (
   if (!pageMetadata || (line && !pageMetadata.lines.includes(line))) return undefined;
 
   const section = pageMetadata.dateStoreSection;
-  const stored = getDateStoreSection(section, useDateStore.getState()) as DateQuery;
+  const stored: DateQuery = getDateStoreSection(section, useDateStore.getState());
   const normalized = normalizeDateParams({ section, tab, page, search, stored, latestDate });
   return normalized ? `${pathname}${stringifySearch(normalized)}` : undefined;
 };
@@ -205,7 +208,7 @@ const throwCanonicalRedirect = (location: ParsedLocation, latestDate?: string) =
   const href = getCanonicalSearchHref(location.pathname, location.search, latestDate);
   if (href) {
     const hash = location.hash ? `#${location.hash}` : '';
-    throw redirect({ href: `${href}${hash}`, replace: true } as Parameters<typeof redirect>[0]);
+    throw hrefRedirect(`${href}${hash}`);
   }
 };
 

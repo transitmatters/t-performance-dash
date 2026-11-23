@@ -59,17 +59,22 @@ export const mergeAndApplyStyles = <Point extends DataPoint>(
   styles: (undefined | Partial<DisplayStyle<Point>>)[],
   data: Point[]
 ): AppliedDisplayStyle<Point> => {
-  const merged: Record<string, unknown> = { ...defaultStyle };
+  const merged: AppliedDisplayStyle<Point> = { ...defaultStyle };
   styles.forEach((style) => {
     if (!style) return;
-    Object.entries(style).forEach(([key, value]) => {
-      merged[key] =
-        typeof value === 'object' && value && 'byPoint' in value
-          ? data.map((point) => value.byPoint(point))
-          : value;
-    });
+    const { pointColor, ...rest } = style;
+    Object.assign(merged, rest);
+    // pointColor is the one style that can be given per point
+    if ('pointColor' in style) {
+      Object.assign(merged, {
+        pointColor:
+          typeof pointColor === 'object' && pointColor
+            ? data.map((point) => pointColor.byPoint(point))
+            : pointColor,
+      });
+    }
   });
-  return merged as AppliedDisplayStyle<Point>;
+  return merged;
 };
 
 export const getFillProps = (style: AppliedDisplayStyle<DataPoint>) => {

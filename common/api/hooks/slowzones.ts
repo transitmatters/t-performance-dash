@@ -1,4 +1,4 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { queryOptions, skipToken, useQuery } from '@tanstack/react-query';
 import {
   fetchAllSlow,
   fetchDelayTotals,
@@ -9,8 +9,7 @@ import { ONE_HOUR } from '../../constants/time';
 import type { FetchSpeedRestrictionsOptions } from '../../types/api';
 import type { SpeedRestriction } from '../../types/dataPoints';
 import type { LineShort } from '../../types/lines';
-import { SLOW_ZONES_LINES } from '../../../modules/slowzones/types';
-import type { SlowZonesLineName } from '../../../modules/slowzones/types';
+import { isSlowZonesLine } from '../../../modules/slowzones/types';
 
 export const useSlowzoneAllData = (enabled = true) => {
   return useQuery({ queryKey: ['allSlow'], queryFn: fetchAllSlow, staleTime: ONE_HOUR, enabled });
@@ -28,11 +27,10 @@ export const useSlowzoneDelayTotalData = () => {
 
 /** Per-day delay for every slow zone on a line. Consumers should fall back to all_slow if this errors. */
 export const useSlowzoneZoneDelays = (lineShort: LineShort | undefined) => {
-  const isSlowZonesLine = SLOW_ZONES_LINES.includes(lineShort as SlowZonesLineName);
+  const slowZonesLine = lineShort && isSlowZonesLine(lineShort) ? lineShort : undefined;
   return useQuery({
     queryKey: ['zoneDelays', lineShort],
-    queryFn: () => fetchZoneDelays(lineShort as SlowZonesLineName),
-    enabled: isSlowZonesLine,
+    queryFn: slowZonesLine ? () => fetchZoneDelays(slowZonesLine) : skipToken,
     staleTime: ONE_HOUR,
   });
 };
@@ -54,12 +52,13 @@ export const useSpeedRestrictionData = ({
   lineId,
   date,
 }: Partial<FetchSpeedRestrictionsOptions>) => {
+  const noSpeedRestrictions: SpeedRestriction[] = [];
   return useQuery({
     queryKey: ['speedRestrictions', { lineId, date }],
     queryFn: () =>
-      lineId && date ? fetchSpeedRestrictions({ lineId, date }) : ([] as SpeedRestriction[]),
+      lineId && date ? fetchSpeedRestrictions({ lineId, date }) : noSpeedRestrictions,
     enabled: false,
-    initialData: [] as SpeedRestriction[],
+    initialData: noSpeedRestrictions,
     staleTime: ONE_HOUR,
   });
 };

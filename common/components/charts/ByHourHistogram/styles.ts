@@ -7,5 +7,5 @@ export const defaultStyle: DisplayStyle = {
 };
 
 export const resolveStyle = (styles: (null | Partial<DisplayStyle>)[]): DisplayStyle => {
-  return styles.reduce((a, b) => ({ ...a, ...b }), defaultStyle) as DisplayStyle;
+  return styles.reduce<DisplayStyle>((a, b) => ({ ...a, ...b }), defaultStyle);
 };

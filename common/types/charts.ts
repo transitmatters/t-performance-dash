@@ -80,14 +80,17 @@ export type TravelTimesUnit = 'by_date' | 'by_time';
 
 export type DayFilter = 'all' | 'weekday' | 'weekend';
 
-type Direction =
-  | 'northbound'
-  | 'southbound'
-  | 'eastbound'
-  | 'westbound'
-  | 'inbound'
-  | 'outbound'
-  | 'loop';
+export const DIRECTIONS = [
+  'northbound',
+  'southbound',
+  'eastbound',
+  'westbound',
+  'inbound',
+  'outbound',
+  'loop',
+] as const;
+
+type Direction = (typeof DIRECTIONS)[number];
 
 export enum PointFieldKeys {
   depDt = 'dep_dt',

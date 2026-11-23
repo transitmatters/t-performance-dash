@@ -1,3 +1,5 @@
+import { objectKeys } from './objects';
+
 /**
  * Titles for exported chart images. A chart's export normally takes the title and subtitle of the
  * widget card around it; these are the fallback for a chart drawn outside a card, such as an embed.
@@ -49,7 +51,7 @@ const CHART_TITLES = {
 
 export type ChartDatasetName = keyof typeof CHART_TITLES;
 
-export const CHART_DATASET_NAMES = Object.keys(CHART_TITLES) as ChartDatasetName[];
+export const CHART_DATASET_NAMES = objectKeys(CHART_TITLES);
 
 const CHART_SUBTITLES: Partial<Record<ChartDatasetName, string>> = {
   headways: 'Time between trains',

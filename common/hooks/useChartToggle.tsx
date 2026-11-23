@@ -48,7 +48,13 @@ export const ToggleControl = <K extends string>({
 
   if ((variant ?? (options.length > 2 ? 'select' : 'toggle')) === 'select') {
     return (
-      <Select value={value} onValueChange={(next) => onChange(next as K)}>
+      <Select
+        value={value}
+        onValueChange={(next) => {
+          const option = options.find(([key]) => key === next);
+          if (option) onChange(option[0]);
+        }}
+      >
         <SelectTrigger
           size="sm"
           style={lineColorVar(colorKey)}
@@ -98,7 +104,7 @@ export const useOption = <K extends string, T extends string = string>(
 
   const fromQuery = paramKey ? query[paramKey] : undefined;
   const value = paramKey
-    ? ((options.some(([key]) => key === fromQuery) ? fromQuery : initial) as K)
+    ? (options.find(([key]) => key === fromQuery)?.[0] ?? initial)
     : localValue;
 
   const setValue = useCallback(

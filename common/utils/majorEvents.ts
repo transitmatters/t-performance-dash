@@ -67,6 +67,8 @@ export const explainsGap = (events: MajorEvent[], from?: string, to?: string) =>
 
 type Annotation = AnnotationOptions;
 
+const dateOf = (value: unknown) => (typeof value === 'string' ? value : undefined);
+
 const isNoDataGap = (annotation: Annotation) =>
   annotation.type === 'box' && annotation.label?.content === 'No data';
 
@@ -78,8 +80,8 @@ export const hideGapsExplainedByEvents = (gaps: Annotation[], events: MajorEvent
   gaps.map((gap) =>
     gap.type === 'box' &&
     isNoDataGap(gap) &&
-    explainsGap(events, gap.xMin as string | undefined, gap.xMax as string | undefined)
-      ? ({ ...gap, label: { ...gap.label, display: false } } as Annotation)
+    explainsGap(events, dateOf(gap.xMin), dateOf(gap.xMax))
+      ? { ...gap, label: { ...gap.label, display: false } }
       : gap
   );
 
