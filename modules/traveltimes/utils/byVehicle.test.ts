@@ -3,14 +3,17 @@ import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { getCarTypes } from '../../fleet/constants/fleetTypes';
 import { MIXED_FLEET, getTravelTimesByVehicle } from './byVehicle';
 
-const trip = (vehicle_label: string, travel_time_sec: number, vehicle_consist?: string) =>
-  ({
-    route_id: 'Red',
-    direction: 0,
-    vehicle_label,
-    travel_time_sec,
-    vehicle_consist,
-  }) as SingleDayDataPoint;
+const trip = (
+  vehicle_label: string,
+  travel_time_sec: number,
+  vehicle_consist?: string
+): SingleDayDataPoint => ({
+  route_id: 'Red',
+  direction: 0,
+  vehicle_label,
+  travel_time_sec,
+  vehicle_consist,
+});
 
 const redTypes = getCarTypes('line-red');
 

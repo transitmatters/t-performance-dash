@@ -4,6 +4,7 @@ import { SEVERITY_COLORS, severityPointStyle } from '../utils/chartTheme';
 import { colorVisionPalette } from '../utils/colorVision';
 import { patternFill } from '../utils/chartPatterns';
 import { contrastRatio, hexWithAlpha } from '../utils/general';
+import { objectKeys } from '../utils/objects';
 import { WEATHER_BASE_COLORS } from '../../modules/weather/utils/weatherAnnotations';
 import { TEMPERATURE_COLOR_STOPS } from '../../modules/weather/utils/temperatureDataset';
 import { REASON_BY_KEY } from '../../modules/delays/constants/reasons';
@@ -88,7 +89,7 @@ describe('colorVisionPalette', () => {
 
 describe('colorblind mode', () => {
   const SUBWAY = ['line-red', 'line-orange', 'line-blue', 'line-green'] as const;
-  const deficiencies = Object.keys(DEFICIENCIES) as Deficiency[];
+  const deficiencies = objectKeys(DEFICIENCIES);
   // Comfortably past noticeable, for colors that have to be told apart at a glance.
   const DISTINCT = 0.1;
 

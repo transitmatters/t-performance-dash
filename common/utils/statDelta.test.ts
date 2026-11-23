@@ -42,7 +42,10 @@ describe('rangeEndsDetail', () => {
 });
 
 describe('statDelta', () => {
-  const base = { negligible: 0.005, words: ['better', 'worse'] as [string, string] };
+  const base: { negligible: number; words: [string, string] } = {
+    negligible: 0.005,
+    words: ['better', 'worse'],
+  };
 
   it('reads a rise as good by default', () => {
     expect(statDelta({ ...base, delta: 0.13, magnitude: '+13%' })).toEqual({

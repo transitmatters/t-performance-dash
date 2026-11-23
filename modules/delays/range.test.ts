@@ -3,12 +3,10 @@ import { DELAY_CAUSES } from '../../common/types/delays';
 import type { DelayRow } from './reasonSeries';
 import { coverRange, splitByWeek } from './range';
 import { getDelayStats } from './utils';
+import { recordFromKeys } from '../../common/utils/objects';
 
 const row = (date: string, minutes: number, overrides: Partial<DelayRow> = {}): DelayRow => {
-  const causes = Object.fromEntries(DELAY_CAUSES.map((cause) => [cause, 0])) as Record<
-    (typeof DELAY_CAUSES)[number],
-    number
-  >;
+  const causes = recordFromKeys(DELAY_CAUSES, () => 0);
   return {
     date,
     line: 'line-red',

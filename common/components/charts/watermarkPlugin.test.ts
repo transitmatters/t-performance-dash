@@ -42,10 +42,13 @@ const loadPlugin = async () => {
   return import('./watermarkPlugin');
 };
 
-type Hooks = {
-  beforeDraw: (chart: Chart, args: object, options: WatermarkOptions) => void;
-  afterDestroy: (chart: Chart) => void;
-};
+type Plugin = Awaited<ReturnType<typeof loadPlugin>>['watermarkPlugin'];
+
+const hooksOf = (plugin: Plugin) => ({
+  beforeDraw: (chart: Chart, options: WatermarkOptions) =>
+    plugin.beforeDraw?.(chart, { cancelable: true }, options),
+  afterDestroy: (chart: Chart) => plugin.afterDestroy?.(chart, {}, {}),
+});
 
 describe('watermarkPlugin', () => {
   beforeEach(() => {
@@ -78,18 +81,18 @@ describe('watermarkPlugin', () => {
 
   it('follows the theme on each draw, without rebuilding the chart', async () => {
     const { watermarkPlugin } = await loadPlugin();
-    const { beforeDraw } = watermarkPlugin as unknown as Hooks;
+    const { beforeDraw } = hooksOf(watermarkPlugin);
     const chart = fakeChart();
 
-    beforeDraw(chart, {}, { placement: 'plot' });
+    beforeDraw(chart, { placement: 'plot' });
     FakeImage.created.forEach((image) => image.load());
-    beforeDraw(chart, {}, { placement: 'plot' });
+    beforeDraw(chart, { placement: 'plot' });
     expect(chart.ctx.drawImage.mock.lastCall?.[0]).toMatchObject({ src: '/Logo_wordmark.png' });
 
     dark = true;
-    beforeDraw(chart, {}, { placement: 'plot' });
+    beforeDraw(chart, { placement: 'plot' });
     FakeImage.created.forEach((image) => image.load());
-    beforeDraw(chart, {}, { placement: 'plot' });
+    beforeDraw(chart, { placement: 'plot' });
     expect(chart.ctx.drawImage.mock.lastCall?.[0]).toMatchObject({
       src: '/Logo_wordmark_white.png',
     });
@@ -97,24 +100,24 @@ describe('watermarkPlugin', () => {
 
   it('draws smaller on a phone', async () => {
     const { watermarkPlugin } = await loadPlugin();
-    const { beforeDraw } = watermarkPlugin as unknown as Hooks;
+    const { beforeDraw } = hooksOf(watermarkPlugin);
     const chart = fakeChart();
-    beforeDraw(chart, {}, {});
+    beforeDraw(chart, {});
     FakeImage.created[0].load();
 
     wide = false;
-    beforeDraw(chart, {}, {});
+    beforeDraw(chart, {});
     expect(chart.ctx.drawImage.mock.lastCall?.slice(3)).toEqual([120, 11.25]);
   });
 
   it('draws a chart again once the wordmark loads, unless it was destroyed', async () => {
     const { watermarkPlugin } = await loadPlugin();
-    const { beforeDraw, afterDestroy } = watermarkPlugin as unknown as Hooks;
+    const { beforeDraw, afterDestroy } = hooksOf(watermarkPlugin);
     const kept = fakeChart();
     const destroyed = fakeChart();
 
-    beforeDraw(kept, {}, {});
-    beforeDraw(destroyed, {}, {});
+    beforeDraw(kept, {});
+    beforeDraw(destroyed, {});
     expect(kept.ctx.drawImage).not.toHaveBeenCalled();
     afterDestroy(destroyed);
 

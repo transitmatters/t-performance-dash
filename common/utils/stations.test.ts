@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import type { Station } from '../types/stations';
-import { getFerryRoutes } from '../constants/stations';
+import { ferryStations } from '../constants/stations';
 import {
   findValidDefaultStations,
   getLocationDetails,
@@ -13,6 +13,7 @@ import {
   optionsForField,
   stopNoun,
 } from './stations';
+import { objectKeys } from './objects';
 
 describe('getStationInOptions', () => {
   const fairmount = optionsStation('Commuter Rail', undefined, 'CR-Fairmount');
@@ -45,7 +46,7 @@ describe('stopNoun', () => {
   });
 });
 
-const busStations = (route: string) => optionsStation('Bus', route as BusRoute) as Station[];
+const busStations = (route: BusRoute) => optionsStation('Bus', route)!;
 
 const sharesBranch = (a: Station, b: Station) =>
   !a.branches || a.branches.some((branch) => b.branches?.includes(branch));
@@ -56,7 +57,7 @@ const hasTrip = (from: Station, to: Station) => {
 };
 
 describe('findValidDefaultStations', () => {
-  it.each(['17/19', 'SL1/SL2/SL3/SLW', '104/109', '52/59', '24/27/33', '131/132'])(
+  it.each<BusRoute>(['17/19', 'SL1/SL2/SL3/SLW', '104/109', '52/59', '24/27/33', '131/132'])(
     'picks two %s stops a trip runs between',
     (route) => {
       const { defaultFrom, defaultTo } = findValidDefaultStations(busStations(route));
@@ -73,7 +74,7 @@ describe('findValidDefaultStations', () => {
 });
 
 describe('getStationForInvalidFromSelection', () => {
-  it.each(['52/59', '64/68', '424/450/456', '434/435/436', '505/553/554', '17/19'])(
+  it.each<BusRoute>(['52/59', '64/68', '424/450/456', '434/435/436', '505/553/554', '17/19'])(
     'ends a %s trip on a stop the new start shares a trip with',
     (route) => {
       const stations = busStations(route);
@@ -129,13 +130,13 @@ describe('getLocationDetails direction', () => {
 const ferryStops = (route: FerryRoute) => optionsStation('Ferry', undefined, undefined, route)!;
 
 describe('ferry routes', () => {
-  it.each(getFerryRoutes())('lists each %s stop once', (route) => {
-    const ids = ferryStops(route as FerryRoute).map((station) => station.station);
+  it.each(objectKeys(ferryStations))('lists each %s stop once', (route) => {
+    const ids = ferryStops(route).map((station) => station.station);
     expect(new Set(ids).size).toBe(ids.length);
   });
 
   // Every loop trip runs as GTFS direction 1, whichever way around it goes.
-  it.each(['Boat-F6', 'Boat-F7'] as FerryRoute[])(
+  it.each<FerryRoute>(['Boat-F6', 'Boat-F7'])(
     'asks for direction 1 stops between any two %s stops',
     (route) => {
       const stops = ferryStops(route);

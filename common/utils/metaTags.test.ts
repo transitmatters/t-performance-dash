@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { LINE_COLORS } from '../constants/colors';
 import { LINE_OBJECTS } from '../constants/lines';
-import type { Line } from '../types/lines';
 import { getMetaTagEntries, getMetaTags, getOgCard, ogImageSlug } from './metaTags';
+import { objectEntries } from './objects';
 
 describe('getMetaTags', () => {
   it('names the line and page', () => {
@@ -85,8 +85,8 @@ describe('og cards', () => {
   });
 
   it("paints each line's card in that line's color", () => {
-    for (const [key, line] of Object.entries(LINE_OBJECTS)) {
-      expect(line.color, key).toBe(LINE_COLORS[key as Line]);
+    for (const [key, line] of objectEntries(LINE_OBJECTS)) {
+      expect(line.color, key).toBe(LINE_COLORS[key]);
     }
     expect(getOgCard('/the-ride/reliability/').color).toBe('#FFC72C');
   });

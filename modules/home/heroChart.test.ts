@@ -4,14 +4,17 @@ import type { SingleDayDataPoint } from '../../common/types/charts';
 import { getLocationDetails, getParentStationForStopId } from '../../common/utils/stations';
 import { exploreHref, HERO_STATIONS, minutesText, pickHero, worstLabel } from './heroChart';
 
-const trip = (headwayMin: number, scheduledMin = 5, at = '2026-11-16T08:00:00') =>
-  ({
-    route_id: 'Red',
-    direction: 0,
-    current_dep_dt: at,
-    headway_time_sec: headwayMin * 60,
-    benchmark_headway_time_sec: scheduledMin * 60,
-  }) as SingleDayDataPoint;
+const trip = (
+  headwayMin: number,
+  scheduledMin = 5,
+  at = '2026-11-16T08:00:00'
+): SingleDayDataPoint => ({
+  route_id: 'Red',
+  direction: 0,
+  current_dep_dt: at,
+  headway_time_sec: headwayMin * 60,
+  benchmark_headway_time_sec: scheduledMin * 60,
+});
 
 /** `n` trips, `bad` of them bunched. */
 const day = (n: number, bad: number) => Array.from({ length: n }, (_, i) => trip(i < bad ? 2 : 5));

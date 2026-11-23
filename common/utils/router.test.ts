@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import type { Route } from '../types/router';
-import type { PageMetadata } from '../constants/pages';
+import type { QueryParams, Route } from '../types/router';
+import type { Page, PageMetadata } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
 import { useDateStore } from '../state/dateStore';
 import type { StationStore } from '../state/stationStore';
@@ -228,15 +228,16 @@ describe('getLineSelectionItemHref', () => {
 describe('getBusRouteSelectionItemHref', () => {
   it('swaps the route and drops stations without mutating the query', () => {
     const query = Object.freeze({ busRoute: '1', date: '2025-01-01', from: 'a', to: 'b' });
-    const route = {
+    const route: Route = {
       line: 'line-bus',
       linePath: 'bus',
       lineShort: 'Bus',
       page: 'singleTrips',
       tab: 'Bus',
       query,
+      colorKey: 'line-bus',
       color: '',
-    } as Route;
+    };
     expect(getBusRouteSelectionItemHref('77', route)).toBe(
       '/bus/trips/single?date=2025-01-01&busRoute=77'
     );
@@ -245,16 +246,16 @@ describe('getBusRouteSelectionItemHref', () => {
 });
 
 describe('bus speed map links', () => {
-  const route = (page: string, query: Record<string, string>) =>
-    ({
-      line: 'line-bus',
-      linePath: 'bus',
-      lineShort: 'Bus',
-      page,
-      tab: 'Bus',
-      query,
-      color: '',
-    }) as Route;
+  const route = (page: Page, query: QueryParams): Route => ({
+    line: 'line-bus',
+    linePath: 'bus',
+    lineShort: 'Bus',
+    page,
+    tab: 'Bus',
+    query,
+    colorKey: 'line-bus',
+    color: '',
+  });
 
   it('drops the combined-route filter when switching routes', () => {
     const from = route('speedmap', { busRoute: 'SL4/SL5', routeId: 'SL4', band: 'pm_peak' });

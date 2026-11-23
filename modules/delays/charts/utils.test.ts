@@ -1,15 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { DELAY_CAUSES, type LineDelays } from '../../../common/types/delays';
 import { toDisplayedDelays } from './utils';
+import { recordFromKeys } from '../../../common/utils/objects';
 
 const row = (overrides: Partial<LineDelays> = {}): LineDelays => ({
   date: '2026-10-14',
   line: 'line-red',
   total_delay_time: 25,
-  ...(Object.fromEntries(DELAY_CAUSES.map((cause) => [cause, 0])) as Record<
-    (typeof DELAY_CAUSES)[number],
-    number
-  >),
+  ...recordFromKeys(DELAY_CAUSES, () => 0),
   signal_problem: 25,
   ...overrides,
 });

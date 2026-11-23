@@ -8,7 +8,7 @@ const chartAt = (left: number, right: number) =>
   ({ chartArea: { left, right }, scales: { x: { min: 0, max: 100 } } }) as unknown as Chart;
 
 const layout = (plugin: ReturnType<typeof chartGeometryPlugin>, chart: Chart) =>
-  (plugin.afterUpdate as (chart: Chart) => void)(chart);
+  plugin.afterUpdate?.(chart, { mode: 'default' }, {});
 
 describe('chartGeometryPlugin', () => {
   let frames: FrameRequestCallback[];

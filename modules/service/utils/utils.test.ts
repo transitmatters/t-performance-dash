@@ -2,10 +2,18 @@ import { describe, expect, it } from 'vitest';
 import type { DeliveredTripMetrics, ScheduledService } from '../../../common/types/dataPoints';
 import { getScheduledAndDeliveredRoundTrips } from './utils';
 
-const delivered = (date: string, count: number): DeliveredTripMetrics =>
-  ({ date, count, miles_covered: count ? 100 : 0 }) as DeliveredTripMetrics;
+const delivered = (
+  date: string,
+  count: number
+): Pick<DeliveredTripMetrics, 'date' | 'miles_covered' | 'count'> => ({
+  date,
+  count,
+  miles_covered: count ? 100 : 0,
+});
 
-const scheduled = (counts: { date: string; count: number }[]) => ({ counts }) as ScheduledService;
+const scheduled = (counts: ScheduledService['counts']): Pick<ScheduledService, 'counts'> => ({
+  counts,
+});
 
 describe('getScheduledAndDeliveredRoundTrips', () => {
   it('matches monthly scheduled (month end) to delivered (month start) as one point', () => {

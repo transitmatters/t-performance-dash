@@ -6,24 +6,82 @@ import { mergeChunks } from './mergeChunks';
 
 type Result = UseQueryResult<AggregateDataResponse>;
 
-const rows = (...dates: string[]) =>
-  ({
-    by_date: dates.map((date) => ({ service_date: date })),
-    by_time: [],
-  }) as unknown as AggregateDataResponse;
+const rows = (...dates: string[]): AggregateDataResponse => ({
+  by_date: dates.map((date) => ({
+    service_date: date,
+    count: 1,
+    mean: 0,
+    min: 0,
+    max: 0,
+    '25%': 0,
+    '50%': 0,
+    '75%': 0,
+  })),
+  by_time: [],
+});
 
-const loaded = (data: AggregateDataResponse): Result =>
-  ({ data, isError: false, isFetching: false, refetch: vi.fn() }) as unknown as Result;
-const pending = (): Result =>
-  ({ data: undefined, isError: false, isFetching: true, refetch: vi.fn() }) as unknown as Result;
-const failed = (): Result =>
-  ({
-    data: undefined,
-    isError: true,
-    error: new Error('timed out'),
-    isFetching: false,
-    refetch: vi.fn(),
-  }) as unknown as Result;
+const settled = {
+  dataUpdatedAt: 0,
+  errorUpdatedAt: 0,
+  failureCount: 0,
+  failureReason: null,
+  errorUpdateCount: 0,
+  isFetched: true,
+  isFetchedAfterMount: true,
+  isFetching: false,
+  isInitialLoading: false,
+  isLoading: false,
+  isPaused: false,
+  isPlaceholderData: false,
+  isRefetching: false,
+  isStale: false,
+  isEnabled: true,
+  fetchStatus: 'idle',
+} as const;
+
+const loaded = (data: AggregateDataResponse): Result => ({
+  ...settled,
+  data,
+  error: null,
+  isError: false,
+  isPending: false,
+  isLoadingError: false,
+  isRefetchError: false,
+  isSuccess: true,
+  status: 'success',
+  refetch: vi.fn(),
+});
+const pending = (): Result => ({
+  ...settled,
+  data: undefined,
+  error: null,
+  isError: false,
+  isFetched: false,
+  isFetchedAfterMount: false,
+  isFetching: true,
+  isInitialLoading: true,
+  isLoading: true,
+  isPending: true,
+  isLoadingError: false,
+  isRefetchError: false,
+  isSuccess: false,
+  status: 'pending',
+  fetchStatus: 'fetching',
+  refetch: vi.fn(),
+});
+const failed = (): Result => ({
+  ...settled,
+  data: undefined,
+  error: new Error('timed out'),
+  failureCount: 1,
+  isError: true,
+  isPending: false,
+  isLoadingError: true,
+  isRefetchError: false,
+  isSuccess: false,
+  status: 'error',
+  refetch: vi.fn(),
+});
 
 // Newest first, as splitDateRange returns them.
 const CHUNKS: DateChunk[] = [
@@ -32,7 +90,7 @@ const CHUNKS: DateChunk[] = [
 ];
 
 const dates = (result: ReturnType<typeof mergeChunks>) =>
-  result.data?.by_date.map((row) => (row as unknown as { service_date: string }).service_date);
+  result.data?.by_date.map((row) => row.service_date);
 
 describe('mergeChunks', () => {
   it('passes a single request through untouched', () => {

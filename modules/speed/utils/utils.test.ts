@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 
-import type { DeliveredTripMetrics } from '../../../common/types/dataPoints';
+import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
 import { getSpeedStats } from './utils';
 
-const period = (date: string, miles: number, hours: number) =>
-  ({
-    date,
-    line: 'line-red',
-    miles_covered: miles,
-    total_time: hours * 3600,
-  }) as DeliveredTripMetrics;
+const period = (date: string, miles: number, hours: number): SpeedTripMetrics => ({
+  date,
+  miles_covered: miles,
+  total_time: hours * 3600,
+  // Not read by the speed stats
+  count: 0,
+});
 
 describe('getSpeedStats', () => {
   // A full week at 20 mph, then a one-day partial week at 30 mph.
