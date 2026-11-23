@@ -7,7 +7,13 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useMemo } from 'react';
 import type { Station } from '../types/stations';
-import type { DayDelayTotals, Direction, SlowZone, SlowZoneResponse } from '../types/dataPoints';
+import type {
+  DayDelayTotals,
+  Direction,
+  SlowZone,
+  SlowZoneAllSlowResponse,
+  SlowZoneResponse,
+} from '../types/dataPoints';
 import { DATE_FORMAT } from '../constants/dates';
 import type { LineShort } from '../types/lines';
 import { getParentStationForStopId } from './stations';
@@ -262,23 +268,24 @@ export interface TripSlowZoneSummary {
 
 /**
  * Slow time on a trip for each day of a window, summing each active zone's median delay. Pass the
- * same start and end date for a single day. Returns null when no slow zone on the trip overlaps
- * the window.
+ * same start and end date for a single day. Dates past the data's last day (see
+ * getSlowZoneDataEndDate) are pulled back to it. Returns null when no slow zone on the trip
+ * overlaps the window.
  */
 export const getTripSlowZoneSummary = (
-  data: SlowZoneResponse[],
+  allSlow: SlowZoneAllSlowResponse,
   from: Station,
   to: Station,
   lineShort: LineShort,
   startDate: string,
   endDate: string
 ): TripSlowZoneSummary | null => {
-  const zones = data.map((zone) => ({
+  const zones = allSlow.data.map((zone) => ({
     ...zone,
     start: zone.start.slice(0, 10),
     end: zone.end.slice(0, 10),
   }));
-  const lastDataDate = zones.reduce((max, zone) => (zone.end > max ? zone.end : max), '');
+  const lastDataDate = getSlowZoneDataEndDate(allSlow.updated_on).format(DATE_FORMAT);
   const end = endDate > lastDataDate ? lastDataDate : endDate;
   const start = startDate > end ? end : startDate;
 

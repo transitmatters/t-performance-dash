@@ -1,4 +1,5 @@
 import { createDefaultDiagramForLine } from '@transitmatters/stripmap';
+import dayjs from 'dayjs';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { SlowZoneAllSlowResponse, SlowZoneResponse } from '../../../common/types/dataPoints';
 import { segmentSlowZones } from './segment';
@@ -51,6 +52,26 @@ describe('segmentSlowZones', () => {
     const zones = zonesOn('2025-01-15').flatMap((s) => s.slowZones['0'].map(key));
     expect(zones).toContain(key(startsJan15));
     expect(zones).not.toContain(key(endsJan14));
+  });
+
+  it('shows the requested date within the data, and the last day of data past it', () => {
+    const dayShown = (date: string) =>
+      dayjs(
+        segmentSlowZones({
+          date,
+          slowZones,
+          speedRestrictions: [],
+          lineName: 'Red',
+          diagram: createDefaultDiagramForLine('Red', {
+            pxPerStation: 15,
+            direction: 'horizontal',
+          }),
+        }).effectiveDate
+      ).format('YYYY-MM-DD');
+    expect(dayShown('2025-01-15')).toBe('2025-01-15');
+    expect(dayShown('2025-01-31')).toBe('2025-01-31');
+    expect(dayShown('2025-02-01')).toBe('2025-01-31');
+    expect(dayShown('2025-03-10')).toBe('2025-01-31');
   });
 
   it('pulls dates past the data back to its last day', () => {

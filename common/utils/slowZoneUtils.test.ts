@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { describe, expect, it } from 'vitest';
 import type { LineShort } from '../types/lines';
-import type { SlowZoneResponse } from '../types/dataPoints';
+import type { SlowZoneAllSlowResponse, SlowZoneResponse } from '../types/dataPoints';
 import {
   filterAllSlow,
   formatSegments,
@@ -84,12 +84,14 @@ describe('isZoneOnTrip', () => {
 });
 
 describe('getTripSlowZoneSummary', () => {
-  const data = [
+  const zones = [
     alewifeToDavis,
     andrewToBraintreeJfk,
     andrewToAshmontJfk,
     zone('Red', '70061', '70063', '2025-02-10', '2025-02-20', 15),
   ];
+  // The morning run covering service through Feb 20, the last day of the last zone.
+  const data: SlowZoneAllSlowResponse = { updated_on: '2025-02-21T10:05:00+00:00', data: zones };
 
   it('sums the zones active on a single day', () => {
     expect(
@@ -129,6 +131,25 @@ describe('getTripSlowZoneSummary', () => {
       '2025-03-05'
     );
     expect(summary).toMatchObject({ startDate: '2025-02-20', endDate: '2025-02-20', endTotal: 15 });
+  });
+
+  it("stops at the data's last day, not the last zone's, once every zone has cleared", () => {
+    // Data through Mar 2, ten days after the last zone cleared.
+    const later = { ...data, updated_on: '2025-03-03T10:05:00+00:00' };
+    expect(
+      getTripSlowZoneSummary(later, alewife, braintree, 'Red', '2025-02-15', '2025-03-05')
+    ).toEqual({
+      startDate: '2025-02-15',
+      endDate: '2025-03-02',
+      startTotal: 15,
+      endTotal: 0,
+      endZones: 0,
+      peakTotal: 15,
+      peakDate: '2025-02-15',
+    });
+    expect(
+      getTripSlowZoneSummary(later, alewife, braintree, 'Red', '2025-03-01', '2025-03-05')
+    ).toBeNull();
   });
 
   it('returns null when no zone on the trip overlaps the dates', () => {

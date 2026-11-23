@@ -46,22 +46,17 @@ export const getSlowZoneStats = (
   const currentSlowTime = filteredTotals[filteredTotals.length - 1]?.[lineShort] ?? NaN;
   const slowTimeDelta = getSlowZoneDelayDelta(filteredTotals, lineShort);
 
-  // Line-wide (both directions).
+  // Line-wide (both directions). Dates past the data's last day count as of that day, so a range
+  // starting after it, like today alone before the morning run, still finds the zones reaching it.
   const dataEndDateUTC = getSlowZoneDataEndDate(allSlow.updated_on);
-  const zones = filterAllSlow(allSlow.data, startDateUTC, endDateUTC, lineShort);
-  const activeZones = zones.filter((sz) =>
-    isSlowZoneActiveAsOf(sz, endDateUTC, dataEndDateUTC)
-  ).length;
-  const startZones = zones.filter((sz) => dayjs.utc(sz.start).isSameOrBefore(startDateUTC)).length;
+  const end = endDateUTC.isAfter(dataEndDateUTC) ? dataEndDateUTC : endDateUTC;
+  const start = startDateUTC.isAfter(end) ? end : startDateUTC;
+  const zones = filterAllSlow(allSlow.data, start, end, lineShort);
+  const activeZones = zones.filter((sz) => isSlowZoneActiveAsOf(sz, end, dataEndDateUTC)).length;
+  const startZones = zones.filter((sz) => dayjs.utc(sz.start).isSameOrBefore(start)).length;
   const zonesDelta = activeZones - startZones;
 
-  const worst = getWorstSlowZoneSegment(
-    allSlow.data,
-    startDateUTC,
-    endDateUTC,
-    dataEndDateUTC,
-    lineShort
-  );
+  const worst = getWorstSlowZoneSegment(allSlow.data, start, end, dataEndDateUTC, lineShort);
   const worstSegment = worst
     ? { title: getStationPairName(worst.from, worst.to, true), delay: worst.delay }
     : null;

@@ -38,6 +38,9 @@ const delayTotals = [
   { date: '2026-11-18', Red: 27, Orange: 0, Blue: 0, Green: 0, Mattapan: 0 },
 ];
 
+// getSlowZoneStats reads neither the clock nor local time. The time zones and the clock, at the
+// moment of the bug, guard against logic like that coming back; constants computed at import, like
+// those in dates.ts, are out of their reach.
 describe.each(['America/New_York', 'Europe/Paris'])('getSlowZoneStats, viewed in %s', (tz) => {
   beforeAll(() => {
     vi.stubEnv('TZ', tz);
@@ -58,6 +61,12 @@ describe.each(['America/New_York', 'Europe/Paris'])('getSlowZoneStats, viewed in
       activeZones: 1,
       worstSegment: { title: 'JFK-N. Quincy', delay: 27 },
     });
+  });
+
+  it("counts zones on the data's last day for a range that starts after it", () => {
+    const expected = { activeZones: 1, worstSegment: { title: 'JFK-N. Quincy', delay: 27 } };
+    expect(statsFor('2026-11-19', '2026-11-20')).toMatchObject(expected);
+    expect(statsFor('2026-11-20', '2026-11-20')).toMatchObject(expected);
   });
 
   it('counts zones active on a past end date', () => {
