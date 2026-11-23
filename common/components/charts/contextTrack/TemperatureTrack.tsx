@@ -25,7 +25,7 @@ export interface TemperaturePoint {
 }
 
 export const getTemperaturePoints = (
-  hours: WeatherHourly[],
+  hours: Pick<WeatherHourly, 'timestamp' | 'temperature_f'>[],
   daily: boolean
 ): TemperaturePoint[] => {
   if (!daily) {

@@ -11,8 +11,8 @@ import { type ServiceComparison, SERVICE_COMPARISON_LABELS } from './embed';
 import { ServiceEmbedButton } from './ServiceEmbedButton';
 
 interface PercentageServiceGraphWrapperProps {
-  data: DeliveredTripMetrics[];
-  predictedData: ScheduledService;
+  data: Pick<DeliveredTripMetrics, 'date' | 'miles_covered' | 'count'>[];
+  predictedData: Pick<ScheduledService, 'counts'>;
   config: ParamsType;
   startDate: string;
   endDate: string;
