@@ -14,15 +14,8 @@ import {
 } from '../../../common/components/ui/select';
 import { FREQUENT_BUS_ROUTE_IDS } from '../../../common/constants/lines';
 import { getBusRouteGroup } from '../../../common/utils/stations';
-import type {
-  BusSpeedSegmentLeaderboardByBand,
-  BusSpeedSegmentLeaderboardByDayType,
-  BusSpeedSegmentLeaderboardEntry,
-  DayType,
-  Period,
-  TimeBand,
-} from '../types';
-import { selectSegmentLeaderboardEntries } from '../utils';
+import type { BusSpeedSegmentLeaderboardEntry, DayType, Period, TimeBand } from '../types';
+import { isKeyedByBand, isKeyedByDayType, selectSegmentLeaderboardEntries } from '../utils';
 import { BusSpeedSegmentLeaderboard } from './BusSpeedSegmentLeaderboard';
 import { BusSpeedSegmentMapDialog } from './BusSpeedSegmentMapDialog';
 
@@ -62,10 +55,12 @@ export const BusSpeedSegmentLeaderboardSection = ({
     if (!leaderboard.data || !date) return [];
     const allEntries: BusSpeedSegmentLeaderboardEntry[] =
       period === 'daily'
-        ? Object.values(leaderboard.data as BusSpeedSegmentLeaderboardByBand).flat()
-        : Object.values(leaderboard.data as BusSpeedSegmentLeaderboardByDayType).flatMap((byBand) =>
-            Object.values(byBand).flat()
-          );
+        ? isKeyedByBand(leaderboard.data)
+          ? Object.values(leaderboard.data).flat()
+          : []
+        : isKeyedByDayType(leaderboard.data)
+          ? Object.values(leaderboard.data).flatMap((byBand) => Object.values(byBand).flat())
+          : [];
     const routes = new Set(allEntries.map((entry) => getBusRouteGroup(entry.route_id, date)));
     return [...routes].toSorted((a, b) => a.localeCompare(b, 'en', { numeric: true }));
   }, [leaderboard.data, period, date]);

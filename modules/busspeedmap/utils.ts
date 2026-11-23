@@ -10,14 +10,13 @@ import { HEADWAY_FIELDS } from '../reliability/utils';
 import {
   DAY_TYPES,
   DIRECTIONS,
+  TIME_BANDS,
   DWELL_SUMMARY_SIZE,
   MIN_DWELL_STOPS_PER_DAY,
   MIN_RUNNING_SPEED_SEGMENT_M,
 } from './constants';
 import type {
   BusDwellProperties,
-  BusSpeedSegmentLeaderboardByBand,
-  BusSpeedSegmentLeaderboardByDayType,
   BusSpeedSegmentLeaderboardEntry,
   BusSpeedSegmentLeaderboardResponse,
   BusSpeedSegmentProperties,
@@ -146,6 +145,17 @@ export const periodDateRange = (
   return { start_date: start.format(format), end_date: end.format(format) };
 };
 
+type ByBand<T> = Partial<Record<TimeBand, T>>;
+type ByDayType<T> = Partial<Record<DayType, ByBand<T>>>;
+
+/** Whether a daily or weekly/monthly file is keyed straight by time_band, as a daily one is. */
+export const isKeyedByBand = <T>(data: ByBand<T> | ByDayType<T>): data is ByBand<T> =>
+  Object.keys(data).every((key) => TIME_BANDS.some((band) => band.key === key));
+
+/** Whether a daily or weekly/monthly file is keyed by day_type first, as a weekly/monthly one is. */
+export const isKeyedByDayType = <T>(data: ByBand<T> | ByDayType<T>): data is ByDayType<T> =>
+  Object.keys(data).every((key) => DAY_TYPES.some((dayType) => dayType.key === key));
+
 /**
  * Daily files are keyed straight by time_band; weekly/monthly nest one level deeper by
  * day_type first. Normalizing that shape difference here means the leaderboard UI can always
@@ -159,9 +169,9 @@ export const selectSegmentLeaderboardEntries = (
   timeBand: TimeBand
 ): BusSpeedSegmentLeaderboardEntry[] => {
   if (period === 'daily') {
-    return (data as BusSpeedSegmentLeaderboardByBand)[timeBand] ?? [];
+    return isKeyedByBand(data) ? (data[timeBand] ?? []) : [];
   }
-  return (data as BusSpeedSegmentLeaderboardByDayType)[dayType]?.[timeBand] ?? [];
+  return isKeyedByDayType(data) ? (data[dayType]?.[timeBand] ?? []) : [];
 };
 
 const METERS_PER_MILE = 1609.344;
@@ -358,13 +368,14 @@ const poolBatteryShare = (
 const sumPresent = <F extends HeadwayField | keyof BusTripCounts>(
   entries: BusSpeedLeaderboardEntry[],
   fields: readonly F[]
-): Partial<Record<F, number>> =>
-  Object.fromEntries(
-    fields.flatMap((field) => {
-      const counted = entries.filter((entry) => entry[field] != null);
-      return counted.length ? [[field, sumOf(counted, (entry) => entry[field] ?? 0)]] : [];
-    })
-  ) as Partial<Record<F, number>>;
+): Partial<Record<F, number>> => {
+  const sums: Partial<Record<F, number>> = {};
+  fields.forEach((field) => {
+    const counted = entries.filter((entry) => entry[field] != null);
+    if (counted.length) sums[field] = sumOf(counted, (entry) => entry[field] ?? 0);
+  });
+  return sums;
+};
 
 /**
  * Each headway count summed over the Frequent Bus Routes among `entries` that have it (116 of

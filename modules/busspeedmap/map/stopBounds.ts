@@ -3,7 +3,7 @@ import { PbfReader } from 'pbf';
 import { LngLatBounds } from 'maplibre-gl';
 import type { PMTiles } from 'pmtiles';
 import { BUS_STOPS_SOURCE_LAYER, NETWORK_BOUNDS } from '../constants';
-import type { BusStopProperties } from '../types';
+import { isBusStopProperties } from './featureProperties';
 
 const tileX = (lon: number, z: number) => Math.floor(((lon + 180) / 360) * 2 ** z);
 const tileY = (lat: number, z: number) => {
@@ -57,7 +57,9 @@ export const findStopBounds = async (
       hasStops ||= layer.length > 0;
       for (let i = 0; i < layer.length; i++) {
         const feature = layer.feature(i);
-        const { stop_id, stop_name, routes } = feature.properties as unknown as BusStopProperties;
+        const properties: unknown = feature.properties;
+        if (!isBusStopProperties(properties)) continue;
+        const { stop_id, stop_name, routes } = properties;
         if (stopNames && !stopNames.includes(stop_name)) continue;
         const bounds = routes.split(',').some((id) => routeIds.includes(id))
           ? onRoute
@@ -66,7 +68,8 @@ export const findStopBounds = async (
             : undefined;
         const { geometry } = feature.toGeoJSON(x, y, z);
         if (bounds && geometry.type === 'Point') {
-          bounds.extend(geometry.coordinates as [number, number]);
+          const [longitude, latitude] = geometry.coordinates;
+          bounds.extend([longitude, latitude]);
         }
       }
     }
