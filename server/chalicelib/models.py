@@ -81,6 +81,32 @@ class AlertsByDateParams(BaseModel):
     route: List[str] = Field(default=[], description=_ROUTE_ID_DESC)
 
 
+class LiveAlertsParams(BaseModel):
+    """Query parameters for `/api/alerts`.
+
+    Each is passed to the MBTA v3 API as a `filter[...]`, so a list is one comma-separated value.
+
+    Attributes:
+        route: Comma-separated route IDs.
+        route_type: Comma-separated GTFS route types.
+        activity: Comma-separated rider activities an alert affects.
+        stop: Comma-separated stop IDs.
+    """
+
+    route: str | None = Field(
+        default=None, description="Comma-separated MBTA route IDs (e.g. `Red`, `CR-Fairmount` or `1,66`)."
+    )
+    route_type: str | None = Field(
+        default=None,
+        description="Comma-separated GTFS route types: `0` light rail, `1` subway, `2` commuter rail, `3` bus, `4` ferry.",
+    )
+    activity: str | None = Field(
+        default=None,
+        description="Comma-separated rider activities an alert affects (e.g. `BOARD,EXIT,RIDE` or `USING_WHEELCHAIR`).",
+    )
+    stop: str | None = Field(default=None, description="Comma-separated MBTA stop IDs.")
+
+
 class AggregateTravelTimesParams(BaseModel):
     """Query parameters for `/api/aggregate/traveltimes` and `/api/aggregate/traveltimes2`.
 

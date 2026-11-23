@@ -856,6 +856,44 @@ export interface components {
      */
     DwellsAggregateResponse: components['schemas']['AggregateByDate'][];
     /**
+     * LiveAlertsParams
+     * @description Query parameters for `/api/alerts`.
+     *
+     *     Each is passed to the MBTA v3 API as a `filter[...]`, so a list is one comma-separated value.
+     *
+     *     Attributes:
+     *         route: Comma-separated route IDs.
+     *         route_type: Comma-separated GTFS route types.
+     *         activity: Comma-separated rider activities an alert affects.
+     *         stop: Comma-separated stop IDs.
+     */
+    LiveAlertsParams: {
+      /**
+       * Route
+       * @description Comma-separated MBTA route IDs (e.g. `Red`, `CR-Fairmount` or `1,66`).
+       * @default null
+       */
+      route?: string | null;
+      /**
+       * Route Type
+       * @description Comma-separated GTFS route types: `0` light rail, `1` subway, `2` commuter rail, `3` bus, `4` ferry.
+       * @default null
+       */
+      route_type?: string | null;
+      /**
+       * Activity
+       * @description Comma-separated rider activities an alert affects (e.g. `BOARD,EXIT,RIDE` or `USING_WHEELCHAIR`).
+       * @default null
+       */
+      activity?: string | null;
+      /**
+       * Stop
+       * @description Comma-separated MBTA stop IDs.
+       * @default null
+       */
+      stop?: string | null;
+    };
+    /**
      * LiveAlertsResponse
      * @description Response for `/api/alerts`: current MBTA alerts with one of the effects listed on `LiveAlert`.
      */
@@ -4056,7 +4094,16 @@ export interface operations {
   };
   getCurrentAlerts: {
     parameters: {
-      query?: never;
+      query?: {
+        /** @description Comma-separated MBTA route IDs (e.g. `Red`, `CR-Fairmount` or `1,66`). */
+        route?: string | null;
+        /** @description Comma-separated GTFS route types: `0` light rail, `1` subway, `2` commuter rail, `3` bus, `4` ferry. */
+        route_type?: string | null;
+        /** @description Comma-separated rider activities an alert affects (e.g. `BOARD,EXIT,RIDE` or `USING_WHEELCHAIR`). */
+        activity?: string | null;
+        /** @description Comma-separated MBTA stop IDs. */
+        stop?: string | null;
+      };
       header?: never;
       path?: never;
       cookie?: never;

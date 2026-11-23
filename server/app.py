@@ -519,7 +519,11 @@ def get_git_id():
         raise ConflictError("Cannot get git id from serverless host")
 
 
-@app.route("/api/alerts", cors=cors_config, docs=Docs(response=models.LiveAlertsResponse))
+@app.route(
+    "/api/alerts",
+    cors=cors_config,
+    docs=Docs(request=models.LiveAlertsParams, responses=[Resp(models.LiveAlertsResponse)]),
+)
 def get_alerts():
     """Fetch current live alerts from the MBTA v3 API."""
     data = mbta_v3.getAlerts(app.current_request.query_params or {})

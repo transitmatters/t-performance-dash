@@ -610,6 +610,52 @@
           "/api"
         ],
         "summary": "Fetch current live alerts from the MBTA v3 API.",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "route",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "type": "string"
+            },
+            "description": "Comma-separated MBTA route IDs (e.g. `Red`, `CR-Fairmount` or `1,66`)."
+          },
+          {
+            "in": "query",
+            "name": "route_type",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "type": "string"
+            },
+            "description": "Comma-separated GTFS route types: `0` light rail, `1` subway, `2` commuter rail, `3` bus, `4` ferry."
+          },
+          {
+            "in": "query",
+            "name": "activity",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "type": "string"
+            },
+            "description": "Comma-separated rider activities an alert affects (e.g. `BOARD,EXIT,RIDE` or `USING_WHEELCHAIR`)."
+          },
+          {
+            "in": "query",
+            "name": "stop",
+            "required": false,
+            "schema": {
+              "default": null,
+              "nullable": true,
+              "type": "string"
+            },
+            "description": "Comma-separated MBTA stop IDs."
+          }
+        ],
         "operationId": "getCurrentAlerts"
       }
     },
@@ -2279,6 +2325,41 @@
         },
         "title": "DwellsAggregateResponse",
         "type": "array"
+      },
+      "LiveAlertsParams": {
+        "description": "Query parameters for `/api/alerts`.\n\nEach is passed to the MBTA v3 API as a `filter[...]`, so a list is one comma-separated value.\n\nAttributes:\n    route: Comma-separated route IDs.\n    route_type: Comma-separated GTFS route types.\n    activity: Comma-separated rider activities an alert affects.\n    stop: Comma-separated stop IDs.",
+        "properties": {
+          "route": {
+            "default": null,
+            "description": "Comma-separated MBTA route IDs (e.g. `Red`, `CR-Fairmount` or `1,66`).",
+            "title": "Route",
+            "nullable": true,
+            "type": "string"
+          },
+          "route_type": {
+            "default": null,
+            "description": "Comma-separated GTFS route types: `0` light rail, `1` subway, `2` commuter rail, `3` bus, `4` ferry.",
+            "title": "Route Type",
+            "nullable": true,
+            "type": "string"
+          },
+          "activity": {
+            "default": null,
+            "description": "Comma-separated rider activities an alert affects (e.g. `BOARD,EXIT,RIDE` or `USING_WHEELCHAIR`).",
+            "title": "Activity",
+            "nullable": true,
+            "type": "string"
+          },
+          "stop": {
+            "default": null,
+            "description": "Comma-separated MBTA stop IDs.",
+            "title": "Stop",
+            "nullable": true,
+            "type": "string"
+          }
+        },
+        "title": "LiveAlertsParams",
+        "type": "object"
       },
       "LiveAlertsResponse": {
         "description": "Response for `/api/alerts`: current MBTA alerts with one of the effects listed on `LiveAlert`.",
