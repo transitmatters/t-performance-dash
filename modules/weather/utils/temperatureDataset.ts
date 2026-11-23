@@ -4,6 +4,8 @@ import type { WeatherHourly } from '../../../common/types/weather';
 import { TWO_HOURS } from '../../../common/constants/time';
 import { colorVisionPalette } from '../../../common/utils/colorVision';
 
+type TemperatureReading = Pick<WeatherHourly, 'timestamp' | 'temperature_f'>;
+
 export type DailyTempPoint = { x: string; y: number };
 
 export type DailyTemperatureSeries = {
@@ -89,12 +91,12 @@ export const temperaturePointColor = ({ parsed }: ScriptableContext<'line'>) =>
 // A fixed scale so a mild day looks mild; colder or hotter readings stretch it
 export const TEMPERATURE_SCALE = { min: 0, max: 100 };
 
-export const getHourlyTemperatureSeries = (hours: WeatherHourly[]): DailyTempPoint[] =>
+export const getHourlyTemperatureSeries = (hours: TemperatureReading[]): DailyTempPoint[] =>
   hours
     .filter((h) => h.temperature_f !== null && h.temperature_f !== undefined)
     .map((h) => ({ x: h.timestamp, y: h.temperature_f as number }));
 
-export const getDailyTemperatureSeries = (hours: WeatherHourly[]): DailyTemperatureSeries => {
+export const getDailyTemperatureSeries = (hours: TemperatureReading[]): DailyTemperatureSeries => {
   const byDay = new Map<string, number[]>();
   hours.forEach((h) => {
     if (h.temperature_f === null || h.temperature_f === undefined) return;

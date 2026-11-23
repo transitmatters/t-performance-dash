@@ -1,6 +1,11 @@
 import type { WeatherCondition, WeatherHourly } from '../../../common/types/weather';
 import type { HoverCardRow } from '../../../common/components/charts/hoverCard/types';
 
+type WeatherReading = Pick<
+  WeatherHourly,
+  'condition' | 'weather_code' | 'precipitation_in' | 'wind_mph'
+>;
+
 type Intensity = 1 | 2 | 3;
 
 const INTENSITY_WORDS: Record<Intensity, string> = { 1: 'light', 2: 'moderate', 3: 'heavy' };
@@ -48,7 +53,7 @@ const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1
  * Names a run of weather from its hours' WMO codes, with the range of intensities it went
  * through: "Light to moderate snow", "Heavy rain showers", "Thunderstorm".
  */
-export const describeWeather = (hours: WeatherHourly[], condition: WeatherCondition): string => {
+export const describeWeather = (hours: WeatherReading[], condition: WeatherCondition): string => {
   const codes = hours
     .filter((hour) => hour.condition === condition && hour.weather_code !== null)
     .map((hour) => WMO_CODES[hour.weather_code as number])
@@ -65,7 +70,7 @@ export const describeWeather = (hours: WeatherHourly[], condition: WeatherCondit
   return capitalize(`${range} ${noun}`);
 };
 
-const readings = (hours: WeatherHourly[], field: 'precipitation_in' | 'wind_mph') =>
+const readings = (hours: WeatherReading[], field: 'precipitation_in' | 'wind_mph') =>
   hours.flatMap((hour) => (hour[field] === null ? [] : [hour[field]]));
 
 // Open-Meteo reports snow as the water it melts to. Ten inches of snow to one of water is the usual
@@ -78,7 +83,7 @@ const total = (values: number[]) => values.reduce((sum, value) => sum + value, 0
  * Total precipitation and peak wind across the hours, when they were reported. Snow shows as a
  * rough depth from the snow hours alone, to the nearest half inch.
  */
-export const weatherRows = (hours: WeatherHourly[], condition: WeatherCondition) => {
+export const weatherRows = (hours: WeatherReading[], condition: WeatherCondition) => {
   const rows: HoverCardRow[] = [];
   if (condition === 'snow') {
     const snowHours = hours.filter((hour) => hour.condition === 'snow');

@@ -11,7 +11,7 @@ import type { Station } from '../../../common/types/stations';
 import { getLocationDetails } from '../../../common/utils/stations';
 
 interface DwellsAggregateChartProps {
-  dwells: AggregateDataResponse;
+  dwells: Pick<AggregateDataResponse, 'by_date'>;
   toStation: Station;
   fromStation: Station;
   dayFilter?: DayFilter;

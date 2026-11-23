@@ -16,7 +16,7 @@ import type { DelayRow } from '../reasonSeries';
 import { causeRows } from '../reasonSeries';
 
 interface DelayCauseBarsProps {
-  data: DelayRow[];
+  data: Pick<DelayRow, DelayReasonKey | 'delay_alert_minutes' | 'stated_by_cause'>[];
   startDate: string;
   endDate: string;
   focus: DelayReasonKey | null;

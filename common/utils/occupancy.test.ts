@@ -60,11 +60,7 @@ describe('consistHoverContent', () => {
   });
 
   it('draws a plain train when no car reported', () => {
-    const { train, load } = consistHoverContent({
-      route_id: 'Blue',
-      direction: 0,
-      vehicle_consist: '0700|0701',
-    });
+    const { train, load } = consistHoverContent({ vehicle_consist: '0700|0701' });
     expect(train?.cars).toEqual([
       { id: '0700', color: undefined, noReading: false, detail: undefined },
       { id: '0701', color: undefined, noReading: false, detail: undefined },
@@ -74,7 +70,7 @@ describe('consistHoverContent', () => {
   });
 
   it('keeps a lone vehicle as a chip', () => {
-    expect(consistHoverContent({ route_id: '28', direction: 0, vehicle_consist: '1234' })).toEqual({
+    expect(consistHoverContent({ vehicle_consist: '1234' })).toEqual({
       chips: { label: 'Vehicle', values: ['1234'] },
     });
   });

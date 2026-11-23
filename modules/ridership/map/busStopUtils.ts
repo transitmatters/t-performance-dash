@@ -95,7 +95,7 @@ export const resolveBusStopRidershipSelection = (
 };
 
 const getStop = (
-  route: BusStopRidership,
+  route: Pick<BusStopRidership, 'seasons'>,
   season: string,
   directionId: number,
   stopId: string
@@ -117,7 +117,7 @@ export interface StopComparison {
  * where the stop was served in the same direction.
  */
 export const getStopComparisons = (
-  route: BusStopRidership,
+  route: Pick<BusStopRidership, 'seasons'>,
   season: string,
   directionId: number,
   stopId: string

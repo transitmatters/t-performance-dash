@@ -9,7 +9,7 @@ import { ChartActions } from '../../common/components/charts/ChartActions';
 import { ServiceEmbedButton } from './ServiceEmbedButton';
 
 interface Props {
-  scheduledService: ScheduledService;
+  scheduledService: Pick<ScheduledService, 'start_date_service_levels' | 'end_date_service_levels'>;
   dayKind: DayKind;
   /** Fill the parent's height, as an embed does. */
   fill?: boolean;

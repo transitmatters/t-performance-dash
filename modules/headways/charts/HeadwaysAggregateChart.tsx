@@ -34,7 +34,7 @@ const bunchingRows = ({
 };
 
 interface HeadwaysAggregateChartProps {
-  headways: AggregateDataResponse;
+  headways: Pick<AggregateDataResponse, 'by_date'>;
   toStation: Station;
   fromStation: Station;
   dayFilter?: DayFilter;

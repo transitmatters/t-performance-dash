@@ -20,7 +20,7 @@ import { ServiceEmbedButton } from './ServiceEmbedButton';
 interface ServiceGraphProps {
   config: ParamsType;
   data: DeliveredTripMetrics[];
-  predictedData: ScheduledService;
+  predictedData: Pick<ScheduledService, 'counts'>;
   startDate: string;
   endDate: string;
   fill?: boolean;

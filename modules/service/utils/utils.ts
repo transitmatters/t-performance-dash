@@ -1,14 +1,17 @@
 import type { DeliveredTripMetrics, ScheduledService } from '../../../common/types/dataPoints';
 import type { AggType } from '../../speed/constants/speeds';
 
+type DeliveredPeriod = Pick<DeliveredTripMetrics, 'date' | 'miles_covered' | 'count'>;
+type ScheduledCounts = Pick<ScheduledService, 'counts'>;
+
 // Monthly trip metrics are dated the first of the month but scheduled service the last,
 // and the two series can start in different months, so match them by period, not index.
 const getPeriodKey = (date: string, agg: AggType) => (agg === 'monthly' ? date.slice(0, 7) : date);
 
 /** Scheduled and delivered round trips per period, dated like the delivered trip metrics. */
 export const getScheduledAndDeliveredRoundTrips = (
-  data: DeliveredTripMetrics[],
-  predictedData: ScheduledService,
+  data: DeliveredPeriod[],
+  predictedData: ScheduledCounts,
   agg: AggType
 ) => {
   const scheduledByPeriod = new Map(
@@ -36,8 +39,8 @@ export const getScheduledAndDeliveredRoundTrips = (
 };
 
 export const getPercentageData = (
-  data: DeliveredTripMetrics[],
-  predictedData: ScheduledService,
+  data: DeliveredPeriod[],
+  predictedData: ScheduledCounts,
   peakService: number,
   agg: AggType
 ) => {
@@ -70,8 +73,8 @@ const halves = <T>(values: T[]): [T[], T[]] => {
  * a "trending up/down over this window" signal, not a fresh query.
  */
 export const getServiceStats = (
-  data: DeliveredTripMetrics[],
-  predictedData: ScheduledService,
+  data: DeliveredPeriod[],
+  predictedData: ScheduledCounts,
   peakService: number,
   agg: AggType
 ) => {

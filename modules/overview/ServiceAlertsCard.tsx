@@ -11,14 +11,18 @@ import { Badge } from '../../common/components/ui/badge';
 import { Button } from '../../common/components/ui/button';
 import { Skeleton } from '../../common/components/ui/skeleton';
 import { useAlertsData } from '../../common/api/hooks/alerts';
-import type { FormattedAlert } from '../../common/types/alerts';
+import type { AlertsResponse, AlertTime } from '../../common/types/alerts';
 import type { BusRoute, CommuterRailRoute, LineShort } from '../../common/types/lines';
 import { getRelevantAlerts } from './alerts';
 import { UpcomingTime } from './AlertTime';
 
 const MAX_ROWS = 4;
 
-const AlertRow = ({ alert }: { alert: FormattedAlert }) => (
+const AlertRow = ({
+  alert,
+}: {
+  alert: Pick<AlertsResponse, 'header'> & { relevantTimes: AlertTime[] };
+}) => (
   <div className="flex items-start gap-3 py-3 first:pt-0">
     <TriangleAlert className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
     <div className="flex flex-1 flex-col gap-1">

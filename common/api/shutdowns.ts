@@ -15,7 +15,7 @@ export const fetchShutdowns = async (options: FetchShutdownsOptions): Promise<Sh
     options: { start_date, end_date, line },
     errorMessage: 'Failed to fetch shutdowns',
   });
-  return shutdowns.flatMap(({ effect, cause, ...shutdown }) =>
-    isShutdownEffect(effect) ? [{ ...shutdown, effect, cause: cause ?? null }] : []
+  return shutdowns.flatMap(({ effect, ...shutdown }) =>
+    isShutdownEffect(effect) ? [{ ...shutdown, effect }] : []
   );
 };

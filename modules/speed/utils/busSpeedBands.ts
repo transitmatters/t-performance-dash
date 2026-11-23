@@ -53,7 +53,10 @@ export const serializeVisibleBands = (visible: TimeBand[]): string | undefined =
  * mph for one line on one row: the row's own totals for "All day", or that band's. Null when there
  * were no miles to divide, which the chart leaves as a gap rather than plotting 0 mph.
  */
-export const bandMph = (row: DeliveredTripMetricsBus, band: TimeBand): number | null => {
+export const bandMph = (
+  row: Pick<DeliveredTripMetricsBus, 'miles_covered' | 'total_time' | 'time_bands'>,
+  band: TimeBand
+): number | null => {
   const totals = band === 'all_day' ? row : row.time_bands?.[band];
   if (!totals?.miles_covered || !totals.total_time) return null;
   return Number((totals.miles_covered / (totals.total_time / 3600)).toFixed(1));
@@ -81,7 +84,7 @@ export interface BandSpeed {
  * quiet day counts for only the trips it ran. Undefined when no row has a per-band breakdown.
  */
 export const bandExtremes = (
-  data: DeliveredTripMetricsBus[]
+  data: Pick<DeliveredTripMetricsBus, 'time_bands'>[]
 ): { slowest: BandSpeed; fastest: BandSpeed } | undefined => {
   const speeds = TIME_BANDS.flatMap(({ key }): BandSpeed[] => {
     if (key === 'all_day') return [];

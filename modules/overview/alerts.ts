@@ -1,6 +1,10 @@
-import type { AlertsResponse, UpcomingOrCurrent } from '../../common/types/alerts';
+import type { AlertsResponse, AlertTime, UpcomingOrCurrent } from '../../common/types/alerts';
 
-export const getRelevantAlerts = (alerts: AlertsResponse[], type: UpcomingOrCurrent) => {
+/** The alerts with a period of this kind, each with those periods as `relevantTimes`. */
+export const getRelevantAlerts = <Alert extends Pick<AlertsResponse, 'active_period'>>(
+  alerts: Alert[],
+  type: UpcomingOrCurrent
+): (Alert & { relevantTimes: AlertTime[] })[] => {
   return (
     alerts
       .map((alert) => {

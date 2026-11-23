@@ -107,7 +107,9 @@ export interface FleetMetrics extends FleetMix {
   avg_cab_car_age?: number | null;
 }
 
-export interface SpeedTripMetrics extends FleetMetrics {
+/** What the speed charts read from any mode's trip metrics. */
+export interface SpeedTripMetrics {
+  date: string;
   miles_covered: number;
   total_time: number;
   count: number;

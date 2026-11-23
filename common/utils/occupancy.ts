@@ -60,9 +60,12 @@ export interface CarOccupancy {
 const isLevel = (status: string): status is OccupancyLevel => status in LEVELS;
 
 /** Each car of a trip's consist with its occupancy reading, in consist order. */
-export const parseConsist = (
-  point?: Pick<SingleDayDataPoint, 'vehicle_consist' | 'occupancy_status' | 'occupancy_percentage'>
-): CarOccupancy[] => {
+type ConsistFields = Pick<
+  SingleDayDataPoint,
+  'vehicle_consist' | 'occupancy_status' | 'occupancy_percentage'
+>;
+
+export const parseConsist = (point?: ConsistFields): CarOccupancy[] => {
   // The API passes the event files' pipe-joined columns through as-is, e.g. `1932|1933`, so a
   // blank consist arrives as an empty string rather than null.
   const ids = point?.vehicle_consist ? point.vehicle_consist.split('|') : [];
@@ -97,7 +100,7 @@ export const busiestCar = (cars: CarOccupancy[]): CarOccupancy | undefined =>
  * vehicle without readings (a bus) stays a plain chip.
  */
 export const consistHoverContent = (
-  point?: SingleDayDataPoint
+  point?: ConsistFields
 ): Pick<HoverCardContent, 'train' | 'chips'> & { load?: HoverCardRow } => {
   const cars = parseConsist(point);
   if (cars.length === 0) return {};

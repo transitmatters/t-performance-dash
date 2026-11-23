@@ -27,7 +27,7 @@ export const toPoints = <Entry extends { date: string }>(
   });
 
 /** Average per service day, so partial weeks/months don't read as dips. */
-export const perDay = (entry: ReliabilityEntry, count?: number | null) =>
+export const perDay = (entry: Pick<ReliabilityEntry, 'days'>, count?: number | null) =>
   count != null && entry.days ? count / entry.days : undefined;
 
 const sum = (
