@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import type { SetStateAction, Dispatch, ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ToggleGroup, ToggleGroupItem } from '../ui/toggle-group';
 import { lineColorVar, needsDarkTextOn } from '../../styles/general';
@@ -17,7 +17,7 @@ const placePill = (pill: HTMLElement, active: HTMLElement) => {
 
 interface ButtonGroupProps<K, T> {
   options: [K, T][];
-  pressFunction: Dispatch<SetStateAction<K>>;
+  pressFunction: (value: K) => void;
   selectedIndex?: number;
   additionalDivClass?: string;
   additionalButtonClass?: string;
@@ -108,8 +108,10 @@ export const ButtonGroup: <T extends string, K extends string>(
           // Radix clears the value when the active item is pressed again; keep the current selection.
           if (!value) return;
           const index = options.findIndex(([key]) => key === value);
-          if (index !== -1) setInternalIndex(index);
-          pressFunction(value as Parameters<typeof pressFunction>[0]);
+          const option = options[index];
+          if (!option) return;
+          setInternalIndex(index);
+          pressFunction(option[0]);
         }}
         variant="outline"
         // shadcn's gap utility here (`gap-[--spacing(var(--gap))]`) isn't resolving in this Tailwind

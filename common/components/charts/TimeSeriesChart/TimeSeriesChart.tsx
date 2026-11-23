@@ -174,6 +174,7 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
   }, [providedTimeAxis]);
 
   const scales = useMemo(() => {
+    const { renderTickLabel } = valueAxis;
     const unit = timeAxis.axisUnit ?? timeAxis.granularity;
     const time = unit !== 'time' && {
       unit,
@@ -215,7 +216,10 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         },
         ticks: {
           color: COLORS.design.subtitleGrey,
-          callback: valueAxis.renderTickLabel,
+          callback: renderTickLabel
+            ? (value: string | number) =>
+                typeof value === 'number' ? renderTickLabel(value) : value
+            : undefined,
         },
         grid: {
           z: grid.zIndex,

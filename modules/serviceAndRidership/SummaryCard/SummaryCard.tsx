@@ -16,12 +16,12 @@ type Selection = 'total' | ModeKind;
 
 const DEFAULT_COLOR = '#165c96';
 
-const SelectionLabels: Partial<Record<Selection, string>> = {
-  total: 'All Lines',
-  'rapid-transit': 'Rapid Transit',
-  'regional-rail': 'Regional Rail',
-  bus: 'Bus',
-};
+const SELECTION_OPTIONS: [Selection, string][] = [
+  ['total', 'All Lines'],
+  ['rapid-transit', 'Rapid Transit'],
+  ['regional-rail', 'Regional Rail'],
+  ['bus', 'Bus'],
+];
 
 const colorsBySelection: Partial<Record<Selection, string>> = {
   total: DEFAULT_COLOR,
@@ -53,9 +53,9 @@ export const SummaryCard = (props: Props) => {
     <Widget title="Summary" className="pb-16">
       <div className="pt-2 pb-1">
         <ButtonGroup
-          options={Object.entries(SelectionLabels).map(([key, value]) => [key, value])}
+          options={SELECTION_OPTIONS}
           pressFunction={setSelection}
-          selectedIndex={Object.keys(SelectionLabels).findIndex((key) => key === selection)}
+          selectedIndex={SELECTION_OPTIONS.findIndex(([key]) => key === selection)}
         />
       </div>
       <ServiceRidershipChart
