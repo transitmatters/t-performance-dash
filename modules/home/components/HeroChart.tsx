@@ -1,16 +1,14 @@
-import { useEffect, useMemo } from 'react';
-import { useHistoricalAlertsData } from '../../../common/api/hooks/alerts';
+import { useMemo } from 'react';
+import { useMatchingAlerts } from '../../../common/api/hooks/alerts';
 import { useWeatherData } from '../../../common/api/hooks/weather';
-import { findMatch } from '../../../common/components/alerts/AlertFilter';
 import { serviceDay } from '../../../common/components/charts/contextTrack/segments';
 import { Link } from '../../../common/components/general/Link';
 import { RouteBullet } from '../../../common/components/transit/RouteBullet';
 import { Card } from '../../../common/components/ui/card';
 import { getLocationDetails } from '../../../common/utils/stations';
 import { HeadwaysSingleChart } from '../../headways/charts/HeadwaysSingleChart';
-import { useAlertStore } from '../../tripexplorer/AlertStore';
 import type { HeroPick } from '../heroChart';
-import { minutesText, timeText, worstLabel } from '../heroChart';
+import { exploreHref, minutesText, timeText, worstLabel } from '../heroChart';
 import { useHeroChart } from '../useHeroChart';
 import { Placeholder } from './Placeholder';
 
@@ -19,15 +17,11 @@ import { Placeholder } from './Placeholder';
  * rebuilds itself when either arrives, which would restart its draw-in, so it waits for both.
  */
 const useDayLayers = (pick: HeroPick | undefined, date: string) => {
-  const { data, isLoading } = useHistoricalAlertsData(
+  // The same request the chart's context track makes, so it finds the answer already in the cache.
+  const { isLoading } = useMatchingAlerts(
     pick ? date : undefined,
-    pick?.station.lineShort ?? 'Red'
+    pick && { lineShort: pick.station.lineShort }
   );
-  const alerts = useMemo(() => data?.filter(findMatch), [data]);
-  const setAlerts = useAlertStore((store) => store.setAlerts);
-  useEffect(() => {
-    if (pick) setAlerts(alerts, isLoading);
-  }, [pick, alerts, isLoading, setAlerts]);
   // The same request the chart makes, so it finds the answer already in the cache.
   const weather = useWeatherData(
     { start_date: date, end_date: serviceDay(date).close.format('YYYY-MM-DD') },
@@ -38,7 +32,9 @@ const useDayLayers = (pick: HeroPick | undefined, date: string) => {
 
 const Stat = ({ value, label, detail }: { value: string; label: string; detail: string }) => (
   <div className="flex flex-col">
-    <dd className="order-1 text-3xl font-bold tracking-tight text-primary tabular-nums">{value}</dd>
+    <dd className="order-1 text-2xl font-semibold tracking-tight text-primary tabular-nums">
+      {value}
+    </dd>
     <dt className="order-2 text-sm font-medium">{label}</dt>
     <span className="order-3 text-xs text-muted-foreground tabular-nums">{detail}</span>
   </div>
@@ -70,14 +66,14 @@ export const HeroChart = () => {
   const { station } = pick;
   const worst = pick.rows[pick.worst];
   const { direction } = getLocationDetails(station.from, station.to);
-  const href = `/${station.path}/trips/single/?from=${station.from.station}&to=${station.to.station}&date=${date}`;
+  const href = exploreHref(station, date);
   return (
     <Card data-line={station.line} className="tm-fade-in gap-5 px-4 pt-0 sm:px-5">
       {/* The line's color along the top edge, like a platform sign. */}
       <div aria-hidden className="-mx-4 h-1 bg-primary sm:-mx-5" />
       <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
         <div className="flex max-w-xl flex-col gap-1.5">
-          <h2 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
+          <h2 className="flex items-center gap-2 text-xl font-bold tracking-tight">
             <span className="text-primary">
               <RouteBullet size="lg" />
             </span>
@@ -112,6 +108,7 @@ export const HeroChart = () => {
         callout={callout}
         actions={false}
         intro
+        alerts={{ lineShort: station.lineShort }}
       />
     </Card>
   );

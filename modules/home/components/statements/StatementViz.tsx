@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import type { ReactNode } from 'react';
 import { cn } from '../../../../common/utils/cn';
 import { NEGLIGIBLE_TREND } from '../../config';
+import { formatChange, formatDroppedShare } from '../../format';
 import type { Mark, Viz } from '../../statements';
 
 // Small charts beside each statement. Each row wears its line's color through `data-line`; the
@@ -145,6 +146,88 @@ const Bars = ({ viz }: { viz: Extract<Viz, { kind: 'bars' }> }) => {
   );
 };
 
+/**
+ * Shares of trips, with the change in points from a year earlier: down is better. Marks carry a
+ * trend only when it's worth an arrow (the statement drops negligible ones).
+ */
+const Shares = ({ viz }: { viz: Extract<Viz, { kind: 'shares' }> }) => {
+  // A floor on the scale, so a fraction of a percent doesn't fill the track.
+  const max = Math.max(...viz.marks.map((m) => m.value), 0.05);
+  return (
+    <>
+      {viz.marks.map((mark) => {
+        return (
+          <MarkRow
+            key={mark.row}
+            mark={mark}
+            value={formatDroppedShare(mark.value)}
+            title={`${mark.label}: ${formatDroppedShare(mark.value)} of scheduled trips ${viz.noun}`}
+          >
+            <span className="flex items-center">
+              <span
+                className="h-3 min-w-0.5 rounded-r bg-primary"
+                style={{ width: `${(mark.value / max) * 100}%` }}
+              />
+              {mark.trend != null && (
+                <span
+                  className={cn(
+                    'ml-1 text-xs font-semibold whitespace-nowrap tabular-nums',
+                    mark.trend > 0
+                      ? 'text-red-700 dark:text-red-400'
+                      : 'text-green-700 dark:text-green-400'
+                  )}
+                >
+                  {mark.trend > 0 ? '▲' : '▼'}
+                  {Math.abs(mark.trend * 100).toFixed(1)} pts
+                </span>
+              )}
+            </span>
+          </MarkRow>
+        );
+      })}
+      {viz.marks.some((m) => m.trend != null) && (
+        <p className="text-xs text-muted-foreground">Arrows compare with a year earlier.</p>
+      )}
+    </>
+  );
+};
+
+/** Changes either side of zero, in the text's own colors: more riders isn't a score. */
+const Changes = ({ viz }: { viz: Extract<Viz, { kind: 'changes' }> }) => {
+  const reach = Math.max(...viz.marks.map((m) => Math.abs(m.value)), 0.05);
+  return (
+    <>
+      {viz.marks.map((mark) => {
+        const width = (Math.abs(mark.value) / reach) * 50;
+        return (
+          <MarkRow
+            key={mark.row}
+            mark={mark}
+            value={formatChange(mark.value)}
+            title={`${mark.label}: ${formatChange(mark.value)} riders from a year earlier`}
+          >
+            <span className="relative h-3">
+              <Rule at={0.5} className="-top-1 -bottom-1" />
+              <span
+                className={cn(
+                  'absolute inset-y-0 min-w-0.5 bg-primary',
+                  mark.value >= 0 ? 'rounded-r' : 'rounded-l'
+                )}
+                style={
+                  mark.value >= 0
+                    ? { left: '50%', width: `${width}%` }
+                    : { right: '50%', width: `${width}%` }
+                }
+              />
+            </span>
+          </MarkRow>
+        );
+      })}
+      <RuleLabels rules={[{ value: 0.5, label: 'A year earlier' }]} />
+    </>
+  );
+};
+
 const Meters = ({ viz }: { viz: Extract<Viz, { kind: 'meters' }> }) => (
   <>
     {viz.marks.map((mark) => (
@@ -245,11 +328,14 @@ const SlowZoneArea = ({ viz }: { viz: Extract<Viz, { kind: 'area' }> }) => {
   );
 };
 
-export const StatementViz = ({ viz }: { viz: Viz }) => (
-  <div className="mt-1.5 flex flex-col gap-1.5 text-[13px]">
+export const StatementViz = ({ viz, note }: { viz: Viz; note?: string }) => (
+  <div className="mt-1.5 flex flex-col gap-1.5 text-sm">
     {viz.kind === 'dots' && <Dots viz={viz} />}
     {viz.kind === 'bars' && <Bars viz={viz} />}
     {viz.kind === 'meters' && <Meters viz={viz} />}
+    {viz.kind === 'shares' && <Shares viz={viz} />}
+    {viz.kind === 'changes' && <Changes viz={viz} />}
     {viz.kind === 'area' && <SlowZoneArea viz={viz} />}
+    {note && <p className="mt-1 text-xs text-pretty text-muted-foreground">{note}</p>}
   </div>
 );

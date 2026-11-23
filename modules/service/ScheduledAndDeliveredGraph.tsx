@@ -3,8 +3,7 @@ import type { ComponentProps } from 'react';
 
 import type { Benchmark, Block, Dataset } from '../../common/components/charts/TimeSeriesChart';
 import { TimeSeriesChart } from '../../common/components/charts/TimeSeriesChart';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { LINE_COLORS } from '../../common/constants/colors';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { useMajorEvents } from '../../common/utils/majorEvents';
 import type { AggType } from '../speed/constants/speeds';
 import { useOtherLineShutdowns } from '../shutdowns';
@@ -38,10 +37,9 @@ export const ScheduledAndDeliveredGraph = (props: ScheduledAndDeliveredGraphProp
     chartRef,
   } = props;
   const data = useMemo(() => [scheduled, delivered], [scheduled, delivered]);
-  const { line, colorKey } = useDelimitatedRoute();
-  const color = LINE_COLORS[colorKey ?? 'default'];
+  const { line, color, lineShort } = useLinePage();
   const events = useMajorEvents(line, startDate, endDate);
-  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(lineShort, startDate, endDate);
   const allBlocks = useMemo(
     () => [...(blocks ?? []), ...otherShutdowns.blocks],
     [blocks, otherShutdowns.blocks]

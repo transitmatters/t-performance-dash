@@ -12,7 +12,11 @@ import {
 } from '../ui/dropdown-menu';
 
 /** View options that change how charts draw, not what data they show. Remembered per browser. */
-export const DisplayMenu = (pageOptions: { withEvents: boolean; withOtherShutdowns: boolean }) => {
+export const DisplayMenu = (pageOptions: {
+  withEvents: boolean;
+  withOtherShutdowns: boolean;
+  withSlowZones: boolean;
+}) => {
   const options = useDisplayOptions(pageOptions);
   return (
     <DropdownMenu>

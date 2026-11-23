@@ -7,6 +7,7 @@ import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { PartialDataNotice } from '../../common/components/notices/PartialDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../common/utils/widgets';
+import { useDateRange } from '../../common/hooks/usePageParams';
 import { TravelTimesAggregateChart } from './charts/TravelTimesAggregateChart';
 
 interface TravelTimesAggregateWrapperProps {
@@ -23,6 +24,7 @@ export const TravelTimesAggregateWrapper = ({
   fromStation,
   dayFilter,
 }: TravelTimesAggregateWrapperProps) => {
+  const { startDate, endDate } = useDateRange();
   const allData = useMemo(
     () => query.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [],
     [query.data]
@@ -47,11 +49,14 @@ export const TravelTimesAggregateWrapper = ({
     <>
       <ChartStack>
         <TravelTimesAggregateChart
+          startDate={startDate}
+          endDate={endDate}
           traveltimes={query.data}
           toStation={toStation}
           fromStation={fromStation}
           timeUnit={'by_date'}
           dayFilter={dayFilter}
+          loadingRanges={query.chunks?.pendingRanges}
         />
         {!query.chunks?.pending && <StatStrip widgetObjects={widgetObjects} />}
         <PartialDataNotice query={query} />

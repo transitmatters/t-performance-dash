@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import type { WidgetValueInterface } from '../../../types/basicWidgets';
+import type { Line } from '../../../types/lines';
 import { LoadingSpinner } from '../../graphics/LoadingSpinner';
 import { Delta } from './Delta';
 
@@ -13,6 +14,8 @@ export type BasicWidgetDataLayoutProps = {
   widgetValue: WidgetValueInterface;
   sentimentDirection?: SentimentDirection;
   layoutKind?: LayoutKind;
+  /** Colors the loading spinner. */
+  line?: Line;
 };
 
 export const BasicWidgetDataLayout = ({
@@ -21,11 +24,12 @@ export const BasicWidgetDataLayout = ({
   widgetValue,
   layoutKind = 'total-and-delta',
   sentimentDirection = 'negativeOnIncrease',
+  line,
 }: BasicWidgetDataLayoutProps) => {
   return (
     <>
       <div className={classNames('relative flex')}>
-        {widgetValue.value === undefined && <LoadingSpinner isWidget />}
+        {widgetValue.value === undefined && <LoadingSpinner isWidget line={line} />}
         <div className={classNames('flex flex-col items-start p-2')}>
           <p className={classNames('text-muted-foreground text-base')}>{title}</p>
           <div className="flex flex-row items-baseline gap-x-1">

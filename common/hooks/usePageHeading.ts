@@ -2,7 +2,7 @@ import { LINE_OBJECTS } from '../constants/lines';
 import { ALL_PAGES } from '../constants/pages';
 import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES, FERRY_LINE_NAMES } from '../types/lines';
-import { useDelimitatedRoute } from '../utils/router';
+import { usePageRoute } from '../utils/router';
 import { useCrServiceScope } from './usePageFilters';
 
 interface RouteNameInput {
@@ -25,7 +25,7 @@ export const usePageHeading = () => {
     page,
     tab,
     query: { busRoute, crRoute, ferryRoute },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const { value: crScope } = useCrServiceScope();
   const routeName = getRouteName({ busRoute, crRoute, ferryRoute });
 

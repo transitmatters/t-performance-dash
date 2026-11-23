@@ -1,10 +1,11 @@
 import type { Chart } from 'chart.js';
+import { FONT_SANS } from '../../constants/typography';
 
 const titleColor = 'gray';
 
+/** The title role (DESIGN.md): 16px, medium weight. */
 function font(size_px = 16) {
-  // This is the default from chartjs, but now we can adjust size.
-  return `bold ${size_px}px "Helvetica Neue", "Helvetica", "Arial", sans-serif`;
+  return `500 ${size_px}px ${FONT_SANS}`;
 }
 
 export const drawSimpleTitle = (title: string, chart: Chart) => {

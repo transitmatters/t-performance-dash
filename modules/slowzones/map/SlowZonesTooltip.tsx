@@ -8,10 +8,9 @@ import { getParentStationForStopId, getStationById } from '../../../common/utils
 import { BasicWidgetDataLayout } from '../../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { DeltaTimeWidgetValue } from '../../../common/types/basicWidgets';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
+import type { Line } from '../../../common/types/lines';
 import { prettyDate } from '../../../common/utils/date';
 
-import { TODAY_STRING } from '../../../common/constants/dates';
-import { useDelimitatedRoute } from '../../../common/utils/router';
 import { DIRECTIONS } from './segment';
 import type { ByDirection, SlowZoneDirection, SlowZonesSegment } from './segment';
 import { DirectionIndicator } from './DirectionIndicator';
@@ -20,6 +19,7 @@ import styles from './SlowZonesTooltip.module.css';
 
 interface SlowZonesTooltipProps {
   segment: SlowZonesSegment;
+  line: Line;
   color: string;
   side: TooltipSide;
 }
@@ -79,11 +79,9 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
   const {
     side,
     color,
+    line,
     segment: { slowZones, speedRestrictions },
   } = props;
-  const {
-    query: { endDate },
-  } = useDelimitatedRoute();
 
   const isHorizontal = side === 'top';
 
@@ -129,8 +127,6 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
   };
 
   const renderSlowZoneForDirection = (direction: SlowZoneDirection) => {
-    const isToday = endDate === TODAY_STRING;
-
     const [slowZone] = slowZones[direction];
     const speedRestrictionsForDirection = speedRestrictions[direction];
 
@@ -141,7 +137,7 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
 
     if (slowZone) {
       // We have a detected slow zone - show full delay info
-      const delayVal = isToday && slowZone.latest_delay ? slowZone.latest_delay : slowZone.delay;
+      const delayVal = slowZone.dayDelay;
       return (
         <div className={styles.direction}>
           <BasicWidgetDataLayout
@@ -158,6 +154,7 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
                 {direction === '0' ? 'Southbound' : 'Northbound'}
               </div>
             }
+            line={line}
             layoutKind="delta-and-percent-change"
             analysis="compared to peak"
           />

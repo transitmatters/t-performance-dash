@@ -1,7 +1,5 @@
-import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripPage } from '../../common/hooks/usePageParams';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
-import type { Station } from '../../common/types/stations';
-import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { QueryNameKeys } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
@@ -11,7 +9,6 @@ import {
   useChartToggle,
 } from '../../common/hooks/useChartToggle';
 import { getLocationDetails } from '../../common/utils/stations';
-import type { Line } from '../../common/types/lines';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
@@ -20,24 +17,10 @@ import { DwellsAggregateWrapper } from '../dwells/DwellsAggregateWrapper';
 import { DwellsSingleWrapper } from '../dwells/DwellsSingleWrapper';
 import { WidgetTitle } from '../../common/components/widgets';
 import { RegionalRailPreview } from './regionalRail/RegionalRailPreview';
+import { useTripMetrics } from './useTripMetrics';
 
-interface CommuterRailTripGraphsProps {
-  fromStation: Station;
-  toStation: Station;
-  parameters: SingleDayAPIOptions | AggregateAPIOptions; // TODO
-  aggregate: boolean;
-  enabled: boolean;
-  line: Line | undefined;
-}
-
-export const CommuterRailTripGraphs = ({
-  fromStation,
-  toStation,
-  parameters,
-  aggregate,
-  enabled,
-  line,
-}: CommuterRailTripGraphsProps) => {
+export const CommuterRailTripGraphs = () => {
+  const { line, fromStation, toStation, dates } = useTripPage();
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -59,20 +42,16 @@ export const CommuterRailTripGraphs = ({
     { paramKey: 'dwDays' }
   );
 
-  const { traveltimes, headways, dwells } = useTripExplorerQueries(
+  const { single, multi } = useTripMetrics(
     'cr',
-    parameters,
-    // @ts-expect-error The overloading doesn't seem to handle this const
-    aggregate,
-    enabled,
-    undefined,
-    fromStation?.terminus ? [QueryNameKeys.dwells] : []
+    fromStation.terminus ? [QueryNameKeys.dwells] : []
   );
+
   const location = getLocationDetails(fromStation, toStation);
 
   return (
     <>
-      {aggregate ? (
+      {dates.kind === 'range' ? (
         <>
           <WidgetDiv>
             <WidgetTitle
@@ -84,7 +63,7 @@ export const CommuterRailTripGraphs = ({
               action={travelTimesDayFilterControl}
             />
             <TravelTimesAggregateWrapper
-              query={traveltimes}
+              query={multi.traveltimes}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={travelTimesDayFilter}
@@ -100,7 +79,7 @@ export const CommuterRailTripGraphs = ({
             />
 
             <HeadwaysAggregateWrapper
-              query={headways}
+              query={multi.headways}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={headwaysDayFilter}
@@ -115,7 +94,7 @@ export const CommuterRailTripGraphs = ({
               action={dwellsDayFilterControl}
             />
             <DwellsAggregateWrapper
-              query={dwells}
+              query={multi.dwells}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={dwellsDayFilter}
@@ -124,14 +103,16 @@ export const CommuterRailTripGraphs = ({
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
               title="Travel times by hour"
-              subtitle={newestChunkSubtitle(traveltimes.chunks)}
+              subtitle={newestChunkSubtitle(multi.traveltimes.chunks)}
               location={location}
               line={line}
               both
               action={peakTimeControl}
             />
             <AggregateChartWrapper
-              query={traveltimes}
+              startDate={dates.startDate}
+              endDate={dates.endDate}
+              query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}
@@ -152,7 +133,7 @@ export const CommuterRailTripGraphs = ({
               both
             />
             <TravelTimesSingleWrapper
-              query={traveltimes}
+              query={single.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
             />
@@ -166,7 +147,7 @@ export const CommuterRailTripGraphs = ({
               line={line}
             />
             <HeadwaysSingleWrapper
-              query={headways}
+              query={single.headways}
               toStation={toStation}
               fromStation={fromStation}
             />
@@ -178,9 +159,13 @@ export const CommuterRailTripGraphs = ({
               location={location}
               line={line}
             />
-            <DwellsSingleWrapper query={dwells} toStation={toStation} fromStation={fromStation} />
+            <DwellsSingleWrapper
+              query={single.dwells}
+              toStation={toStation}
+              fromStation={fromStation}
+            />
           </WidgetDiv>
-          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
+          <RegionalRailPreview fromStation={fromStation} toStation={toStation} date={dates.date} />
         </>
       )}
     </>

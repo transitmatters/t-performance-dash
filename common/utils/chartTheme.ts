@@ -1,5 +1,7 @@
+import type { PointStyle } from 'chart.js';
 import { CHART_COLORS } from '../constants/colors';
 import { useThemeStore } from '../state/themeStore';
+import { isColorblindMode } from './colorVision';
 
 /** Bold-but-refined line weight for the hero series across the design-system charts. */
 export const HERO_LINE_WIDTH = 2.5;
@@ -20,6 +22,10 @@ export interface ChartTheme {
   medianLine: string;
   /** Text on a callout pill, which is filled with `medianLine`. */
   calloutText: string;
+  /** Stripes over the part of a long date range still loading. */
+  pendingHatch: string;
+  /** The card behind the plot, for labels that sit over busy parts of it. */
+  surface: string;
 }
 
 const LIGHT: ChartTheme = {
@@ -31,6 +37,8 @@ const LIGHT: ChartTheme = {
   neutralPoint: '#1c1c1c',
   medianLine: '#000000',
   calloutText: '#ffffff',
+  pendingHatch: 'rgba(0,0,0,0.08)',
+  surface: '#ffffff',
 };
 
 const DARK: ChartTheme = {
@@ -42,6 +50,8 @@ const DARK: ChartTheme = {
   neutralPoint: '#d6d3d1',
   medianLine: '#e7e5e4',
   calloutText: '#1c1917',
+  pendingHatch: 'rgba(255,255,255,0.10)',
+  surface: '#171717',
 };
 
 /**
@@ -63,16 +73,38 @@ export const getChartTheme = (): ChartTheme =>
 /**
  * How far a trip ran from its MBTA benchmark, as a color ramp. Saturated enough to read on either
  * plot surface, so it does not vary with the theme — it lives here so the charts and the legend
- * that explains them draw from one source.
+ * that explains them draw from one source. Getters, so colorblind mode's ramp applies.
  */
 export const SEVERITY_COLORS = {
-  onTime: CHART_COLORS.GREEN,
-  off25: CHART_COLORS.YELLOW,
-  off50: CHART_COLORS.RED,
-  off100: CHART_COLORS.PURPLE,
+  get onTime() {
+    return CHART_COLORS.GREEN;
+  },
+  get off25() {
+    return CHART_COLORS.YELLOW;
+  },
+  get off50() {
+    return CHART_COLORS.RED;
+  },
+  get off100() {
+    return CHART_COLORS.PURPLE;
+  },
 };
 
 export type SeverityTone = keyof typeof SEVERITY_COLORS;
+
+/**
+ * In colorblind mode each severity also gets its own point shape, so the ramp never rests on hue
+ * alone. Standard mode keeps every point a circle.
+ */
+const SEVERITY_POINT_STYLES: Record<SeverityTone, PointStyle> = {
+  onTime: 'circle',
+  off25: 'triangle',
+  off50: 'rectRot',
+  off100: 'rect',
+};
+
+export const severityPointStyle = (tone: SeverityTone | undefined): PointStyle =>
+  tone && isColorblindMode() ? SEVERITY_POINT_STYLES[tone] : 'circle';
 
 /**
  * A headway at or under half its scheduled headway is bunched. These match `headways_over_time` in

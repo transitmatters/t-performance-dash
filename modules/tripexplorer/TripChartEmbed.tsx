@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { useSearch } from '@tanstack/react-router';
 import { EmbedFrame } from '../../common/components/embed/EmbedFrame';
 import { EmbedMessage } from '../../common/components/embed/EmbedMessage';
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
@@ -6,8 +7,8 @@ import { DAY_FILTER_OPTIONS } from '../../common/hooks/useChartToggle';
 import type { RouteType } from '../../common/types/api';
 import type { DayFilter } from '../../common/types/charts';
 import type { QueryParams, Tab } from '../../common/types/router';
-import { normalizeDateParams } from '../../common/utils/dateParams';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
+import { canonicalDateRange, canonicalSingleDate } from '../../common/utils/dateParams';
 import { getLocationDetails, getParentStationForStopId } from '../../common/utils/stations';
 import type { TripEmbed } from './embed';
 import { MULTI_TRIP_DAY_PARAMS, getTripEmbedTitle, getTripPageUrl } from './embed';
@@ -36,19 +37,24 @@ const getDays = (embed: TripEmbed, query: QueryParams): DayFilter => {
 
 /** One trip chart on its own, for iframing into articles. */
 export const TripChartEmbed = (embed: TripEmbed) => {
-  const route = useDelimitatedRoute();
-  const { tab, lineShort, query } = route;
-  const single = embed.page === 'single';
+  const { line, linePath, tab, lineShort } = useLinePage();
+  const query = useSearch({ strict: false });
   // Fills in missing or out-of-range dates without rewriting the URL, as the slow zone embed does.
-  const dates = {
-    ...query,
-    ...normalizeDateParams({
-      section: single ? 'singleTrips' : 'multiTrips',
-      tab,
-      page: single ? 'singleTrips' : 'multiTrips',
-      search: query,
-    }),
-  };
+  const shown =
+    embed.page === 'single'
+      ? {
+          ...embed,
+          ...canonicalSingleDate({
+            section: 'singleTrips',
+            tab,
+            page: 'singleTrips',
+            search: query,
+          }),
+        }
+      : {
+          ...embed,
+          ...canonicalDateRange({ section: 'multiTrips', tab, page: 'multiTrips', search: query }),
+        };
   const days = getDays(embed, query);
 
   const fromStation = query.from ? getParentStationForStopId(query.from, lineShort) : undefined;
@@ -57,22 +63,23 @@ export const TripChartEmbed = (embed: TripEmbed) => {
   const where = BETWEEN_STOPS.includes(embed.chart)
     ? `${location.from} to ${location.to}`
     : `${location.from}, ${location.direction}`;
-  const when = single
-    ? formatDate(dates.date as string)
-    : `${formatDate(dates.startDate as string)} – ${formatDate(dates.endDate as string)}`;
+  const when =
+    shown.page === 'single'
+      ? formatDate(shown.date)
+      : `${formatDate(shown.startDate)} – ${formatDate(shown.endDate)}`;
   const dayLabel = DAY_FILTER_OPTIONS.find(([option]) => option === days && option !== 'all')?.[1];
 
   const renderChart = () => {
     if (!fromStation || !toStation)
       return <EmbedMessage>This embed is missing its stops.</EmbedMessage>;
     const props = { routeType: ROUTE_TYPES[tab] ?? 'subway', fromStation, toStation } as const;
-    return embed.page === 'single' ? (
-      <SingleTripEmbedChart chart={embed.chart} date={dates.date as string} {...props} />
+    return shown.page === 'single' ? (
+      <SingleTripEmbedChart chart={shown.chart} date={shown.date} {...props} />
     ) : (
       <MultiTripEmbedChart
-        chart={embed.chart}
-        startDate={dates.startDate as string}
-        endDate={dates.endDate as string}
+        chart={shown.chart}
+        startDate={shown.startDate}
+        endDate={shown.endDate}
         days={days}
         trendline={query.trend === '1'}
         {...props}
@@ -82,9 +89,9 @@ export const TripChartEmbed = (embed: TripEmbed) => {
 
   return (
     <EmbedFrame
-      title={getTripEmbedTitle(embed, route)}
+      title={getTripEmbedTitle(embed, { line, query })}
       subtitle={[where, when, dayLabel].filter(Boolean).join(' · ')}
-      href={getTripPageUrl(embed, { ...route, query: dates })}
+      href={getTripPageUrl(embed, { linePath, query: { ...query, ...shown } })}
     >
       {renderChart()}
     </EmbedFrame>

@@ -207,6 +207,31 @@ export type BusSpeedSegmentLeaderboardResponse =
   | BusSpeedSegmentLeaderboardByDayType;
 
 /**
+ * One route direction's median trip in route_delays.json (mbta-performance's route_delays.py):
+ * how long it took between stops, and how long the same trip takes at free flow, the median before
+ * 6am and after 10pm when traffic is light. Both are summed trip by trip over the segments with a
+ * free flow, and only trips with one for at least 90% of the way count. Whole seconds.
+ *
+ * Like a leaderboard row, `time_band` and `day_type` aren't repeated: they're the keys the entry
+ * sits under. A route direction with too few trips in a band has no entry there.
+ */
+export interface BusRouteDelayEntry {
+  route_id: string;
+  direction_id: number;
+  n_trips: number;
+  p50_running_time_seconds: number;
+  free_flow_running_time_seconds: number;
+}
+
+/** A daily route delays file, keyed by time band. */
+export type BusRouteDelaysByBand = Partial<Record<TimeBand, BusRouteDelayEntry[]>>;
+
+/** A weekly or monthly route delays file, keyed by day type first. */
+export type BusRouteDelaysByDayType = Partial<Record<DayType, BusRouteDelaysByBand>>;
+
+export type BusRouteDelaysResponse = BusRouteDelaysByBand | BusRouteDelaysByDayType;
+
+/**
  * Which grain the merged leaderboard page ranks by -- routes (an arbitrary date range, summed
  * across the whole thing) or segments (one precomputed day/week/month slice). Both share the
  * same period control, but only 'route' mode ever cares about frequentRoutesOnly, and only

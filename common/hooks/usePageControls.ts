@@ -1,8 +1,9 @@
 import type { DateStoreSection } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
 import type { Line } from '../types/lines';
-import { useDelimitatedRoute } from '../utils/router';
+import { usePageRoute } from '../utils/router';
 import { otherShutdownLines } from '../../modules/shutdowns';
+import { isSlowZonesLine } from '../../modules/slowzones/types';
 
 /** The modes whose pages are per route, so they get a route picker. */
 const ROUTED_LINES: Line[] = ['line-bus', 'line-commuter-rail', 'line-ferry'];
@@ -24,7 +25,7 @@ export const usePageControls = () => {
     page,
     tab,
     query: { busRoute, crRoute, ferryRoute },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const config = page ? ALL_PAGES[page] : undefined;
   const section = config?.dateStoreSection;
   const isTrips = section === 'singleTrips' || section === 'multiTrips';
@@ -53,5 +54,7 @@ export const usePageControls = () => {
     showEventsOption,
     // Only lines with a subway to compare against: rapid transit and Commuter Rail.
     showOtherShutdownsOption: showEventsOption && otherShutdownLines(lineShort).length > 0,
+    // Slow zones are drawn under a subway trip's travel times over a range of dates.
+    showSlowZonesOption: section === 'multiTrips' && isSlowZonesLine(lineShort),
   };
 };

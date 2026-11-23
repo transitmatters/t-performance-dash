@@ -1,8 +1,7 @@
 import { useRef } from 'react';
 import { Bar } from '@chartjs-components';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
@@ -31,11 +30,10 @@ interface OnTimeBarsProps {
 
 /** One bar per period: the share of headways on time: within 25% of the scheduled headway. */
 export const OnTimeBars = ({ rows, agg, startDate, endDate }: OnTimeBarsProps) => {
-  const { colorKey, linePath } = useDelimitatedRoute();
+  const { color: lineColor, linePath } = useLinePage();
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
-  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   const shares = rows.map((row) => headwayShare(row.counts, ON_TIME) ?? null);
 
   if (shares.every((share) => share == null)) return <NoDataNotice isLineMetric />;

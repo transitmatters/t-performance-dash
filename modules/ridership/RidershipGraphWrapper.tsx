@@ -4,7 +4,7 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { BusRoute, CommuterRailRoute } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { getMinMaxDatesForRoute } from '../../common/utils/stations';
 import { getServiceDatesBlockAnnotations } from '../service/utils/graphUtils';
 import { RidershipGraph } from './RidershipGraph';
@@ -20,8 +20,6 @@ interface RidershipGraphWrapperProps {
   stationName?: string;
 }
 
-// The average/percentage/peak KPIs now live in the page's stat-card row (see RidershipDetails), so
-// the chart no longer carries an in-plot carousel value — just the graph.
 export const RidershipGraphWrapper = ({
   data,
   busRoute,
@@ -31,7 +29,7 @@ export const RidershipGraphWrapper = ({
   endDate,
   stationName,
 }: RidershipGraphWrapperProps) => {
-  const { tab } = useDelimitatedRoute();
+  const { tab } = useLinePage();
   const { minDate: serviceStart, maxDate: serviceEnd } = getMinMaxDatesForRoute(
     tab,
     busRoute ?? crRoute

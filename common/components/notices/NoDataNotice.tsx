@@ -1,15 +1,14 @@
 import { faMagnifyingGlassChart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import classNames from 'classnames';
+import { useSearch } from '@tanstack/react-router';
 import type { TripMetric } from '../../utils/dataCoverage';
 import { getNoDataReason } from '../../utils/dataCoverage';
-import { useDelimitatedRoute, useUpdateQuery } from '../../utils/router';
+import { useLinePage } from '../../hooks/usePageParams';
+import { useUpdateQuery } from '../../utils/router';
 import { Button } from '../ui/button';
 import { usePageShutdowns, shutdownDates } from '../../../modules/shutdowns';
 
 interface NoDataNoticeProps {
-  isWidget?: boolean;
-  inverse?: boolean;
   isLineMetric?: boolean;
   /** The query returned data, but the chart's day or peak filter removed all of it. */
   filtered?: boolean;
@@ -21,11 +20,11 @@ interface NoDataNoticeProps {
   message?: string;
 }
 
-const ShutdownExplanation = ({ scope, inverse }: { scope: 'line' | 'trip'; inverse?: boolean }) => {
+const ShutdownExplanation = ({ scope }: { scope: 'line' | 'trip' }) => {
   const shutdowns = usePageShutdowns(scope);
   if (shutdowns.length === 0) return null;
   return (
-    <ul className={classNames('text-sm', inverse ? 'text-white' : 'text-card-foreground')}>
+    <ul className="text-sm text-card-foreground">
       {shutdowns.slice(0, 2).map((view) => (
         <li key={view.shutdown.alert_id}>
           {view.label} · {shutdownDates(view)}
@@ -44,15 +43,15 @@ const ShutdownExplanation = ({ scope, inverse }: { scope: 'line' | 'trip'; inver
  * The copy says why the chart is empty when we can tell (see `getNoDataReason`).
  */
 export const NoDataNotice = ({
-  isWidget,
-  inverse,
   isLineMetric = false,
   filtered = false,
   metric,
   shutdownScope,
   message,
 }: NoDataNoticeProps) => {
-  const { tab, query } = useDelimitatedRoute();
+  const { tab } = useLinePage();
+  // Embeds don't get their dates filled in, so these can be missing.
+  const query = useSearch({ strict: false });
   const updateQueryParams = useUpdateQuery();
   const { title, detail, jumpTo, jumpLabel } = getNoDataReason({
     tab,
@@ -66,27 +65,16 @@ export const NoDataNotice = ({
 
   return (
     <div className="relative flex h-60 w-full items-center justify-center">
-      <div
-        className={classNames(
-          'flex h-full max-w-md flex-col content-center items-center justify-center gap-1 rounded-lg px-4 text-center',
-          isWidget ? 'bg-card p-2' : ''
-        )}
-      >
+      <div className="flex h-full max-w-md flex-col content-center items-center justify-center gap-1 rounded-lg px-4 text-center">
         <FontAwesomeIcon
           size={'2x'}
           icon={faMagnifyingGlassChart}
-          className={classNames('mb-1', inverse ? 'text-white/50' : 'text-muted-foreground/50')}
+          className="mb-1 text-muted-foreground/50"
           aria-hidden
         />
-        <p className={classNames('font-medium', inverse ? 'text-white' : 'text-card-foreground')}>
-          {title}
-        </p>
-        {shutdownScope && !filtered && (
-          <ShutdownExplanation scope={shutdownScope} inverse={inverse} />
-        )}
-        <p className={classNames('text-sm', inverse ? 'text-white/80' : 'text-muted-foreground')}>
-          {message ?? detail}
-        </p>
+        <p className="font-medium text-card-foreground">{title}</p>
+        {shutdownScope && !filtered && <ShutdownExplanation scope={shutdownScope} />}
+        <p className="text-sm text-muted-foreground">{message ?? detail}</p>
         {jumpTo && (
           <Button
             variant="outline"

@@ -5,10 +5,11 @@ from datetime import date
 
 import pytest
 from chalice import BadRequestError
+from chalice.app import MultiDict
 from chalice.test import Client
 
 import app as chalice_app
-from app import parse_user_date, validate_query_params
+from app import parse_user_date, tag_span_with_request_size, validate_query_params
 
 
 # ---------------------------------------------------------------------------
@@ -392,6 +393,29 @@ class TestGitId:
         assert result.status_code == 409
 
 
+class TestHealthcheck:
+    def test_hides_api_keys_in_exception_messages(self, client, monkeypatch):
+        v3_key = "v3-key-1234567890abcdef"
+        monkeypatch.setattr(chalice_app.config, "MBTA_V3_API_KEY", v3_key)
+        # The empty string stands in for an unset key
+        monkeypatch.setattr(chalice_app.config, "HEALTHCHECK_HIDE_SECRETS", ["", v3_key])
+
+        def failing_headways(*args, **kwargs):
+            raise RuntimeError(f"GET https://api-v3.mbta.com/predictions?api_key={v3_key} returned 503")
+
+        monkeypatch.setattr(chalice_app.data_funcs, "headways", failing_headways)
+
+        result = client.http.get("/api/healthcheck")
+
+        assert result.status_code == 500
+        assert v3_key not in result.body.decode()
+        assert json.loads(result.body)["failed_checks"] == {
+            "S3 Headway Fetching": (
+                "Check threw an exception: GET https://api-v3.mbta.com/predictions?api_key=HIDDEN returned 503"
+            )
+        }
+
+
 class TestDateRangeValidation:
     @pytest.mark.parametrize(
         "path",
@@ -435,3 +459,47 @@ class TestServiceParamsValidation:
     def test_unknown_agg_returns_400(self, client, path):
         result = client.http.get(f"{path}&start_date=2026-01-01&end_date=2026-01-31&agg=yearly")
         assert result.status_code == 400
+
+
+# ---------------------------------------------------------------------------
+# Unit tests: tag_span_with_request_size
+# ---------------------------------------------------------------------------
+
+
+class FakeSpan:
+    def __init__(self):
+        self.tags = {}
+        self.metrics = {}
+
+    def set_tag(self, key, value):
+        self.tags[key] = value
+
+    def set_metric(self, key, value):
+        self.metrics[key] = value
+
+
+class TestTagSpanWithRequestSize:
+    def test_tags_date_range_and_stop_count(self):
+        span = FakeSpan()
+        params = MultiDict(
+            {
+                "start_date": ["2025-01-01"],
+                "end_date": ["2025-12-31"],
+                "from_stop": ["70061"],
+                "to_stop": ["70105", "70107"],
+            }
+        )
+        tag_span_with_request_size(span, params)
+        assert span.tags == {"tm.start_date": "2025-01-01", "tm.end_date": "2025-12-31"}
+        assert span.metrics == {"tm.range_days": 365, "tm.stop_count": 3}
+
+    def test_skips_range_days_for_malformed_date(self):
+        span = FakeSpan()
+        tag_span_with_request_size(span, MultiDict({"start_date": ["abc"], "end_date": ["2025-12-31"]}))
+        assert "tm.range_days" not in span.metrics
+
+    def test_no_params_or_span_is_a_no_op(self):
+        span = FakeSpan()
+        tag_span_with_request_size(span, None)
+        tag_span_with_request_size(None, MultiDict({"start_date": ["2025-01-01"], "end_date": ["2025-01-02"]}))
+        assert span.tags == {} and span.metrics == {}

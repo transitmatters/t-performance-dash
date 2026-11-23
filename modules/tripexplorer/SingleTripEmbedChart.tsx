@@ -1,10 +1,11 @@
-import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useSingleDayTripMetrics } from '../../common/api/hooks/tripExplorer';
 import { EmbedMessage } from '../../common/components/embed/EmbedMessage';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import type { TripEmbedChart } from '../../common/constants/staticRoutes';
-import { QueryNameKeys, SingleDayAPIParams } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import type { RouteType } from '../../common/types/api';
 import type { Station } from '../../common/types/stations';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { stopIdsForStations } from '../../common/utils/stations';
 import { DwellsSingleChart } from '../dwells/charts/DwellsSingleChart';
 import { HeadwaysHistogram } from '../headways/charts/HeadwaysHistogram';
@@ -33,20 +34,14 @@ export const SingleTripEmbedChart = ({
   toStation,
   date,
 }: SingleTripEmbedChartProps) => {
+  const linePage = useLinePage();
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
   const queryName = CHART_QUERIES[chart];
-  const result = useTripExplorerQueries(
+  const result = useSingleDayTripMetrics({
     routeType,
-    {
-      [SingleDayAPIParams.stop]: fromStopIds,
-      [SingleDayAPIParams.fromStop]: fromStopIds,
-      [SingleDayAPIParams.toStop]: toStopIds,
-      [SingleDayAPIParams.date]: date,
-    },
-    false,
-    Boolean(fromStopIds && toStopIds && date),
-    [queryName]
-  )[queryName];
+    params: { stop: fromStopIds, from_stop: fromStopIds, to_stop: toStopIds, date },
+    only: [queryName],
+  })[queryName];
 
   if (!result.data) return <ChartPlaceHolder query={result} />;
   if (result.data.length < 1)
@@ -56,7 +51,7 @@ export const SingleTripEmbedChart = ({
     case 'traveltimes':
       return <TravelTimesSingleChart traveltimes={result.data} {...props} />;
     case 'headways':
-      return <HeadwaysSingleChart headways={result.data} {...props} />;
+      return <HeadwaysSingleChart headways={result.data} alerts={linePage} {...props} />;
     case 'dwells':
       return <DwellsSingleChart dwells={result.data} {...props} />;
     case 'headway-distribution':

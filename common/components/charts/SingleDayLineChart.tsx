@@ -20,6 +20,7 @@ import {
   SEVERITY_COLORS,
   isOnTimeHeadwayRatio,
   severityForRatio,
+  severityPointStyle,
   useChartTheme,
 } from '../../utils/chartTheme';
 import { CHART_COLORS } from '../../constants/colors';
@@ -35,22 +36,18 @@ import { useChartLayers } from './contextTrack/useChartLayers';
 import { singleDayAxisBounds } from './contextTrack/segments';
 import { useIntroAnimation } from './introAnimation';
 
-const pointColors = (
+/** Each point's severity against its benchmark, or undefined with no benchmark to judge it by. */
+const pointTones = (
   data: DataPoint[],
   metric_field: string,
-  neutralColor: string,
   effectiveBenchmark: (number | null)[],
   showUnderRatio?: boolean
-) => {
-  return data.map((point: DataPoint, idx: number) => {
+) =>
+  data.map((point: DataPoint, idx: number) => {
     const benchmarkValue = effectiveBenchmark[idx];
-    if (typeof benchmarkValue !== 'number' || !Number.isFinite(benchmarkValue)) {
-      return neutralColor; // no benchmark to judge this point against
-    }
-    const severity = severityForRatio(point[metric_field] / benchmarkValue, showUnderRatio);
-    return severity ? SEVERITY_COLORS[severity.tone] : neutralColor;
+    if (typeof benchmarkValue !== 'number' || !Number.isFinite(benchmarkValue)) return undefined;
+    return severityForRatio(point[metric_field] / benchmarkValue, showUnderRatio)?.tone;
   });
-};
 
 export const SingleDayLineChart = ({
   chartId,
@@ -72,6 +69,7 @@ export const SingleDayLineChart = ({
   callout,
   actions = true,
   intro = false,
+  alerts,
 }: SingleDayLineProps) => {
   const ref = useRef(null);
   const { pending: introPending, options: introOptions } = useIntroAnimation(intro, data.length);
@@ -87,8 +85,8 @@ export const SingleDayLineChart = ({
     endDate: date,
     granularity: 'hourly',
     // Embeds have no track, so they skip the request
-    enabled: Boolean(date) && !fill,
-    withAlerts: true,
+    enabled: !fill,
+    alerts,
   });
   const { weather } = layers;
   const temperaturePoints = useMemo(
@@ -97,10 +95,7 @@ export const SingleDayLineChart = ({
   );
   const isMobile = !useBreakpoint('md');
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
-  const xBounds = useMemo(
-    () => (date ? singleDayAxisBounds(date, labels) : undefined),
-    [date, labels]
-  );
+  const xBounds = useMemo(() => singleDayAxisBounds(date, labels), [date, labels]);
 
   // Per-point MBTA scheduled benchmark.
   const mbtaBenchmarkData = data.map((datapoint) => {
@@ -141,9 +136,16 @@ export const SingleDayLineChart = ({
     ((datapoint[metricField] as number) * multiplier).toFixed(2)
   );
 
+  const tones = pointTones(data, metricField, effectiveBenchmarkData, showUnderRatio);
+  const pointColors = tones.map((tone) => (tone ? SEVERITY_COLORS[tone] : chartTheme.neutralPoint));
+
   // Ringed and labeled beside the point, on whichever side has room, so it stays inside the plot
   // Held back while an intro draws the series in, then shown once the last point lands.
   const calloutValue = callout && !introPending ? Number(convertedData[callout.index]) : NaN;
+  // Annotations are clipped to the plot, so the ring and label need room above the point when it's
+  // the day's highest. 15% leaves at least 14px on a phone, more than half the label's height. Set
+  // before the callout shows, so the axis doesn't jump when it appears.
+  const calloutHeadroom = callout ? Number(convertedData[callout.index]) * 1.15 : undefined;
   const calloutAnnotations: typeof layerAnnotations =
     callout && Number.isFinite(calloutValue)
       ? [
@@ -167,7 +169,7 @@ export const SingleDayLineChart = ({
             backgroundColor: chartTheme.medianLine,
             borderRadius: 6,
             padding: { x: 8, y: 4 },
-            font: { size: 12, weight: 'bold' },
+            font: { size: 12, weight: 600 },
           },
         ]
       : [];
@@ -177,21 +179,10 @@ export const SingleDayLineChart = ({
       label: `Actual`,
       fill: false,
       borderColor: chartTheme.benchmarkLine,
-      pointBackgroundColor: pointColors(
-        data,
-        metricField,
-        chartTheme.neutralPoint,
-        effectiveBenchmarkData,
-        showUnderRatio
-      ),
+      pointBackgroundColor: pointColors,
       pointHoverRadius: 3,
-      pointHoverBackgroundColor: pointColors(
-        data,
-        metricField,
-        chartTheme.neutralPoint,
-        effectiveBenchmarkData,
-        showUnderRatio
-      ),
+      pointHoverBackgroundColor: pointColors,
+      pointStyle: tones.map(severityPointStyle),
       pointRadius: 3,
       pointHitRadius: 10,
       data: convertedData,
@@ -354,6 +345,7 @@ export const SingleDayLineChart = ({
             scales: {
               y: {
                 display: true,
+                suggestedMax: calloutHeadroom,
                 border: { display: false },
                 grid: { color: chartTheme.grid },
                 ticks: {
@@ -406,11 +398,11 @@ export const SingleDayLineChart = ({
                 display: true,
                 title: {
                   display: true,
-                  text: date ? prettyDate(date, true) : 'No date selected',
+                  text: prettyDate(date, true),
                   color: chartTheme.tick,
                 },
-                min: xBounds?.min,
-                max: xBounds?.max,
+                min: xBounds.min,
+                max: xBounds.max,
               },
             },
           }}

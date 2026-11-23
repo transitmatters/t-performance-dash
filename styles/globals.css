@@ -62,20 +62,16 @@
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans',
     'Droid Sans', 'Helvetica Neue', sans-serif;
-  --transitmatters-red: #d31a2b;
-  --red-line: #da291c;
-  --orange-line: #ed8b00;
-  --blue-line: #003da5;
-  --green-line: #00843d;
-  --bus: #ffc72c;
-  --dark-grey: #353535;
-  --subtitle-grey: #808080;
-
-  --global-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  --incident-color: #c02828;
-  --swap-white: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='white' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
-  --swap-black: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 125'><path fill='black' transform='rotate(90 50 62)' style='text-indent:0;text-transform:none;block-progression:tb' d='M42 10a2 2 0 00-2 1l-8 9a2 2 0 000 3l9 10a2 2 0 103-3l-6-7h27c10 0 15 7 15 13s-5 12-15 12H35c-12 0-19 8-19 16 0 9 7 17 19 17h27l-5 5a2 2 0 103 3l8-9a2 2 0 000-3l-9-10a2 2 0 10-3 3l6 7H35c-10 0-15-6-15-13 0-6 5-12 15-12h30c12 0 19-8 19-16s-7-17-19-17H38l5-5a2 2 0 00-1-4z' fill-rule='evenodd' overflow='visible'/></svg>");
-  --download-icon: url("data:image/svg+xml,<svg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M9 17L15 17' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round'/><path d='M12 6V13M12 13L15.5 9.5M12 13L8.5 9.5' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  /* The line colors colorblind mode shifts; tailwind.config.js's mbta red/orange/green read these. */
+  --mbta-red: #d13434;
+  --mbta-light-red: #e89999;
+  --mbta-dark-red: #bc2020;
+  --mbta-orange: #ed8b00;
+  --mbta-light-orange: #f6c580;
+  --mbta-dark-orange: #e08300;
+  --mbta-green: #00834d;
+  --mbta-light-green: #80c1a6;
+  --mbta-dark-green: #0e5e3d;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -122,26 +118,26 @@
 
 [data-line='line-red'],
 [data-line='line-mattapan'] {
-  --primary: #d13434;
+  --primary: var(--mbta-red);
   --primary-foreground: oklch(0.985 0 0);
-  --ring: #d13434;
-  --accent: color-mix(in oklch, #d13434 15%, var(--background));
+  --ring: var(--mbta-red);
+  --accent: color-mix(in oklch, var(--mbta-red) 15%, var(--background));
   --accent-foreground: var(--foreground);
-  --sidebar-primary: #d13434;
+  --sidebar-primary: var(--mbta-red);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-ring: #d13434;
-  --chart-1: #d13434;
+  --sidebar-ring: var(--mbta-red);
+  --chart-1: var(--mbta-red);
 }
 [data-line='line-orange'] {
-  --primary: #ed8b00;
+  --primary: var(--mbta-orange);
   --primary-foreground: oklch(0.205 0 0);
-  --ring: #ed8b00;
-  --accent: color-mix(in oklch, #ed8b00 15%, var(--background));
+  --ring: var(--mbta-orange);
+  --accent: color-mix(in oklch, var(--mbta-orange) 15%, var(--background));
   --accent-foreground: var(--foreground);
-  --sidebar-primary: #ed8b00;
+  --sidebar-primary: var(--mbta-orange);
   --sidebar-primary-foreground: oklch(0.205 0 0);
-  --sidebar-ring: #ed8b00;
-  --chart-1: #ed8b00;
+  --sidebar-ring: var(--mbta-orange);
+  --chart-1: var(--mbta-orange);
 }
 [data-line='line-blue'] {
   --primary: #003da5;
@@ -155,15 +151,15 @@
   --chart-1: #003da5;
 }
 [data-line='line-green'] {
-  --primary: #00834d;
+  --primary: var(--mbta-green);
   --primary-foreground: oklch(0.985 0 0);
-  --ring: #00834d;
-  --accent: color-mix(in oklch, #00834d 15%, var(--background));
+  --ring: var(--mbta-green);
+  --accent: color-mix(in oklch, var(--mbta-green) 15%, var(--background));
   --accent-foreground: var(--foreground);
-  --sidebar-primary: #00834d;
+  --sidebar-primary: var(--mbta-green);
   --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-ring: #00834d;
-  --chart-1: #00834d;
+  --sidebar-ring: var(--mbta-green);
+  --chart-1: var(--mbta-green);
 }
 [data-line='line-bus'],
 [data-line='line-RIDE'] {
@@ -199,6 +195,38 @@
   --sidebar-ring: #008eaa;
   --chart-1: #008eaa;
 }
+/*
+  Colorblind mode (data-colorblind on <html>). Red, Orange and Green shift within their families so
+  they separate without red-green color vision; the hexes match CVD_LINE in common/constants/colors.ts.
+*/
+[data-colorblind] {
+  --mbta-red: #d1400f;
+  --mbta-light-red: #e89f87;
+  --mbta-dark-red: #b93300;
+  --mbta-orange: #e89a00;
+  --mbta-light-orange: #f3cc80;
+  --mbta-dark-orange: #dc9200;
+  --mbta-green: #008a64;
+  --mbta-light-green: #80c4b1;
+  --mbta-dark-green: #026649;
+
+  /*
+    Green utilities here only ever mean "good" (scoreboard tones, deltas, success badges), against
+    red for "bad". Pointing the green scale at Tailwind's blue makes that pair blue against red.
+  */
+  --color-green-50: oklch(97% 0.014 254.604);
+  --color-green-100: oklch(93.2% 0.032 255.585);
+  --color-green-200: oklch(88.2% 0.059 254.128);
+  --color-green-300: oklch(80.9% 0.105 251.813);
+  --color-green-400: oklch(70.7% 0.165 254.624);
+  --color-green-500: oklch(62.3% 0.214 259.815);
+  --color-green-600: oklch(54.6% 0.245 262.881);
+  --color-green-700: oklch(48.8% 0.243 264.376);
+  --color-green-800: oklch(42.4% 0.199 265.638);
+  --color-green-900: oklch(37.9% 0.146 265.522);
+  --color-green-950: oklch(28.2% 0.091 267.935);
+}
+
 /* Silver Line routes, which are bus routes drawn in their own color. Near-black text reads better
    on the silver (4.8:1) than white does (3.7:1). */
 [data-line='line-silver'] {
@@ -229,18 +257,6 @@ a {
   box-sizing: border-box;
 }
 
-.main-column {
-  margin: 0 auto;
-  max-width: 1200px;
-}
-
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom);
-}
-
-.mb-safe {
-  margin-bottom: env(safe-area-inset-bottom);
-}
 /*
   ---break---
 */

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { queryOptions, useQuery } from '@tanstack/react-query';
 import type {
   FetchBusSpeedSegmentsOptions,
   FetchBusSpeedSegmentsUrlOptions,
@@ -8,9 +8,11 @@ import {
   busDwellsFile,
   busSpeedSegmentsFile,
   fetchBusDwellsUrl,
+  fetchBusRouteDelays,
   fetchBusSpeedSegmentLeaderboard,
   fetchBusSpeedSegmentsUrl,
   fetchBusSpeedStops,
+  fetchLatestBusSpeedDate,
 } from '../busSpeedSegments';
 
 /**
@@ -77,6 +79,17 @@ export const useBusSpeedSegmentLeaderboard = (
   });
 };
 
+/** Each route direction's median trip against free flow, or null for an archive without them. */
+export const useBusRouteDelays = (options: FetchBusSpeedSegmentsOptions, enabled?: boolean) => {
+  return useQuery({
+    queryKey: ['busRouteDelays', options],
+    queryFn: () => fetchBusRouteDelays(options),
+    enabled: enabled,
+    staleTime: ONE_DAY,
+    gcTime: ONE_DAY,
+  });
+};
+
 export const useBusSpeedStops = () => {
   return useQuery({
     queryKey: ['busSpeedStops'],
@@ -86,3 +99,16 @@ export const useBusSpeedStops = () => {
     gcTime: Infinity,
   });
 };
+
+/**
+ * The newest day with published segments, checked once per page load. The router reads it too
+ * (`ensureQueryData`), to open the speed map and Rankings on a day that has data.
+ */
+export const latestBusSpeedDateQuery = queryOptions({
+  queryKey: ['latestBusSpeedDate'],
+  queryFn: fetchLatestBusSpeedDate,
+  staleTime: Infinity,
+  gcTime: Infinity,
+});
+
+export const useLatestBusSpeedDate = () => useQuery(latestBusSpeedDateQuery);

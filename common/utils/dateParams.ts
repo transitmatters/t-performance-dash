@@ -5,6 +5,7 @@ import { isEqual, pickBy } from '@lodash-utils';
 import { DATE_FORMAT, getDatePickerBounds } from '../constants/dates';
 import type { DateStoreSection, Page } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
+import { queryClient } from '../api/queryClient';
 import { getDefaultDates } from '../state/defaults/dateDefaults';
 import { useDateStore } from '../state/dateStore';
 import { getDateStoreSection } from '../state/utils/dateStoreUtils';
@@ -12,18 +13,30 @@ import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
 import { parseRoutePath, stripForeignRouteParams, withDefaultRouteParam } from './router';
 import type { SearchObject } from './searchParams';
+import { withCanonicalStations } from './stationParams';
 import { stringifySearch } from './searchParams';
+import type { DateRange, SingleDate } from './pageParams';
 
 type DateQuery = { date?: string; startDate?: string; endDate?: string };
 
 const RANGE_SECTIONS: DateStoreSection[] = ['line', 'system', 'multiTrips'];
 const SINGLE_SECTIONS: DateStoreSection[] = ['singleTrips'];
 
+/** Whether a page's dates are a range (`startDate`, `endDate`) or one day (`date`), if it has any. */
+export const dateKindOf = (page: Page): 'range' | 'single' | undefined => {
+  const section = ALL_PAGES[page]?.dateStoreSection;
+  if (!section) return undefined;
+  if (RANGE_SECTIONS.includes(section)) return 'range';
+  if (SINGLE_SECTIONS.includes(section)) return 'single';
+  return undefined;
+};
+
 /** Only used if a tab has no default range for the section, which none do today. */
 const FALLBACK_WINDOW_DAYS = 7;
 
 /** The value as a date if it is a real `YYYY-MM-DD` day; empty, malformed and rolled-over dates aren't. */
-const asDate = (value: unknown): string | undefined =>
+/** The value, if it is a real `YYYY-MM-DD` date. */
+export const asDate = (value: unknown): string | undefined =>
   typeof value === 'string' &&
   /^\d{4}-\d{2}-\d{2}$/.test(value) &&
   dayjs(value).format(DATE_FORMAT) === value
@@ -94,36 +107,40 @@ interface NormalizeDateParamsArgs {
  * pages, `startDate` and `endDate` on range pages. Undefined when the search already has one, or
  * the page doesn't take dates.
  */
-export const normalizeDateParams = ({
-  section,
-  tab,
-  page,
-  search,
-  stored = {},
-  latestDate,
-}: NormalizeDateParamsArgs): SearchObject | undefined => {
-  const isRange = RANGE_SECTIONS.includes(section);
-  if (!isRange && !SINGLE_SECTIONS.includes(section)) return undefined;
-
+const boundsAndDefaults = ({ section, tab, page, search }: NormalizeDateParamsArgs) => {
   const route = (search.busRoute ?? search.crRoute ?? search.ferryRoute) as
     | BusRoute
     | CommuterRailRoute
     | FerryRoute
     | undefined;
-  const bounds = getDatePickerBounds(tab, page, route);
   const defaults: DateQuery = getDefaultDates(section, tab) ?? {};
+  return { bounds: getDatePickerBounds(tab, page, route), defaults };
+};
 
-  let dates: DateQuery;
-  if (isRange) {
-    const fallback = asDate(stored.startDate) && asDate(stored.endDate) ? stored : defaults;
-    const windowDays =
-      defaults.startDate && defaults.endDate
-        ? dayjs(defaults.endDate).diff(defaults.startDate, 'day')
-        : FALLBACK_WINDOW_DAYS;
-    dates = normalizeRange(search, bounds, fallback, windowDays);
-  } else {
-    dates = normalizeSingle(search, bounds, asDate(stored.date) ? stored : defaults, latestDate);
-  }
+/** The range a range page shows for this search: complete, ordered and in bounds. */
+export const canonicalDateRange = (args: NormalizeDateParamsArgs): DateRange => {
+  const { bounds, defaults } = boundsAndDefaults(args);
+  const { stored = {} } = args;
+  const fallback = asDate(stored.startDate) && asDate(stored.endDate) ? stored : defaults;
+  const windowDays =
+    defaults.startDate && defaults.endDate
+      ? dayjs(defaults.endDate).diff(defaults.startDate, 'day')
+      : FALLBACK_WINDOW_DAYS;
+  return normalizeRange(args.search, bounds, fallback, windowDays);
+};
+
+/** The day a single-day page shows for this search, in bounds. */
+export const canonicalSingleDate = (args: NormalizeDateParamsArgs): SingleDate => {
+  const { bounds, defaults } = boundsAndDefaults(args);
+  const { stored = {}, latestDate } = args;
+  return normalizeSingle(args.search, bounds, asDate(stored.date) ? stored : defaults, latestDate);
+};
+
+export const normalizeDateParams = (args: NormalizeDateParamsArgs): SearchObject | undefined => {
+  const { section, search } = args;
+  const isRange = RANGE_SECTIONS.includes(section);
+  if (!isRange && !SINGLE_SECTIONS.includes(section)) return undefined;
+  const dates: DateQuery = isRange ? canonicalDateRange(args) : canonicalSingleDate(args);
 
   const normalized = pickBy(
     { ...search, date: undefined, startDate: undefined, endDate: undefined, ...dates },
@@ -151,15 +168,19 @@ export const getDateRedirectHref = (
 
 /**
  * Where to send a URL whose query doesn't fit its page: a route param from another mode (the line
- * would render as that route), a missing route on a bus, Commuter Rail or ferry page, or missing or
- * broken dates. Route params go first, since they set the date bounds.
+ * would render as that route), a missing route on a bus, Commuter Rail or ferry page, missing or
+ * invalid stations on a trip page, or missing or broken dates. Route params go first, since they set
+ * the stations and the date bounds.
  */
 export const getCanonicalSearchHref = (
   pathname: string,
   search: SearchObject,
   latestDate?: string
 ) => {
-  const stripped = withDefaultRouteParam(pathname, stripForeignRouteParams(pathname, search));
+  const stripped = withCanonicalStations(
+    pathname,
+    withDefaultRouteParam(pathname, stripForeignRouteParams(pathname, search))
+  );
   const dateHref = getDateRedirectHref(pathname, stripped, latestDate);
   if (dateHref) return dateHref;
   return isEqual(stripped, search) ? undefined : `${pathname}${stringifySearch(stripped)}`;
@@ -196,7 +217,7 @@ export const redirectToCanonicalSearch = ({ location }: { location: ParsedLocati
   if (!opensOnLatestBusSpeedDate(location.pathname, location.search)) {
     return throwCanonicalRedirect(location);
   }
-  return import('../api/busSpeedSegments')
-    .then(({ getLatestBusSpeedDate }) => getLatestBusSpeedDate())
+  return import('../api/hooks/busSpeedSegments')
+    .then(({ latestBusSpeedDateQuery }) => queryClient.ensureQueryData(latestBusSpeedDateQuery))
     .then((latestDate) => throwCanonicalRedirect(location, latestDate));
 };

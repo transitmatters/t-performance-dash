@@ -1,6 +1,6 @@
 import { getBusRouteDisplayName } from '../../common/constants/lines';
 import { useOption } from '../../common/hooks/useChartToggle';
-import { getBusSpeedMapRouteHref, useDelimitatedRoute } from '../../common/utils/router';
+import { getBusSpeedMapRouteHref, usePageRoute } from '../../common/utils/router';
 import {
   ALL_ROUTES,
   DAY_TYPES,
@@ -24,7 +24,7 @@ import type {
   Period,
   TimeBand,
 } from './types';
-import { periodLabel } from './utils';
+import { directionAndDaysLabel, periodLabel } from './utils';
 
 // The speed map's and Rankings' filters. The header renders their controls and the pages read
 // them, so each is a hook over its URL param, like common/hooks/usePageFilters.ts.
@@ -50,6 +50,17 @@ export const useTimeBand = () => useOption<TimeBand>(DEFAULT_TIME_BAND, TIME_BAN
 
 export const useDirection = () =>
   useOption<DirectionFilter>(DEFAULT_DIRECTION, DIRECTION_OPTIONS, 'direction');
+
+/** The speed map's direction and days in words, as "Outbound · Weekdays" (see directionAndDaysLabel). */
+export const useDirectionAndDays = () => {
+  const {
+    query: { date },
+  } = usePageRoute();
+  const { shown: period } = useShownPeriod();
+  const { value: dayType } = useDayType();
+  const { value: direction } = useDirection();
+  return directionAndDaysLabel(date, period, dayType, direction);
+};
 
 /** One route of a combined route like SL4/SL5, or all of them. */
 export const useRouteId = (routeIds: string[]) =>
@@ -84,7 +95,7 @@ export const useRankings = () => {
  * in, keeping the chosen period for when another metric is picked.
  */
 export const useShownPeriod = () => {
-  const { page } = useDelimitatedRoute();
+  const { page } = usePageRoute();
   const period = usePeriod();
   const { metric } = useRankings();
   const lockedToMonth = page === 'leaderboard' && Boolean(metric.monthlyOnly);
@@ -96,14 +107,14 @@ export const useShownPeriod = () => {
 export const usePeriodDateLabel = () => {
   const {
     query: { date },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const { shown } = useShownPeriod();
   return periodLabel(date, shown);
 };
 
 /** Links a Rankings route to its speed map, showing the period Rankings shows. */
 export const useSpeedMapRouteHref = () => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
   const { shown } = useShownPeriod();
   const period = shown === DEFAULT_PERIOD ? undefined : shown;
   return (busRoute: string) => getBusSpeedMapRouteHref(busRoute, route, period);

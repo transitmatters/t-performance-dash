@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import type { Line } from '../../common/types/lines';
-import { FREQUENCY_GOALS, ROWS } from './config';
+import { NEGLIGIBLE_POINTS, ROWS } from './config';
+import { formatChange, formatDroppedShare, roundedPercent } from './format';
 import type { Cell, HomeData, MetricId } from './types';
 
 // The "Across the system" statements and the line under the page title: sentences filled in from
@@ -29,12 +30,18 @@ export type Viz =
   | { kind: 'dots'; marks: Mark[]; rules: Rule[] }
   | { kind: 'bars'; unit: string; marks: Mark[] }
   | { kind: 'meters'; marks: Mark[]; cap: number; rule?: Rule }
+  /** Shares of trips; each mark's `trend` is the change in points from a year earlier. */
+  | { kind: 'shares'; marks: Mark[]; noun: string }
+  /** Changes from a year earlier, either side of zero. */
+  | { kind: 'changes'; marks: Mark[] }
   | { kind: 'area'; series: [string, number][]; peak: [string, number]; now: number };
 
 export interface Statement {
-  id: 'reliability' | 'delays' | 'frequency' | 'service' | 'slowZones';
+  id: 'service' | 'dropped' | 'reliability' | 'delays' | 'speed' | 'ridership';
   head: string;
   viz: Viz;
+  /** A line under the chart for a term the head can't define, like the service statement's "best". */
+  note?: string;
   link: { href: string; label: string };
 }
 
@@ -42,6 +49,8 @@ const pct = (value: number) => `${Math.round(value * 100)}%`;
 const isNumber = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
 const isGood = (cell?: Cell) => cell?.status === 'good' || cell?.status === 'win';
+const isMeasured = (cell?: Pick<Cell, 'status'>) =>
+  cell?.status !== 'na' && cell?.status !== 'insufficient';
 
 const rowConfig = (id: string) => ROWS.find((row) => row.id === id);
 const labelOf = (id: string) => rowConfig(id)?.label ?? id;
@@ -159,27 +168,6 @@ function delays({ cell, mark, link }: Reader): Statement | undefined {
   };
 }
 
-function frequency({ cell, hero, mark, link }: Reader): Statement | undefined {
-  const subway = hero('subwayFrequency')?.value;
-  const bus = cell('all-bus', 'frequency')?.value;
-  const frequent = cell('frequent-bus', 'frequency')?.value;
-  if (!isNumber(subway) || !isNumber(bus) || !isNumber(frequent)) return undefined;
-  return {
-    id: 'frequency',
-    head: `A subway train comes every ${FREQUENCY_GOALS.subway} minutes or better for ${pct(subway)} of the service day; a bus, every ${FREQUENCY_GOALS.bus}, for ${pct(bus)}.`,
-    viz: {
-      kind: 'meters',
-      cap: 1,
-      marks: [
-        { row: 'subway', label: 'Subway', value: subway },
-        mark('frequent-bus', frequent),
-        mark('all-bus', bus),
-      ],
-    },
-    link: link('frequent-bus', 'frequency', 'frequency'),
-  };
-}
-
 function service({ cell, mark, link }: Reader): Statement | undefined {
   const lines = SERVICE_ROWS.map((id) => ({ id, cell: cell(id, 'service') })).filter((l) =>
     isNumber(l.cell?.score)
@@ -204,25 +192,144 @@ function service({ cell, mark, link }: Reader): Statement | undefined {
       marks: lines.map((l) => mark(l.id, l.cell?.score as number)),
       rule: { value: 1, label: 'Best' },
     },
-    link: link(furthest.id, 'service', 'service'),
+    // A line's best only counts weeks at least 3 years old (data-ingestion's LOOKBACK_YEARS), so a
+    // line that has added trips since, like the Orange Line in 2025, runs well over 100% of it.
+    note: "Best means a line's busiest stretch at least 3 years ago, so one that has added trips since can pass 100%.",
+    link: link(furthest.id, 'service', 'scheduled service'),
   };
 }
 
-function slowZones({ hero }: Reader): Statement | undefined {
+/**
+ * A cell's change in points from a year earlier, or undefined when it has none worth saying: its
+ * trend is another kind (2 weeks against 12) or under NEGLIGIBLE_POINTS.
+ */
+const yearAgoChange = (c: Cell) =>
+  c.trendBasis === 'yearAgo' && isNumber(c.trend) && Math.abs(c.trend) >= NEGLIGIBLE_POINTS
+    ? c.trend
+    : undefined;
+
+/** Rows that count dropped trips, in scoreboard order. Subway rows join once they have figures. */
+const DROPPED_ROWS = [...SUBWAY, 'commuter-rail', 'frequent-bus', 'all-bus', 'mattapan'];
+
+function dropped({ cell, mark }: Reader): Statement | undefined {
+  const lines = DROPPED_ROWS.map((id) => ({ id, cell: cell(id, 'dropped') })).filter(
+    (l) => isNumber(l.cell?.value) && isMeasured(l.cell)
+  );
+  const bus = lines.find((l) => l.id === 'all-bus')?.cell;
+  if (!bus || !isNumber(bus.value)) return undefined;
+  const change = yearAgoChange(bus);
+  const now = formatDroppedShare(bus.value);
+  const then = change === undefined ? undefined : formatDroppedShare(bus.value - change);
+  const since =
+    then === undefined || then === now
+      ? ''
+      : (change as number) < 0
+        ? `, down from ${then} a year ago`
+        : `, up from ${then} a year ago`;
+  const cr = lines.find((l) => l.id === 'commuter-rail')?.cell;
+  return {
+    id: 'dropped',
+    head:
+      `Buses drop ${now} of scheduled trips${since}.` +
+      (cr && isNumber(cr.value) ? ` Commuter Rail cancels ${formatDroppedShare(cr.value)}.` : ''),
+    viz: {
+      kind: 'shares',
+      noun: 'dropped',
+      marks: lines.map((l) => mark(l.id, l.cell?.value as number, l.cell && yearAgoChange(l.cell))),
+    },
+    note: 'A bus trip counts as dropped when no bus was seen running it.',
+    link: { href: bus.href ?? '/bus', label: 'Dropped bus trips' },
+  };
+}
+
+/** "1.3 minutes a day, down from 2 hours a day in April 2023", or undefined without enough history. */
+const slowZoneSentence = (hero: Reader['hero']) => {
   const stat = hero('slowZones');
   const series = stat?.history ?? [];
   if (!isNumber(stat?.value) || series.length < 12) return undefined;
   const peak = series.reduce((a, b) => (b[1] > a[1] ? b : a));
-  const then = `down from ${formatMinutes(peak[1])} a day in ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')}.`;
+  // The peak is a monthly mean and the value last week's, so a bad week can top it.
+  const then =
+    stat.value < peak[1]
+      ? `, down from ${formatMinutes(peak[1])} a day in ${dayjs(`${peak[0]}-01`).format('MMMM YYYY')}.`
+      : '.';
+  // Under 3 seconds a day rounds to "0.0 minutes", so call it none.
+  const text =
+    stat.value < 0.05
+      ? `There are no slow zones on the subway right now${then}`
+      : `Slow zones add ${formatMinutes(stat.value)} a day across the subway${then}`;
+  return { text, viz: { kind: 'area' as const, series, peak, now: stat.value } };
+};
+
+/** Each subway line's speed against its best, with slow zones in the sentence. */
+function speed({ cell, hero, mark, link }: Reader): Statement | undefined {
+  const lines = SUBWAY.map((id) => {
+    const part = cell(id, 'speed')?.parts?.find((p) => p.id === 'speed');
+    // A stale or thin part keeps its old score, but the scoreboard shows "—" for it.
+    return { id, score: part && isMeasured(part) ? part.score : undefined };
+  });
+  const slowZones = slowZoneSentence(hero);
+  if (!lines.every((l) => isNumber(l.score))) {
+    // No speed baselines: slow zones still tell the story on their own.
+    return (
+      slowZones && {
+        id: 'speed',
+        head: slowZones.text,
+        viz: slowZones.viz,
+        link: { href: '/slowzones', label: 'Slow zones' },
+      }
+    );
+  }
+  const scores = lines.map((l) => l.score as number);
+  const [low, high] = [Math.min(...scores), Math.max(...scores)];
+  const slowest = lines[scores.indexOf(low)];
+  const head =
+    Math.round(low * 100) >= 100
+      ? 'Every subway line runs as fast as it did at its best, or faster.'
+      : pct(low) === pct(high)
+        ? `Subway trains run at ${pct(low)} of their best speeds.`
+        : `Subway trains run at ${pct(low)} to ${pct(high)} of their best speeds.`;
   return {
-    id: 'slowZones',
-    // Under 3 seconds a day rounds to "0.0 minutes", so call it none.
+    id: 'speed',
+    head: slowZones ? `${head} ${slowZones.text}` : head,
+    viz: {
+      kind: 'meters',
+      cap: 1.2,
+      marks: lines.map((l) => mark(l.id, l.score as number)),
+      rule: { value: 1, label: 'Best' },
+    },
+    note: "Best means a line's fastest stretch at least 3 years ago, end to end including stops.",
+    link: link(slowest.id, 'speed', 'speed'),
+  };
+}
+
+/** Rows with ridership, in scoreboard order. Frequent Bus is part of All Buses, so it's left out. */
+const RIDERSHIP_ROWS = [...SUBWAY, 'commuter-rail', 'all-bus', 'ferry'];
+
+/** How a sentence names a row after "on": "the Red Line", "Commuter Rail", "buses". */
+const onLabel = (id: string) =>
+  ({ 'all-bus': 'buses', 'frequent-bus': 'Frequent Bus routes', ferry: 'ferries' })[id] ??
+  (labelOf(id).endsWith('Line') ? `the ${labelOf(id)}` : labelOf(id));
+
+function ridership({ cell, mark }: Reader): Statement | undefined {
+  const lines = RIDERSHIP_ROWS.map((id) => ({ id, cell: cell(id, 'ridership') })).filter(
+    (l) => l.cell?.status === 'unscored' && isNumber(l.cell.value)
+  );
+  if (!SUBWAY.every((id) => lines.some((l) => l.id === id))) return undefined;
+  const changes = lines.map((l) => l.cell?.value as number);
+  const up = changes.filter((c) => roundedPercent(c) > 0).length;
+  const most = lines[changes.indexOf(Math.max(...changes))];
+  return {
+    id: 'ridership',
     head:
-      stat.value < 0.05
-        ? `There are no slow zones on the subway right now, ${then}`
-        : `Slow zones add ${formatMinutes(stat.value)} a day across the subway, ${then}`,
-    viz: { kind: 'area', series, peak, now: stat.value },
-    link: { href: '/slowzones', label: 'Slow zones' },
+      up === lines.length
+        ? `Every line carries more riders than a year ago, up to ${formatChange(Math.max(...changes))} on ${onLabel(most.id)}.`
+        : up === 0
+          ? 'No line carries more riders than a year ago.'
+          : `${up} of ${lines.length} lines carry more riders than a year ago.`,
+    viz: { kind: 'changes', marks: lines.map((l) => mark(l.id, l.cell?.value as number)) },
+    note: "Each line's latest 4 weeks of counts against the same weeks a year earlier. Modes publish on different schedules, so the weeks differ.",
+    link: { href: '/system/ridership', label: 'Ridership across the system' },
   };
 }
 
@@ -230,7 +337,9 @@ function slowZones({ hero }: Reader): Statement | undefined {
 export const buildStatements = (data?: HomeData): Statement[] => {
   if (!data) return [];
   const read = reader(data);
-  return [reliability, delays, frequency, service, slowZones].flatMap((build) => build(read) ?? []);
+  return [service, dropped, reliability, delays, speed, ridership].flatMap(
+    (build) => build(read) ?? []
+  );
 };
 
 /** The line under the page title, as a lead sentence and a quieter second one. */

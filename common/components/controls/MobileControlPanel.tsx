@@ -58,6 +58,7 @@ export const MobileControlPanel = () => {
     showPeriodDate,
     showEventsOption,
     showOtherShutdownsOption,
+    showSlowZonesOption,
   } = usePageControls();
   const { presetName, dates } = useDateSummary(queryType);
   const periodDate = usePeriodDateLabel();
@@ -65,6 +66,7 @@ export const MobileControlPanel = () => {
   const displayOptions = useDisplayOptions({
     withEvents: showEventsOption,
     withOtherShutdowns: showOtherShutdownsOption,
+    withSlowZones: showSlowZonesOption,
   });
   const stationProps =
     showTripControls && line ? { line, busRoute, crRoute, ferryRoute } : undefined;
@@ -126,7 +128,13 @@ export const MobileControlPanel = () => {
           <LabeledControl label="Show on charts">
             <div className="flex flex-col gap-3">
               {displayOptions.map(({ key, label, checked, setChecked }) => (
-                <ToggleSwitch key={key} enabled={checked} setEnabled={setChecked} label={label} />
+                <ToggleSwitch
+                  key={key}
+                  enabled={checked}
+                  setEnabled={setChecked}
+                  label={label}
+                  colorKey={colorKey}
+                />
               ))}
             </div>
           </LabeledControl>

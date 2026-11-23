@@ -1,5 +1,11 @@
-import { useLocation, useMatches, useNavigate, useRouter } from '@tanstack/react-router';
-import { useCallback, useMemo } from 'react';
+import {
+  rootRouteId,
+  useLocation,
+  useMatches,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router';
+import { useCallback } from 'react';
 import { isEqual, pickBy, startCase, toLower } from '@lodash-utils';
 import type { Line, LineColorKey, LinePath, LineShort } from '../types/lines';
 import { COMMUTER_RAIL_ROUTES, FERRY_ROUTES, RAIL_LINES } from '../types/lines';
@@ -7,7 +13,8 @@ import type { QueryParams, Route, Tab } from '../types/router';
 import { CHART_PARAMS, DATE_PARAMS } from '../types/router';
 import type { PageMetadata, Page } from '../constants/pages';
 import { SYSTEM_PAGES_MAP, SUB_PAGES_MAP, ALL_PAGES } from '../constants/pages';
-import { LINE_OBJECTS } from '../constants/lines';
+import { LINE_OBJECTS, getBusRouteDataIds } from '../constants/lines';
+import { getBusRoutes } from '../constants/stations';
 import {
   saveDateStoreSection,
   getDateStoreSection,
@@ -17,7 +24,7 @@ import {
 import type { StationStore } from '../state/stationStore';
 import { useStationStore } from '../state/stationStore';
 import { useDateStore } from '../state/dateStore';
-import type { DateStore } from '../state/dateStore';
+import type { DateStore, TripPage } from '../state/dateStore';
 import { getLineColorKey, LINE_COLORS } from '../constants/colors';
 import type { SearchObject } from './searchParams';
 import { validateAnySearch } from './searchSchemas';
@@ -78,7 +85,7 @@ export const useIsEmbed = () =>
 
 /** The line, tab and page a pathname points at. Pure, so the router can use it before render. */
 export const parseRoutePath = (pathname: string) => {
-  // Page detection expects Next's trailing-slash paths; a hand-typed `/red/speed` still has to work.
+  // Page detection expects trailing-slash paths; a hand-typed `/red/speed` still has to work.
   const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
   const tab = getTab((pathItems[1] as LinePath) ?? 'System');
   return {
@@ -94,7 +101,7 @@ const withoutEmbedPrefix = (pathname: string) =>
   pathname.startsWith('/embed/') ? pathname.slice('/embed'.length) : pathname;
 
 /** Query keys that pick a route within a mode. Each one only means something on its own mode. */
-const ROUTE_PARAMS = ['busRoute', 'crRoute', 'ferryRoute'];
+export const ROUTE_PARAMS = ['busRoute', 'crRoute', 'ferryRoute'];
 
 const ROUTE_PARAM_FOR_LINE: Partial<Record<Line, 'busRoute' | 'crRoute' | 'ferryRoute'>> = {
   'line-bus': 'busRoute',
@@ -116,24 +123,41 @@ export const stripForeignRouteParams = (pathname: string, search: SearchObject):
 };
 
 /** The route a mode's pages open on when the URL doesn't name one. */
-const DEFAULT_ROUTE_FOR_LINE: Partial<Record<Line, string>> = {
+export const DEFAULT_ROUTE_FOR_LINE: Partial<Record<Line, string>> = {
   'line-bus': '1',
   'line-commuter-rail': 'CR-Fairmount',
   'line-ferry': 'Boat-F6',
 };
 
-/**
- * Modes whose every route is known, so an unknown one is a typo or a dead link. Bus isn't here:
- * its pages take routes beyond the station files, and the speed map reads its own tileset's.
- */
+/** Every route each mode's pages can show, so an unknown one is a typo or a dead link. */
 const KNOWN_ROUTES_FOR_LINE: Partial<Record<Line, readonly string[]>> = {
+  'line-bus': getBusRoutes(),
   'line-commuter-rail': COMMUTER_RAIL_ROUTES,
   'line-ferry': FERRY_ROUTES,
 };
 
+/** Pages that take routes beyond the station files: the bus speed map reads its tileset's. */
+const ANY_ROUTE_PAGES: Page[] = ['speedmap'];
+
+/** A raw GTFS bus route_id the API accepts, e.g. '34E' or '741' (SL1); see chalicelib/delays.py. */
+const BUS_ROUTE_ID = /^\d{1,3}[A-Z]?$/;
+
+/**
+ * Whether `line`'s pages can show `route`. Bus pages fetch by route_id, so they also show routes
+ * with no station file, like 34E linked from the speed map.
+ */
+const isKnownRoute = (line: Line, page: Page, route: string) => {
+  if (ANY_ROUTE_PAGES.includes(page)) return true;
+  if (line === 'line-bus' && getBusRouteDataIds(route).every((id) => BUS_ROUTE_ID.test(id))) {
+    return true;
+  }
+  const knownRoutes = KNOWN_ROUTES_FOR_LINE[line];
+  return !knownRoutes || knownRoutes.includes(route);
+};
+
 /**
  * The search with the mode's default route filled in, e.g. `/bus/ridership/` with no `busRoute`,
- * or `/commuter-rail/` with a `crRoute` that doesn't exist.
+ * or `/bus/` with a `busRoute` that doesn't exist.
  * Pages that rank every route at once, like the leaderboard, are left without one.
  */
 export const withDefaultRouteParam = (pathname: string, search: SearchObject): SearchObject => {
@@ -142,15 +166,47 @@ export const withDefaultRouteParam = (pathname: string, search: SearchObject): S
   // Embed paths carry a chart name after the page, so their page may not resolve; they still need a route.
   if (!line || !param || ALL_PAGES[page]?.hasRouteSelector === false) return search;
   const route = search[param];
-  const knownRoutes = KNOWN_ROUTES_FOR_LINE[line];
-  if (route && (!knownRoutes || knownRoutes.includes(String(route)))) return search;
+  if (route && isKnownRoute(line, page, String(route))) return search;
   return { ...search, [param]: DEFAULT_ROUTE_FOR_LINE[line] };
 };
 
-export const useDelimitatedRoute = (): Route => {
-  const { pathname, search } = useLocation();
-  // Merged like TanStack merges a route's validated search, so unknown params still carry over.
-  const query: QueryParams = useMemo(() => ({ ...search, ...validateAnySearch(search) }), [search]);
+// Merged like TanStack merges a route's validated search, so unknown params still carry over.
+export const routeFromLocation = (pathname: string, search: SearchObject): Route =>
+  routeWithQuery(pathname, { ...search, ...validateAnySearch(search) });
+
+const NO_SEARCH: SearchObject = {};
+
+/**
+ * The path and search of the page on screen. useLocation moves to the next URL as soon as a
+ * navigation starts, while the page being left is still rendered. The last match, not the nearest,
+ * so chrome outside the page's Outlet reads the page too.
+ */
+export const useRenderedLocation = () => {
+  const location = useLocation();
+  // When no route matched the path, only the root's `/` is left, which reads as the landing page.
+  const unmatched = useMatches({
+    select: (matches) =>
+      matches[matches.length - 1]?.routeId === rootRouteId &&
+      matches.some((match) => match.status === 'notFound' || match._notFound === true),
+  });
+  const pathname = useMatches({
+    select: (matches) => matches[matches.length - 1]?.pathname ?? '/',
+  });
+  const search = useMatches({
+    select: (matches) => matches[matches.length - 1]?.search ?? NO_SEARCH,
+  });
+  return unmatched
+    ? { pathname: location.pathname, search: location.search }
+    : { pathname, search };
+};
+
+/** The page on screen, for chrome that renders on every kind of page. Pages use usePageParams. */
+export const usePageRoute = (): Route => {
+  const { pathname, search } = useRenderedLocation();
+  return routeFromLocation(pathname, search);
+};
+
+const routeWithQuery = (pathname: string, query: QueryParams): Route => {
   const { pathItems, tab, page, line } = parseRoutePath(withoutEmbedPrefix(pathname));
   const colorKey = getLineColorKey(line, query.busRoute);
 
@@ -171,7 +227,7 @@ export const useDelimitatedRoute = (): Route => {
  * page's line, so the bus line turns silver on a Silver Line route, and `line` itself otherwise.
  */
 export const useLineColorKey = (line: Line | null | undefined): LineColorKey | undefined => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
   if (!line) return undefined;
   return line === route.line ? route.colorKey : line;
 };
@@ -257,13 +313,11 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   let href = `/${path}`;
   // Go to homepage if current line is selected or the selected page is not valid for the given line.
   const validPage = currentPage.lines.includes(newLine);
-  if (key === line || currentPath === 'today' || !validPage) {
+  if (key === line || !validPage) {
     return href;
   }
-  // Drop stations, route params and view (a per-line preset selection, e.g. the Overview page's
-  // date range — carrying it to a different line makes that line's page open on whatever range was
-  // last picked instead of its own default).
-  const queryParams = queryWithout(query, ['from', 'to', 'view', ...ROUTE_PARAMS]);
+  // Drop stations and route params, which belong to the old line.
+  const queryParams = queryWithout(query, ['from', 'to', ...ROUTE_PARAMS]);
   href += currentPath ? `${currentPath}` : '';
   const queryString = queryParams.toString();
   href += queryString ? `?${queryString}` : '';
@@ -274,7 +328,9 @@ export const getBusRouteSelectionItemHref = (newRoute: string, route: Route): st
   const { query, page } = route;
   const currentPage = ALL_PAGES[page] ?? ALL_PAGES['singleTrips'];
   const currentPath = currentPage.path;
-  const validPage = currentPage.lines.includes('line-bus');
+  // A page without a route selector (Rankings) has no per-route view to switch to.
+  const validPage =
+    currentPage.lines.includes('line-bus') && currentPage.hasRouteSelector !== false;
   if (newRoute === route.query.busRoute || !validPage) {
     return `/bus/trips/single?busRoute=${newRoute}`;
   }
@@ -368,7 +424,7 @@ export const useGenerateHref = () => {
 
 // TODO: We should probably use this anywhere we have links to consolidate the logic. i.e. components like <LineSelection>
 export const useHandleConfigStore = () => {
-  const { page, query, line } = useDelimitatedRoute();
+  const { page, query, line } = usePageRoute();
   const currentPage = ALL_PAGES[page];
   const dateStore = useDateStore();
   const stationStore = useStationStore();
@@ -478,11 +534,25 @@ export const getQueryParams = (
   };
 };
 
+/**
+ * The speed map and Rankings share the single-day trips date section without being trip views, so
+ * the section alone can't say whether a page is one.
+ */
+const isTripPage = (page: Page | string): page is TripPage =>
+  page === 'singleTrips' || page === 'multiTrips';
+
+/**
+ * Where the sidebar's Trips item goes: the trip view already open, or else the one last used, so a
+ * picked date range is still there on the way back.
+ */
+export const getNavTripPage = (currentPage: Page | string, tripPage: TripPage): PageMetadata =>
+  isTripPage(currentPage) ? ALL_PAGES[currentPage] : ALL_PAGES[tripPage];
+
 const getPathName = (newPage: PageMetadata, linePath: LinePath) => {
   return `/${newPage.dateStoreSection === 'system' ? 'system' : linePath}${newPage.path}`;
 };
 
-const savePageConfigIfNecessary = (
+export const savePageConfigIfNecessary = (
   currentPage: PageMetadata,
   newPage: PageMetadata,
   query: QueryParams,
@@ -492,6 +562,9 @@ const savePageConfigIfNecessary = (
 ) => {
   if (!(currentPage.dateStoreSection === newPage.dateStoreSection)) {
     saveDateStoreSection(currentPage.dateStoreSection, query, dateStore);
+  }
+  if (isTripPage(currentPage.key) && !isTripPage(newPage.key)) {
+    dateStore.setTripPage(currentPage.key);
   }
   if (!(currentPage.hasStationStore === newPage.hasStationStore)) {
     stationStore.setStationStore({

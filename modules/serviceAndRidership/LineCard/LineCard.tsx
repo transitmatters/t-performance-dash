@@ -8,7 +8,7 @@ import {
   AccordionContent,
 } from '../../../common/components/ui/accordion';
 import { Widget } from '../../../common/components/widgets/Widget';
-import { useServiceAndRidershipContext } from '../useServiceAndRidershipContext';
+import { useDateRange } from '../../../common/hooks/usePageParams';
 import type { LineData, ServiceDay } from '../types';
 
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
@@ -30,7 +30,7 @@ type Props = {
   lineData: LineData;
 };
 
-const serviceDayItems = [
+const serviceDayItems: { value: ServiceDay; label: string }[] = [
   { value: 'weekday', label: 'Weekdays' },
   { value: 'saturday', label: 'Saturday' },
   { value: 'sunday', label: 'Sunday' },
@@ -80,17 +80,21 @@ export const LineCard = (props: Props) => {
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');
   const highestTph = useMemo(() => getHighestTphValue(lineData), [lineData]);
   const title = shortName || longName;
-  const { startDate, endDate } = useServiceAndRidershipContext();
+  const { startDate, endDate } = useDateRange();
 
   const generateHref = useGenerateHref();
   const href = useMemo(() => {
+    // Mattapan's lineKind is 'red' (it's run as part of the Red Line), but it has its own pages
+    if (id === 'line-Mattapan') {
+      return generateHref(ALL_PAGES.overview, 'serviceAndRidership', {}, 'mattapan');
+    }
     // Navigate to the overview page for subway lines
-    if (['red', 'blue', 'green', 'orange', 'mattapan'].includes(lineKind)) {
+    if (['red', 'blue', 'green', 'orange'].includes(lineKind)) {
       return generateHref(
         ALL_PAGES.overview,
         'serviceAndRidership',
         {},
-        lineKind as 'red' | 'blue' | 'green' | 'orange' | 'mattapan'
+        lineKind as 'red' | 'blue' | 'green' | 'orange'
       );
     }
     if (lineKind === 'regional-rail') {
@@ -143,7 +147,7 @@ export const LineCard = (props: Props) => {
     <Widget title={title} titleHref={href} details={renderDetails()} className="pb-16">
       {renderSectionLabel('Current service levels')}
       <ButtonGroup
-        options={serviceDayItems.map((item) => [item.value, item.label])}
+        options={serviceDayItems.map((item): [ServiceDay, string] => [item.value, item.label])}
         pressFunction={setServiceDay}
         selectedIndex={serviceDayItems.findIndex((item) => item.value === serviceDay)}
         additionalDivClass="mb-2"

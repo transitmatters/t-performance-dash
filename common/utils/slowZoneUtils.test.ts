@@ -2,13 +2,16 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { describe, expect, it } from 'vitest';
 import type { LineShort } from '../types/lines';
-import type { SlowZoneResponse } from '../types/dataPoints';
+import type { SlowZoneAllSlowResponse, SlowZoneResponse } from '../types/dataPoints';
 import {
   filterAllSlow,
   formatSegments,
   getStationPairName,
+  getTripSlowZoneRuns,
+  getSlowZoneDataEndDate,
   getTripSlowZoneSummary,
   getWorstSlowZoneSegment,
+  isSlowZoneActiveAsOf,
   isZoneOnTrip,
 } from './slowZoneUtils';
 import { getParentStationForStopId } from './stations';
@@ -81,12 +84,14 @@ describe('isZoneOnTrip', () => {
 });
 
 describe('getTripSlowZoneSummary', () => {
-  const data = [
+  const zones = [
     alewifeToDavis,
     andrewToBraintreeJfk,
     andrewToAshmontJfk,
     zone('Red', '70061', '70063', '2025-02-10', '2025-02-20', 15),
   ];
+  // The morning run covering service through Feb 20, the last day of the last zone.
+  const data: SlowZoneAllSlowResponse = { updated_on: '2025-02-21T10:05:00+00:00', data: zones };
 
   it('sums the zones active on a single day', () => {
     expect(
@@ -126,6 +131,25 @@ describe('getTripSlowZoneSummary', () => {
       '2025-03-05'
     );
     expect(summary).toMatchObject({ startDate: '2025-02-20', endDate: '2025-02-20', endTotal: 15 });
+  });
+
+  it("stops at the data's last day, not the last zone's, once every zone has cleared", () => {
+    // Data through Mar 2, ten days after the last zone cleared.
+    const later = { ...data, updated_on: '2025-03-03T10:05:00+00:00' };
+    expect(
+      getTripSlowZoneSummary(later, alewife, braintree, 'Red', '2025-02-15', '2025-03-05')
+    ).toEqual({
+      startDate: '2025-02-15',
+      endDate: '2025-03-02',
+      startTotal: 15,
+      endTotal: 0,
+      endZones: 0,
+      peakTotal: 15,
+      peakDate: '2025-02-15',
+    });
+    expect(
+      getTripSlowZoneSummary(later, alewife, braintree, 'Red', '2025-03-01', '2025-03-05')
+    ).toBeNull();
   });
 
   it('returns null when no zone on the trip overlaps the dates', () => {
@@ -174,6 +198,33 @@ describe('filterAllSlow', () => {
   });
 });
 
+describe('getSlowZoneDataEndDate', () => {
+  it('is the day before the morning run', () => {
+    expect(getSlowZoneDataEndDate('2026-11-19T10:06:00+00:00').toISOString()).toBe(
+      '2026-11-18T00:00:00.000Z'
+    );
+  });
+});
+
+describe('isSlowZoneActiveAsOf', () => {
+  // The run on the morning of Nov 19 covers service through Nov 18.
+  const dataEnd = getSlowZoneDataEndDate('2026-11-19T10:06:00+00:00');
+  const endingOn = (end: string) => ({ end: `${end}T00:00:00` });
+
+  it("checks a range ending past the data against the data's last day", () => {
+    // 00:10 ET on Nov 20, before that day's run.
+    const end = dayjs.utc('2026-11-20');
+    expect(isSlowZoneActiveAsOf(endingOn('2026-11-18'), end, dataEnd)).toBe(true);
+    expect(isSlowZoneActiveAsOf(endingOn('2026-11-17'), end, dataEnd)).toBe(false);
+  });
+
+  it('checks a range ending within the data against its own end date', () => {
+    const end = dayjs.utc('2026-11-10');
+    expect(isSlowZoneActiveAsOf(endingOn('2026-11-10'), end, dataEnd)).toBe(true);
+    expect(isSlowZoneActiveAsOf(endingOn('2026-11-09'), end, dataEnd)).toBe(false);
+  });
+});
+
 describe('getWorstSlowZoneSegment', () => {
   const start = dayjs.utc('2025-01-01');
   const end = dayjs.utc('2025-03-31');
@@ -182,13 +233,13 @@ describe('getWorstSlowZoneSegment', () => {
     const cleared = zone('Red', '70061', '70063', '2025-01-01', '2025-01-10', 300);
     const active = zone('Red', '70083', '70095', '2025-01-05', '2025-03-31', 40);
     expect(cleared.latest_delay).not.toBeNull();
-    const worst = getWorstSlowZoneSegment([cleared, active], start, end, 'Red');
+    const worst = getWorstSlowZoneSegment([cleared, active], start, end, end, 'Red');
     expect(worst).toMatchObject({ delay: 40, from: { station: 'place-andrw' } });
   });
 
   it('returns null when no zone is active at the end date', () => {
     const cleared = zone('Red', '70061', '70063', '2025-01-01', '2025-01-10', 300);
-    expect(getWorstSlowZoneSegment([cleared], start, end, 'Red')).toBeNull();
+    expect(getWorstSlowZoneSegment([cleared], start, end, end, 'Red')).toBeNull();
   });
 });
 
@@ -210,5 +261,40 @@ describe('formatSegments', () => {
     expect(formatSegments(data, start, 'northbound')).toMatchObject([
       { from: { station: 'place-asmnl' }, to: { station: 'place-smmnl' } },
     ]);
+  });
+});
+
+describe('getTripSlowZoneRuns', () => {
+  const early = zone('Red', '70061', '70063', '2025-01-01', '2025-01-10', 60);
+  const late = zone('Red', '70083', '70095', '2025-01-06', '2025-01-31', 50);
+  const offTrip = zone('Red', '70083', '70085', '2025-01-01', '2025-01-31', 40);
+  const data = [
+    early,
+    late,
+    offTrip,
+    zone('Red', '70061', '70063', '2025-02-10', '2025-02-20', 15),
+  ];
+
+  it("splits the window wherever the trip's active zones change, skipping days with none", () => {
+    const runs = getTripSlowZoneRuns(data, alewife, braintree, 'Red', '2024-12-25', '2025-02-15');
+    expect(runs.map(({ start, end, total }) => ({ start, end, total }))).toEqual([
+      { start: '2025-01-01', end: '2025-01-05', total: 60 },
+      { start: '2025-01-06', end: '2025-01-10', total: 110 },
+      { start: '2025-01-11', end: '2025-01-31', total: 50 },
+      { start: '2025-02-10', end: '2025-02-15', total: 15 },
+    ]);
+    expect(runs[1].zones.map((z) => z.delay)).toEqual([60, 50]);
+  });
+
+  it('clips runs to the window', () => {
+    expect(
+      getTripSlowZoneRuns(data, alewife, braintree, 'Red', '2025-01-08', '2025-01-08')
+    ).toMatchObject([{ start: '2025-01-08', end: '2025-01-08', total: 110 }]);
+  });
+
+  it('returns nothing when no zone on the trip overlaps the window', () => {
+    expect(
+      getTripSlowZoneRuns(data, alewife, braintree, 'Red', '2025-03-01', '2025-03-31')
+    ).toEqual([]);
   });
 });

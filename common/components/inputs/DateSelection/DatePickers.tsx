@@ -4,21 +4,20 @@ import classNames from 'classnames';
 import { getDatePickerBounds } from '../../../constants/dates';
 import { CONTROL_SURFACE, FOCUS_RING_ON_SURFACE } from '../../../styles/general';
 import type { QueryTypeOptions } from '../../../types/router';
-import { useDelimitatedRoute, useUpdateQuery } from '../../../utils/router';
+import { usePageRoute, useUpdateQuery } from '../../../utils/router';
 import { DateField } from './DateField';
 
 interface DatePickerProps {
   type: QueryTypeOptions;
-  clearPreset: () => void;
 }
 
 /**
  * The date fields themselves. They only ever edit dates that are already there: the router fills in
  * and clamps missing or out-of-bounds dates before the page renders (see `redirectToCanonicalSearch`).
  */
-export const DatePickers = ({ type, clearPreset }: DatePickerProps) => {
+export const DatePickers = ({ type }: DatePickerProps) => {
   const updateQueryParams = useUpdateQuery();
-  const { query, line, tab, page } = useDelimitatedRoute();
+  const { query, line, tab, page } = usePageRoute();
   const { startDate, endDate, date } = query;
   const range = type === 'range';
   const { minDate, maxDate } = getDatePickerBounds(
@@ -32,7 +31,6 @@ export const DatePickers = ({ type, clearPreset }: DatePickerProps) => {
     // Swap start and end if new end < startDate
     if (newDate < startDate) updateQueryParams({ startDate: newDate, endDate: startDate }, false);
     else updateQueryParams({ startDate, endDate: newDate }, false);
-    clearPreset();
   };
 
   const handleStartDateChange = (newDate: string) => {
@@ -40,12 +38,10 @@ export const DatePickers = ({ type, clearPreset }: DatePickerProps) => {
     // Swap start and end if new start > endDate
     if (newDate > endDate) updateQueryParams({ startDate: endDate, endDate: newDate }, false);
     else updateQueryParams({ startDate: newDate, endDate }, false);
-    clearPreset();
   };
 
   const handleDateChange = (newDate: string) => {
     updateQueryParams({ date: newDate }, false);
-    clearPreset();
   };
 
   const fieldClassName = classNames(

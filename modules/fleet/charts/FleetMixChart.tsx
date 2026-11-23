@@ -5,8 +5,7 @@ import { round } from '@lodash-utils';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import type { FleetMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useChartTheme } from '../../../common/utils/chartTheme';
@@ -48,16 +47,15 @@ export const FleetMixChart = ({
   endDate,
   showTitle = false,
 }: FleetMixChartProps) => {
-  const { line, colorKey, linePath } = useDelimitatedRoute();
+  const { line, color: lineColor, linePath, lineShort } = useLinePage();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
-  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
-  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(lineShort, startDate, endDate);
   const shuttlingBlocks = showShuttling
     ? hideGapsExplainedByEvents(
         explainGaps(

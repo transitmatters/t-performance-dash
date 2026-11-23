@@ -19,10 +19,11 @@ const halves = <T>(values: T[]): [T[], T[]] => {
  *
  * The percentage compares the newest week with the most riders in the same week of past years when
  * `seasonalMaximumFor` has it (see `seasonalPeak`), and with the all-time `peakRidership` otherwise.
+ * It's NaN without either, as for a line whose baseline is held back.
  */
 export const getRidershipStats = (
   ridership: RidershipCount[],
-  peakRidership: number,
+  peakRidership: number | undefined,
   seasonalMaximumFor?: (date: string) => SeasonalMaximum | undefined
 ) => {
   const withCounts = ridership.filter((point) => point.count !== null);
@@ -35,7 +36,8 @@ export const getRidershipStats = (
   // The newest week can have no count yet; the chart leaves it out, so this does too.
   const latest = withCounts[withCounts.length - 1];
   const seasonalPeak = latest && seasonalMaximumFor?.(latest.date);
-  const percentage = latest ? latest.count / (seasonalPeak?.value ?? peakRidership) : NaN;
+  const maximum = seasonalPeak?.value ?? peakRidership;
+  const percentage = latest && maximum ? latest.count / maximum : NaN;
   return {
     average: mean(counts),
     averageBefore: mean(c1),

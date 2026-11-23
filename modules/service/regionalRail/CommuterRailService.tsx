@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useDateRange, useLinePage } from '../../../common/hooks/usePageParams';
 import { useCrScorecard } from '../../../common/api/hooks/crScorecard';
 import { ChartPageDiv } from '../../../common/components/charts/ChartPageDiv';
 import { Widget } from '../../../common/components/widgets';
@@ -47,9 +47,8 @@ const WAIT_WINDOWS = { midday: '10am to 3pm', evening: '7pm to midnight' };
 
 /** Commuter Rail's scheduled service, measured against TransitMatters' Regional Rail standards. */
 export function CommuterRailService() {
-  const {
-    query: { startDate, endDate, crRoute },
-  } = useDelimitatedRoute();
+  const { crRoute } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const { value: scope } = useCrServiceScope();
   const { value: dayKind } = useServiceDay();
   const { value: wait, control: waitControl } = useChartToggle('midday', WAIT_OPTIONS, {
@@ -61,16 +60,13 @@ export function CommuterRailService() {
     () => getSpeedGraphConfig(dayjs(startDate), dayjs(endDate)),
     [startDate, endDate]
   );
-  const scorecard = useCrScorecard(
-    {
-      route_id: byLine ? crRoute : ALL_COMMUTER_RAIL,
-      start_date: startDate,
-      end_date: endDate,
-      agg,
-      day_kind: dayKind,
-    },
-    Boolean(startDate && endDate)
-  );
+  const scorecard = useCrScorecard({
+    route_id: byLine ? crRoute : ALL_COMMUTER_RAIL,
+    start_date: startDate,
+    end_date: endDate,
+    agg,
+    day_kind: dayKind,
+  });
   // Trains per day rarely changes from day to day, so short ranges read better as bars, and
   // the bars show every day so weekend service sits next to weekday service
   const bars = agg === 'daily';
@@ -82,12 +78,8 @@ export function CommuterRailService() {
       agg,
       day_kind: 'all',
     },
-    Boolean(startDate && endDate && byLine && bars)
+    byLine && bars
   );
-
-  if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
-  }
 
   const data = scorecard.data ?? [];
   const stats = byLine && scorecard.data ? getScorecardStats(scorecard.data) : null;

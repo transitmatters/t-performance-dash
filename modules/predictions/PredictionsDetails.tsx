@@ -3,7 +3,7 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { Link } from '../../common/components/general/Link';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { usePredictionData } from '../../common/api/hooks/predictions';
 import { Widget } from '../../common/components/widgets';
@@ -24,27 +24,17 @@ import { PredictionsBinsGraphWrapper } from './charts/PredictionsBinsGraphWrappe
 dayjs.extend(utc);
 
 export function PredictionsDetails() {
-  const {
-    line,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const greenBranch = useGreenBranch();
   const routeId = line === 'line-green' ? greenBranch.routeId : lineToDefaultRouteId(line);
-  const enabled = Boolean(routeId);
 
-  const predictions = usePredictionData(
-    {
-      // Only subway lines have a Predictions page, and each has a default route.
-      route_id: routeId!,
-      // Without these the stat cards cover all history, not the charted range.
-      start_date: startDate,
-      end_date: endDate,
-    },
-    enabled
-  );
-  if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
-  }
+  const predictions = usePredictionData({
+    route_id: routeId,
+    // Without these the stat cards cover all history, not the charted range.
+    start_date: startDate,
+    end_date: endDate,
+  });
 
   const stats = predictions.data?.length ? getPredictionStats(predictions.data) : null;
 

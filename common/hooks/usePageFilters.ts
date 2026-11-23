@@ -3,7 +3,7 @@ import { rtStations } from '../constants/stations';
 import type { DayKind } from '../types/dataPoints';
 import type { LineShort } from '../types/lines';
 import { COMMUTER_RAIL_LINE_NAMES } from '../types/lines';
-import { useDelimitatedRoute } from '../utils/router';
+import { usePageRoute } from '../utils/router';
 import { useOption } from './useChartToggle';
 
 // Page-wide filters. The header renders their controls (see PageFilters) and the pages read their
@@ -19,7 +19,7 @@ const directionName = (lineShort: LineShort, directionId: '0' | '1') => {
 
 /** Reliability: which direction's headways to count. */
 export const useReliabilityDirection = () => {
-  const { lineShort } = useDelimitatedRoute();
+  const { lineShort } = usePageRoute();
   return useOption<HeadwayDirection>(
     'both',
     [
@@ -59,7 +59,7 @@ export const useFleetScope = () => {
   const {
     line,
     query: { busRoute, crRoute },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const isCommuterRail = line === 'line-commuter-rail';
   const routeLabel = isCommuterRail
     ? (COMMUTER_RAIL_LINE_NAMES[crRoute!] ?? crRoute ?? '')

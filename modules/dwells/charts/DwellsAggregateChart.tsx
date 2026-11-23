@@ -1,10 +1,13 @@
 import { useMemo } from 'react';
 import { AggregateLineChart } from '../../../common/components/charts/AggregateLineChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
-import type { AggregateDataResponse, DayFilter } from '../../../common/types/charts';
+import type {
+  AggregateDataResponse,
+  AggregateLineProps,
+  DayFilter,
+} from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
-import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
 
 interface DwellsAggregateChartProps {
@@ -12,11 +15,11 @@ interface DwellsAggregateChartProps {
   toStation: Station;
   fromStation: Station;
   dayFilter?: DayFilter;
-  /** Defaults to the page's dates; an embed passes its own. */
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
   fill?: boolean;
   trendline?: boolean;
+  loadingRanges?: AggregateLineProps['loadingRanges'];
 }
 
 export const DwellsAggregateChart = ({
@@ -24,15 +27,12 @@ export const DwellsAggregateChart = ({
   toStation,
   fromStation,
   dayFilter = 'all',
-  startDate: startDateProp,
-  endDate: endDateProp,
+  startDate,
+  endDate,
   fill = false,
   trendline = false,
+  loadingRanges,
 }: DwellsAggregateChartProps) => {
-  const { query } = useDelimitatedRoute();
-  const startDate = startDateProp ?? query.startDate;
-  const endDate = endDateProp ?? query.endDate;
-
   const chart = useMemo(() => {
     // Filter data based on dayFilter
     let filteredData = dwells.by_date?.filter((datapoint) => datapoint.peak === 'all') || [];
@@ -63,10 +63,21 @@ export const DwellsAggregateChart = ({
         yUnit="Minutes"
         fill={fill}
         trendline={trendline}
+        loadingRanges={loadingRanges}
         embedChart={'dwells'}
       />
     );
-  }, [dwells.by_date, startDate, endDate, fromStation, toStation, dayFilter, fill, trendline]);
+  }, [
+    dwells.by_date,
+    startDate,
+    endDate,
+    fromStation,
+    toStation,
+    dayFilter,
+    fill,
+    trendline,
+    loadingRanges,
+  ]);
 
   return chart;
 };

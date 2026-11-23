@@ -9,7 +9,7 @@ import {
   getBusRouteSelectionItemHref,
   getCommuterRailRouteSelectionItemHref,
   getFerryRouteSelectionItemHref,
-  useDelimitatedRoute,
+  usePageRoute,
   useGenerateHref,
   useHandleConfigStore,
 } from '../../common/utils/router';
@@ -29,7 +29,7 @@ const ROUTE_PARAM: Record<RouteLine, 'busRoute' | 'crRoute' | 'ferryRoute'> = {
 };
 
 /** Params that only mean something on the line and route they were picked on. */
-const SCOPED_PARAMS = ['from', 'to', 'view', 'busRoute', 'crRoute', 'ferryRoute'];
+const SCOPED_PARAMS = ['from', 'to', 'busRoute', 'crRoute', 'ferryRoute'];
 
 const withoutScopedParams = (query: QueryParams): QueryParams =>
   Object.fromEntries(Object.entries(query).filter(([key]) => !SCOPED_PARAMS.includes(key)));
@@ -53,7 +53,7 @@ const tripEndFor = (line: Line, from: Station, options: Station[] | undefined) =
  * selector use, so dates and remembered stations carry over the same way.
  */
 export const useResolveCommand = () => {
-  const route = useDelimitatedRoute();
+  const route = usePageRoute();
   const generateHref = useGenerateHref();
   const handlePageConfig = useHandleConfigStore();
 

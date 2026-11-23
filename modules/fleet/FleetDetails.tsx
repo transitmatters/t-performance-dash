@@ -1,7 +1,7 @@
 'use client';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
 import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
@@ -9,7 +9,7 @@ import { useCrTripMetrics } from '../../common/api/hooks/crTripMetrics';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import { formatPercentChange, halvesDetail, statDelta } from '../../common/utils/statDelta';
-import { getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds } from '../../common/constants/lines';
 import { useFleetScope } from '../../common/hooks/usePageFilters';
 import { SelectedBusRouteScope } from '../../common/hooks/useChartBusRoute';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
@@ -27,10 +27,8 @@ const SYSTEM_WIDE_ROUTE = 'all';
 type HalvesStat = { delta: number; before: number; after: number };
 
 export function FleetDetails() {
-  const {
-    line,
-    query: { startDate, endDate, busRoute, crRoute },
-  } = useDelimitatedRoute();
+  const { line, busRoute, crRoute } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const config = getSpeedGraphConfig(dayjs(startDate), dayjs(endDate));
   const isBus = line === 'line-bus';
   const isCommuterRail = line === 'line-commuter-rail';
@@ -39,28 +37,27 @@ export function FleetDetails() {
   const { value: scope, routeLabel, allLabel } = useFleetScope();
   const byRoute = scope === 'route' && Boolean(selectedRoute);
   const route = byRoute ? selectedRoute : SYSTEM_WIDE_ROUTE;
-  const enabled = Boolean(startDate && endDate && line && config.agg);
 
   const railMetrics = useDeliveredTripMetrics(
     { start_date: startDate, end_date: endDate, agg: config.agg, line },
-    enabled && isRail
+    isRail
   );
   const busMetrics = useBusTripMetrics(
     {
       start_date: startDate,
       end_date: endDate,
       agg: config.agg,
-      route: byRoute && busRoute ? getBusRouteIds(busRoute).join(',') : route,
+      route: byRoute && busRoute ? getBusRouteDataIds(busRoute).join(',') : route,
     },
-    enabled && isBus
+    isBus
   );
   const crMetrics = useCrTripMetrics(
     { start_date: startDate, end_date: endDate, agg: config.agg, route },
-    enabled && isCommuterRail
+    isCommuterRail
   );
   const fleetMetrics = isBus ? busMetrics : isCommuterRail ? crMetrics : railMetrics;
 
-  const fleetTypes = line ? FLEET_TYPES[line] : undefined;
+  const fleetTypes = FLEET_TYPES[line];
   const metrics = getFleetModeMetrics(line);
   const scopeLabel = byRoute ? routeLabel : allLabel;
   // A bus route is named by the badge on each chart title, so the subtitle only has to say
@@ -69,10 +66,6 @@ export function FleetDetails() {
   const subtitle = (railSubtitle: string) => (isRail ? railSubtitle : scopeSubtitle);
   // Shuttle shading marks rail shutdowns; bus and CR gaps are just missing samples.
   const shuttling = isRail;
-
-  if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
-  }
 
   const stats = fleetMetrics.data
     ? getFleetStats(fleetMetrics.data, metrics.share, metrics.age, fleetTypes)

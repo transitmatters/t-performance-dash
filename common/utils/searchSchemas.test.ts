@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { parseSearch, stringifySearch } from './searchParams';
-import {
-  validateEmbedSearch,
-  validateLineSearch,
-  validateOverviewSearch,
-  validateTripSearch,
-} from './searchSchemas';
+import { validateEmbedSearch, validateLineSearch, validateTripSearch } from './searchSchemas';
 
 /** What a route sees: TanStack merges the validated params over the raw ones. */
 const resolve = (validate: (search: Record<string, unknown>) => object, searchStr: string) => {
@@ -25,8 +20,6 @@ describe('search validators', () => {
   });
 
   it('blank values outside their set, even over the raw search', () => {
-    expect(resolve(validateOverviewSearch, '?view=bogus')).toMatchObject({ view: undefined });
-    expect(resolve(validateOverviewSearch, '?view=month')).toMatchObject({ view: 'month' });
     expect(validateEmbedSearch({ theme: 'blue' }).theme).toBeUndefined();
     expect(validateEmbedSearch({ theme: 'dark' }).theme).toBe('dark');
   });

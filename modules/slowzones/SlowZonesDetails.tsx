@@ -3,10 +3,11 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
 import { Link } from '../../common/components/general/Link';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
+  useSlowzoneZoneDelays,
   useSpeedRestrictionData,
 } from '../../common/api/hooks/slowzones';
 import { Widget } from '../../common/components/widgets';
@@ -35,19 +36,16 @@ export function SlowZonesDetails() {
     DIRECTION_OPTIONS
   );
 
-  const {
-    lineShort,
-    linePath,
-    line,
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { lineShort, linePath, line } = useLinePage();
+  const { startDate, endDate } = useDateRange();
 
   const delayTotals = useSlowzoneDelayTotalData();
   const allSlow = useSlowzoneAllData();
-  const speedRestrictions = useSpeedRestrictionData({ lineId: line!, date: endDate! });
+  const zoneDelays = useSlowzoneZoneDelays(lineShort);
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line, date: endDate });
 
-  const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
-  const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
+  const startDateUTC = dayjs.utc(startDate).startOf('day');
+  const endDateUTC = dayjs.utc(endDate).startOf('day');
   const canShowSlowZonesMap =
     lineShort === 'Red' ||
     lineShort === 'Blue' ||
@@ -56,20 +54,10 @@ export function SlowZonesDetails() {
     lineShort === 'Mattapan';
   const isDesktop = useBreakpoint('lg');
 
-  if (!endDateUTC || !startDateUTC) {
-    return <p>Select a date range to load graphs.</p>;
-  }
-
   const isRapidTransit = lineShort !== 'Commuter Rail' && lineShort !== 'Bus';
   const stats =
     delayTotals.data && allSlow.data && isRapidTransit
-      ? getSlowZoneStats(
-          delayTotals.data.data,
-          Array.isArray(allSlow.data) ? allSlow.data : allSlow.data.data,
-          startDateUTC,
-          endDateUTC,
-          lineShort
-        )
+      ? getSlowZoneStats(delayTotals.data.data, allSlow.data, startDateUTC, endDateUTC, lineShort)
       : null;
 
   return (
@@ -105,18 +93,17 @@ export function SlowZonesDetails() {
               Time over baseline across the line
             </Link>
           }
-          ready={[delayTotals, line]}
+          ready={[delayTotals]}
         >
           {/* Children are built before Widget checks `ready`, so guard the data here too —
               `delayTotals.data!` alone throws on the first client render. */}
-          {isRapidTransit && line && delayTotals.data ? (
+          {isRapidTransit && delayTotals.data ? (
             <TotalSlowTimeWrapper
               data={delayTotals.data.data}
               startDateUTC={startDateUTC}
               endDateUTC={endDateUTC}
               line={line}
               lineShort={lineShort}
-              showWidgetValue={false}
               embedLine={linePath}
             />
           ) : (
@@ -125,13 +112,14 @@ export function SlowZonesDetails() {
         </Widget>
         <Widget
           title="Line map"
-          subtitle={`As of ${formatDateTodayCheck(endDate!).replace('Today', 'today')}`}
+          subtitle={`As of ${formatDateTodayCheck(endDate).replace('Today', 'today')}`}
           ready={[allSlow, speedRestrictions]}
         >
           {canShowSlowZonesMap ? (
             <SlowZonesMap
               key={lineShort}
               slowZones={allSlow.data!}
+              zoneDelays={zoneDelays.data}
               speedRestrictions={speedRestrictions.data}
               lineName={lineShort}
               direction={isDesktop ? 'horizontal' : 'vertical'}
@@ -148,7 +136,7 @@ export function SlowZonesDetails() {
         >
           {allSlow.data && (
             <SlowZonesSegmentsWrapper
-              data={Array.isArray(allSlow.data) ? allSlow.data : allSlow.data.data}
+              data={allSlow.data.data}
               lineShort={lineShort}
               linePath={linePath}
               endDateUTC={endDateUTC}

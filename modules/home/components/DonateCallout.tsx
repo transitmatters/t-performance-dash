@@ -7,7 +7,7 @@ export const DonateCallout = () => (
     className="flex flex-col gap-4 rounded-xl bg-tm-red px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between sm:px-8"
   >
     <div className="flex max-w-2xl flex-col gap-1">
-      <h2 id="donate-title" className="text-xl font-bold sm:text-2xl">
+      <h2 id="donate-title" className="text-2xl font-bold">
         Keep the data flowing
       </h2>
       <p className="text-sm text-white/85 sm:text-base">

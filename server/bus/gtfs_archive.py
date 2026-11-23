@@ -1,6 +1,7 @@
 """Download and process GTFS archives to compute scheduled headways for bus routes."""
 
 import datetime
+import functools
 import os
 import pandas as pd
 import pathlib
@@ -9,9 +10,14 @@ import urllib.request
 
 # Set GTFS_DATA_DIR to share downloaded archives between repos when running locally
 MAIN_DIR = pathlib.Path(os.environ.get("GTFS_DATA_DIR", "./data")).expanduser() / "gtfs_archives"
-MAIN_DIR.mkdir(parents=True, exist_ok=True)
 
-ARCHIVES = pd.read_csv("https://cdn.mbta.com/archive/archived_feeds.txt")
+ARCHIVES_URL = "https://cdn.mbta.com/archive/archived_feeds.txt"
+
+
+@functools.cache
+def _archives():
+    """Download the GTFS archive index on first use, so importing this module needs no network."""
+    return pd.read_csv(ARCHIVES_URL)
 
 
 def to_dateint(date):
@@ -24,7 +30,8 @@ def get_gtfs_archive(dateint: int):
     Determine which GTFS archive corresponds to the date.
     Returns that archive folder, downloading if it doesn't yet exist.
     """
-    matches = ARCHIVES[(ARCHIVES.feed_start_date <= dateint) & (ARCHIVES.feed_end_date >= dateint)]
+    archives = _archives()
+    matches = archives[(archives.feed_start_date <= dateint) & (archives.feed_end_date >= dateint)]
     archive_url = matches.iloc[0].archive_url
 
     archive_name = pathlib.Path(archive_url).stem
@@ -35,6 +42,7 @@ def get_gtfs_archive(dateint: int):
 
     # else we have to download it
     print(f"Downloading archive for {dateint}: {archive_url}")
+    MAIN_DIR.mkdir(parents=True, exist_ok=True)
     zipfile, _ = urllib.request.urlretrieve(archive_url)
     # extract to a temp dir and rename into place so other processes never see a partial archive
     tmp_dir = MAIN_DIR / f".{archive_name}.tmp-{os.getpid()}"

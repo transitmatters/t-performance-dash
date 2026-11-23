@@ -5,7 +5,7 @@ import type { Station } from '../../common/types/stations';
 import { TitleWithInfo } from '../../common/components/general/InfoTooltip';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage, useSingleDate } from '../../common/hooks/usePageParams';
 import { getLocationDetails } from '../../common/utils/stations';
 import { getStationDistance } from '../../common/utils/stationDistances';
 import { getCarTypes } from '../fleet/constants/fleetTypes';
@@ -33,10 +33,8 @@ export const TravelTimesByVehicleWrapper = ({
   fromStation,
   vehicleNoun,
 }: TravelTimesByVehicleWrapperProps) => {
-  const {
-    line,
-    query: { date },
-  } = useDelimitatedRoute();
+  const { line } = useLinePage();
+  const { date } = useSingleDate();
   const carTypes = getCarTypes(line);
   const data = useMemo(
     () =>
@@ -48,7 +46,7 @@ export const TravelTimesByVehicleWrapper = ({
     [query.data, carTypes, fromStation.station, toStation.station]
   );
 
-  const dataReady = !query.isError && query.data && date;
+  const dataReady = !query.isError && query.data;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   if (data.length < 1) return <NoDataNotice shutdownScope="trip" metric="traveltimes" />;
 

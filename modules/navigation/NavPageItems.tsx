@@ -5,9 +5,11 @@ import { PAGES } from '../../common/constants/pages';
 import { SidebarMenuSubButton, SidebarMenuSubItem } from '../../common/components/ui/sidebar';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { lineColorVar } from '../../common/styles/general';
+import { useDateStore } from '../../common/state/dateStore';
 import { readableOn } from '../../common/utils/general';
 import {
-  useDelimitatedRoute,
+  getNavTripPage,
+  usePageRoute,
   useGenerateHref,
   useHandleConfigStore,
 } from '../../common/utils/router';
@@ -22,9 +24,10 @@ interface NavPageItemsProps {
  * rendered as disabled rather than hidden, so the metrics stay in the same place per line.
  */
 export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
-  const { line, colorKey, page, query, linePath } = useDelimitatedRoute();
+  const { line, colorKey, page, query, linePath } = usePageRoute();
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
+  const tripPage = useDateStore((state) => state.tripPage);
   const needsDarkText = readableOn(LINE_COLORS[colorKey ?? 'default']) === 'dark';
 
   return (
@@ -48,6 +51,8 @@ export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
           );
         }
 
+        const target = tab.key === PAGES.singleTrips ? getNavTripPage(page, tripPage) : tab;
+
         return (
           <SidebarMenuSubItem key={tab.key}>
             <SidebarMenuSubButton
@@ -64,10 +69,10 @@ export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
               )}
             >
               <Link
-                href={generateHref(tab, page, query, linePath)}
+                href={generateHref(target, page, query, linePath)}
                 aria-current={selected ? 'page' : undefined}
                 onClick={() => {
-                  handlePageConfig(tab);
+                  handlePageConfig(target);
                   close?.();
                 }}
               >

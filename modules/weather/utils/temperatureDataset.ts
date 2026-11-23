@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import type { ScriptableContext } from 'chart.js';
 import type { WeatherHourly } from '../../../common/types/weather';
 import { TWO_HOURS } from '../../../common/constants/time';
+import { colorVisionPalette } from '../../../common/utils/colorVision';
 
 export type DailyTempPoint = { x: string; y: number };
 
@@ -15,12 +16,21 @@ export type DailyTemperatureSeries = {
  * Cold to hot in °F. Fixed, so a temperature reads as the same color in every date range, and
  * each color holds 3:1 against both the light and the dark card, so it doesn't vary with theme.
  */
-export const TEMPERATURE_COLOR_STOPS: [number, string][] = [
-  [20, '#3b82f6'],
-  [50, '#16a34a'],
-  [75, '#ea580c'],
-  [95, '#dc2626'],
-];
+export const TEMPERATURE_COLOR_STOPS: [number, string][] = colorVisionPalette(
+  [
+    [20, '#3b82f6'],
+    [50, '#16a34a'],
+    [75, '#ea580c'],
+    [95, '#dc2626'],
+  ],
+  // Colorblind mode runs blue through gray to amber and crimson, with no green to mistake for red
+  [
+    [20, '#3b82f6'],
+    [50, '#8b8f99'],
+    [75, '#c98400'],
+    [95, '#c22a3f'],
+  ]
+);
 
 // The opacity of the daily low–high band under the mean line
 export const TEMPERATURE_BAND_OPACITY = 0.18;

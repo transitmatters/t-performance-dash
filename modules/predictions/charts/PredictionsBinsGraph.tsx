@@ -6,7 +6,7 @@ import { enUS } from 'date-fns/locale';
 
 import dayjs from 'dayjs';
 import { max, min } from 'date-fns';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { COLORS, LINE_COLORS_LEVELS } from '../../../common/constants/colors';
 import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
@@ -30,7 +30,7 @@ export const PredictionsBinsGraph = ({
   endDate,
   showTitle = false,
 }: PredictionsBinsGraphProps) => {
-  const { line, linePath } = useDelimitatedRoute();
+  const { line, linePath } = useLinePage();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.week);
@@ -66,14 +66,14 @@ export const PredictionsBinsGraph = ({
             datasets: [
               {
                 label: `0-3min predictions`,
-                borderColor: LINE_COLORS_LEVELS[line ?? 'default'][0],
+                borderColor: LINE_COLORS_LEVELS[line][0],
                 pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,
                 pointHoverRadius: 6,
                 spanGaps: false,
-                pointHoverBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][0],
-                pointBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][0],
+                pointHoverBackgroundColor: LINE_COLORS_LEVELS[line][0],
+                pointBackgroundColor: LINE_COLORS_LEVELS[line][0],
                 data: bin0to3.map((datapoint) =>
                   datapoint
                     ? (
@@ -85,14 +85,14 @@ export const PredictionsBinsGraph = ({
               },
               {
                 label: `3-6min predictions`,
-                borderColor: LINE_COLORS_LEVELS[line ?? 'default'][1],
+                borderColor: LINE_COLORS_LEVELS[line][1],
                 pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,
                 pointHoverRadius: 6,
                 spanGaps: false,
-                pointHoverBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][1],
-                pointBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][1],
+                pointHoverBackgroundColor: LINE_COLORS_LEVELS[line][1],
+                pointBackgroundColor: LINE_COLORS_LEVELS[line][1],
                 data: bin3to6.map((datapoint) =>
                   datapoint
                     ? (
@@ -104,14 +104,14 @@ export const PredictionsBinsGraph = ({
               },
               {
                 label: `6-12min predictions`,
-                borderColor: LINE_COLORS_LEVELS[line ?? 'default'][2],
+                borderColor: LINE_COLORS_LEVELS[line][2],
                 pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,
                 pointHoverRadius: 6,
                 spanGaps: false,
-                pointHoverBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][2],
-                pointBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][2],
+                pointHoverBackgroundColor: LINE_COLORS_LEVELS[line][2],
+                pointBackgroundColor: LINE_COLORS_LEVELS[line][2],
                 data: bin6to12.map((datapoint) =>
                   datapoint
                     ? (
@@ -123,14 +123,14 @@ export const PredictionsBinsGraph = ({
               },
               {
                 label: `12-30min predictions`,
-                borderColor: LINE_COLORS_LEVELS[line ?? 'default'][3],
+                borderColor: LINE_COLORS_LEVELS[line][3],
                 pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,
                 pointHoverRadius: 6,
                 spanGaps: false,
-                pointHoverBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][3],
-                pointBackgroundColor: LINE_COLORS_LEVELS[line ?? 'default'][3],
+                pointHoverBackgroundColor: LINE_COLORS_LEVELS[line][3],
+                pointBackgroundColor: LINE_COLORS_LEVELS[line][3],
                 data: bin12to30.map((datapoint) =>
                   datapoint
                     ? (

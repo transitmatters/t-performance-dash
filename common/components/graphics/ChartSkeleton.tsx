@@ -1,9 +1,8 @@
 import { Skeleton } from '../ui/skeleton';
 
 /**
- * Loading state for a chart card. A bare spinner said only "something is happening"; a shape that
- * matches the chart about to arrive says what is coming and holds its space, so the card does not
- * resize under the reader when data lands. Matches the redesigned pages, which already load this way.
+ * Loading state for a chart card. A shape that matches the chart about to arrive says what is coming
+ * and holds its space, so the card does not resize under the reader when data lands.
  */
 export const ChartSkeleton = ({ isMobile = false }: { isMobile?: boolean }) => {
   // Static, uneven heights: a plot silhouette rather than a row of identical bars.

@@ -1,26 +1,18 @@
 import type { Line } from '../../common/types/lines';
 import type { MetricId } from './types';
 
-/**
- * Headway goals in minutes. Commuter Rail has none: the MBTA hasn't committed to one for the whole
- * system, only for "the inner core" and "key corridors with higher ridership" in Full T Ahead.
- */
-export const FREQUENCY_GOALS = {
-  subway: 10,
-  frequentBus: 15,
-  bus: 15,
-} as const;
-
 /** What a row measures against; each measure explains itself per mode. */
 export type RowMode = 'subway' | 'commuterRail' | 'frequentBus' | 'bus' | 'ferry';
 
-const WEEKDAY_WEIGHTING = 'Weekdays count five times as much as Saturday or Sunday.';
 const SCHEDULED_SERVICE =
   'Scheduled trips per day (the 12-week median), compared with the most scheduled in any 12-week stretch at least 3 years ago.';
 const BUS_DELIVERED =
   'Also shows the share of scheduled trips delivered over the last 4 complete weeks; a trip with no bus location data counts as missed.';
-const frequencyDefinition = (vehicle: string, minutes: number) =>
-  `Share of scheduled service hours, first trip to last, with a ${vehicle} at least every ${minutes} minutes. ${WEEKDAY_WEIGHTING}`;
+const BUS_DROPPED =
+  "Share of scheduled trips with no bus location data at all over the last 4 complete weeks, the same estimate as the bus leaderboard's dropped trips. A bus whose tracker is off counts as dropped, so this can run a little high.";
+const RIDERSHIP_DEFINITION =
+  'Median riders a day over the latest 4 weeks of counts, against the same weeks a year earlier. Each mode publishes on its own schedule, so the weeks compared differ by mode.';
+const NOT_SCORED = "Not scored: the T doesn't control ridership directly.";
 const reliabilityDefinition = (where: string) =>
   `Share of headways (the wait between one vehicle and the next) within 75–125% of the scheduled headway, at ${where}, over the last 4 complete weeks.`;
 const DELAYS_DEFINITION =
@@ -31,7 +23,7 @@ const DELAYS_DEFINITION =
 export interface MetricMethod {
   id: MetricId;
   label: string;
-  /** One line for every mode, in the info pill on the column header. */
+  /** For every mode, in the info pill on the column header. */
   summary: string;
   /** Shown in a cell's detail; a mode with none isn't measured on this. */
   definitions: Partial<Record<RowMode, string>>;
@@ -40,26 +32,28 @@ export interface MetricMethod {
 export const METRICS: Record<MetricId, MetricMethod> = {
   service: {
     id: 'service',
-    label: 'Service',
+    label: 'Scheduled service',
     summary:
-      "Trips per day compared with the line's best stretch at least 3 years ago, and how much of the schedule actually ran.",
+      "Trips per day compared with the line's busiest stretch at least 3 years ago, and how much of the schedule actually ran.",
     definitions: {
       subway:
-        'Trips run per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago. Also shows the share of scheduled service hours delivered over the last 4 complete weeks.',
+        'On the subway this counts trips that actually ran per day (the 12-week median), compared with the busiest 4-week stretch at least 3 years ago. Also shows the share of scheduled service hours delivered over the last 4 complete weeks.',
       commuterRail: SCHEDULED_SERVICE,
       frequentBus: `${SCHEDULED_SERVICE} ${BUS_DELIVERED}`,
       bus: `${SCHEDULED_SERVICE} ${BUS_DELIVERED}`,
       ferry: SCHEDULED_SERVICE,
     },
   },
-  frequency: {
-    id: 'frequency',
-    label: 'Frequency',
-    summary: `Share of scheduled service hours with a train or bus at least every ${FREQUENCY_GOALS.subway} minutes on the subway and ${FREQUENCY_GOALS.bus} on buses. Commuter Rail isn't judged on this: the MBTA hasn't set a frequency goal for it.`,
+  dropped: {
+    id: 'dropped',
+    label: 'Trips dropped',
+    summary:
+      "Share of scheduled trips that didn't run, over the last 4 complete weeks. Buses count trips no bus was seen on; Commuter Rail counts the MBTA's cancellations. Subway is coming soon.",
     definitions: {
-      subway: frequencyDefinition('train', FREQUENCY_GOALS.subway),
-      frequentBus: frequencyDefinition('bus', FREQUENCY_GOALS.frequentBus),
-      bus: `${frequencyDefinition('bus', FREQUENCY_GOALS.bus)} Each route counts by its riders.`,
+      commuterRail:
+        "Share of scheduled trains the MBTA reports as cancelled over the last 4 complete weeks of its published counts. The MBTA publishes these in batches, so they're often weeks behind.",
+      frequentBus: BUS_DROPPED,
+      bus: BUS_DROPPED,
     },
   },
   reliability: {
@@ -95,9 +89,26 @@ export const METRICS: Record<MetricId, MetricMethod> = {
         'The worse of two measures. Speed: median weekly average speed over 12 weeks, end to end including stops, compared with the fastest 4-week stretch at least 3 years ago. Slow zones: average extra time per day that slow zones add to a trip, over the last 12 weeks.',
     },
   },
+
+  ridership: {
+    id: 'ridership',
+    label: 'Ridership',
+    summary:
+      "Change in riders from the same weeks a year earlier. Not scored: the T doesn't control ridership directly, though better service tends to bring riders back.",
+    definitions: {
+      subway: `${RIDERSHIP_DEFINITION} ${NOT_SCORED}`,
+      commuterRail: `${RIDERSHIP_DEFINITION} ${NOT_SCORED}`,
+      frequentBus: `${RIDERSHIP_DEFINITION} Routes add up. ${NOT_SCORED}`,
+      bus: `${RIDERSHIP_DEFINITION} ${NOT_SCORED}`,
+      ferry: `${RIDERSHIP_DEFINITION} ${NOT_SCORED}`,
+    },
+  },
 };
 
-export const METRIC_ORDER: MetricId[] = ['service', 'frequency', 'reliability', 'delays', 'speed'];
+/** The measures each line is scored on, in column order. */
+export const SCORED_METRICS: MetricId[] = ['service', 'dropped', 'reliability', 'delays', 'speed'];
+/** Shown after the scored measures, set apart, off the route line and left out of the verdict. */
+export const UNSCORED_METRICS: MetricId[] = ['ridership'];
 
 export interface RowConfig {
   id: string;
@@ -181,3 +192,8 @@ export const definitionFor = (metric: MetricId, rowId: string) => {
 
 /** A trend smaller than this reads as flat. */
 export const NEGLIGIBLE_TREND = 0.02;
+/**
+ * The same for a change in points from a year earlier (`trendBasis: 'yearAgo'`), like dropped trips,
+ * whose cut-offs are a few points apart.
+ */
+export const NEGLIGIBLE_POINTS = 0.002;

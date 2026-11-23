@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 import type { ReactNode } from 'react';
-import { useDelimitatedRoute } from '../utils/router';
+import { useSearch } from '@tanstack/react-router';
 
 /**
  * Whether the charts inside show the bus route picked in the header. Most bus pages do, so it
@@ -23,6 +23,6 @@ export const SelectedBusRouteScope = ({
  */
 export const useChartBusRoute = (): string | undefined => {
   const shown = useContext(SelectedBusRouteContext);
-  const { query } = useDelimitatedRoute();
-  return shown ? query.busRoute : undefined;
+  const busRoute = useSearch({ strict: false, select: (search) => search.busRoute });
+  return shown ? busRoute : undefined;
 };

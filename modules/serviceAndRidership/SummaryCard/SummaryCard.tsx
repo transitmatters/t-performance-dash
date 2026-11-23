@@ -3,7 +3,7 @@ import type { ModeKind, SummaryData } from '../types';
 
 import { Widget } from '../../../common/components/widgets/Widget';
 import { ServiceRidershipChart } from '../LineCard/ServiceRidershipChart';
-import { useServiceAndRidershipContext } from '../useServiceAndRidershipContext';
+import { useDateRange } from '../../../common/hooks/usePageParams';
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
 import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
 
@@ -16,12 +16,12 @@ type Selection = 'total' | ModeKind;
 
 const DEFAULT_COLOR = '#165c96';
 
-const SelectionLabels: Partial<Record<Selection, string>> = {
-  total: 'All Lines',
-  'rapid-transit': 'Rapid Transit',
-  'regional-rail': 'Regional Rail',
-  bus: 'Bus',
-};
+const SELECTION_OPTIONS: [Selection, string][] = [
+  ['total', 'All Lines'],
+  ['rapid-transit', 'Rapid Transit'],
+  ['regional-rail', 'Regional Rail'],
+  ['bus', 'Bus'],
+];
 
 const colorsBySelection: Partial<Record<Selection, string>> = {
   total: DEFAULT_COLOR,
@@ -33,7 +33,7 @@ const colorsBySelection: Partial<Record<Selection, string>> = {
 export const SummaryCard = (props: Props) => {
   const { summaryData, modeData } = props;
   const [selection, setSelection] = useState<Selection>('total');
-  const { startDate, endDate } = useServiceAndRidershipContext();
+  const { startDate, endDate } = useDateRange();
 
   const { serviceHistory, ridershipHistory } = useMemo(() => {
     if (selection === 'total') {
@@ -53,9 +53,9 @@ export const SummaryCard = (props: Props) => {
     <Widget title="Summary" className="pb-16">
       <div className="pt-2 pb-1">
         <ButtonGroup
-          options={Object.entries(SelectionLabels).map(([key, value]) => [key, value])}
+          options={SELECTION_OPTIONS}
           pressFunction={setSelection}
-          selectedIndex={Object.keys(SelectionLabels).findIndex((key) => key === selection)}
+          selectedIndex={SELECTION_OPTIONS.findIndex(([key]) => key === selection)}
         />
       </div>
       <ServiceRidershipChart

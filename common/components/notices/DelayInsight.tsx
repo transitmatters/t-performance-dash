@@ -84,7 +84,7 @@ export const DelayInsight = ({
       <span className="flex size-4.5 shrink-0 items-center justify-center rounded-full bg-(--line-color) text-[11px] font-bold text-stone-900">
         !
       </span>
-      <span className="text-[12.5px] leading-snug text-stone-700">
+      <span className="text-sm leading-snug text-stone-700">
         {subject ? `${subject} had ` : 'There were '}
         <b className="font-semibold">
           {insight.count} {trips}

@@ -1,9 +1,19 @@
 import dayjs from 'dayjs';
+import { LINE_COLORS } from '../../../common/constants/colors';
+import type { LineColorKey } from '../../../common/types/lines';
 import { HeroChart } from './HeroChart';
 import { Placeholder } from './Placeholder';
 
 // The strip across the top: one segment per mode, in the T's own colors.
-const STRIPE = ['#da291c', '#ed8b00', '#003da5', '#00843d', '#80276c', '#ffc72c', '#008eaa'];
+const STRIPE: LineColorKey[] = [
+  'line-red',
+  'line-orange',
+  'line-blue',
+  'line-green',
+  'line-commuter-rail',
+  'line-bus',
+  'line-ferry',
+];
 
 interface HomeHeroProps {
   lede?: { lead: string; rest?: string };
@@ -18,8 +28,8 @@ interface HomeHeroProps {
 export const HomeHero = ({ lede, generatedAt, failed }: HomeHeroProps) => (
   <header className="flex flex-col gap-6">
     <div className="flex h-1.5 overflow-hidden rounded-full" aria-hidden="true">
-      {STRIPE.map((color) => (
-        <span key={color} className="flex-1" style={{ backgroundColor: color }} />
+      {STRIPE.map((line) => (
+        <span key={line} className="flex-1" style={{ backgroundColor: LINE_COLORS[line] }} />
       ))}
     </div>
     <div className="flex flex-col gap-1">
@@ -45,10 +55,10 @@ export const HomeHero = ({ lede, generatedAt, failed }: HomeHeroProps) => (
           Data Dashboard
         </span>
       </h1>
-      <p className="mt-3 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+      <p className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
         How is the T doing?
       </p>
-      <p className="mt-2 max-w-[48ch] text-lg leading-snug tracking-tight text-pretty sm:text-2xl">
+      <p className="mt-2 max-w-[48ch] text-lg leading-snug tracking-tight text-pretty sm:text-xl">
         {lede ? (
           <span className="tm-fade-in">
             {lede.lead}

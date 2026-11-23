@@ -7,8 +7,14 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 import { useMemo } from 'react';
 import type { Station } from '../types/stations';
-import type { DayDelayTotals, Direction, SlowZone, SlowZoneResponse } from '../types/dataPoints';
-import { DATE_FORMAT, TODAY_MIDNIGHT } from '../constants/dates';
+import type {
+  DayDelayTotals,
+  Direction,
+  SlowZone,
+  SlowZoneAllSlowResponse,
+  SlowZoneResponse,
+} from '../types/dataPoints';
+import { DATE_FORMAT } from '../constants/dates';
 import type { LineShort } from '../types/lines';
 import { getParentStationForStopId } from './stations';
 
@@ -102,16 +108,25 @@ export const getRoutes = (direction: Direction, data: SlowZone[], isMobile: bool
 };
 
 /**
- * Whether a slow zone is still active on `endDateUTC`. Zone `end` is the last slow day, inclusive.
- * Our latest slow zone data is always a day behind, so a window ending today counts zones active
- * yesterday. Callers should already have dropped zones that start after `endDateUTC`.
+ * The last service day in all_slow.json, as UTC midnight. The slow zones job runs each morning
+ * (about 10:05 UTC) and covers service through the day before, which `updated_on` timestamps. So
+ * from midnight Eastern until that run, the data ends two days back.
  */
-export const isSlowZoneActiveAsOf = (zone: { end: string }, endDateUTC: dayjs.Dayjs) => {
-  const zoneEnd = dayjs.utc(zone.end);
-  if (endDateUTC.isSame(TODAY_MIDNIGHT, 'day')) {
-    return zoneEnd.isSameOrAfter(endDateUTC.subtract(1, 'day'));
-  }
-  return zoneEnd.isSameOrAfter(endDateUTC);
+export const getSlowZoneDataEndDate = (updatedOn: string) =>
+  dayjs.utc(updatedOn).startOf('day').subtract(1, 'day');
+
+/**
+ * Whether a slow zone is still active on `endDateUTC`. Zone `end` is the last slow day, inclusive.
+ * An end date past the data's last day (see getSlowZoneDataEndDate) counts the zones active on
+ * that day. Callers should already have dropped zones that start after `endDateUTC`.
+ */
+export const isSlowZoneActiveAsOf = (
+  zone: { end: string },
+  endDateUTC: dayjs.Dayjs,
+  dataEndDateUTC: dayjs.Dayjs
+) => {
+  const asOf = endDateUTC.isAfter(dataEndDateUTC) ? dataEndDateUTC : endDateUTC;
+  return dayjs.utc(zone.end).isSameOrAfter(asOf);
 };
 
 /** The single most time-costly segment among slow zones active at the end date, for headlining. */
@@ -119,11 +134,12 @@ export const getWorstSlowZoneSegment = (
   data: SlowZoneResponse[],
   startDateUTC: dayjs.Dayjs,
   endDateUTC: dayjs.Dayjs,
+  dataEndDateUTC: dayjs.Dayjs,
   lineShort: LineShort
 ): SlowZone | null => {
   // Not `latest_delay !== null`: that's the delay on a zone's last slow day, set for ended zones too.
   const active = filterAllSlow(data, startDateUTC, endDateUTC, lineShort).filter((sz) =>
-    isSlowZoneActiveAsOf(sz, endDateUTC)
+    isSlowZoneActiveAsOf(sz, endDateUTC, dataEndDateUTC)
   );
   if (!active.length) return null;
   const worst = active.reduce((max, sz) => (sz.delay > max.delay ? sz : max), active[0]);
@@ -177,22 +193,6 @@ export const useFilteredDelayTotals = (
       return date.isSameOrAfter(startDateUTC) && date.isSameOrBefore(endDateUTC);
     });
   }, [data, startDateUTC, endDateUTC]);
-};
-
-export const useSlowZoneQuantityDelta = (
-  allSlow: SlowZone[],
-  endDateUTC: dayjs.Dayjs,
-  startDateUTC: dayjs.Dayjs
-) => {
-  return useMemo(() => {
-    const start =
-      allSlow.filter((sz) => {
-        return dayjs.utc(sz.start).isSameOrBefore(startDateUTC);
-      }).length ?? 0;
-    const end = allSlow.filter((sz) => isSlowZoneActiveAsOf(sz, endDateUTC)).length ?? 0;
-
-    return { endValue: end, zonesDelta: end - start };
-  }, [allSlow, startDateUTC, endDateUTC]);
 };
 
 export const getTimeUnitSlowzones = (startDate: dayjs.Dayjs, endDate: dayjs.Dayjs): TimeUnit => {
@@ -268,23 +268,24 @@ export interface TripSlowZoneSummary {
 
 /**
  * Slow time on a trip for each day of a window, summing each active zone's median delay. Pass the
- * same start and end date for a single day. Returns null when no slow zone on the trip overlaps
- * the window.
+ * same start and end date for a single day. Dates past the data's last day (see
+ * getSlowZoneDataEndDate) are pulled back to it. Returns null when no slow zone on the trip
+ * overlaps the window.
  */
 export const getTripSlowZoneSummary = (
-  data: SlowZoneResponse[],
+  allSlow: SlowZoneAllSlowResponse,
   from: Station,
   to: Station,
   lineShort: LineShort,
   startDate: string,
   endDate: string
 ): TripSlowZoneSummary | null => {
-  const zones = data.map((zone) => ({
+  const zones = allSlow.data.map((zone) => ({
     ...zone,
     start: zone.start.slice(0, 10),
     end: zone.end.slice(0, 10),
   }));
-  const lastDataDate = zones.reduce((max, zone) => (zone.end > max ? zone.end : max), '');
+  const lastDataDate = getSlowZoneDataEndDate(allSlow.updated_on).format(DATE_FORMAT);
   const end = endDate > lastDataDate ? lastDataDate : endDate;
   const start = startDate > end ? end : startDate;
 
@@ -318,4 +319,69 @@ export const getTripSlowZoneSummary = (
     peakTotal,
     peakDate,
   };
+};
+
+export interface TripSlowZoneRun {
+  /** First day of the run. */
+  start: string;
+  /** Last day of the run, inclusive. */
+  end: string;
+  /** Seconds the run's zones added to the trip, summing each zone's median delay. */
+  total: number;
+  zones: { title: string; delay: number }[];
+}
+
+/**
+ * The stretches of days from `startDate` to `endDate` when the same slow zones were active on a
+ * trip, longest delay first within each. Days with none are left out.
+ */
+export const getTripSlowZoneRuns = (
+  data: SlowZoneResponse[],
+  from: Station,
+  to: Station,
+  lineShort: LineShort,
+  startDate: string,
+  endDate: string
+): TripSlowZoneRun[] => {
+  const zones = data
+    .filter((zone) => isZoneOnTrip(zone, from, to, lineShort))
+    .map((zone) => ({
+      start: zone.start.slice(0, 10),
+      end: zone.end.slice(0, 10),
+      delay: zone.delay,
+      title: getStationPairName(
+        getParentStationForStopId(zone.fr_id, lineShort),
+        getParentStationForStopId(zone.to_id, lineShort),
+        true
+      ),
+    }))
+    .filter((zone) => zone.start <= endDate && zone.end >= startDate);
+  if (!zones.length) return [];
+
+  const dayAfter = (date: string) => dayjs(date).add(1, 'day').format(DATE_FORMAT);
+  const afterEnd = dayAfter(endDate);
+  // Each day the set of active zones can change: the window's start, a zone's first day, or the
+  // day after its last.
+  const changes = [
+    ...new Set([startDate, ...zones.flatMap((zone) => [zone.start, dayAfter(zone.end)])]),
+  ]
+    .filter((date) => date >= startDate && date < afterEnd)
+    .sort();
+
+  return changes.flatMap((start, i) => {
+    const active = zones
+      .filter((zone) => zone.start <= start && zone.end >= start)
+      .sort((a, b) => b.delay - a.delay);
+    const total = active.reduce((sum, zone) => sum + zone.delay, 0);
+    if (total <= 0) return [];
+    const next = changes[i + 1] ?? afterEnd;
+    return [
+      {
+        start,
+        end: dayjs(next).subtract(1, 'day').format(DATE_FORMAT),
+        total,
+        zones: active.map(({ title, delay }) => ({ title, delay })),
+      },
+    ];
+  });
 };

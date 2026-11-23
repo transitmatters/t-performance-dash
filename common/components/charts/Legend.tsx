@@ -1,4 +1,7 @@
-import { CHART_COLORS } from '../../constants/colors';
+import { useThemeStore } from '../../state/themeStore';
+import { SEVERITY_COLORS } from '../../utils/chartTheme';
+import type { SeverityTone } from '../../utils/chartTheme';
+import { cn } from '../../utils/cn';
 
 interface LegendProps {
   showUnderRatio?: boolean;
@@ -22,14 +25,23 @@ export const LegendSingleDay = ({ showUnderRatio, usingTmBenchmark }: LegendProp
   );
 };
 
-const SEVERITY_LEGEND = [
-  { label: 'On time', color: CHART_COLORS.GREEN },
-  { label: '25%+ off', color: CHART_COLORS.YELLOW },
-  { label: '50%+ off', color: CHART_COLORS.RED },
-  { label: '100%+ off', color: CHART_COLORS.PURPLE },
+const SEVERITY_LEGEND: { label: string; tone: SeverityTone }[] = [
+  { label: 'On time', tone: 'onTime' },
+  { label: '25%+ off', tone: 'off25' },
+  { label: '50%+ off', tone: 'off50' },
+  { label: '100%+ off', tone: 'off100' },
 ];
 
+// The CSS twin of severityPointStyle, so the legend shows the shapes colorblind mode draws.
+const SEVERITY_SWATCH_SHAPE: Record<SeverityTone, string> = {
+  onTime: 'rounded-full',
+  off25: '[clip-path:polygon(50%_0,100%_100%,0_100%)]',
+  off50: 'rotate-45 scale-90',
+  off100: '',
+};
+
 const LegendSingle = ({ usingTmBenchmark = false }: LegendProps) => {
+  const colorblind = useThemeStore((state) => state.colorblind);
   return (
     <>
       <p className="flex flex-row items-center gap-x-1 italic">
@@ -37,11 +49,14 @@ const LegendSingle = ({ usingTmBenchmark = false }: LegendProps) => {
         <span className="inline-block h-0 w-3 border-t-2 border-muted-foreground align-middle" />
         {usingTmBenchmark ? 'TransitMatters' : 'MBTA'} benchmark:
       </p>
-      {SEVERITY_LEGEND.map(({ label, color }) => (
+      {SEVERITY_LEGEND.map(({ label, tone }) => (
         <p key={label} className="flex flex-row items-center gap-x-1.5">
           <span
-            className="inline-block h-2.5 w-2.5 rounded-full ring-1 ring-foreground/25"
-            style={{ backgroundColor: color }}
+            className={cn(
+              'inline-block h-2.5 w-2.5',
+              colorblind ? SEVERITY_SWATCH_SHAPE[tone] : 'rounded-full ring-1 ring-foreground/25'
+            )}
+            style={{ backgroundColor: SEVERITY_COLORS[tone] }}
           />
           {label}
         </p>

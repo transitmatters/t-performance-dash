@@ -14,8 +14,6 @@ interface ServiceGraphWrapperProps {
   fill?: boolean;
 }
 
-// The average/peak KPIs now live in the page's stat-card row (see ServiceDetails), so the chart
-// no longer carries an in-plot carousel value — just the graph.
 export const ServiceGraphWrapper = ({
   data,
   predictedData,

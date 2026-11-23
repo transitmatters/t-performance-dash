@@ -17,7 +17,10 @@ export interface HeroStation {
   from: Station;
   /** The terminus the trains are heading for, which sets the direction. */
   to: Station;
+  /** `from`'s stop IDs in the direction of `to`, which the headways come from. */
   stopIds: string[];
+  /** `to`'s stop IDs in the same direction, for the trip page link. */
+  toStopIds: string[];
 }
 
 const station = (
@@ -30,11 +33,18 @@ const station = (
 ): HeroStation | undefined => {
   const from = getParentStationForStopId(fromStopId, lineShort);
   const to = getParentStationForStopId(toStopId, lineShort);
-  const { fromStopIds } = stopIdsForStations(from, to);
-  return from && to && fromStopIds
-    ? { line, lineShort, path, label, from, to, stopIds: fromStopIds }
+  const { fromStopIds, toStopIds } = stopIdsForStations(from, to);
+  return from && to && fromStopIds?.length && toStopIds?.length
+    ? { line, lineShort, path, label, from, to, stopIds: fromStopIds, toStopIds }
     : undefined;
 };
+
+/**
+ * The line's trip page on the hero's platform, direction and day. Trip pages take stop IDs, not
+ * station IDs, and open their default pair for anything else.
+ */
+export const exploreHref = ({ path, stopIds, toStopIds }: HeroStation, date: string) =>
+  `/${path}/trips/single/?from=${stopIds[0]}&to=${toStopIds[0]}&date=${date}`;
 
 /**
  * Northbound (eastbound on Green and Blue) at each line's downtown station. Red's southbound

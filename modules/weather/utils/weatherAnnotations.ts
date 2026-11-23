@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCloudBolt, faCloudRain, faSmog, faSnowflake } from '@fortawesome/free-solid-svg-icons';
 import type { WeatherCondition, WeatherHourly } from '../../../common/types/weather';
+import { colorVisionPalette } from '../../../common/utils/colorVision';
 import { hexWithAlpha } from '../../../common/utils/general';
 import type {
   HoverCardRow,
@@ -22,12 +23,16 @@ export interface WeatherRun {
   condition: SignificantCondition;
 }
 
-export const WEATHER_BASE_COLORS: Record<SignificantCondition, string> = {
-  rain: '#60a5fa',
-  snow: '#94a3b8',
-  fog: '#9ca3af',
-  storm: '#7c3aed',
-};
+export const WEATHER_BASE_COLORS: Record<SignificantCondition, string> = colorVisionPalette(
+  {
+    rain: '#60a5fa',
+    snow: '#94a3b8',
+    fog: '#9ca3af',
+    storm: '#7c3aed',
+  },
+  // Snow goes icy blue so it parts from fog's gray, and storm goes magenta so it parts from rain
+  { rain: '#3b7fd9', snow: '#8ad8f2', fog: '#a8a29e', storm: '#c0489a' }
+);
 
 export const WEATHER_ICONS: Record<SignificantCondition, IconDefinition> = {
   rain: faCloudRain,
@@ -43,18 +48,11 @@ export const weatherTitleIcon = (condition: SignificantCondition) => ({
 });
 
 // Shading on the plot stays faint so the data reads through it
-const WEATHER_SHADING: Record<SignificantCondition, string> = {
-  rain: hexWithAlpha(WEATHER_BASE_COLORS.rain, 0.35),
-  snow: hexWithAlpha(WEATHER_BASE_COLORS.snow, 0.45),
-  fog: hexWithAlpha(WEATHER_BASE_COLORS.fog, 0.3),
-  storm: hexWithAlpha(WEATHER_BASE_COLORS.storm, 0.4),
-};
-
-export const WEATHER_LABELS: Record<SignificantCondition, string> = {
-  rain: 'Rain',
-  snow: 'Snow',
-  fog: 'Fog',
-  storm: 'Storm',
+const WEATHER_SHADING_ALPHA: Record<SignificantCondition, number> = {
+  rain: 0.35,
+  snow: 0.45,
+  fog: 0.3,
+  storm: 0.4,
 };
 
 // Higher-severity conditions win when coalescing a day's worth of hours down
@@ -226,7 +224,10 @@ export const getWeatherAnnotations = (
     type: 'box',
     xMin: start,
     xMax: end,
-    backgroundColor: WEATHER_SHADING[run.condition],
+    backgroundColor: hexWithAlpha(
+      WEATHER_BASE_COLORS[run.condition],
+      WEATHER_SHADING_ALPHA[run.condition]
+    ),
     borderColor: 'transparent',
     borderWidth: 0,
   }));

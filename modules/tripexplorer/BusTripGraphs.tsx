@@ -1,7 +1,5 @@
-import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useTripPage } from '../../common/hooks/usePageParams';
 import { newestChunkSubtitle } from '../../common/utils/dateChunks';
-import type { Station } from '../../common/types/stations';
-import type { AggregateAPIOptions, SingleDayAPIOptions } from '../../common/types/api';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import {
@@ -10,8 +8,6 @@ import {
   useChartToggle,
 } from '../../common/hooks/useChartToggle';
 import { getLocationDetails } from '../../common/utils/stations';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import type { Line } from '../../common/types/lines';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { TravelTimesAggregateWrapper } from '../traveltimes/TravelTimesAggregateWrapper';
 import { TravelTimesSingleWrapper } from '../traveltimes/TravelTimesSingleWrapper';
@@ -23,34 +19,13 @@ import { HeadwaysSingleWrapper } from '../headways/HeadwaysSingleWrapper';
 import { HeadwaysAggregateWrapper } from '../headways/HeadwaysAggregateWrapper';
 import { DelayInsight } from '../../common/components/notices/DelayInsight';
 import { BenchmarkFieldKeys, MetricFieldKeys } from '../../common/types/charts';
+import { useTripMetrics } from './useTripMetrics';
 
-interface BusTripGraphsProps {
-  fromStation: Station;
-  toStation: Station;
-  parameters: AggregateAPIOptions | SingleDayAPIOptions; // TODO
-  aggregate: boolean;
-  enabled: boolean;
-  line: Line | undefined;
-}
-
-export const BusTripGraphs = ({
-  fromStation,
-  toStation,
-  parameters,
-  aggregate,
-  enabled,
-  line,
-}: BusTripGraphsProps) => {
-  const { traveltimes, headways } = useTripExplorerQueries(
-    'bus',
-    parameters,
-    // @ts-expect-error The overloading doesn't seem to handle this const
-    aggregate,
-    enabled
-  );
+export const BusTripGraphs = () => {
+  const { line, fromStation, toStation, busRoute, dates } = useTripPage();
+  const { single, multi } = useTripMetrics('bus');
   const location = getLocationDetails(fromStation, toStation);
-  const { query } = useDelimitatedRoute();
-  const busRouteLabel = query.busRoute ? `Route ${query.busRoute}` : undefined;
+  const busRouteLabel = busRoute ? `Route ${busRoute}` : undefined;
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -69,7 +44,7 @@ export const BusTripGraphs = ({
 
   return (
     <>
-      {aggregate ? (
+      {dates.kind === 'range' ? (
         <>
           <WidgetDiv>
             <WidgetTitle
@@ -80,7 +55,7 @@ export const BusTripGraphs = ({
               action={travelTimesDayFilterControl}
             />
             <TravelTimesAggregateWrapper
-              query={traveltimes}
+              query={multi.traveltimes}
               fromStation={fromStation}
               toStation={toStation}
               dayFilter={travelTimesDayFilter}
@@ -95,7 +70,7 @@ export const BusTripGraphs = ({
               action={headwaysDayFilterControl}
             />
             <HeadwaysAggregateWrapper
-              query={headways}
+              query={multi.headways}
               toStation={toStation}
               fromStation={fromStation}
               dayFilter={headwaysDayFilter}
@@ -104,14 +79,16 @@ export const BusTripGraphs = ({
           <WidgetDiv className="flex flex-col justify-center">
             <WidgetTitle
               title="Travel times by hour"
-              subtitle={newestChunkSubtitle(traveltimes.chunks)}
+              subtitle={newestChunkSubtitle(multi.traveltimes.chunks)}
               location={location}
               line={line}
               both
               action={peakTimeControl}
             />
             <AggregateChartWrapper
-              query={traveltimes}
+              startDate={dates.startDate}
+              endDate={dates.endDate}
+              query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               type={'traveltimes'}
@@ -122,12 +99,12 @@ export const BusTripGraphs = ({
         </>
       ) : (
         <>
-          {traveltimes.data && (
+          {single.traveltimes.data && (
             <DelayInsight
-              data={traveltimes.data}
+              data={single.traveltimes.data}
               metricField={MetricFieldKeys.travelTimeSec}
               benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-              date={query.date}
+              date={dates.date}
               subject={busRouteLabel}
               line={line}
             />
@@ -135,7 +112,7 @@ export const BusTripGraphs = ({
           <WidgetDiv>
             <WidgetTitle title="Travel times" location={location} line={line} both />
             <TravelTimesSingleWrapper
-              query={traveltimes}
+              query={single.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
             />
@@ -148,7 +125,7 @@ export const BusTripGraphs = ({
               line={line}
             />
             <HeadwaysSingleWrapper
-              query={headways}
+              query={single.headways}
               toStation={toStation}
               fromStation={fromStation}
             />
@@ -162,7 +139,7 @@ export const BusTripGraphs = ({
               both
             />
             <TravelTimesByVehicleWrapper
-              query={traveltimes}
+              query={single.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
               vehicleNoun="Bus"

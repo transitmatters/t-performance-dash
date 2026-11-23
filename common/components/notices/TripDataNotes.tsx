@@ -1,5 +1,5 @@
 import { POKEY_SCHLEPPIE_AWARDS } from '../../constants/pokeySchleppie';
-import { useDelimitatedRoute } from '../../utils/router';
+import { useLinePage } from '../../hooks/usePageParams';
 import { Link } from '../general/Link';
 import { DataNotes } from './DataNotes';
 import { BetaDataNotice } from './BetaDataNotice';
@@ -49,8 +49,7 @@ const HeadwayNotes = ({ isBus }: { isBus: boolean }) => (
  * TripExplorer).
  */
 export const TripDataNotes = () => {
-  const { line, linePath } = useDelimitatedRoute();
-  const isBus = line === 'line-bus' || linePath === 'bus';
+  const isBus = useLinePage().line === 'line-bus';
 
   return (
     <DataNotes>

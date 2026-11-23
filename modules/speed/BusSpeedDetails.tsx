@@ -1,5 +1,6 @@
 'use client';
 
+import { useSearch } from '@tanstack/react-router';
 import dayjs from 'dayjs';
 import { useCallback, useMemo } from 'react';
 import { useBusTripMetrics } from '../../common/api/hooks/busTripMetrics';
@@ -8,10 +9,11 @@ import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
-import { getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds } from '../../common/constants/lines';
 import { DAY_FILTER_OPTIONS, useChartToggle } from '../../common/hooks/useChartToggle';
 import { halvesDetail, statDelta } from '../../common/utils/statDelta';
-import { useDelimitatedRoute, useSetQueryParam } from '../../common/utils/router';
+import { useSetQueryParam } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { TIME_BANDS } from '../busspeedmap/constants';
 import type { DayType, TimeBand } from '../busspeedmap/types';
 import { BusSpeedGraph } from './charts/BusSpeedGraph';
@@ -36,9 +38,9 @@ const mph = (value: number) => `${value.toFixed(1)} mph`;
 const bandLabel = (band: TimeBand) => TIME_BANDS.find(({ key }) => key === band)?.label ?? band;
 
 export function BusSpeedDetails() {
-  const {
-    query: { startDate, endDate, busRoute, speedBands },
-  } = useDelimitatedRoute();
+  const { busRoute } = useLinePage();
+  const { startDate, endDate } = useDateRange();
+  const speedBands = useSearch({ from: '/$line/speed', select: (search) => search.speedBands });
   const setQueryParam = useSetQueryParam();
   // Same day/week/month thresholds as rail. Bus has no weekly/monthly tables, so the API
   // rolls daily rows up server-side when agg isn't daily.
@@ -61,7 +63,6 @@ export function BusSpeedDetails() {
     [setQueryParam]
   );
 
-  const enabled = Boolean(startDate && endDate && busRoute);
   // One request draws every line: each row carries its own per-band breakdown, so toggling a line
   // never fetches again.
   const speeds = useBusTripMetrics(
@@ -69,23 +70,19 @@ export function BusSpeedDetails() {
       start_date: startDate,
       end_date: endDate,
       // Grouped labels (e.g. 114/116/117) are summed server-side across their route_ids.
-      route: busRoute ? getBusRouteIds(busRoute).join(',') : undefined,
+      route: busRoute ? getBusRouteDataIds(busRoute).join(',') : undefined,
       agg: config.agg,
       // Only sent when narrowing: "All days" is the unfiltered figure.
       ...(dayType && { day_type: dayType }),
     },
-    enabled
+    Boolean(busRoute)
   );
 
   const subtitle = dayType ? DAY_FILTER_OPTIONS.find(([key]) => key === dayFilter)?.[1] : undefined;
-  const hasData = speeds.data?.some((row) => row.miles_covered);
-  const stats = hasData ? getSpeedStats(speeds.data!, undefined) : undefined;
-  const extremes = hasData ? bandExtremes(speeds.data!) : undefined;
-  const startsBeforeData = Boolean(startDate && startDate < BUS_SPEED_DATA_START);
-
-  if (!startDate || !endDate) {
-    return <p>Select a date range to load graphs.</p>;
-  }
+  const rows = speeds.data?.some((row) => row.miles_covered) ? speeds.data : undefined;
+  const stats = rows && getSpeedStats(rows, undefined);
+  const extremes = rows && bandExtremes(rows);
+  const startsBeforeData = startDate < BUS_SPEED_DATA_START;
 
   return (
     <>
@@ -123,10 +120,10 @@ export function BusSpeedDetails() {
           action={<div className="flex flex-wrap justify-end gap-2">{dayFilterControl}</div>}
           ready={[speeds]}
         >
-          {hasData ? (
+          {rows ? (
             <>
               <BusSpeedGraph
-                data={speeds.data!}
+                data={rows}
                 config={config}
                 startDate={startsBeforeData ? BUS_SPEED_DATA_START : startDate}
                 endDate={endDate}

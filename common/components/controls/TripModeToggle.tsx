@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { Link } from '../general/Link';
 import { TRIP_PAGES } from '../../constants/pages';
 import { FOCUS_RING_ON_SURFACE, lineColorVar, textOnLineColor } from '../../styles/general';
-import { useDelimitatedRoute, useGenerateHref, useHandleConfigStore } from '../../utils/router';
+import { usePageRoute, useGenerateHref, useHandleConfigStore } from '../../utils/router';
 
 /** Labelled for where they sit — beside the date control, which is what they change. */
 const MODE_LABELS: Record<string, string> = {
@@ -16,7 +16,7 @@ const MODE_LABELS: Record<string, string> = {
  * range across the hop.
  */
 export const TripModeToggle = () => {
-  const { line, colorKey, page, query, linePath } = useDelimitatedRoute();
+  const { line, colorKey, page, query, linePath } = usePageRoute();
   const generateHref = useGenerateHref();
   const handlePageConfig = useHandleConfigStore();
 

@@ -1,9 +1,8 @@
 import classNames from 'classnames';
 import { useMemo } from 'react';
-import { LINE_COLORS } from '../../../common/constants/colors';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { hexWithAlpha } from '../../../common/utils/general';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { TIME_BANDS } from '../../busspeedmap/constants';
 import type { TimeBand } from '../../busspeedmap/types';
 import { BAND_COLORS } from '../utils/busSpeedBands';
@@ -21,8 +20,7 @@ export const allDayFill = (color: string, backdrop: boolean) =>
  */
 export const useBandColors = (): Record<TimeBand, string> => {
   const isDark = useThemeStore((state) => state.theme) === 'dark';
-  const { colorKey } = useDelimitatedRoute();
-  const allDay = LINE_COLORS[colorKey ?? 'line-bus'];
+  const allDay = useLinePage().color;
   return useMemo(
     () =>
       Object.fromEntries(

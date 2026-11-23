@@ -1,11 +1,12 @@
 import dayjs from 'dayjs';
 
+import { useSearch } from '@tanstack/react-router';
 import { EmbedFrame } from '../../common/components/embed/EmbedFrame';
 import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHolder';
 import { PRETTY_DATE_FORMAT } from '../../common/constants/dates';
 import type { DelaysEmbedChart } from '../../common/constants/staticRoutes';
-import { normalizeDateParams } from '../../common/utils/dateParams';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
+import { canonicalDateRange } from '../../common/utils/dateParams';
 import { DelayBreakdownGraph } from './charts/DelayBreakdownGraph';
 import { DelayCauseBars } from './charts/DelayCauseBars';
 import { DelayTotalBars } from './charts/DelayTotalBars';
@@ -15,15 +16,15 @@ import { useFocusedReason } from './useFocusedReason';
 
 /** One Delays page chart on its own, for iframing into articles. */
 export const DelaysChartEmbed = ({ chart }: { chart: DelaysEmbedChart }) => {
-  const route = useDelimitatedRoute();
-  const { tab, query } = route;
+  const { line, linePath, tab } = useLinePage();
+  const query = useSearch({ from: '/embed/$line/delays/$chart' });
   // Fills in missing or out-of-range dates without rewriting the URL, as the slow zone embed does.
-  const dates = {
-    ...query,
-    ...normalizeDateParams({ section: 'line', tab, page: 'delays', search: query }),
-  };
-  const startDate = dates.startDate as string;
-  const endDate = dates.endDate as string;
+  const { startDate, endDate } = canonicalDateRange({
+    section: 'line',
+    tab,
+    page: 'delays',
+    search: query,
+  });
   const { alertDelays, agg, period, isActual, delayData, series, rangeData, rangeQueries } =
     useDelays(startDate, endDate);
   const { focus } = useFocusedReason();
@@ -68,9 +69,9 @@ export const DelaysChartEmbed = ({ chart }: { chart: DelaysEmbedChart }) => {
 
   return (
     <EmbedFrame
-      title={getDelaysEmbedTitle(chart, route)}
+      title={getDelaysEmbedTitle(chart, { line, query })}
       subtitle={`${detail} · ${when}`}
-      href={getDelaysPageUrl(chart, { ...route, query: dates })}
+      href={getDelaysPageUrl(chart, { linePath, query: { ...query, startDate, endDate } })}
     >
       {renderChart()}
     </EmbedFrame>

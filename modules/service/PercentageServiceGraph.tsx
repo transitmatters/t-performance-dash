@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import type { ReactNode } from 'react';
 import { Line } from '@chartjs-components';
 
@@ -7,8 +7,8 @@ import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 
 import { round } from '@lodash-utils';
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
+import { useLinePage } from '../../common/hooks/usePageParams';
+import { CHART_COLORS, COLORS } from '../../common/constants/colors';
 import type { DeliveredTripMetrics } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { hexWithAlpha } from '../../common/utils/general';
@@ -49,7 +49,7 @@ export const PercentageServiceGraph = ({
   fill = false,
   embed,
 }: PercentageServiceGraphProps) => {
-  const { line, colorKey, linePath } = useDelimitatedRoute();
+  const { line, color: lineColor, linePath, lineShort } = useLinePage();
   const { tooltipFormat, unit, callbacks } = config;
 
   const isMobile = !useBreakpoint('md');
@@ -58,200 +58,178 @@ export const PercentageServiceGraph = ({
 
   const events = useMajorEvents(line, startDate, endDate);
 
-  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(lineShort, startDate, endDate);
 
-  const chart = useMemo(() => {
-    const labels = data.map((point) => point.date);
-    const lineColor = LINE_COLORS[colorKey ?? 'default'];
-    const shuttlingBlocks = hideGapsExplainedByEvents(
-      explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
-        startDate,
-        endDate,
-        agg: config.agg,
-      }),
-      events
-    );
-    const compareToScheduled = comparison === 'Scheduled';
-    return (
-      <ChartStack className={fill ? 'h-full' : undefined}>
-        <ChartDiv isMobile={isMobile} fill={fill}>
-          <Line
-            id={`service-percentage-${linePath}`}
-            height={isMobile ? 200 : 240}
-            ref={ref}
-            redraw={true}
-            data={{
-              labels,
-              datasets: [
-                {
-                  label: `% of ${comparison}`,
-                  borderColor: lineColor,
-                  pointRadius: 0,
-                  pointHoverRadius: 6,
-                  pointBorderWidth: 0,
-                  stepped: true,
-                  fill: true,
-                  pointHoverBackgroundColor: lineColor,
-                  backgroundColor: hexWithAlpha(lineColor, 0.8),
-                  data: compareToScheduled ? calculatedData.scheduled : calculatedData.peak,
-                },
-                {
-                  // This null dataset produces the entry in the legend for the baseline annotation.
-                  label: `100%`,
-                  backgroundColor: CHART_COLORS.ANNOTATIONS,
-                  data: null,
-                },
-              ],
-            }}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              layout: {
-                padding: {
-                  top: showTitle ? 25 : 0,
-                },
+  const labels = data.map((point) => point.date);
+  const shuttlingBlocks = hideGapsExplainedByEvents(
+    explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
+      startDate,
+      endDate,
+      agg: config.agg,
+    }),
+    events
+  );
+  const compareToScheduled = comparison === 'Scheduled';
+  const chart = (
+    <ChartStack className={fill ? 'h-full' : undefined}>
+      <ChartDiv isMobile={isMobile} fill={fill}>
+        <Line
+          id={`service-percentage-${linePath}`}
+          height={isMobile ? 200 : 240}
+          ref={ref}
+          redraw={true}
+          data={{
+            labels,
+            datasets: [
+              {
+                label: `% of ${comparison}`,
+                borderColor: lineColor,
+                pointRadius: 0,
+                pointHoverRadius: 6,
+                pointBorderWidth: 0,
+                stepped: true,
+                fill: true,
+                pointHoverBackgroundColor: lineColor,
+                backgroundColor: hexWithAlpha(lineColor, 0.8),
+                data: compareToScheduled ? calculatedData.scheduled : calculatedData.peak,
               },
-              interaction: {
-                intersect: false,
+              {
+                // This null dataset produces the entry in the legend for the baseline annotation.
+                label: `100%`,
+                backgroundColor: CHART_COLORS.ANNOTATIONS,
+                data: null,
               },
-              plugins: {
-                tooltip: {
-                  mode: 'index',
-                  position: 'nearest',
-                  callbacks: {
-                    ...callbacks,
-                    hoverCard: (items) => {
-                      const percent = items.find((item) => item.datasetIndex === 0)?.parsed.y;
-                      if (!percent) return null;
-                      return {
-                        hero: { value: `${round(percent, 1)}%`, color: lineColor },
-                        meter: {
-                          fraction: percent / 100,
-                          label: `of ${comparison.toLowerCase()}`,
-                          color: lineColor,
-                        },
-                      };
-                    },
+            ],
+          }}
+          options={{
+            responsive: true,
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                top: showTitle ? 25 : 0,
+              },
+            },
+            interaction: {
+              intersect: false,
+            },
+            plugins: {
+              tooltip: {
+                mode: 'index',
+                position: 'nearest',
+                callbacks: {
+                  ...callbacks,
+                  hoverCard: (items) => {
+                    const percent = items.find((item) => item.datasetIndex === 0)?.parsed.y;
+                    if (!percent) return null;
+                    return {
+                      hero: { value: `${round(percent, 1)}%`, color: lineColor },
+                      meter: {
+                        fraction: percent / 100,
+                        label: `of ${comparison.toLowerCase()}`,
+                        color: lineColor,
+                      },
+                    };
                   },
                 },
-                legend: {
-                  position: 'bottom',
-                  labels: {
-                    boxWidth: 15,
+              },
+              legend: {
+                position: 'bottom',
+                labels: {
+                  boxWidth: 15,
+                },
+              },
+              title: {
+                // empty title to set font and leave room for drawTitle fn
+                display: showTitle,
+                text: '',
+              },
+              annotation: {
+                // Add your annotations here
+                annotations: [
+                  {
+                    type: 'line',
+                    yMin: 100,
+                    yMax: 100,
+                    borderColor: CHART_COLORS.ANNOTATIONS,
+                    // corresponds to null dataset index.
+                    display: (ctx) => ctx.chart.isDatasetVisible(1),
+                    borderWidth: 2,
                   },
+                  ...shuttlingBlocks,
+                  ...getNoDataSinceLatestAnnotation(labels),
+                  ...getMajorEventAnnotations(events),
+                  ...otherShutdowns.annotations,
+                ],
+              },
+            },
+            scales: {
+              y: {
+                min: 0,
+                display: true,
+                ticks: {
+                  color: COLORS.design.subtitleGrey,
+                  callback: (value) => `${value}%`,
                 },
                 title: {
-                  // empty title to set font and leave room for drawTitle fn
-                  display: showTitle,
-                  text: '',
-                },
-                annotation: {
-                  // Add your annotations here
-                  annotations: [
-                    {
-                      type: 'line',
-                      yMin: 100,
-                      yMax: 100,
-                      borderColor: CHART_COLORS.ANNOTATIONS,
-                      // corresponds to null dataset index.
-                      display: (ctx) => ctx.chart.isDatasetVisible(1),
-                      borderWidth: 2,
-                    },
-                    ...shuttlingBlocks,
-                    ...getNoDataSinceLatestAnnotation(labels),
-                    ...getMajorEventAnnotations(events),
-                    ...otherShutdowns.annotations,
-                  ],
+                  display: true,
+                  text: 'Percentage',
+                  color: COLORS.design.subtitleGrey,
                 },
               },
-              scales: {
-                y: {
-                  min: 0,
-                  display: true,
-                  ticks: {
-                    color: COLORS.design.subtitleGrey,
-                    callback: (value) => `${value}%`,
-                  },
-                  title: {
-                    display: true,
-                    text: 'Percentage',
-                    color: COLORS.design.subtitleGrey,
+              x: {
+                min: startDate,
+                max: endDate,
+                type: 'time',
+                time: {
+                  unit: unit,
+                  tooltipFormat: tooltipFormat,
+                  displayFormats: {
+                    month: 'MMM',
                   },
                 },
-                x: {
-                  min: startDate,
-                  max: endDate,
-                  type: 'time',
-                  time: {
-                    unit: unit,
-                    tooltipFormat: tooltipFormat,
-                    displayFormats: {
-                      month: 'MMM',
-                    },
+                ticks: {
+                  color: COLORS.design.subtitleGrey,
+                },
+                adapters: {
+                  date: {
+                    locale: enUS,
                   },
-                  ticks: {
-                    color: COLORS.design.subtitleGrey,
-                  },
-                  adapters: {
-                    date: {
-                      locale: enUS,
-                    },
-                  },
-                  display: true,
-                  title: {
-                    display: false,
-                    text: ``,
-                  },
+                },
+                display: true,
+                title: {
+                  display: false,
+                  text: ``,
                 },
               },
-            }}
-            plugins={[
-              {
-                id: 'customTitle',
-                afterDraw: (chart) => {
-                  if (!data) {
-                    // No data is present
-                    const { ctx } = chart;
-                    const { width } = chart;
-                    const { height } = chart;
-                    chart.clear();
+            },
+          }}
+          plugins={[
+            {
+              id: 'customTitle',
+              afterDraw: (chart) => {
+                if (!data) {
+                  // No data is present
+                  const { ctx } = chart;
+                  const { width } = chart;
+                  const { height } = chart;
+                  chart.clear();
 
-                    ctx.save();
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.font = "16px normal 'Helvetica Nueue'";
-                    ctx.fillText('No data to display', width / 2, height / 2);
-                    ctx.restore();
-                  }
-                  if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
-                },
+                  ctx.save();
+                  ctx.textAlign = 'center';
+                  ctx.textBaseline = 'middle';
+                  ctx.font = "16px normal 'Helvetica Nueue'";
+                  ctx.fillText('No data to display', width / 2, height / 2);
+                  ctx.restore();
+                }
+                if (showTitle) drawSimpleTitle(`Daily round trips`, chart);
               },
-              Annotation,
-            ]}
-          />
-        </ChartDiv>
-      </ChartStack>
-    );
-  }, [
-    data,
-    shutdowns,
-    colorKey,
-    comparison,
-    isMobile,
-    linePath,
-    calculatedData.scheduled,
-    calculatedData.peak,
-    showTitle,
-    fill,
-    callbacks,
-    startDate,
-    endDate,
-    events,
-    otherShutdowns,
-    unit,
-    tooltipFormat,
-  ]);
-  // Outside the memo: a new embed element each render would otherwise rebuild the chart.
+            },
+            Annotation,
+          ]}
+        />
+      </ChartDiv>
+    </ChartStack>
+  );
   return (
     <>
       {chart}

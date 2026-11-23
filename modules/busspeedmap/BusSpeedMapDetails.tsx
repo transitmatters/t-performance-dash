@@ -1,6 +1,5 @@
 'use client';
 
-import dayjs from 'dayjs';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useBusDwellsUrl, useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
 import { BusSpeedDataUnavailableError } from '../../common/api/busSpeedSegments';
@@ -10,57 +9,59 @@ import { ChartPlaceHolder } from '../../common/components/graphics/ChartPlaceHol
 import { ErrorNotice } from '../../common/components/notices/ErrorNotice';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { WidgetDiv } from '../../common/components/widgets/WidgetDiv';
-import { getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds } from '../../common/constants/lines';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { Skeleton } from '../../common/components/ui/skeleton';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage, useSingleDate } from '../../common/hooks/usePageParams';
+import { BusRouteDelayCard } from './BusRouteDelayCard';
 import { BusSpeedDataNotes } from './BusSpeedDataNotes';
-import { ALL_ROUTES, DAY_TYPES, DIRECTIONS, TIME_BANDS } from './constants';
+import { ALL_ROUTES, TIME_BANDS } from './constants';
 import { InProgressBadge } from './InProgressBadge';
 import { BusSpeedLegend } from './map/BusSpeedLegend';
 import { BusSpeedMapViewLazy as BusSpeedMapView } from './map/BusSpeedMapViewLazy';
+import { RetiredRouteNotice, serviceEndBefore } from './RetiredRouteNotice';
 import {
   useDayType,
   useDirection,
+  useDirectionAndDays,
   useRouteId,
   useShownPeriod,
   useTimeBand,
 } from './useBusSpeedParams';
 
 export function BusSpeedMapDetails() {
-  const {
-    query: { date, busRoute },
-  } = useDelimitatedRoute();
+  const { busRoute } = useLinePage();
+  const { date } = useSingleDate();
   const { shown: period } = useShownPeriod();
   const { value: dayType } = useDayType();
   const { value: timeBand } = useTimeBand();
   const { value: direction } = useDirection();
-  const { value: routeId } = useRouteId(busRoute ? getBusRouteIds(busRoute) : []);
+  const { value: routeId } = useRouteId(busRoute ? getBusRouteDataIds(busRoute) : []);
 
-  const segments = useBusSpeedSegmentsUrl({ date, period, timeBand }, Boolean(date));
+  const segments = useBusSpeedSegmentsUrl({ date, period, timeBand });
   const { data: pmtilesUrl } = segments;
   // Null for an archive from before dwell had a layer of its own. Read as running speeds until
   // that's known, as every archive from here on is.
-  const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand }, Boolean(date));
+  const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand });
 
   const band = TIME_BANDS.find(({ key }) => key === timeBand);
-  // A single day is wholly one day type, so it's named instead.
-  const days =
-    period === 'daily'
-      ? date && dayjs(date).format('dddd')
-      : DAY_TYPES.find(({ key }) => key === dayType)?.label;
+  const directionAndDays = useDirectionAndDays();
   const summary = [
-    DIRECTIONS.find(({ key }) => key === direction)?.label,
-    days,
+    directionAndDays,
     band && (band.key === 'all_day' ? band.label : `${band.label}, ${band.hours}`),
   ]
     .filter(Boolean)
     .join(' · ');
+  // Each route of a combined route like SL4/SL5, unless the header narrows it to one. The ids the
+  // data is filed under, so a retired route like 60/65-legacy finds its trips.
+  const routeIds =
+    routeId === ALL_ROUTES ? (busRoute ? getBusRouteDataIds(busRoute) : []) : [routeId];
 
   const mapBox = 'h-[28rem] w-full overflow-hidden rounded-lg md:h-[36rem]';
 
   const renderBody = () => {
-    if (!date) return <p>Select a date to load the bus speed map.</p>;
+    const serviceEnd = serviceEndBefore(busRoute, date, period);
+    if (serviceEnd) return <RetiredRouteNotice serviceEnd={serviceEnd} period={period} />;
     if (segments.isLoading) return <Skeleton className={mapBox} />;
     // A date with no published file isn't a failure, it's just outside coverage.
     if (segments.error instanceof BusSpeedDataUnavailableError)
@@ -106,6 +107,15 @@ export function BusSpeedMapDetails() {
           />
           <div className="flex flex-col gap-3">{renderBody()}</div>
         </WidgetDiv>
+        {!serviceEndBefore(busRoute, date, period) && (
+          <BusRouteDelayCard
+            date={date}
+            period={period}
+            dayType={dayType}
+            direction={direction}
+            routeIds={routeIds}
+          />
+        )}
         <BusSpeedDataNotes />
       </ChartPageDiv>
     </>

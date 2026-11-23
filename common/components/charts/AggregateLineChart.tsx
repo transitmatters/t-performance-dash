@@ -21,13 +21,14 @@ import {
 } from '../../../modules/weather/utils/temperatureDataset';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { getMajorEventAnnotations, useMajorEvents } from '../../utils/majorEvents';
-import { useDelimitatedRoute } from '../../utils/router';
+import { useLinePage } from '../../hooks/usePageParams';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartActions } from './ChartActions';
 import { ChartDiv } from './ChartDiv';
 import { ContextTrack } from './contextTrack/ContextTrack';
 import { useChartLayers } from './contextTrack/useChartLayers';
+import { loadingAnnotations } from './loadingAnnotations';
 
 const xAxisLabel = (startDate: string, endDate: string, hourly: boolean) => {
   if (hourly) {
@@ -90,23 +91,28 @@ export const AggregateLineChart = ({
   fill = false,
   embedChart,
   trendline = false,
+  slowZonesTrip,
+  loadingRanges,
 }: AggregateLineProps) => {
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const hourly = timeUnit === 'hour';
+  const { line, lineShort } = useLinePage();
   const {
     layers,
     annotations: weatherBlocks,
     temperatureEnabled: tempEnabled,
     geometryPlugin,
     weatherAt,
+    slowZonesAt,
   } = useChartLayers({
     startDate,
     endDate,
     granularity: 'daily',
     enabled: !hourly && !fill,
     // Charts by time of day span many dates at every point, so there's no day to mark.
-    withOtherShutdowns: !hourly && !byTime,
+    otherShutdownsBesides: hourly || byTime ? undefined : lineShort,
+    slowZonesTrip: byTime ? undefined : slowZonesTrip,
   });
   const { weather } = layers;
   const temperatureSeries = useMemo(
@@ -117,7 +123,6 @@ export const AggregateLineChart = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
-  const { line } = useDelimitatedRoute();
   // Charts by time of day span many dates at every point, so there's no day to mark.
   const lineEvents = useMajorEvents(line, startDate, endDate);
   const events = hourly || byTime ? [] : lineEvents;
@@ -285,6 +290,9 @@ export const AggregateLineChart = ({
             },
             responsive: true,
             maintainAspectRatio: false,
+            // Each chunk that arrives rebuilds the chart; replaying the grow-in every time made it
+            // jump.
+            animation: loadingRanges ? false : undefined,
             // Make the tooltip display all 3 datapoints for each x axis entry.
             interaction: {
               mode: 'index',
@@ -292,7 +300,11 @@ export const AggregateLineChart = ({
             },
             plugins: {
               annotation: {
-                annotations: [...weatherBlocks, ...getMajorEventAnnotations(events)],
+                annotations: [
+                  ...weatherBlocks,
+                  ...getMajorEventAnnotations(events),
+                  ...(hourly ? [] : loadingAnnotations(loadingRanges ?? [], chartTheme)),
+                ],
               },
               legend: {
                 display: false,
@@ -322,10 +334,9 @@ export const AggregateLineChart = ({
                           )
                         : undefined;
                     const hoveredDay = medianItem?.parsed.x;
-                    const weatherRow =
-                      hoveredDay === undefined || hoveredDay === null
-                        ? undefined
-                        : weatherAt(hoveredDay);
+                    const hasDay = hoveredDay !== undefined && hoveredDay !== null;
+                    const weatherRow = hasDay ? weatherAt(hoveredDay) : undefined;
+                    const slowZonesRow = hasDay ? slowZonesAt(hoveredDay) : undefined;
                     const extraRows =
                       hoverRows && medianItem ? hoverRows(data[medianItem.dataIndex]) : [];
 
@@ -345,6 +356,7 @@ export const AggregateLineChart = ({
                           ? [{ label: '25th percentile', value: format(p25), color: fillColor }]
                           : []),
                         ...extraRows,
+                        ...(slowZonesRow ? [slowZonesRow] : []),
                         ...(trend
                           ? [{ label: 'Trend', value: format(trend), color: CHART_COLORS.RED }]
                           : []),

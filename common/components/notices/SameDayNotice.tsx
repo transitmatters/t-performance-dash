@@ -1,14 +1,10 @@
-import { useDelimitatedRoute } from '../../utils/router';
+import { usePageDates } from '../../hooks/usePageParams';
+import { asDateRange } from '../../utils/pageParams';
 import { TODAY_STRING } from '../../constants/dates';
 import { Notice } from './Notice';
 
 export const SameDayNotice = () => {
-  const {
-    query: { date, endDate },
-  } = useDelimitatedRoute();
-  const isToday = date === TODAY_STRING || endDate === TODAY_STRING;
-
-  if (!isToday) {
+  if (asDateRange(usePageDates()).endDate !== TODAY_STRING) {
     return null;
   }
 

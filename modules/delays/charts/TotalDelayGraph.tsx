@@ -6,8 +6,8 @@ import { enUS } from 'date-fns/locale';
 import dayjs from 'dayjs';
 import { max, min } from 'date-fns';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { useLinePage } from '../../../common/hooks/usePageParams';
+import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
 import { ChartStack } from '../../../common/components/charts/ChartStack';
@@ -39,14 +39,12 @@ export const TotalDelayGraph = ({
   showTitle = false,
   agg = 'weekly',
 }: TotalDelayGraphProps) => {
-  const { line, colorKey, linePath } = useDelimitatedRoute();
+  const { line, color: lineColor, linePath, lineShort } = useLinePage();
   const ref = useRef(null);
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
   const events = useMajorEvents(line, startDate, endDate);
-  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
-
-  const lineColor = LINE_COLORS[colorKey ?? 'default'];
+  const otherShutdowns = useOtherLineShutdowns(lineShort, startDate, endDate);
 
   const remainingBlocks = getRemainingBlockAnnotation(
     dayjs(max(data.map((delay) => dayjs(delay.date).toDate()))).format(DATE_FORMAT) ??

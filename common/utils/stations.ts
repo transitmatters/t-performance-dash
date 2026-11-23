@@ -82,7 +82,7 @@ export const optionsStation = (
       return undefined;
     }
 
-    return stations[line][busRoute].stations.sort((a, b) => a.order - b.order);
+    return stations[line][busRoute].stations.toSorted((a, b) => a.order - b.order);
   }
 
   if (isCommuterRailLine(line)) {
@@ -90,12 +90,11 @@ export const optionsStation = (
       return undefined;
     }
 
-    return stations[line][crRoute].stations.sort((a, b) => a.order - b.order);
+    return stations[line][crRoute].stations.toSorted((a, b) => a.order - b.order);
   }
 
-  // Fixed: Access rtStations directly for rapid transit lines
   if (isRapidTransitLine(line)) {
-    return rtStations[line].stations.sort((a, b) => a.order - b.order);
+    return rtStations[line].stations.toSorted((a, b) => a.order - b.order);
   }
 
   if (isFerryLine(line)) {
@@ -103,7 +102,7 @@ export const optionsStation = (
       return undefined;
     }
 
-    return ferryStations[ferryRoute].stations.sort((a, b) => a.order - b.order);
+    return ferryStations[ferryRoute].stations.toSorted((a, b) => a.order - b.order);
   }
 
   return undefined;
@@ -217,7 +216,15 @@ export const getStationForInvalidFromSelection = (
   return getTrunkStationFor(from, stations);
 };
 
-export const stopIdsForStations = (from: Station | undefined, to: Station | undefined) => {
+export function stopIdsForStations(
+  from: Station,
+  to: Station
+): { fromStopIds: string[]; toStopIds: string[] };
+export function stopIdsForStations(
+  from: Station | undefined,
+  to: Station | undefined
+): { fromStopIds: string[] | undefined; toStopIds: string[] | undefined };
+export function stopIdsForStations(from: Station | undefined, to: Station | undefined) {
   if (to === undefined || from === undefined) {
     return { fromStopIds: undefined, toStopIds: undefined };
   }
@@ -228,7 +235,7 @@ export const stopIdsForStations = (from: Station | undefined, to: Station | unde
     fromStopIds: from.stops[directionKey],
     toStopIds: to.stops[directionKey],
   };
-};
+}
 
 /**
  * Names the direction the way the trip's own line does. Station order runs the way of the stops
@@ -313,6 +320,33 @@ export const findNextValidStation = (
       s.order > station.order &&
       s.station !== station.station &&
       s.stops[station.stops['1']?.length ? '1' : '0']?.length > 0
+  );
+
+/**
+ * The closest station that a trip runs to from `station` (`end: 'from'`) or from it to `station`
+ * (`end: 'to'`). Stations sharing its order are skipped, since order is what sets the direction.
+ */
+export const findNearestConnectingStation = (
+  station: Station,
+  stations: Station[] | undefined,
+  end: 'from' | 'to'
+): Station | undefined =>
+  stations
+    ?.filter(
+      (s) =>
+        s.order !== station.order && (end === 'from' ? connects(station, s) : connects(s, station))
+    )
+    .sort((a, b) => Math.abs(a.order - station.order) - Math.abs(b.order - station.order))[0];
+
+/**
+ * The GTFS stop_ids our station list has for a bus route, e.g. '29005' from '747-1-29005'. They
+ * outlast the route itself, which drops out of MBTA's current feed once it's retired.
+ */
+export const getBusRouteStopIds = (busRoute: string): string[] =>
+  (stations.Bus[busRoute as BusRoute]?.stations ?? []).flatMap(({ stops }) =>
+    [...(stops['0'] ?? []), ...(stops['1'] ?? [])].map(
+      (stopId) => stopId.split('-').pop() ?? stopId
+    )
   );
 
 export const getMinMaxDatesForRoute = (

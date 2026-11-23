@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { parseSearch, stringifySearch } from './searchParams';
 
 describe('parseSearch', () => {
-  it('keeps values as strings, like Next router.query', () => {
+  it('keeps values as strings', () => {
     expect(parseSearch('?busRoute=1&date=2024-01-01')).toEqual({
       busRoute: '1',
       date: '2024-01-01',

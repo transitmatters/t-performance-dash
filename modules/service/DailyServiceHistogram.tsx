@@ -2,7 +2,7 @@ import { useMemo, useRef } from 'react';
 
 import type { DayKind, ScheduledService } from '../../common/types/dataPoints';
 import { ByHourHistogram } from '../../common/components/charts/ByHourHistogram';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { prettyDate } from '../../common/utils/date';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { ChartActions } from '../../common/components/charts/ChartActions';
@@ -23,7 +23,7 @@ const DAY_KIND_NAMES: Record<DayKind, string> = {
 
 export const DailyServiceHistogram = (props: Props) => {
   const { scheduledService, dayKind, fill = false } = props;
-  const { color } = useDelimitatedRoute();
+  const { color } = useLinePage();
   const ref = useRef(null);
 
   const compared = useMemo(() => {

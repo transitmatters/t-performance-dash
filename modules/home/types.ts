@@ -1,12 +1,16 @@
+import type { DelayCause } from '../../common/types/delays';
 import type { Line } from '../../common/types/lines';
 
 // The shape of static/landing/overview.json (schemaVersion 1), built daily by data-ingestion
 // (chalicelib/overview).
 
-export type MetricId = 'service' | 'frequency' | 'reliability' | 'delays' | 'speed';
+export type MetricId = 'service' | 'dropped' | 'reliability' | 'delays' | 'speed' | 'ridership';
 
-/** `insufficient`: should be measured but there isn't enough recent data. `na`: not measured. */
-export type Status = 'win' | 'good' | 'room' | 'problem' | 'insufficient' | 'na';
+/**
+ * `insufficient`: should be measured but there isn't enough recent data. `na`: not measured.
+ * `unscored`: measured but never judged, like ridership.
+ */
+export type Status = 'win' | 'good' | 'room' | 'problem' | 'insufficient' | 'na' | 'unscored';
 
 export type Direction = 'higher' | 'lower';
 
@@ -15,6 +19,8 @@ export type Unit = 'pct' | 'mph' | 'seconds' | 'years' | 'count';
 
 /** One of the measures a cell is judged on; the cell takes the worst of its parts' statuses. */
 export interface CellPart {
+  /** Stable key, e.g. `speed` or `slowZones`; `label` is display copy. */
+  id?: string;
   label: string;
   status: Status;
   /** Shown as the figure, in `scoreUnit`. */
@@ -46,7 +52,7 @@ export interface Cell {
   baselineLabel?: string;
   /** Last 2 weeks vs the 12-week window, as a fraction (0.05 = 5% higher). */
   trend: number | null;
-  /** `yearAgo`: `trend` is the change in score since the schedule a year ago, in points. */
+  /** `yearAgo`: `trend` is the change in score since the same weeks a year ago, in points. */
   trendBasis?: 'yearAgo';
   secondary?: string;
   spark?: number[];
@@ -59,6 +65,11 @@ export interface Cell {
   minutesPerDay?: number;
   /** Reliability: share of headways half the scheduled gap or less. */
   bunched?: number;
+  /**
+   * Delays: the cause with the most alert time over the last 4 weeks, leaving out alerts that give
+   * no reason, and its share of all the alert time.
+   */
+  topCause?: { cause: DelayCause; share: number };
 }
 
 export type HeadlineKind = 'strong' | 'good' | 'room' | 'needsWork' | 'limited';

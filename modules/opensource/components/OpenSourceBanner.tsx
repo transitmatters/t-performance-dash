@@ -16,7 +16,7 @@ export const OpenSourceBanner = ({ packageCount }: { packageCount: number }) => 
     className="flex flex-col gap-5 rounded-xl bg-card px-6 py-6 ring-1 ring-foreground/10 sm:px-8"
   >
     <div className="flex max-w-3xl flex-col gap-2">
-      <h1 id="opensource-title" className="text-2xl font-bold sm:text-3xl">
+      <h1 id="opensource-title" className="text-2xl font-bold">
         Built in the open
       </h1>
       <p className="text-sm text-muted-foreground sm:text-base">

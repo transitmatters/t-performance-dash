@@ -145,9 +145,6 @@ export const waitTone = (minutes: number): Tone => {
   return rounded <= TARGET_HEADWAY_MINUTES ? 'meets' : rounded <= 60 ? 'partway' : 'far';
 };
 
-export const clockFaceTone = (share: number): Tone =>
-  share >= 0.9 ? 'meets' : share >= 0.5 ? 'partway' : 'far';
-
 // Tinted chips, as on the home scoreboard: amber and red text alone are hard to tell apart
 export const TONE_CHIP: Record<Tone, string> = {
   meets: 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300',

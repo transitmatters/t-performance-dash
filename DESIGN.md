@@ -23,6 +23,18 @@ colors:
   line-commuter-rail: '#80276c'
   line-ferry: '#008eaa'
 typography:
+  display:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
+    fontSize: '3.75rem'
+    fontWeight: 700
+    lineHeight: 1
+    letterSpacing: '-0.025em'
+  headline:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
+    fontSize: '1.5rem'
+    fontWeight: 700
+    lineHeight: 1.33
+    letterSpacing: '-0.025em'
   page-title:
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
     fontSize: '1.25rem'
@@ -48,9 +60,19 @@ typography:
     fontSize: '0.75rem'
     fontWeight: 500
     lineHeight: 1.33
-  status-caption:
+  stat:
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
-    fontSize: '11px'
+    fontSize: '1.25rem'
+    fontWeight: 600
+    fontFeature: "'tnum'"
+  hero-stat:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
+    fontSize: '1.5rem'
+    fontWeight: 600
+    fontFeature: "'tnum'"
+  subtitle:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
+    fontSize: '13px'
     fontWeight: 400
     lineHeight: 1.25
 rounded:
@@ -169,8 +191,6 @@ Status text tones come from Tailwind's own scale: green-700 for Good and Win, am
 
 **The Brick Is for Brand Rule.** Signal Brick marks TransitMatters itself (donations, announcements). Don't use it for errors, alerts, or the Red Line.
 
-**The Legacy Variables Rule.** `:root` still defines older `--red-line`, `--bus`, and `--transitmatters-red` values that differ from the tokens above. They are legacy. New work uses the `mbta.*` and `tm.*` Tailwind colors or the `data-line` theme variables.
-
 ## Typography
 
 **Body Font:** The system stack (`-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, …, 'Helvetica Neue', sans-serif`), used for everything.
@@ -180,38 +200,41 @@ Status text tones come from Tailwind's own scale: green-700 for Good and Win, am
 
 ### Hierarchy
 
-- **Page Title** (`page-title`): The header band's `<h1>`. The line name is bold and the page name is regular weight, separated by a route bullet ("**Red Line** • Travel Times").
+- **Display** (`display`): The homepage's one question ("How is the T doing?"), stepping `text-4xl` → `text-5xl` → `text-6xl` with the viewport. Overview surfaces only, once per page. The lede under it is `text-lg` → `text-xl`, regular weight.
+- **Headline** (`headline`): `text-2xl` bold. Section headings and the lead finding on overview surfaces (the homepage, the open-source page), and the donation callout.
+- **Page Title** (`page-title`): The header band's `<h1>`. The line name is bold and the page name is regular weight, separated by a route bullet ("**Red Line** • Travel Times"). The same `text-xl` bold also sets the homepage's other findings and the 404 heading.
 - **Title** (`title`): Card titles. When a card title links to a page, it takes the line's text color and a trailing chevron.
-- **Body** (`body`): The default size for card content, table cells, and menu items. Card subtitles are 13px in Ink Muted.
-- **Figure** (`figure`): Every metric value. Semibold with `tabular-nums`, so columns of numbers align and can be quoted.
-- **Label** (`label`): Badges, legends, and the status legend.
-- **Status Caption** (`status-caption`): The word under a status node ("Good", "Needs work"), in its status tone.
+- **Body** (`body`): The default size for card content, table cells, alert text, and menu items. Emphasis inside body text is semibold, never bold.
+- **Subtitle** (`subtitle`): Card and embed subtitles, and the station names in the header band: 13px in Ink Muted.
+- **Figure** (`figure`): Every metric value. Semibold with `tabular-nums`, so columns of numbers align and can be quoted. Figures come in three sizes and no others: 14px inline, **Stat** (`stat`, `text-xl`) for compact stats in cards, strips, scorecards, popovers, and hover cards, and **Hero Stat** (`hero-stat`, `text-2xl`) for the headline numbers of a card or overview.
+- **Label** (`label`): Badges, legends, keyboard hints, chart ticks and annotations, and axis labels. 12px is the smallest text anywhere in the product.
 
-Larger sizes (`text-2xl` to `text-4xl`) appear only for hero stats on overview pages.
+Weights are 400, 500, 600, and 700, nothing lighter or heavier. Charts draw on a canvas that doesn't inherit CSS, so `common/constants/typography.ts` gives Chart.js the same system stack and the 12px label size; chart titles use the title role. Glyphs inside an icon (the "!" in a status node) are part of the icon, not text, and are exempt from the floor.
 
 ### Named Rules
 
 **The Tabular Figures Rule.** Any number a reader might compare or quote is set with `tabular-nums`. Proportional numerals in a column of data count as a bug.
 
+**The 12px Floor Rule.** No text is set below the label role's 12px: not in a chart, a hover card, a legend, or a keyboard hint. When text doesn't fit at 12px, change the layout or the words, not the size.
+
 ## Layout
 
-The app shell is a collapsible sidebar (icon-collapsed on desktop, a sheet on mobile) beside a `SidebarInset` main column on Stone Ground. Content is capped at 1200px (`.main-column`) and centered.
+The app shell is a collapsible sidebar (icon-collapsed on desktop, a sheet on mobile) beside a `SidebarInset` main column on Stone Ground.
 
 Line pages stack three things: a sticky line-colored header band (20px horizontal, 12px vertical padding) holding the title and the date/station controls, an optional control bar under it, and a grid of cards. Cards pad 16px (12px for the `sm` size) on every side, and children inside a card inherit that padding instead of adding their own.
 
-Spacing follows Tailwind's 4px scale. Breakpoints are Tailwind's defaults (640 / 768 / 1024 / 1280 / 1536px) and are shared with runtime code through `common/constants/breakpoints.js`. Charts switch to a chart-plus-side-legend grid at 770px and above. On phones, card headers stack the title above the actions, and scoreboard stops switch from columns to rows.
+Spacing follows Tailwind's 4px scale. Breakpoints are Tailwind's defaults (640 / 768 / 1024 / 1280 / 1536px) and are shared with runtime code through `common/constants/breakpoints.js`. On phones, card headers stack the title above the actions, and scoreboard stops switch from columns to rows.
 
 Every view is addressable: line, page, dates, and filters live in the URL search params, so any layout state can be shared as a link.
 
 ## Elevation & Depth
 
-The system is flat and ring-defined. Cards sit directly on Stone Ground with no shadow, separated by the change in tone and a 1px ring of 10% ink (`ring-1 ring-foreground/10`). Shadows are reserved for things that float over content: the sticky header band (`shadow-md`), popovers and menus (`shadow-md` / `shadow-lg`, each also ringed), and the tapped/selected states of legacy data boxes (inset shadows).
+The system is flat and ring-defined. Cards sit directly on Stone Ground with no shadow, separated by the change in tone and a 1px ring of 10% ink (`ring-1 ring-foreground/10`). Shadows are reserved for things that float over content: the sticky header band (`shadow-md`), popovers and menus (`shadow-md` / `shadow-lg`, each also ringed).
 
 ### Shadow Vocabulary
 
 - **Floating band** (`shadow-md`): The sticky line header, so content scrolling under it reads as passing beneath.
 - **Overlay** (`shadow-md`, `shadow-lg` for submenus): Popovers, dropdowns, and the command palette.
-- **Pressed** (`box-shadow: inset 1px 1px 4px rgba(0,0,0,0.2)`): Legacy tapped data boxes and selected line toggles. Don't extend this to new components.
 
 ### Named Rules
 
@@ -309,6 +332,5 @@ A small filled circle (10 / 14 / 16px) in the line's color. It identifies a line
 - **Don't** use Signal Brick for errors, alerts, or the Red Line.
 - **Don't** show more than one line's color as a page-wide accent.
 - **Don't** use circles decoratively. Circles mean stops and lines here.
-- **Don't** add shadows to in-flow cards or extend the legacy inset "pressed" shadows to new components.
-- **Don't** use the legacy `:root` line variables (`--red-line`, `--bus`, `--transitmatters-red`) in new code.
+- **Don't** add shadows to in-flow cards.
 - **Don't** add motion that ignores `prefers-reduced-motion`, or animate a value in a way that moves it under the reader.

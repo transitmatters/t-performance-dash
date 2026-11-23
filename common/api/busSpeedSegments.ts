@@ -6,6 +6,7 @@ import {
 } from '../../modules/busspeedmap/constants';
 import { TWO_DAYS_AGO_STRING, YESTERDAY_STRING } from '../constants/dates';
 import type {
+  BusRouteDelaysResponse,
   BusSpeedSegmentLeaderboardResponse,
   FetchBusSpeedSegmentsOptions,
   FetchBusSpeedSegmentsUrlOptions,
@@ -71,6 +72,9 @@ export const busDwellsPath = (date: string, period: Period, timeBand: TimeBand):
 export const busSpeedSegmentLeaderboardPath = (date: string, period: Period): string =>
   `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/leaderboard.json`;
 
+export const busRouteDelaysPath = (date: string, period: Period): string =>
+  `${BUS_SPEED_SEGMENTS_BASE_PATH}/${periodDirectory(date, period)}/route_delays.json`;
+
 /**
  * PMTiles are read byte-range by byte-range straight from the browser as the map pans and
  * zooms, so there is no whole-file fetch or parse to do up front. This just confirms the
@@ -99,14 +103,12 @@ export const fetchBusSpeedSegmentsUrl = async ({
   return url.toString();
 };
 
-let latestBusSpeedDate: Promise<string> | undefined;
-
 /**
  * The newest day with published segments: yesterday once its ingest has run, otherwise the day
- * before. Checked once per page load, so opening the speed map again doesn't repeat the request.
+ * before. Cached for the page load by `latestBusSpeedDateQuery`.
  */
-export const getLatestBusSpeedDate = (): Promise<string> => {
-  latestBusSpeedDate ??= fetch(
+export const fetchLatestBusSpeedDate = (): Promise<string> =>
+  fetch(
     new URL(
       busSpeedSegmentsPath(YESTERDAY_STRING, 'daily', 'all_day'),
       window.location.origin
@@ -115,8 +117,6 @@ export const getLatestBusSpeedDate = (): Promise<string> => {
   )
     .then((response) => (response.ok ? YESTERDAY_STRING : TWO_DAYS_AGO_STRING))
     .catch(() => TWO_DAYS_AGO_STRING);
-  return latestBusSpeedDate;
-};
 
 /**
  * Like fetchBusSpeedSegmentsUrl, for the dwell points beside the segments. Resolves to null
@@ -162,6 +162,27 @@ export const fetchBusSpeedSegmentLeaderboard = async ({
   if (!response.ok) {
     throw new Error(`Failed to load the bus speed segment leaderboard for ${date}.`);
   }
+
+  return response.json();
+};
+
+/**
+ * Each route direction's median trip against free flow, beside the leaderboard and fetched whole
+ * like it (gzipped by the pipeline: about 21KB for a week, 27KB for a month). Resolves to null
+ * when there's no file, as for every archive published before the pipeline wrote one: the speed
+ * map then just leaves out what it would show.
+ */
+export const fetchBusRouteDelays = async ({
+  date,
+  period,
+}: FetchBusSpeedSegmentsOptions): Promise<BusRouteDelaysResponse | null> => {
+  if (!date) throw new Error('A service date is required to load bus route delays.');
+
+  const url = new URL(busRouteDelaysPath(date, period), window.location.origin);
+  const response = await fetch(url.toString());
+
+  if (response.status === 403 || response.status === 404) return null;
+  if (!response.ok) throw new Error(`Failed to load bus route delays for ${date}.`);
 
   return response.json();
 };

@@ -80,7 +80,7 @@ export const TrainsStrip = ({ rows, departAt }: TrainsStripProps) => (
     ))}
     <div aria-hidden className="grid grid-cols-[6rem_1fr] gap-3 sm:grid-cols-[7.5rem_1fr]">
       <div />
-      <div className="relative h-4 text-[11px] text-muted-foreground">
+      <div className="relative h-4 text-xs text-muted-foreground">
         {TICKS.map(({ hour, label, wide }) => (
           <span
             key={hour}

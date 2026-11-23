@@ -6,6 +6,7 @@ import type { SingleDayDataPoint } from '../../common/types/charts';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
+import { useSingleDate } from '../../common/hooks/usePageParams';
 import { TravelTimesSingleChart } from './charts/TravelTimesSingleChart';
 
 interface TravelTimesSingleWrapperProps {
@@ -19,6 +20,7 @@ export const TravelTimesSingleWrapper = ({
   toStation,
   fromStation,
 }: TravelTimesSingleWrapperProps) => {
+  const { date } = useSingleDate();
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" metric="traveltimes" />;
@@ -26,6 +28,7 @@ export const TravelTimesSingleWrapper = ({
   return (
     <ChartStack>
       <TravelTimesSingleChart
+        date={date}
         traveltimes={query.data}
         toStation={toStation}
         fromStation={fromStation}

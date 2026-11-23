@@ -2,13 +2,13 @@
 
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { useReliabilityData } from '../../common/api/hooks/reliability';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
 import { DataNotes } from '../../common/components/notices/DataNotes';
 import { Notice } from '../../common/components/notices/Notice';
-import { FREQUENT_BUS_ROUTE_IDS, getBusRouteIds } from '../../common/constants/lines';
+import { getBusRouteDataIds, getFrequentBusRouteIds } from '../../common/constants/lines';
 import { SUBWAY_LINES } from '../../common/types/lines';
 import { getSpeedGraphConfig } from '../speed/constants/speeds';
 import { TheRideReliability } from './TheRideReliability';
@@ -21,15 +21,13 @@ import { hasExcessTripTime } from './excessTripTimeUtils';
 const ALL_COMMUTER_RAIL = 'commuter-rail';
 
 export function ReliabilityDetails() {
-  const {
-    line,
-    query: { startDate, endDate, crRoute, busRoute },
-  } = useDelimitatedRoute();
+  const { line, crRoute, busRoute } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const isRide = line === 'line-RIDE';
   const isBus = line === 'line-bus';
-  const isSubway = line !== undefined && SUBWAY_LINES.includes(line);
+  const isSubway = SUBWAY_LINES.includes(line);
   // Grouped labels (e.g. 114/116/117) are summed server-side across their route_ids
-  const busRouteIds = isBus && busRoute ? getBusRouteIds(busRoute) : [];
+  const busRouteIds = isBus && busRoute ? getBusRouteDataIds(busRoute) : [];
   const routeId = isRide
     ? 'RIDE'
     : isSubway
@@ -37,17 +35,19 @@ export function ReliabilityDetails() {
       : isBus
         ? busRouteIds.join(',')
         : (crRoute ?? ALL_COMMUTER_RAIL);
-  const isFrequentBus = busRouteIds.some((id) => FREQUENT_BUS_ROUTE_IDS.includes(id));
+  // By label, as on the Overview, so 110-legacy isn't counted as frequent because 110 is now.
+  const isFrequentBus = busRoute ? getFrequentBusRouteIds(busRoute).length > 0 : false;
   const { agg } = useMemo(
     () => getSpeedGraphConfig(dayjs(startDate), dayjs(endDate)),
     [startDate, endDate]
   );
 
-  const enabled = Boolean(startDate && endDate && line && routeId);
-  const reliability = useReliabilityData(
-    { route_id: routeId, start_date: startDate, end_date: endDate, agg },
-    enabled
-  );
+  const reliability = useReliabilityData({
+    route_id: routeId,
+    start_date: startDate,
+    end_date: endDate,
+    agg,
+  });
 
   const props = { reliability, agg, startDate, endDate };
 
@@ -70,7 +70,7 @@ export function ReliabilityDetails() {
         ) : (
           <CommuterRailReliability {...props} />
         )}
-        {line && hasExcessTripTime(line) && (
+        {hasExcessTripTime(line) && (
           <ExcessTripTime line={line} agg={agg} startDate={startDate} endDate={endDate} />
         )}
         <DataNotes>

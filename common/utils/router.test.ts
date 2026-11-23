@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import type { Route } from '../types/router';
+import type { PageMetadata } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
 import { useDateStore } from '../state/dateStore';
 import type { StationStore } from '../state/stationStore';
@@ -7,8 +8,10 @@ import {
   getBusRouteSelectionItemHref,
   getBusSpeedMapRouteHref,
   getLineSelectionItemHref,
+  getNavTripPage,
   getQueryParams,
   parseRoutePath,
+  savePageConfigIfNecessary,
   stationScope,
   stripForeignRouteParams,
   withDefaultRouteParam,
@@ -43,6 +46,60 @@ describe('getQueryParams stations', () => {
     const busStore = { ...orangeStore, scope: stationScope('line-bus', { busRoute: '1' }) };
     expect(toTrips({ busRoute: '1' }, 'line-bus', busStore)).toMatchObject({ from: '70034' });
     expect(toTrips({ busRoute: '28' }, 'line-bus', busStore)).not.toHaveProperty('from');
+  });
+});
+
+describe('returning to trips', () => {
+  it('keeps the open trip view and otherwise reopens the last one used', () => {
+    expect(getNavTripPage('multiTrips', 'singleTrips')).toBe(ALL_PAGES.multiTrips);
+    expect(getNavTripPage('singleTrips', 'multiTrips')).toBe(ALL_PAGES.singleTrips);
+    expect(getNavTripPage('speed', 'multiTrips')).toBe(ALL_PAGES.multiTrips);
+    expect(getNavTripPage('speed', 'singleTrips')).toBe(ALL_PAGES.singleTrips);
+  });
+
+  describe('after a page that shares the single-day trips date section', () => {
+    const stationStore: StationStore = { setStationStore: () => {} };
+    const leave = (from: PageMetadata, to: PageMetadata) =>
+      savePageConfigIfNecessary(
+        from,
+        to,
+        { busRoute: '1' },
+        useDateStore.getState(),
+        stationStore,
+        'line-bus'
+      );
+    const tripsTarget = () => getNavTripPage('ridership', useDateStore.getState().tripPage);
+
+    afterEach(() => useDateStore.setState({ tripPage: 'singleTrips' }));
+
+    it.each([ALL_PAGES.speedmap, ALL_PAGES.leaderboard])(
+      'still reopens a trip view after $name',
+      (page) => {
+        leave(page, ALL_PAGES.ridership);
+        expect(tripsTarget()).toBe(ALL_PAGES.singleTrips);
+
+        leave(ALL_PAGES.multiTrips, page);
+        leave(page, ALL_PAGES.ridership);
+        expect(tripsTarget()).toBe(ALL_PAGES.multiTrips);
+      }
+    );
+  });
+
+  it('restores the saved range when coming back to the date range view', () => {
+    const dateStore = {
+      ...useDateStore.getState(),
+      multiTripConfig: { startDate: '2026-03-01', endDate: '2026-03-31' },
+    };
+    const stationStore: StationStore = { setStationStore: () => {} };
+    const query = getQueryParams(
+      ALL_PAGES.speed,
+      ALL_PAGES.multiTrips,
+      { busRoute: '1', startDate: '2026-01-01', endDate: '2026-11-01' },
+      dateStore,
+      stationStore,
+      'line-bus'
+    );
+    expect(query).toMatchObject({ startDate: '2026-03-01', endDate: '2026-03-31', busRoute: '1' });
   });
 });
 
@@ -95,16 +152,33 @@ describe('withDefaultRouteParam', () => {
     });
   });
 
-  it('replaces an unknown Commuter Rail or ferry route with the default', () => {
+  it('replaces an unknown route with the default', () => {
     expect(withDefaultRouteParam('/commuter-rail/', { crRoute: 'CR-Nope' })).toEqual({
       crRoute: 'CR-Fairmount',
     });
     expect(withDefaultRouteParam('/ferry/ridership/', { ferryRoute: 'Boat-Nope' })).toEqual({
       ferryRoute: 'Boat-F6',
     });
+    expect(withDefaultRouteParam('/bus/', { busRoute: 'zzz' })).toEqual({ busRoute: '1' });
   });
 
-  it('leaves bus routes alone, since bus pages take routes beyond the station files', () => {
+  it('keeps bus routes with no station file that the API still serves', () => {
+    expect(withDefaultRouteParam('/bus/delays/', { busRoute: '34E' })).toEqual({
+      busRoute: '34E',
+    });
+    expect(withDefaultRouteParam('/embed/bus/delays/total/', { busRoute: '34E' })).toEqual({
+      busRoute: '34E',
+    });
+    expect(withDefaultRouteParam('/bus/speed/', { busRoute: '1234' })).toEqual({ busRoute: '1' });
+  });
+
+  it('keeps retired bus routes, which have station files of their own', () => {
+    expect(withDefaultRouteParam('/bus/', { busRoute: '110-legacy' })).toEqual({
+      busRoute: '110-legacy',
+    });
+  });
+
+  it("leaves the speed map's route alone, since it reads routes from its own tileset", () => {
     expect(withDefaultRouteParam('/bus/speedmap/', { busRoute: '9999' })).toEqual({
       busRoute: '9999',
     });
@@ -185,6 +259,11 @@ describe('bus speed map links', () => {
   it('drops the combined-route filter when switching routes', () => {
     const from = route('speedmap', { busRoute: 'SL4/SL5', routeId: 'SL4', band: 'pm_peak' });
     expect(getBusRouteSelectionItemHref('9', from)).toBe('/bus/speedmap?band=pm_peak&busRoute=9');
+  });
+
+  it('opens the route itself from Rankings, which has no per-route view', () => {
+    const from = route('leaderboard', { date: '2026-11-05', rank: 'dropped' });
+    expect(getBusRouteSelectionItemHref('28', from)).toBe('/bus/trips/single?busRoute=28');
   });
 
   it('opens the map on the period Rankings shows, without Rankings-only params', () => {

@@ -1,12 +1,13 @@
-import { useDelimitatedRoute } from '../../utils/router';
+import type { Line } from '../../types/lines';
 import { spinnerFillColor } from './styles/spinnerFillColor';
 
 interface LoadingSpinnerProps {
   isWidget?: boolean;
+  /** Spins in the line's color; neutral without one. */
+  line?: Line;
 }
 
-export const LoadingSpinner = ({ isWidget }: LoadingSpinnerProps) => {
-  const { line } = useDelimitatedRoute();
+export const LoadingSpinner = ({ isWidget, line }: LoadingSpinnerProps) => {
   return (
     <div
       role={'status'}

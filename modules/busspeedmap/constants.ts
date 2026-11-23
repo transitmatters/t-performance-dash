@@ -55,6 +55,9 @@ export const DIRECTIONS: { key: DirectionFilter; label: string }[] = [
 
 export const DEFAULT_DIRECTION: DirectionFilter = 'inbound';
 
+/** The GTFS direction_id each direction filter stands for (see DIRECTIONS). */
+export const DIRECTION_IDS: Record<DirectionFilter, number> = { inbound: 1, outbound: 0 };
+
 export const PERIODS: { key: Period; label: string }[] = [
   { key: 'daily', label: 'Day' },
   { key: 'weekly', label: 'Week' },
@@ -123,6 +126,12 @@ export const DWELL_RADIUS_STOPS: [number, number][] = [
 export const DWELL_COLOR = '#292524';
 
 /**
+ * The time a trip loses to delay, in the route delay bars: the speed ramp's slow end, so it reads
+ * as slow the way the map does.
+ */
+export const DELAY_LOST_COLOR = SPEED_COLOR_STOPS[1][1];
+
+/**
  * Served same-origin: CloudFront maps this prefix onto the private performance bucket.
  * `daily`/`weekly`/`monthly` sit below it -- see `busSpeedSegmentsPath` in
  * common/api/busSpeedSegments.ts.
@@ -175,14 +184,40 @@ export const BUS_STOPS_SOURCE_LAYER = 'bus_stops';
 
 /**
  * Every value a station's `lines` can hold, keyed as the tileset spells it. Drives both the
- * station dot colours on the map and the line list in the station hover popup.
+ * station dot colours on the map and the line list in the station hover popup. Colors are getters
+ * so colorblind mode applies.
  */
 export const STATION_LINES: Record<string, { label: string; color: string }> = {
-  Red: { label: 'Red Line', color: COLORS.mbta.red },
-  Mattapan: { label: 'Mattapan Line', color: COLORS.mbta.mattapan },
-  Orange: { label: 'Orange Line', color: COLORS.mbta.orange },
-  Blue: { label: 'Blue Line', color: COLORS.mbta.blue },
-  Green: { label: 'Green Line', color: COLORS.mbta.green },
+  Red: {
+    label: 'Red Line',
+    get color() {
+      return COLORS.mbta.red;
+    },
+  },
+  Mattapan: {
+    label: 'Mattapan Line',
+    get color() {
+      return COLORS.mbta.mattapan;
+    },
+  },
+  Orange: {
+    label: 'Orange Line',
+    get color() {
+      return COLORS.mbta.orange;
+    },
+  },
+  Blue: {
+    label: 'Blue Line',
+    get color() {
+      return COLORS.mbta.blue;
+    },
+  },
+  Green: {
+    label: 'Green Line',
+    get color() {
+      return COLORS.mbta.green;
+    },
+  },
 };
 
 export const BOSTON_CENTER: { longitude: number; latitude: number; zoom: number } = {

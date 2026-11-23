@@ -27,10 +27,6 @@ export interface Station {
   short?: string;
 }
 
-export const isLineMap = (obj: any): obj is LineMap => {
-  return obj && typeof obj === 'object' && 'stations' in obj && Array.isArray(obj.stations);
-};
-
 export interface LineMap {
   type: string;
   direction: Direction;

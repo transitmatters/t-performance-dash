@@ -1,6 +1,6 @@
 import { formatPercentChange } from '../../../utils/statDelta';
 import { getFormattedTimeString } from '../../../utils/time';
-import type { WidgetComparison } from '../MiniWidgetCreator';
+import type { WidgetComparison } from '../../../types/basicWidgets';
 
 export const formatComparisonDelta = (comparison: WidgetComparison) => {
   const abs = Math.abs(comparison.delta);

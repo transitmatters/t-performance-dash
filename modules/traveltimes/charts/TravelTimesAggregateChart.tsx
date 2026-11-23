@@ -3,12 +3,13 @@ import { AggregateLineChart } from '../../../common/components/charts/AggregateL
 import { CHART_COLORS } from '../../../common/constants/colors';
 import type {
   AggregateDataResponse,
-  TravelTimesUnit,
+  AggregateLineProps,
   DayFilter,
+  TravelTimesUnit,
 } from '../../../common/types/charts';
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { getLocationDetails } from '../../../common/utils/stations';
 
 interface TravelTimesAggregateChartProps {
@@ -18,11 +19,11 @@ interface TravelTimesAggregateChartProps {
   timeUnit?: TravelTimesUnit;
   peakTime?: boolean;
   dayFilter?: DayFilter;
-  /** Defaults to the page's dates; an embed passes its own. */
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
   fill?: boolean;
   trendline?: boolean;
+  loadingRanges?: AggregateLineProps['loadingRanges'];
 }
 
 export const TravelTimesAggregateChart = ({
@@ -32,14 +33,18 @@ export const TravelTimesAggregateChart = ({
   timeUnit = 'by_date',
   peakTime = true,
   dayFilter = 'all',
-  startDate: startDateProp,
-  endDate: endDateProp,
+  startDate,
+  endDate,
   fill = false,
   trendline = false,
+  loadingRanges,
 }: TravelTimesAggregateChartProps) => {
-  const { query } = useDelimitatedRoute();
-  const startDate = startDateProp ?? query.startDate;
-  const endDate = endDateProp ?? query.endDate;
+  const { lineShort, color } = useLinePage();
+
+  const slowZonesTrip = useMemo(
+    () => ({ fromStation, toStation, lineShort, color }),
+    [fromStation, toStation, lineShort, color]
+  );
 
   const chart = useMemo(() => {
     const timeUnitByDate = timeUnit === 'by_date';
@@ -77,6 +82,8 @@ export const TravelTimesAggregateChart = ({
         yUnit="Minutes"
         fill={fill}
         trendline={trendline}
+        slowZonesTrip={slowZonesTrip}
+        loadingRanges={loadingRanges}
         embedChart={timeUnitByDate ? 'traveltimes' : 'traveltimes-by-hour'}
       />
     );
@@ -91,6 +98,8 @@ export const TravelTimesAggregateChart = ({
     dayFilter,
     fill,
     trendline,
+    slowZonesTrip,
+    loadingRanges,
   ]);
 
   return chart;

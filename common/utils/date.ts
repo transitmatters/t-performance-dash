@@ -19,13 +19,8 @@ export const prettyDate = (dateString: string, withDow: boolean = false) => {
   );
 };
 
-export const getCurrentDate = (): string => {
-  const isoDate = new Date();
-  const offset = isoDate.getTimezoneOffset();
-  const localDate = new Date(isoDate.valueOf() - offset * 60 * 1000);
-  const maxDate = localDate.toISOString().split('T')[0];
-  return maxDate;
-};
+// Today in Boston, so a viewer in another time zone asks for the same service day as the data.
+export const getCurrentDate = (): string => dayjs().tz('America/New_York').format(DATE_FORMAT);
 
 // Weekly data is keyed on the Monday of each week. Start from the Monday of the start
 // date's week so a range that begins mid-week still includes that week.

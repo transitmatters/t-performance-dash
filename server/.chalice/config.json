@@ -32,6 +32,12 @@
     },
     "beta": {
       "api_gateway_stage": "beta",
+      "lambda_memory_size": 896,
+      "lambda_functions": {
+        "render_og_cards": {
+          "lambda_memory_size": 1024
+        }
+      },
       "autogen_policy": false,
       "iam_policy_file": "policy.json",
       "environment_variables": {

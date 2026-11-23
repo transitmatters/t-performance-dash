@@ -31,6 +31,7 @@ export const BarControls = () => {
     showPeriodDate,
     showEventsOption,
     showOtherShutdownsOption,
+    showSlowZonesOption,
   } = usePageControls();
   return (
     <div className="flex flex-row flex-wrap items-center gap-x-3 gap-y-2 border-b border-stone-200 bg-white px-5 py-2 text-stone-900 dark:border-stone-800 dark:bg-stone-900 dark:text-stone-100">
@@ -46,6 +47,7 @@ export const BarControls = () => {
           <DisplayMenu
             withEvents={showEventsOption}
             withOtherShutdowns={showOtherShutdownsOption}
+            withSlowZones={showSlowZonesOption}
           />
         </div>
       </div>

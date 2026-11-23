@@ -1,18 +1,19 @@
 import dayjs from 'dayjs';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { Link } from '../../common/components/general/Link';
 import {
   useSlowzoneAllData,
   useSlowzoneDelayTotalData,
+  useSlowzoneZoneDelays,
   useSpeedRestrictionData,
 } from '../../common/api/hooks/slowzones';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange } from '../../common/hooks/usePageParams';
 import { Widget } from '../../common/components/widgets';
 import { filterAllSlow, formatSegments } from '../../common/utils/slowZoneUtils';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
 import { ButtonGroup } from '../../common/components/general/ButtonGroup';
-import { useChartToggle } from '../../common/hooks/useChartToggle';
+import { useChartToggle, useOption } from '../../common/hooks/useChartToggle';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { formatDateTodayCheck } from '../../common/state/utils/dateStoreUtils';
 import type { Direction } from '../../common/types/dataPoints';
@@ -28,6 +29,14 @@ interface SystemSlowZonesDetailsProps {
 }
 
 const DIRECTION_OPTIONS = Object.entries(DirectionObject) as [Direction, string][];
+const LINE_KEYS: Record<SlowZonesLineName, Line> = {
+  Red: 'line-red',
+  Orange: 'line-orange',
+  Blue: 'line-blue',
+  Green: 'line-green',
+  Mattapan: 'line-mattapan',
+};
+
 const LINE_OPTIONS: [SlowZonesLineName, string][] = [
   ['Red', 'Red'],
   ['Orange', 'Orange'],
@@ -44,33 +53,25 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
     DIRECTION_OPTIONS
   );
 
-  const [lineShort, setLineShort] = useState<SlowZonesLineName>('Red');
-  const line = `line-${lineShort.toLowerCase()}` as Line;
+  // In the URL, so a link to the map opens on the line it showed
+  const { value: lineShort, setValue: setLineShort } = useOption('Red', LINE_OPTIONS, 'mapLine');
+  const line = LINE_KEYS[lineShort];
   const isDesktop = useBreakpoint('lg');
 
-  const {
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { startDate, endDate } = useDateRange();
 
-  const speedRestrictions = useSpeedRestrictionData({ lineId: line, date: endDate! });
+  const speedRestrictions = useSpeedRestrictionData({ lineId: line, date: endDate });
+  const zoneDelays = useSlowzoneZoneDelays(lineShort);
 
-  const startDateUTC = startDate ? dayjs.utc(startDate).startOf('day') : undefined;
-  const endDateUTC = endDate ? dayjs.utc(endDate).startOf('day') : undefined;
+  const startDateUTC = dayjs.utc(startDate).startOf('day');
+  const endDateUTC = dayjs.utc(endDate).startOf('day');
 
   const graphData = useMemo(() => {
-    if (allData.data && startDateUTC && endDateUTC) {
-      const fitleredData = filterAllSlow(
-        Array.isArray(allData.data) ? allData.data : allData.data.data,
-        startDateUTC,
-        endDateUTC
-      );
+    if (allData.data) {
+      const fitleredData = filterAllSlow(allData.data.data, startDateUTC, endDateUTC);
       return formatSegments(fitleredData, startDateUTC, direction);
     } else return [];
   }, [allData.data, endDateUTC, startDateUTC, direction]);
-
-  if (!endDateUTC || !startDateUTC) {
-    return <p>Select a date range to load graphs.</p>;
-  }
 
   return (
     <>
@@ -86,7 +87,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
         >
           {delayTotals.data && (
             <TotalSlowTime
-              data={Array.isArray(delayTotals.data) ? delayTotals.data : delayTotals.data.data}
+              data={delayTotals.data.data}
               startDateUTC={startDateUTC}
               endDateUTC={endDateUTC}
               showTitle={showTitle}
@@ -96,7 +97,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
         </Widget>
         <Widget
           title="Line map"
-          subtitle={`As of ${formatDateTodayCheck(endDate!).replace('Today', 'today')}`}
+          subtitle={`As of ${formatDateTodayCheck(endDate).replace('Today', 'today')}`}
           action={
             <ButtonGroup
               line={line}
@@ -112,6 +113,7 @@ export function SystemSlowZonesDetails({ showTitle = false }: SystemSlowZonesDet
           <SlowZonesMap
             key={lineShort}
             slowZones={allData.data!}
+            zoneDelays={zoneDelays.data}
             speedRestrictions={speedRestrictions.data}
             lineName={lineShort}
             direction={isDesktop ? 'horizontal' : 'vertical'}

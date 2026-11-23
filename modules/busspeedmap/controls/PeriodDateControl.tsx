@@ -13,15 +13,13 @@ import { Calendar } from '../../../common/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../../../common/components/ui/popover';
 import { DATE_FORMAT, getDatePickerBounds } from '../../../common/constants/dates';
 import { ToggleControl } from '../../../common/hooks/useChartToggle';
-import { useDatePresetStore } from '../../../common/state/datePresetStore';
-import { checkForPreset } from '../../../common/state/utils/datePresetUtils';
 import {
   CONTROL_SURFACE,
   FOCUS_RING_ON_SURFACE,
   lineColorVar,
   needsDarkTextOn,
 } from '../../../common/styles/general';
-import { useDelimitatedRoute, useUpdateQuery } from '../../../common/utils/router';
+import { usePageRoute, useUpdateQuery } from '../../../common/utils/router';
 import type { Period } from '../types';
 import { useShownPeriod } from '../useBusSpeedParams';
 import {
@@ -77,11 +75,10 @@ export const PeriodDateControl = () => {
     page,
     colorKey,
     query: { date },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const { minDate, maxDate } = getDatePickerBounds(tab, page);
   const { shown: period, setValue: setPeriod, options, lockedToMonth } = useShownPeriod();
   const updateQueryParams = useUpdateQuery();
-  const setDatePreset = useDatePresetStore((state) => state.setDatePreset);
   const [open, setOpen] = useState(false);
 
   if (!date) return null;
@@ -89,8 +86,6 @@ export const PeriodDateControl = () => {
   const setDate = (next: string) => {
     const clamped = clampDate(next, minDate, maxDate);
     updateQueryParams({ date: clamped }, false);
-    // Keeps the trips pages' preset label in step, since they share this date.
-    setDatePreset(checkForPreset({ date: clamped }), 'singleTrips', false);
   };
 
   const pick = (next: string) => {

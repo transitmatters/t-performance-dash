@@ -1,10 +1,20 @@
+import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from './lines';
+
+/** Whose alerts to show: a page's line and route, or a whole line. */
+export interface AlertsScope {
+  lineShort: LineShort;
+  busRoute?: BusRoute;
+  crRoute?: CommuterRailRoute;
+  ferryRoute?: FerryRoute;
+}
+
 export type AlertTime = {
   end: string | null;
   start: string | null;
   upcoming: boolean;
   current: boolean;
 };
-export interface OldAlert {
+export interface HistoricalAlert {
   /** Null when the feed had neither a header nor a short header. */
   text: string | null;
   valid_from: string;
@@ -32,15 +42,6 @@ export interface AlertsResponse {
   stops: string[];
   routes?: string[];
   header: string;
-}
-export type AlertEffectTypes = AlertEffect;
-
-export enum AlertNames {
-  DELAY = 'Delays',
-  SHUTTLE = 'Shuttling',
-  STOP_CLOSURE = 'Stop Closure',
-  DETOUR = 'Detour',
-  SUSPENSION = 'Suspension',
 }
 
 export enum AlertEffect {

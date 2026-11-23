@@ -1,8 +1,8 @@
-import { useTripExplorerQueries } from '../../common/api/datadashboard';
+import { useMultiDayTripMetrics } from '../../common/api/hooks/tripExplorer';
 import { AggregateChartWrapper } from '../../common/components/charts/AggregateChartWrapper';
 import { PartialDataNotice } from '../../common/components/notices/PartialDataNotice';
 import type { TripEmbedChart } from '../../common/constants/staticRoutes';
-import { AggregateAPIParams, QueryNameKeys } from '../../common/types/api';
+import { QueryNameKeys } from '../../common/types/api';
 import type { RouteType } from '../../common/types/api';
 import type { DayFilter } from '../../common/types/charts';
 import type { Station } from '../../common/types/stations';
@@ -40,19 +40,17 @@ export const MultiTripEmbedChart = ({
 }: MultiTripEmbedChartProps) => {
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
   const queryName = CHART_QUERIES[chart];
-  const result = useTripExplorerQueries(
+  const result = useMultiDayTripMetrics({
     routeType,
-    {
-      [AggregateAPIParams.stop]: fromStopIds,
-      [AggregateAPIParams.fromStop]: fromStopIds,
-      [AggregateAPIParams.toStop]: toStopIds,
-      [AggregateAPIParams.startDate]: startDate,
-      [AggregateAPIParams.endDate]: endDate,
+    params: {
+      stop: fromStopIds,
+      from_stop: fromStopIds,
+      to_stop: toStopIds,
+      start_date: startDate,
+      end_date: endDate,
     },
-    true,
-    Boolean(fromStopIds && toStopIds && startDate && endDate),
-    [queryName]
-  )[queryName];
+    only: [queryName],
+  })[queryName];
 
   const byHour = chart === 'traveltimes-by-hour';
   return (

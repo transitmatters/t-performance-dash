@@ -8,6 +8,8 @@ import { getFormattedTimeString } from '../../common/utils/time';
 import type { HeadwayField } from '../reliability/utils';
 import { HEADWAY_FIELDS } from '../reliability/utils';
 import {
+  DAY_TYPES,
+  DIRECTIONS,
   DWELL_SUMMARY_SIZE,
   MIN_DWELL_STOPS_PER_DAY,
   MIN_RUNNING_SPEED_SEGMENT_M,
@@ -20,6 +22,7 @@ import type {
   BusSpeedSegmentLeaderboardResponse,
   BusSpeedSegmentProperties,
   DayType,
+  DirectionFilter,
   LeaderboardMetricConfig,
   Period,
   StopDwell,
@@ -81,10 +84,43 @@ export const periodLabel = (date: string | undefined, period: Period): string | 
   return `${start.format(startFormat)} – ${end.format(endFormat)}`;
 };
 
+/**
+ * The speed map's direction and days in words, as "Outbound · Weekdays". A single day is wholly
+ * one day type, so it's named instead: "Outbound · Wednesday".
+ */
+export const directionAndDaysLabel = (
+  date: string | undefined,
+  period: Period,
+  dayType: DayType,
+  direction: DirectionFilter
+): string => {
+  const days =
+    period === 'daily'
+      ? date && dayjs(date).format('dddd')
+      : DAY_TYPES.find(({ key }) => key === dayType)?.label;
+  return [DIRECTIONS.find(({ key }) => key === direction)?.label, days].filter(Boolean).join(' · ');
+};
+
 /** The current, still-accumulating week/month has a tile too, built from partial data. */
 export const isPeriodInProgress = (date: string | undefined, period: Period): boolean => {
   if (!date || period === 'daily') return false;
   return dayjs(periodEnd(date, period)).endOf('day').isAfter(dayjs());
+};
+
+/**
+ * The last day a partial week or month's file covers: the newest published day, which is the day
+ * before yesterday until yesterday's ingest has run. That includes a period that ended yesterday,
+ * whose file still stops a day short until then. Undefined once the period is fully published, and
+ * while none of it is (all of the 1st of a month, or the 2nd before the 1st is out).
+ */
+export const inProgressThrough = (
+  date: string | undefined,
+  period: Period,
+  latestDate: string | undefined
+): string | undefined => {
+  if (!date || !latestDate || period === 'daily') return undefined;
+  const isPartial = periodStart(date, period) <= latestDate && latestDate < periodEnd(date, period);
+  return isPartial ? latestDate : undefined;
 };
 
 /**

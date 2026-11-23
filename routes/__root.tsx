@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { Outlet, createRootRoute, useMatches } from '@tanstack/react-router';
-import { useDelimitatedRoute, useIsNotFound } from '../common/utils/router';
+import { usePageRoute, useIsNotFound } from '../common/utils/router';
 import { Layouts } from '../common/layouts/Layouts';
-import { Layout } from '../common/layouts/PrimaryLayout';
+import { AppProviders } from '../common/layouts/AppProviders';
 import { NavLayout } from '../common/layouts/NavLayout';
-import { LoadPresetsLayout } from '../common/layouts/LoadPresetsLayout';
 import { DynamicMetaTags } from '../common/components/DynamicMetaTags';
 import { useApplyTheme } from '../common/hooks/useApplyTheme';
 import { useGoatCounter } from '../common/hooks/useGoatCounter';
 import { BetaNotices } from '../common/components/notices/BetaNotices';
 import { initBetaRum } from '../common/utils/rum';
 import { redirectToCanonicalSearch } from '../common/utils/dateParams';
+import { useColorVisionKey } from '../common/utils/colorVision';
 
 const PassThroughLayout = ({ children }: { children?: ReactNode }) => <>{children}</>;
 
@@ -22,8 +22,10 @@ const RootComponent = () => {
     select: (matches) => matches[matches.length - 1]?.staticData ?? {},
   });
   // An embed's host page picks its theme (light unless `?theme=dark`), not the visitor's preference.
-  const { theme } = useDelimitatedRoute().query;
+  const { theme } = usePageRoute().query;
   useApplyTheme(embed ? (theme === 'dark' ? 'dark' : 'light') : undefined);
+  // Remount the page when colorblind mode flips, so charts redraw in its palette
+  const colorVisionKey = useColorVisionKey();
   useGoatCounter();
   useEffect(() => {
     initBetaRum();
@@ -31,26 +33,24 @@ const RootComponent = () => {
 
   if (embed && !notFound) {
     return (
-      <Layout>
-        <Outlet />
-      </Layout>
+      <AppProviders>
+        <Outlet key={colorVisionKey} />
+      </AppProviders>
     );
   }
 
   const SecondaryLayout = layout && !notFound ? Layouts[layout] : PassThroughLayout;
 
   return (
-    <Layout>
+    <AppProviders>
       <DynamicMetaTags />
-      <LoadPresetsLayout>
-        <NavLayout>
-          <SecondaryLayout>
-            <Outlet />
-          </SecondaryLayout>
-          <BetaNotices />
-        </NavLayout>
-      </LoadPresetsLayout>
-    </Layout>
+      <NavLayout>
+        <SecondaryLayout key={colorVisionKey}>
+          <Outlet />
+        </SecondaryLayout>
+        <BetaNotices />
+      </NavLayout>
+    </AppProviders>
   );
 };
 

@@ -5,7 +5,7 @@ import {
   DATE_FORMAT,
   getDatePickerBounds,
   getRangePresets,
-  OVERVIEW_OPTIONS,
+  DEFAULT_LINE_START_DATE,
   TODAY_STRING,
   TWO_DAYS_AGO_STRING,
   YESTERDAY_STRING,
@@ -30,7 +30,7 @@ const daysBefore = (date: string, days: number) =>
 const daysAfter = (date: string, days: number) => daysBefore(date, -days);
 
 // The line pages' default window is the past year: 365 or 366 days.
-const LINE_WINDOW_DAYS = dayjs(TODAY_STRING).diff(OVERVIEW_OPTIONS.year.startDate, 'day');
+const LINE_WINDOW_DAYS = dayjs(TODAY_STRING).diff(DEFAULT_LINE_START_DATE, 'day');
 
 describe('normalizeDateParams on range pages', () => {
   it('leaves a complete range alone', () => {
@@ -40,7 +40,7 @@ describe('normalizeDateParams on range pages', () => {
   it('fills in the default range when there are no dates', () => {
     expect(range({ from: 'a' })).toEqual({
       from: 'a',
-      startDate: OVERVIEW_OPTIONS.year.startDate,
+      startDate: DEFAULT_LINE_START_DATE,
       endDate: TODAY_STRING,
     });
     expect(range({}, 'multiTrips')).toEqual(getDefaultDates('multiTrips', 'Subway'));

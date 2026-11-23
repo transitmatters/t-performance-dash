@@ -6,13 +6,16 @@ import { LineMap, createDefaultDiagramForLine } from '@transitmatters/stripmap';
 import '@transitmatters/stripmap/dist/style.css';
 
 import { LINE_OBJECTS } from '../../../common/constants/lines';
-import type { SlowZoneAllSlowResponse, SpeedRestriction } from '../../../common/types/dataPoints';
+import type {
+  SlowZoneAllSlowResponse,
+  SlowZoneDailyDelaysResponse,
+  SpeedRestriction,
+} from '../../../common/types/dataPoints';
 import type { SlowZonesLineName } from '../types';
 
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useDateRange } from '../../../common/hooks/usePageParams';
 import { SvgChart } from '../../../common/components/charts/SvgChart';
-import { TODAY_STRING } from '../../../common/constants/dates';
 import { useThemeStore } from '../../../common/state/themeStore';
 import {
   abbreviateStationName,
@@ -25,6 +28,7 @@ import { SlowZonesTooltip } from './SlowZonesTooltip';
 
 interface SlowZonesMapProps extends Pick<ComponentProps<typeof LineMap>, 'direction'> {
   slowZones: SlowZoneAllSlowResponse;
+  zoneDelays?: SlowZoneDailyDelaysResponse;
   speedRestrictions: SpeedRestriction[];
   lineName: SlowZonesLineName;
 }
@@ -53,6 +57,7 @@ const getSegmentLabelOverrides = (
 export const SlowZonesMap = ({
   lineName,
   slowZones,
+  zoneDelays,
   direction,
   speedRestrictions,
 }: SlowZonesMapProps) => {
@@ -68,19 +73,19 @@ export const SlowZonesMap = ({
   const isDark = useThemeStore((state) => state.theme === 'dark');
   const isHorizontal = direction === 'horizontal';
 
-  const { query } = useDelimitatedRoute();
-  const { endDate } = query;
+  const { endDate } = useDateRange();
 
   const { segments } = useMemo(
     () =>
       segmentSlowZones({
         slowZones,
+        zoneDelays: zoneDelays?.data,
         speedRestrictions,
         lineName: line.short,
-        date: endDate || TODAY_STRING,
+        date: endDate,
         diagram,
       }),
-    [slowZones, speedRestrictions, line, diagram, endDate]
+    [slowZones, zoneDelays, speedRestrictions, line, diagram, endDate]
   );
 
   const getSegmentsForSlowZones = ({ isHorizontal }: { isHorizontal: boolean }) => {
@@ -103,13 +108,10 @@ export const SlowZonesMap = ({
 
           if (zones.length > 0 || restrictions.length > 0) {
             const offset = direction === '0' ? 1 : -1;
-            const isToday = endDate === TODAY_STRING;
 
             if (zones.length > 0) {
               // We have a detected slow zone - use delay-based opacity
-              const getDelay = (zone: (typeof zones)[0]) =>
-                isToday && zone.latest_delay ? zone.latest_delay : zone.delay;
-              const totalDelay = zones.reduce((sum, zone) => sum + getDelay(zone), 0);
+              const totalDelay = zones.reduce((sum, zone) => sum + zone.dayDelay, 0);
               strokes.push({
                 offset,
                 stroke: line.color,
@@ -164,14 +166,16 @@ export const SlowZonesMap = ({
         seg.segmentLocation.toStationId === toStationId
     );
     if (slowSegment) {
-      return <SlowZonesTooltip side={side} segment={slowSegment} color={line.color} />;
+      return (
+        <SlowZonesTooltip side={side} segment={slowSegment} line={line.key} color={line.color} />
+      );
     }
 
     return null;
   };
 
   return (
-    <SvgChart datasetName="slowzone-map" startDate={endDate || TODAY_STRING}>
+    <SvgChart datasetName="slowzone-map" startDate={endDate}>
       <LineMap
         diagram={diagram}
         strokeOptions={{ stroke: line.color }}

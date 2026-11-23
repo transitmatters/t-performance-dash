@@ -6,15 +6,8 @@ import { Link } from '../general/Link';
 import type { Href } from '../general/Link';
 import type { Location } from '../../types/charts';
 import type { Line } from '../../types/lines';
-import {
-  useDelimitatedRoute,
-  useGenerateHref,
-  useHandleConfigStore,
-  useLineColorKey,
-} from '../../utils/router';
+import { useLineColorKey } from '../../utils/router';
 import { LINE_COLORS } from '../../constants/colors';
-import type { Page } from '../../constants/pages';
-import { ALL_PAGES } from '../../constants/pages';
 import { mbtaTextConfig } from '../../styles/general';
 import { LocationTitle } from '../../../modules/dashboard/LocationTitle';
 import { CardDescription, CardHeader, CardTitle } from '../ui/card';
@@ -28,9 +21,7 @@ interface WidgetTitle {
   line?: Line;
   /** A control that acts on this card's chart — a view switch or a filter. */
   action?: ReactNode;
-  /** When set, the title becomes a chevron link to this page, colored by line — the homescreen card style. */
-  tab?: Page;
-  /** A pre-resolved chevron-link href, for targets `tab` can't express (e.g. a route/date-specific link). Takes precedence over `tab`. */
+  /** When set, the title becomes a chevron link to this href, colored by line. */
   titleHref?: null | Href;
 }
 
@@ -44,27 +35,13 @@ export const WidgetTitle = ({
   location,
   line,
   action,
-  tab,
   titleHref,
 }: WidgetTitle) => {
-  const { page, query, linePath } = useDelimitatedRoute();
   const colorKey = useLineColorKey(line);
-  const handlePageConfig = useHandleConfigStore();
-  const generateHref = useGenerateHref();
-
-  const linkHref =
-    titleHref !== undefined
-      ? titleHref
-      : tab
-        ? generateHref(ALL_PAGES[tab], page, query, linePath)
-        : null;
+  const linkHref = titleHref ?? null;
 
   const titleElement = linkHref ? (
-    <Link
-      onClick={tab ? () => handlePageConfig(ALL_PAGES[tab]) : undefined}
-      href={linkHref}
-      className="flex items-center"
-    >
+    <Link href={linkHref} className="flex items-center">
       <CardTitle
         as="h2"
         className={classNames(

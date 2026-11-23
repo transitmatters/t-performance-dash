@@ -6,21 +6,6 @@ export interface DataPoint {
   direction: number;
 }
 
-export interface TravelTimePoint extends DataPoint {
-  dep_dt: string;
-  arr_dt: string;
-  travel_time_sec: number;
-  benchmark_travel_time_sec: number;
-  tm_benchmark_travel_time_sec?: number | null;
-  threshold_flag_1?: string;
-  threshold_flag_2?: string;
-  threshold_flag_3?: string;
-  vehicle_consist?: string;
-  occupancy_status?: string | null;
-  occupancy_percentage?: string | null;
-  vehicle_label?: string;
-}
-
 export interface HeadwayPoint extends DataPoint {
   prev_route_id: string;
   current_dep_dt: string;
@@ -30,16 +15,6 @@ export interface HeadwayPoint extends DataPoint {
   threshold_flag_1?: string;
   threshold_flag_2?: string;
   threshold_flag_3?: string;
-  vehicle_consist?: string;
-  occupancy_status?: string | null;
-  occupancy_percentage?: string | null;
-  vehicle_label?: string;
-}
-
-export interface DwellPoint extends DataPoint {
-  arr_dt: string;
-  dep_dt: string;
-  dwell_time_sec: number;
   vehicle_consist?: string;
   occupancy_status?: string | null;
   occupancy_percentage?: string | null;
@@ -99,11 +74,22 @@ export interface SlowZoneDayTotalsResponse {
   updated_on: string;
 }
 
-export interface SpeedDataPoint {
-  count: number;
-  date: string;
-  line: Line;
-  value: number;
+/** One slow zone's delay on each day it was active. Matches a SlowZoneResponse on color, fr_id, to_id and start date. */
+export interface SlowZoneDailyDelays {
+  color: Exclude<LineShort, 'Bus'>;
+  fr_id: string;
+  to_id: string;
+  /** YYYY-MM-DD */
+  start: string;
+  /** YYYY-MM-DD */
+  end: string;
+  /** Seconds over baseline on start + i days, or null when there was no data that day. */
+  delays: (number | null)[];
+}
+
+export interface SlowZoneDailyDelaysResponse {
+  data: SlowZoneDailyDelays[];
+  updated_on: string;
 }
 
 /** Fleet stats from data-ingestion. Each mode fills in its own share and age fields. */

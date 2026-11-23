@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 import type { Chart } from 'chart.js';
 import {
   faCloudRain,
+  faGaugeSimpleHigh,
   faTemperatureHalf,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
@@ -26,6 +27,7 @@ import { Segment, TrackRow } from './TrackRow';
 import { TemperatureTrack, getTemperaturePoints } from './TemperatureTrack';
 import type { TemperaturePoint } from './TemperatureTrack';
 import { PinnedAlerts } from './PinnedAlerts';
+import { SlowZonesTrack } from './SlowZonesTrack';
 
 interface ContextTrackProps {
   layers: ChartLayers;
@@ -33,8 +35,8 @@ interface ContextTrackProps {
 }
 
 /**
- * Strips under a chart's x axis showing the service alerts, weather, and temperature behind the
- * data, lined up with the plot. Hovering a segment reads it; clicking shades it on the chart.
+ * Strips under a chart's x axis showing the service alerts, slow zones, weather, and temperature
+ * behind the data, lined up with the plot. Hovering a segment reads it; clicking shades it on the chart.
  */
 export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
   const {
@@ -48,14 +50,29 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
     date,
     alerts,
     withAlerts,
+    slowZones,
   } = layers;
   const daily = granularity === 'daily';
   const pinned = useLayerStore((store) => store.pinned);
-  const temperaturePinned = useLayerStore((store) => store.temperature);
+  const temperaturePinned = useLayerStore((store) => store.temperaturePinned);
   const toggle = useLayerStore((store) => store.toggle);
   const toggleTemperature = useLayerStore((store) => store.toggleTemperature);
+  const slowZonesPinned = useLayerStore((store) => store.slowZonesPinned);
+  const toggleSlowZones = useLayerStore((store) => store.toggleSlowZones);
   const rowsRef = useRef<HTMLDivElement>(null);
   const ruleRef = useRef<HTMLDivElement>(null);
+  const [labelFits, setLabelFits] = useState<Record<string, boolean>>({});
+  const onLabelFit = useCallback((label: string, fits: boolean | null) => {
+    setLabelFits((previous) => {
+      if (fits === null) {
+        const next = { ...previous };
+        delete next[label];
+        return next;
+      }
+      return previous[label] === fits ? previous : { ...previous, [label]: fits };
+    });
+  }, []);
+  const iconOnly = Object.values(labelFits).includes(false);
 
   // Mirror the chart's hover rule down through the track, without re-rendering on every move
   useEffect(() => {
@@ -82,7 +99,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
     [daily, weather]
   );
 
-  if (!enabled || !geometry || !(withAlerts || showWeather || showTemperature)) return null;
+  if (!enabled || !geometry || !(withAlerts || slowZones || showWeather || showTemperature))
+    return null;
   const domain = { min: geometry.min, max: geometry.max };
   const weatherStatus = layers.isWeatherLoading
     ? 'loading'
@@ -100,6 +118,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             label="Alerts"
             icon={faTriangleExclamation}
             geometry={geometry}
+            iconOnly={iconOnly}
+            onLabelFit={onLabelFit}
             status={alertStatus}
             emptyText={alerts ? 'No service alerts' : 'Alerts unavailable'}
             lanes={Math.max(...alertSpans.map((span) => span.lane + 1), 1)}
@@ -122,11 +142,34 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             })}
           </TrackRow>
         )}
+        {slowZones && (
+          <TrackRow
+            label="Slow zones"
+            shortLabel="Slow"
+            icon={faGaugeSimpleHigh}
+            geometry={geometry}
+            iconOnly={iconOnly}
+            onLabelFit={onLabelFit}
+            status={slowZones.isLoading ? 'loading' : slowZones.runs.length ? 'ready' : 'empty'}
+            emptyText="No slow zones on this trip"
+            contentHeight={18}
+          >
+            <SlowZonesTrack
+              runs={slowZones.runs}
+              domain={domain}
+              color={slowZones.color}
+              pinned={slowZonesPinned}
+              onToggle={toggleSlowZones}
+            />
+          </TrackRow>
+        )}
         {showWeather && (
           <TrackRow
             label="Weather"
             icon={faCloudRain}
             geometry={geometry}
+            iconOnly={iconOnly}
+            onLabelFit={onLabelFit}
             status={weatherStatus}
             emptyText={noWeatherData ? 'No weather data' : 'No rain, snow, fog or storms'}
           >
@@ -152,6 +195,8 @@ export const ContextTrack = ({ layers, chartRef }: ContextTrackProps) => {
             label="Temp"
             icon={faTemperatureHalf}
             geometry={geometry}
+            iconOnly={iconOnly}
+            onLabelFit={onLabelFit}
             status={
               layers.isWeatherLoading ? 'loading' : temperaturePoints.length > 1 ? 'ready' : 'empty'
             }

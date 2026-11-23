@@ -2,6 +2,8 @@ import type { UseQueryResult } from '@tanstack/react-query';
 import type { TimeUnit } from 'chart.js';
 import type { HoverCardRow } from '../components/charts/hoverCard/types';
 import type { TripEmbedChart } from '../constants/staticRoutes';
+import type { AlertsScope } from './alerts';
+import type { LineShort } from './lines';
 import type { Station } from './stations';
 
 export interface SingleDayDataPoint {
@@ -57,6 +59,8 @@ export interface AggregateChunkProgress {
   failed: number;
   /** Chunks with neither data nor an error yet. */
   pending: number;
+  /** The date spans those pending chunks cover, joined where they touch, oldest first. */
+  pendingRanges: { startDate: string; endDate: string }[];
   /** by_time is taken from the newest chunk only, since percentiles can't be merged across chunks. */
   byTimeRange: { startDate: string; endDate: string };
   byTimeStatus: 'pending' | 'error' | 'success';
@@ -125,14 +129,22 @@ export interface LineProps {
   showUnderRatio?: boolean;
 }
 
+/** A subway trip whose slow zones go in a chart's context track. */
+export interface SlowZonesTrip {
+  fromStation: Station;
+  toStation: Station;
+  lineShort: LineShort;
+  color: string;
+}
+
 export interface AggregateLineProps extends LineProps {
   timeUnit: TimeUnit;
   data: AggregateDataPoint[];
   timeFormat: string;
   seriesName: string;
   fillColor: string;
-  startDate: string | undefined;
-  endDate: string | undefined;
+  startDate: string;
+  endDate: string;
   suggestedYMin?: number;
   suggestedYMax?: number;
   byTime?: boolean;
@@ -146,12 +158,15 @@ export interface AggregateLineProps extends LineProps {
   embedChart?: TripEmbedChart<'multi'>;
   /** Start with the trendline drawn. */
   trendline?: boolean;
+  slowZonesTrip?: SlowZonesTrip;
+  /** Set when the range loads in chunks: the spans still loading, shaded until they arrive. */
+  loadingRanges?: { startDate: string; endDate: string }[];
 }
 
 export interface SingleDayLineProps extends LineProps {
   data: SingleDayDataPoint[];
   metricField: MetricField;
-  date: string | undefined;
+  date: string;
   benchmarkField?: BenchmarkField;
   tmBenchmarkField?: BenchmarkField;
   units: 'Minutes' | 'MPH';
@@ -166,6 +181,8 @@ export interface SingleDayLineProps extends LineProps {
   actions?: boolean;
   /** Draws the series in, point by point, the first time the chart appears. */
   intro?: boolean;
+  /** Whose alerts the context track shows. */
+  alerts: AlertsScope;
 }
 
 export interface ChartCallout {
@@ -174,25 +191,12 @@ export interface ChartCallout {
   label: string;
 }
 
-export interface HeadwayHistogramProps {
-  chartId: string;
-  data: SingleDayDataPoint[];
-  date: string | undefined;
-  location: Location;
-  isLoading: boolean;
-  includeBothStopsForLocation?: boolean;
-  fname: DataName;
-  showLegend?: boolean;
-  metricField: MetricField;
-}
-
 export interface HeadwaysChartProps {
   headways: SingleDayDataPoint[];
   fromStation: Station;
   toStation: Station;
   showLegend?: boolean;
-  /** The day shown; defaults to the URL's `date`. */
-  date?: string;
+  date: string;
   /** Fill the parent's height and leave out the buttons under the chart, as an embed does. */
   fill?: boolean;
   callout?: ChartCallout;

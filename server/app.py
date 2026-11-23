@@ -10,6 +10,7 @@ from chalice_spec import ChaliceWithSpec, PydanticPlugin, Docs, Resp
 from apispec import APISpec
 from datetime import date
 from datadog_lambda.wrapper import datadog_lambda_wrapper
+from ddtrace.trace import tracer
 from chalicelib import (
     aggregation,
     cache,
@@ -70,6 +71,34 @@ CHECKS_FAILED = Resp(models.HealthcheckResponse, 500, "One or more health checks
 
 if TM_FRONTEND_HOST != localhost:
     app.register_middleware(ConvertToMiddleware(datadog_lambda_wrapper))
+
+STOP_PARAMS = ("stop", "from_stop", "to_stop")
+
+
+def tag_span_with_request_size(span, query_params):
+    """Tag a span with the request's date range and stop count, to tie Lambda memory to request size."""
+    if span is None or not query_params:
+        return
+    start = query_params.get("start_date")
+    end = query_params.get("end_date")
+    if start and end:
+        span.set_tag("tm.start_date", start)
+        span.set_tag("tm.end_date", end)
+        try:
+            span.set_metric("tm.range_days", (parse_user_date(end) - parse_user_date(start)).days + 1)
+        except BadRequestError:
+            pass
+    stop_count = sum(len(query_params.getlist(key)) for key in STOP_PARAMS if key in query_params)
+    if stop_count:
+        span.set_metric("tm.stop_count", stop_count)
+
+
+@app.middleware("http")
+def tag_request_size(event, get_response):
+    # Runs inside the Datadog wrapper, so the current span is the aws.lambda span.
+    tag_span_with_request_size(tracer.current_span(), event.query_params)
+    return get_response(event)
+
 
 # Initialize DynamoDB resource based on backend source
 if config.BACKEND_SOURCE == "aws":
@@ -179,7 +208,9 @@ def healthcheck():
         except Exception as e:
             e_str = str(e)
             for secret in config.HEALTHCHECK_HIDE_SECRETS:
-                e_str.replace(secret, "HIDDEN")
+                # An unset key is "", and replacing "" would put HIDDEN between every character
+                if secret:
+                    e_str = e_str.replace(secret, "HIDDEN")
             failed_checks[check] = f"Check threw an exception: {e_str}"
 
     # Uptime monitors must reach the Lambda, never a cached copy at the edge

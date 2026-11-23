@@ -7,12 +7,7 @@ import { StatementViz } from './StatementViz';
 
 const StatementText = ({ statement, lead }: { statement: Statement; lead: boolean }) => (
   <div className="flex flex-col gap-3">
-    <h3
-      className={cn(
-        'font-bold tracking-tight text-balance',
-        lead ? 'text-2xl md:text-3xl' : 'text-xl'
-      )}
-    >
+    <h3 className={cn('font-bold tracking-tight text-balance', lead ? 'text-2xl' : 'text-xl')}>
       {statement.head}
     </h3>
     <Link
@@ -55,13 +50,14 @@ export const SystemStatements = ({
                 key={statement.id}
                 className={cn(
                   'tm-fade-in flex min-w-0 flex-col gap-2.5 border-t py-6',
-                  // The first statement leads, across the full width.
-                  i === 0 &&
+                  // The first statement leads across the full width, and so does a last one that
+                  // would otherwise sit alone beside an empty column.
+                  (i === 0 || (i === statements.length - 1 && i % 2 === 1)) &&
                     'md:col-span-2 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:items-center md:gap-12'
                 )}
               >
                 <StatementText statement={statement} lead={i === 0} />
-                <StatementViz viz={statement.viz} />
+                <StatementViz viz={statement.viz} note={statement.note} />
               </article>
             ))
           : state === 'loading' && [0, 1, 2].map((i) => <Pending key={i} pulse />)}
