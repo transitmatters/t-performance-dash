@@ -1,20 +1,21 @@
 import { APP_DATA_BASE_PATH } from '../../utils/constants';
-import type { ApiPath, ApiQuery, ApiResponse } from '../../types/apiSchemas';
+import type { ApiPath, ApiPathParams, ApiQuery, ApiResponse } from '../../types/apiSchemas';
 import { fetchOrThrow } from './ApiError';
 
-interface ApiFetchArgs<P extends ApiPath> {
+type ApiFetchArgs<P extends ApiPath> = {
   path: P;
-  /** Values for the path's `{name}` segments. */
-  pathParams?: Record<string, string>;
-  // The intersection lets the body read a route's parameters generically.
-  options: ApiQuery<P> & Record<string, unknown>;
+  // `& object` lets the body list a route's parameters; unlike a Record, it still rejects unknown ones.
+  options: ApiQuery<P> & object;
   errorMessage: string;
   signal?: AbortSignal;
-}
+} & ([ApiPathParams<P>] extends [never]
+  ? { pathParams?: undefined }
+  : { /** Values for the path's `{name}` segments. */ pathParams: ApiPathParams<P> });
 
-const buildUrl = (path: string, options: Record<string, unknown>) => {
+const buildUrl = (path: string, options: object) => {
   const url = new URL(`${APP_DATA_BASE_PATH}${path}`, window.location.origin);
-  Object.entries(options).forEach(([key, value]) => {
+  const entries: [string, unknown][] = Object.entries(options);
+  entries.forEach(([key, value]) => {
     // An array is sent as a repeated parameter (`route=a&route=b`).
     const values: unknown[] = Array.isArray(value) ? value : [value];
     values.forEach((item) => {
@@ -35,7 +36,10 @@ export const apiFetch = async <P extends ApiPath>({
   errorMessage,
   signal,
 }: ApiFetchArgs<P>): Promise<ApiResponse<P>> => {
-  const resolvedPath = path.replace(/\{(\w+)\}/g, (_, name: string) => pathParams?.[name] ?? '');
+  const segments = new Map<string, unknown>(Object.entries(pathParams ?? {}));
+  const resolvedPath = path.replace(/\{(\w+)\}/g, (_, name: string) =>
+    String(segments.get(name) ?? '')
+  );
   const response = await fetchOrThrow(
     buildUrl(resolvedPath, options).toString(),
     { signal },

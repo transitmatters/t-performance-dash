@@ -17,6 +17,11 @@ export type ApiQuery<P extends ApiPath> = [QueryOf<P>] extends [never]
   ? Record<string, never>
   : QueryOf<P>;
 
+/** The values for a route's `{name}` path segments; never for a route without any. */
+export type ApiPathParams<P extends ApiPath> = paths[P]['parameters'] extends { path: infer Params }
+  ? Params
+  : never;
+
 /** The JSON body a GET route returns on success. */
 export type ApiResponse<P extends ApiPath> =
   paths[P]['get']['responses'][200]['content']['application/json'];
