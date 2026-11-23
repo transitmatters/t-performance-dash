@@ -23,7 +23,7 @@ import { useTripMetrics } from './useTripMetrics';
 
 export const BusTripGraphs = () => {
   const { line, fromStation, toStation, busRoute, dates } = useTripPage();
-  const { aggregate, single, multi } = useTripMetrics('bus');
+  const { single, multi } = useTripMetrics('bus');
   const location = getLocationDetails(fromStation, toStation);
   const busRouteLabel = busRoute ? `Route ${busRoute}` : undefined;
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
@@ -44,7 +44,7 @@ export const BusTripGraphs = () => {
 
   return (
     <>
-      {aggregate ? (
+      {dates.kind === 'range' ? (
         <>
           <WidgetDiv>
             <WidgetTitle
@@ -86,6 +86,8 @@ export const BusTripGraphs = () => {
               action={peakTimeControl}
             />
             <AggregateChartWrapper
+              startDate={dates.startDate}
+              endDate={dates.endDate}
               query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
@@ -102,7 +104,7 @@ export const BusTripGraphs = () => {
               data={single.traveltimes.data}
               metricField={MetricFieldKeys.travelTimeSec}
               benchmarkField={BenchmarkFieldKeys.benchmarkTravelTimeSec}
-              date={dates.kind === 'single' ? dates.date : undefined}
+              date={dates.date}
               subject={busRouteLabel}
               line={line}
             />

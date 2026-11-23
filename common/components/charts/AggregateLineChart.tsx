@@ -21,7 +21,7 @@ import {
 } from '../../../modules/weather/utils/temperatureDataset';
 import { TripEmbedButton } from '../../../modules/tripexplorer/TripEmbedButton';
 import { getMajorEventAnnotations, useMajorEvents } from '../../utils/majorEvents';
-import { useDelimitatedRoute } from '../../utils/router';
+import { useLinePage } from '../../hooks/usePageParams';
 import { LegendLongTerm } from './Legend';
 import { ChartStack } from './ChartStack';
 import { ChartActions } from './ChartActions';
@@ -97,6 +97,7 @@ export const AggregateLineChart = ({
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const hourly = timeUnit === 'hour';
+  const { line, lineShort } = useLinePage();
   const {
     layers,
     annotations: weatherBlocks,
@@ -110,7 +111,7 @@ export const AggregateLineChart = ({
     granularity: 'daily',
     enabled: !hourly && !fill,
     // Charts by time of day span many dates at every point, so there's no day to mark.
-    withOtherShutdowns: !hourly && !byTime,
+    otherShutdownsBesides: hourly || byTime ? undefined : lineShort,
     slowZonesTrip: byTime ? undefined : slowZonesTrip,
   });
   const { weather } = layers;
@@ -122,7 +123,6 @@ export const AggregateLineChart = ({
   const labels = useMemo(() => data.map((item) => item[pointField]), [data, pointField]);
   const [isTrendlineVisible, setIsTrendlineVisible] = useState(trendline);
   const multiplier = yUnit === 'Minutes' ? 1 / 60 : 1;
-  const { line } = useDelimitatedRoute();
   // Charts by time of day span many dates at every point, so there's no day to mark.
   const lineEvents = useMajorEvents(line, startDate, endDate);
   const events = hourly || byTime ? [] : lineEvents;

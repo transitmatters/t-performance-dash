@@ -4,8 +4,7 @@ import { Bar } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { useChartTheme } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
 import { useBreakpoint } from '../../../common/hooks/useBreakpoint';
@@ -45,11 +44,10 @@ export const DelayTotalBars = ({
   focus,
   fill = false,
 }: DelayTotalBarsProps) => {
-  const { line, colorKey, linePath } = useDelimitatedRoute();
+  const { line, color: lineColor, linePath } = useLinePage();
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
-  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   const period = AGG_PERIOD[agg];
   const timeAxis = delayTimeAxis(agg);
 

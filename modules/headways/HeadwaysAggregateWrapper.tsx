@@ -11,6 +11,7 @@ import {
   getAggHeadwayDataWidgets,
   getComparisonData,
 } from '../../common/utils/widgets';
+import { useDateRange } from '../../common/hooks/usePageParams';
 import { HeadwaysAggregateChart } from './charts/HeadwaysAggregateChart';
 
 interface HeadwaysAggregateWrapperProps {
@@ -27,6 +28,7 @@ export const HeadwaysAggregateWrapper = ({
   fromStation,
   dayFilter,
 }: HeadwaysAggregateWrapperProps) => {
+  const { startDate, endDate } = useDateRange();
   const allData = useMemo(
     () => query.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [],
     [query.data]
@@ -51,6 +53,8 @@ export const HeadwaysAggregateWrapper = ({
     <>
       <ChartStack>
         <HeadwaysAggregateChart
+          startDate={startDate}
+          endDate={endDate}
           headways={query.data}
           toStation={toStation}
           fromStation={fromStation}

@@ -10,7 +10,7 @@ import {
 } from '../components/ui/select';
 import { lineColorVar } from '../styles/general';
 import type { QueryParams } from '../types/router';
-import { useDelimitatedRoute, useSetQueryParam } from '../utils/router';
+import { usePageRoute, useSetQueryParam } from '../utils/router';
 
 type ToggleVariant = 'toggle' | 'select';
 
@@ -44,7 +44,7 @@ export const ToggleControl = <K extends string>({
   onChange,
   variant,
 }: ToggleControlProps<K>) => {
-  const { line, colorKey } = useDelimitatedRoute();
+  const { line, colorKey } = usePageRoute();
 
   if ((variant ?? (options.length > 2 ? 'select' : 'toggle')) === 'select') {
     return (
@@ -92,7 +92,7 @@ export const useOption = <K extends string, T extends string = string>(
   options: [K, T][],
   paramKey?: keyof QueryParams
 ) => {
-  const { query } = useDelimitatedRoute();
+  const { query } = usePageRoute();
   const setQueryParam = useSetQueryParam();
   const [localValue, setLocalValue] = useState<K>(initial);
 

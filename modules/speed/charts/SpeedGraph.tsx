@@ -4,8 +4,8 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../../common/constants/colors';
+import { useLinePage } from '../../../common/hooks/usePageParams';
+import { CHART_COLORS, COLORS } from '../../../common/constants/colors';
 import { HERO_LINE_WIDTH } from '../../../common/utils/chartTheme';
 import { hexWithAlpha } from '../../../common/utils/general';
 import type { SpeedTripMetrics } from '../../../common/types/dataPoints';
@@ -45,7 +45,7 @@ export const SpeedGraph = ({
   showTitle = false,
   peakLineDashed = false,
 }: SpeedGraphProps) => {
-  const { line, colorKey, linePath } = useDelimitatedRoute();
+  const { line, color: lineColor, linePath, lineShort } = useLinePage();
   const { tooltipFormat, unit, callbacks } = config;
   const peak = useSpeedBaseline(line);
   const ref = useRef(null);
@@ -53,7 +53,7 @@ export const SpeedGraph = ({
   const labels = data.map((point) => point.date);
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
-  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(lineShort, startDate, endDate);
   const shuttlingBlocks = hideGapsExplainedByEvents(
     explainGaps(getShuttlingBlockAnnotations(data), shutdowns, {
       startDate,
@@ -78,16 +78,16 @@ export const SpeedGraph = ({
               {
                 label: `MPH`,
                 fill: true,
-                backgroundColor: hexWithAlpha(LINE_COLORS[colorKey ?? 'default'], 0.8),
-                borderColor: LINE_COLORS[colorKey ?? 'default'],
+                backgroundColor: hexWithAlpha(lineColor, 0.8),
+                borderColor: lineColor,
                 borderWidth: HERO_LINE_WIDTH,
                 pointRadius: 0,
                 pointBorderWidth: 0,
                 stepped: true,
                 pointHoverRadius: 6,
                 spanGaps: false,
-                pointHoverBackgroundColor: LINE_COLORS[colorKey ?? 'default'],
-                pointBackgroundColor: LINE_COLORS[colorKey ?? 'default'],
+                pointHoverBackgroundColor: lineColor,
+                pointBackgroundColor: lineColor,
                 // Days with no trips are left out rather than plotted as 0 mph under the gap's band
                 data: data.map((datapoint) =>
                   datapoint.miles_covered
@@ -131,14 +131,13 @@ export const SpeedGraph = ({
                   hoverCard: (items) => {
                     const mph = items.find((item) => item.datasetIndex === 0)?.parsed.y;
                     if (!mph) return null;
-                    const color = LINE_COLORS[colorKey ?? 'default'];
                     return {
-                      hero: { value: `${mph}`, unit: 'mph', color },
+                      hero: { value: `${mph}`, unit: 'mph', color: lineColor },
                       meter: peak
                         ? {
                             fraction: mph / peak,
                             label: `${((100 * mph) / peak).toFixed(1)}% of historical maximum (${peak} mph)`,
-                            color,
+                            color: lineColor,
                           }
                         : undefined,
                     };

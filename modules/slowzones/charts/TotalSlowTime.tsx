@@ -59,6 +59,7 @@ export const TotalSlowTime = ({
     endDateUTC?.format('YYYY-MM-DD')
   );
   const otherShutdowns = useOtherLineShutdowns(
+    lineShort,
     startDateUTC?.format('YYYY-MM-DD'),
     endDateUTC?.format('YYYY-MM-DD')
   );

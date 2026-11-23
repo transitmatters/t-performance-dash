@@ -7,6 +7,7 @@ import { PartialDataNotice } from '../../common/components/notices/PartialDataNo
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import { filterByDayType, getAggDataWidgets, getComparisonData } from '../../common/utils/widgets';
+import { useDateRange } from '../../common/hooks/usePageParams';
 import { DwellsAggregateChart } from './charts/DwellsAggregateChart';
 import { DwellsTerminusNotice } from './DwellsTerminusNotice';
 
@@ -24,6 +25,7 @@ export const DwellsAggregateWrapper = ({
   fromStation,
   dayFilter,
 }: DwellsAggregateWrapperProps) => {
+  const { startDate, endDate } = useDateRange();
   const allData = useMemo(
     () => query.data?.by_date.filter((datapoint) => datapoint.peak === 'all') ?? [],
     [query.data]
@@ -50,6 +52,8 @@ export const DwellsAggregateWrapper = ({
     <>
       <ChartStack>
         <DwellsAggregateChart
+          startDate={startDate}
+          endDate={endDate}
           dwells={query.data}
           toStation={toStation}
           fromStation={fromStation}

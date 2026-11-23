@@ -3,15 +3,14 @@ import { SingleDayLineChart } from '../../../common/components/charts/SingleDayL
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { getLocationDetails } from '../../../common/utils/stations';
 
 interface DwellsSingleChartProps {
   dwells: SingleDayDataPoint[];
   toStation: Station;
   fromStation: Station;
-  /** The day shown; defaults to the URL's `date`. */
-  date?: string;
+  date: string;
   fill?: boolean;
 }
 
@@ -19,11 +18,11 @@ export const DwellsSingleChart = ({
   dwells,
   toStation,
   fromStation,
-  date: dateProp,
+  date,
   fill = false,
 }: DwellsSingleChartProps) => {
-  const { linePath, query } = useDelimitatedRoute();
-  const date = dateProp ?? query.date;
+  const linePage = useLinePage();
+  const { linePath } = linePage;
 
   const chart = useMemo(() => {
     return (
@@ -39,9 +38,10 @@ export const DwellsSingleChart = ({
         showLegend={false}
         fill={fill}
         embedChart="dwells"
+        alerts={linePage}
       />
     );
-  }, [dwells, fromStation, linePath, date, toStation, fill]);
+  }, [dwells, fromStation, linePath, linePage, date, toStation, fill]);
 
   return chart;
 };

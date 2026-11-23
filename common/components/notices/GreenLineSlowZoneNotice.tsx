@@ -1,8 +1,8 @@
-import { useDelimitatedRoute } from '../../utils/router';
+import { useLinePage } from '../../hooks/usePageParams';
 import { Notice } from './Notice';
 
 export const GreenLineSlowZoneNotice = () => {
-  const { line } = useDelimitatedRoute();
+  const { line } = useLinePage();
 
   if (line !== 'line-green') {
     return null;

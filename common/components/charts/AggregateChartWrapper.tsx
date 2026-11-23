@@ -15,10 +15,10 @@ interface AggregateChartWrapperProps {
   peakTime?: boolean;
   type: 'headways' | 'traveltimes' | 'dwells' | 'speeds';
   dayFilter?: DayFilter;
-  /** For an embed: fill its frame, with its own dates rather than the page's. */
+  /** For an embed: fill its frame. */
   fill?: boolean;
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
   trendline?: boolean;
 }
 

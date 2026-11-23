@@ -6,6 +6,7 @@ import type { SingleDayDataPoint } from '../../common/types/charts';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
+import { useSingleDate } from '../../common/hooks/usePageParams';
 import { DwellsSingleChart } from './charts/DwellsSingleChart';
 import { DwellsTerminusNotice } from './DwellsTerminusNotice';
 
@@ -20,6 +21,7 @@ export const DwellsSingleWrapper = ({
   toStation,
   fromStation,
 }: DwellsSingleWrapperProps) => {
+  const { date } = useSingleDate();
   if (fromStation?.terminus) return <DwellsTerminusNotice />;
 
   const dataReady = !query.isError && query.data && toStation && fromStation;
@@ -29,7 +31,12 @@ export const DwellsSingleWrapper = ({
 
   return (
     <ChartStack>
-      <DwellsSingleChart dwells={query.data} toStation={toStation} fromStation={fromStation} />
+      <DwellsSingleChart
+        date={date}
+        dwells={query.data}
+        toStation={toStation}
+        fromStation={fromStation}
+      />
       <StatStrip widgetObjects={widgetObjects} />
     </ChartStack>
   );

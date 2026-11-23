@@ -6,8 +6,8 @@ import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
 import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
 
-import { useDelimitatedRoute } from '../../common/utils/router';
-import { CHART_COLORS, COLORS, LINE_COLORS } from '../../common/constants/colors';
+import { useLinePage } from '../../common/hooks/usePageParams';
+import { CHART_COLORS, COLORS } from '../../common/constants/colors';
 import type { RidershipCount } from '../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../common/components/charts/Title';
 import { HERO_LINE_WIDTH } from '../../common/utils/chartTheme';
@@ -50,10 +50,13 @@ export const RidershipGraph = ({
 }: RidershipGraphProps) => {
   const {
     line,
-    colorKey,
+    color: lineColor,
     linePath,
-    query: { busRoute, crRoute, ferryRoute },
-  } = useDelimitatedRoute();
+    busRoute,
+    crRoute,
+    ferryRoute,
+    lineShort,
+  } = useLinePage();
   const { tooltipFormat, unit, callbacks } = config;
   const isMobile = !useBreakpoint('md');
   const ref = useRef(null);
@@ -62,11 +65,10 @@ export const RidershipGraph = ({
   const seasonalMaximumFor = stationName ? undefined : seasonal.maximumFor;
   const seasonalPending = !stationName && seasonal.isPending;
   const events = useMajorEvents(line, startDate, endDate);
-  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(lineShort, startDate, endDate);
 
   const chart = useMemo(() => {
     const labels = data.map((point) => point.date);
-    const lineColor = LINE_COLORS[colorKey ?? 'default'];
     // Each week against the most riders in the same week of past years, so December and holiday
     // weeks aren't measured against a fall peak (#938). Without it, the flat all-time maximum.
     const seasonalPeaks = seasonalMaximumFor
@@ -293,7 +295,7 @@ export const RidershipGraph = ({
     seasonalMaximumFor,
     seasonalPending,
     stationName,
-    colorKey,
+    lineColor,
     data,
     isMobile,
     linePath,

@@ -1,7 +1,7 @@
 // These throw on a URL the router should have fixed, so a bug shows as an error, not empty charts.
 import type { DateRange, LinePage, PageDates, SingleDate, TripPage } from '../utils/pageParams';
 import { parseLinePage, parsePageDates, parseTripPage } from '../utils/pageParams';
-import { useDelimitatedRoute } from '../utils/router';
+import { routeFromLocation, useRenderedLocation } from '../utils/router';
 
 export class PageParamsError extends Error {
   constructor(expected: string, pathname: string) {
@@ -10,27 +10,42 @@ export class PageParamsError extends Error {
   }
 }
 
-const orThrow = <T>(value: T | undefined, expected: string): T => {
-  if (value === undefined) throw new PageParamsError(expected, window.location.pathname);
+const orThrow = <T>(value: T | undefined, expected: string, pathname: string): T => {
+  if (value === undefined) throw new PageParamsError(expected, pathname);
   return value;
 };
 
-export const useLinePage = (): LinePage => orThrow(parseLinePage(useDelimitatedRoute()), 'a line');
+const useRenderedPage = () => {
+  const { pathname, search } = useRenderedLocation();
+  return { pathname, route: routeFromLocation(pathname, search) };
+};
 
-export const usePageDates = (): PageDates =>
-  orThrow(parsePageDates(useDelimitatedRoute()), 'dates');
+export const useLinePage = (): LinePage => {
+  const { pathname, route } = useRenderedPage();
+  return orThrow(parseLinePage(route), 'a line', pathname);
+};
+
+const usePageDatesAt = () => {
+  const { pathname, route } = useRenderedPage();
+  return { pathname, dates: orThrow(parsePageDates(route), 'dates', pathname) };
+};
+
+export const usePageDates = (): PageDates => usePageDatesAt().dates;
 
 export const useDateRange = (): DateRange => {
-  const dates = usePageDates();
-  return orThrow(dates.kind === 'range' ? dates : undefined, 'a date range');
+  const { pathname, dates } = usePageDatesAt();
+  return orThrow(dates.kind === 'range' ? dates : undefined, 'a date range', pathname);
 };
 
 export const useSingleDate = (): SingleDate => {
-  const dates = usePageDates();
-  return orThrow(dates.kind === 'single' ? dates : undefined, 'a single date');
+  const { pathname, dates } = usePageDatesAt();
+  return orThrow(dates.kind === 'single' ? dates : undefined, 'a single date', pathname);
 };
 
 // For the trip page itself, which explains a route with no stations. Inside it, use useTripPage.
-export const useTripSelection = (): TripPage | undefined => parseTripPage(useDelimitatedRoute());
+export const useTripSelection = (): TripPage | undefined => parseTripPage(useRenderedPage().route);
 
-export const useTripPage = (): TripPage => orThrow(useTripSelection(), 'a trip');
+export const useTripPage = (): TripPage => {
+  const { pathname, route } = useRenderedPage();
+  return orThrow(parseTripPage(route), 'a trip', pathname);
+};

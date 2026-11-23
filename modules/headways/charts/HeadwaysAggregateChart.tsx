@@ -11,7 +11,6 @@ import type {
 import { PointFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
 import { SEVERITY_COLORS } from '../../../common/utils/chartTheme';
-import { useDelimitatedRoute } from '../../../common/utils/router';
 import { getLocationDetails } from '../../../common/utils/stations';
 
 const formatShare = (part: number, total: number) => `${Math.round((part / total) * 100)}%`;
@@ -39,9 +38,8 @@ interface HeadwaysAggregateChartProps {
   toStation: Station;
   fromStation: Station;
   dayFilter?: DayFilter;
-  /** Defaults to the page's dates; an embed passes its own. */
-  startDate?: string;
-  endDate?: string;
+  startDate: string;
+  endDate: string;
   fill?: boolean;
   trendline?: boolean;
   loadingRanges?: AggregateLineProps['loadingRanges'];
@@ -52,16 +50,12 @@ export const HeadwaysAggregateChart = ({
   toStation,
   fromStation,
   dayFilter = 'all',
-  startDate: startDateProp,
-  endDate: endDateProp,
+  startDate,
+  endDate,
   fill = false,
   trendline = false,
   loadingRanges,
 }: HeadwaysAggregateChartProps) => {
-  const { query } = useDelimitatedRoute();
-  const startDate = startDateProp ?? query.startDate;
-  const endDate = endDateProp ?? query.endDate;
-
   const chart = useMemo(() => {
     // Filter data based on dayFilter
     let filteredData = headways.by_date.filter((datapoint) => datapoint.peak === 'all');

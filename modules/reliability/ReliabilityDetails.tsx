@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useDateRange, useLinePage } from '../../common/hooks/usePageParams';
 import { useReliabilityData } from '../../common/api/hooks/reliability';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { BusDataNotice } from '../../common/components/notices/BusDataNotice';
@@ -21,13 +21,11 @@ import { hasExcessTripTime } from './excessTripTimeUtils';
 const ALL_COMMUTER_RAIL = 'commuter-rail';
 
 export function ReliabilityDetails() {
-  const {
-    line,
-    query: { startDate, endDate, crRoute, busRoute },
-  } = useDelimitatedRoute();
+  const { line, crRoute, busRoute } = useLinePage();
+  const { startDate, endDate } = useDateRange();
   const isRide = line === 'line-RIDE';
   const isBus = line === 'line-bus';
-  const isSubway = line !== undefined && SUBWAY_LINES.includes(line);
+  const isSubway = SUBWAY_LINES.includes(line);
   // Grouped labels (e.g. 114/116/117) are summed server-side across their route_ids
   const busRouteIds = isBus && busRoute ? getBusRouteDataIds(busRoute) : [];
   const routeId = isRide
@@ -44,11 +42,12 @@ export function ReliabilityDetails() {
     [startDate, endDate]
   );
 
-  const enabled = Boolean(startDate && endDate && line && routeId);
-  const reliability = useReliabilityData(
-    { route_id: routeId, start_date: startDate, end_date: endDate, agg },
-    enabled
-  );
+  const reliability = useReliabilityData({
+    route_id: routeId,
+    start_date: startDate,
+    end_date: endDate,
+    agg,
+  });
 
   const props = { reliability, agg, startDate, endDate };
 
@@ -71,7 +70,7 @@ export function ReliabilityDetails() {
         ) : (
           <CommuterRailReliability {...props} />
         )}
-        {line && hasExcessTripTime(line) && (
+        {hasExcessTripTime(line) && (
           <ExcessTripTime line={line} agg={agg} startDate={startDate} endDate={endDate} />
         )}
         <DataNotes>

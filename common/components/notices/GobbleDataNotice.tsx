@@ -1,5 +1,6 @@
 import { Link } from '../general/Link';
-import { useDelimitatedRoute } from '../../utils/router';
+import { useLinePage, usePageDates } from '../../hooks/usePageParams';
+import { asDateRange } from '../../utils/pageParams';
 import { FERRY_ARCHIVE_MAX_DATE, TODAY_STRING } from '../../constants/dates';
 
 /**
@@ -27,15 +28,10 @@ export const includesGobbleFerryDay = (start: string | undefined, end: string | 
  * TripDataNotes). Commuter Rail and ferry attribution is owned by BetaDataNotice.
  */
 export const GobbleDataNotice = () => {
-  const {
-    line,
-    linePath,
-    query: { date, startDate, endDate },
-  } = useDelimitatedRoute();
+  const { line } = useLinePage();
+  const { startDate, endDate } = asDateRange(usePageDates());
 
-  const isBus = line === 'line-bus' || linePath === 'bus';
-
-  if (!(isBus && includesGobbleOnlyBusDay(startDate ?? date, endDate ?? date))) {
+  if (line !== 'line-bus' || !includesGobbleOnlyBusDay(startDate, endDate)) {
     return null;
   }
 

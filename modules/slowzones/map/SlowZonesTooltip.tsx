@@ -8,6 +8,7 @@ import { getParentStationForStopId, getStationById } from '../../../common/utils
 import { BasicWidgetDataLayout } from '../../../common/components/widgets/internal/BasicWidgetDataLayout';
 import { DeltaTimeWidgetValue } from '../../../common/types/basicWidgets';
 import type { SlowZoneResponse, SpeedRestriction } from '../../../common/types/dataPoints';
+import type { Line } from '../../../common/types/lines';
 import { prettyDate } from '../../../common/utils/date';
 
 import { DIRECTIONS } from './segment';
@@ -18,6 +19,7 @@ import styles from './SlowZonesTooltip.module.css';
 
 interface SlowZonesTooltipProps {
   segment: SlowZonesSegment;
+  line: Line;
   color: string;
   side: TooltipSide;
 }
@@ -77,6 +79,7 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
   const {
     side,
     color,
+    line,
     segment: { slowZones, speedRestrictions },
   } = props;
 
@@ -151,6 +154,7 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
                 {direction === '0' ? 'Southbound' : 'Northbound'}
               </div>
             }
+            line={line}
             layoutKind="delta-and-percent-change"
             analysis="compared to peak"
           />

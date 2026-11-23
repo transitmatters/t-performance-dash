@@ -5,8 +5,7 @@ import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 
 import { round } from '@lodash-utils';
-import { useDelimitatedRoute } from '../../../common/utils/router';
-import { LINE_COLORS } from '../../../common/constants/colors';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import type { FleetMetrics } from '../../../common/types/dataPoints';
 import { drawSimpleTitle } from '../../../common/components/charts/Title';
 import { HERO_LINE_WIDTH, useChartTheme } from '../../../common/utils/chartTheme';
@@ -47,19 +46,18 @@ export const FleetShareChart = ({
   endDate,
   showTitle = false,
 }: FleetShareChartProps) => {
-  const { line, colorKey, linePath } = useDelimitatedRoute();
+  const { line, color: lineColor, linePath, lineShort } = useLinePage();
   const { tooltipFormat, unit, callbacks } = config;
   const ref = useRef(null);
   const chartTheme = useChartTheme();
   const isMobile = !useBreakpoint('md');
   const labels = data.map((point) => point.date);
-  const lineColor = LINE_COLORS[colorKey ?? 'default'];
   // Keyed off the fleet metric, not miles_covered: a partial shutdown zeroes the line's
   // service metrics while cars still ran (and were sampled) on the remaining branches.
   // Checked against null rather than truthiness -- 0% is a real value.
   const shutdowns = usePageShutdowns('line', startDate, endDate);
   const events = useMajorEvents(line, startDate, endDate);
-  const otherShutdowns = useOtherLineShutdowns(startDate, endDate);
+  const otherShutdowns = useOtherLineShutdowns(lineShort, startDate, endDate);
   const shuttlingBlocks = showShuttling
     ? hideGapsExplainedByEvents(
         explainGaps(

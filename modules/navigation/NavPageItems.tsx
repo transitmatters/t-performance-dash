@@ -9,7 +9,7 @@ import { useDateStore } from '../../common/state/dateStore';
 import { readableOn } from '../../common/utils/general';
 import {
   getNavTripPage,
-  useDelimitatedRoute,
+  usePageRoute,
   useGenerateHref,
   useHandleConfigStore,
 } from '../../common/utils/router';
@@ -24,7 +24,7 @@ interface NavPageItemsProps {
  * rendered as disabled rather than hidden, so the metrics stay in the same place per line.
  */
 export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
-  const { line, colorKey, page, query, linePath } = useDelimitatedRoute();
+  const { line, colorKey, page, query, linePath } = usePageRoute();
   const handlePageConfig = useHandleConfigStore();
   const generateHref = useGenerateHref();
   const tripPage = useDateStore((state) => state.tripPage);

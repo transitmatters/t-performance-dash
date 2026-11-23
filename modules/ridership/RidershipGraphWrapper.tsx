@@ -4,7 +4,7 @@ import type { ParamsType } from '../speed/constants/speeds';
 import { ChartStack } from '../../common/components/charts/ChartStack';
 import type { BusRoute, CommuterRailRoute } from '../../common/types/lines';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { getMinMaxDatesForRoute } from '../../common/utils/stations';
 import { getServiceDatesBlockAnnotations } from '../service/utils/graphUtils';
 import { RidershipGraph } from './RidershipGraph';
@@ -29,7 +29,7 @@ export const RidershipGraphWrapper = ({
   endDate,
   stationName,
 }: RidershipGraphWrapperProps) => {
-  const { tab } = useDelimitatedRoute();
+  const { tab } = useLinePage();
   const { minDate: serviceStart, maxDate: serviceEnd } = getMinMaxDatesForRoute(
     tab,
     busRoute ?? crRoute

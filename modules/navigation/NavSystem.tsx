@@ -8,7 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '../../common/components/ui/sidebar';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import { usePageRoute } from '../../common/utils/router';
 
 const SYSTEM_ITEMS = [
   { page: 'landing', name: 'Home', href: '/', icon: faHouse },
@@ -26,7 +26,7 @@ interface NavSystemProps {
 }
 
 export const NavSystem = ({ close }: NavSystemProps) => {
-  const { page } = useDelimitatedRoute();
+  const { page } = usePageRoute();
 
   return (
     <SidebarGroup>

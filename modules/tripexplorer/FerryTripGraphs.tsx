@@ -17,7 +17,7 @@ import { HeadwaysHistogramWrapper } from '../headways/charts/HeadwaysHistogramWr
 import { useTripMetrics } from './useTripMetrics';
 
 export const FerryTripGraphs = () => {
-  const { line, fromStation, toStation } = useTripPage();
+  const { line, fromStation, toStation, dates } = useTripPage();
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -34,13 +34,13 @@ export const FerryTripGraphs = () => {
     { paramKey: 'hwDays' }
   );
 
-  const { aggregate, single, multi } = useTripMetrics('ferry');
+  const { single, multi } = useTripMetrics('ferry');
 
   const location = getLocationDetails(fromStation, toStation);
 
   return (
     <>
-      {aggregate ? (
+      {dates.kind === 'range' ? (
         <>
           <WidgetDiv>
             <>
@@ -86,6 +86,8 @@ export const FerryTripGraphs = () => {
               action={peakTimeControl}
             />
             <AggregateChartWrapper
+              startDate={dates.startDate}
+              endDate={dates.endDate}
               query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}

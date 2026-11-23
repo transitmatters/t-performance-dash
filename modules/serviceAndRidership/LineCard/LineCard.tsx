@@ -8,7 +8,7 @@ import {
   AccordionContent,
 } from '../../../common/components/ui/accordion';
 import { Widget } from '../../../common/components/widgets/Widget';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useDateRange } from '../../../common/hooks/usePageParams';
 import type { LineData, ServiceDay } from '../types';
 
 import { ButtonGroup } from '../../../common/components/general/ButtonGroup';
@@ -80,9 +80,7 @@ export const LineCard = (props: Props) => {
   const [serviceDay, setServiceDay] = useState<ServiceDay>('weekday');
   const highestTph = useMemo(() => getHighestTphValue(lineData), [lineData]);
   const title = shortName || longName;
-  const {
-    query: { startDate, endDate },
-  } = useDelimitatedRoute();
+  const { startDate, endDate } = useDateRange();
 
   const generateHref = useGenerateHref();
   const href = useMemo(() => {

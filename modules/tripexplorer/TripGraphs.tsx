@@ -1,4 +1,5 @@
 import { useTripPage } from '../../common/hooks/usePageParams';
+import { asDateRange } from '../../common/utils/pageParams';
 import { TripSlowZonesCallout } from '../slowzones/TripSlowZonesCallout';
 import { isSlowZonesLine } from '../slowzones/types';
 import { BusTripGraphs } from './BusTripGraphs';
@@ -18,8 +19,7 @@ export const TripGraphs = () => {
 export const TripSlowZonesBanner = () => {
   const { lineShort, linePath, dates, fromStation, toStation } = useTripPage();
   if (!isSlowZonesLine(lineShort)) return null;
-  const [startDate, endDate] =
-    dates.kind === 'range' ? [dates.startDate, dates.endDate] : [dates.date, dates.date];
+  const { startDate, endDate } = asDateRange(dates);
   return (
     <TripSlowZonesCallout
       fromStation={fromStation}

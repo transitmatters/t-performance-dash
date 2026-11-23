@@ -14,9 +14,8 @@ import type {
 import type { SlowZonesLineName } from '../types';
 
 import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useDateRange } from '../../../common/hooks/usePageParams';
 import { SvgChart } from '../../../common/components/charts/SvgChart';
-import { TODAY_STRING } from '../../../common/constants/dates';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { abbreviateStationName, getStripMapWatermark } from '../../../common/utils/stripmap';
 import { segmentSlowZones } from './segment';
@@ -70,8 +69,7 @@ export const SlowZonesMap = ({
   const isDark = useThemeStore((state) => state.theme === 'dark');
   const isHorizontal = direction === 'horizontal';
 
-  const { query } = useDelimitatedRoute();
-  const { endDate } = query;
+  const { endDate } = useDateRange();
 
   const { segments } = useMemo(
     () =>
@@ -80,7 +78,7 @@ export const SlowZonesMap = ({
         zoneDelays: zoneDelays?.data,
         speedRestrictions,
         lineName: line.short,
-        date: endDate || TODAY_STRING,
+        date: endDate,
         diagram,
       }),
     [slowZones, zoneDelays, speedRestrictions, line, diagram, endDate]
@@ -164,14 +162,16 @@ export const SlowZonesMap = ({
         seg.segmentLocation.toStationId === toStationId
     );
     if (slowSegment) {
-      return <SlowZonesTooltip side={side} segment={slowSegment} color={line.color} />;
+      return (
+        <SlowZonesTooltip side={side} segment={slowSegment} line={line.key} color={line.color} />
+      );
     }
 
     return null;
   };
 
   return (
-    <SvgChart datasetName="slowzone-map" startDate={endDate || TODAY_STRING}>
+    <SvgChart datasetName="slowzone-map" startDate={endDate}>
       <LineMap
         diagram={diagram}
         strokeOptions={{ stroke: line.color }}

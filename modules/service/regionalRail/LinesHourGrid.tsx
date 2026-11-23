@@ -1,4 +1,4 @@
-import { useLocation } from '@tanstack/react-router';
+import { useLocation, useSearch } from '@tanstack/react-router';
 import { Link } from '../../../common/components/general/Link';
 import { NoDataNotice } from '../../../common/components/notices/NoDataNotice';
 import { ChartActions } from '../../../common/components/charts/ChartActions';
@@ -6,7 +6,6 @@ import { ChartStack } from '../../../common/components/charts/ChartStack';
 import type { CrScorecardEntry } from '../../../common/types/dataPoints';
 import type { CommuterRailRoute } from '../../../common/types/lines';
 import { COMMUTER_RAIL_LINE_NAMES } from '../../../common/types/lines';
-import { useDelimitatedRoute } from '../../../common/utils/router';
 import { cn } from '../../../common/utils/cn';
 import { HourGrid, HourGridHeader, HourGridLegend, HourGridRow } from './HourGrid';
 import {
@@ -30,7 +29,7 @@ interface LinesHourGridProps {
 
 /** Every line's hours side by side, closest to Regional Rail first. */
 export const LinesHourGrid = ({ data, dayLabel, startDate, endDate }: LinesHourGridProps) => {
-  const { query } = useDelimitatedRoute();
+  const query = useSearch({ strict: false });
   const { pathname } = useLocation();
   const rows = data
     // Lines the dashboard knows about; leaves out event-only service like Foxboro

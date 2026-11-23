@@ -5,6 +5,7 @@ import type { TripEmbedChart } from '../../common/constants/staticRoutes';
 import { QueryNameKeys } from '../../common/types/api';
 import type { RouteType } from '../../common/types/api';
 import type { Station } from '../../common/types/stations';
+import { useLinePage } from '../../common/hooks/usePageParams';
 import { stopIdsForStations } from '../../common/utils/stations';
 import { DwellsSingleChart } from '../dwells/charts/DwellsSingleChart';
 import { HeadwaysHistogram } from '../headways/charts/HeadwaysHistogram';
@@ -33,6 +34,7 @@ export const SingleTripEmbedChart = ({
   toStation,
   date,
 }: SingleTripEmbedChartProps) => {
+  const linePage = useLinePage();
   const { fromStopIds, toStopIds } = stopIdsForStations(fromStation, toStation);
   const queryName = CHART_QUERIES[chart];
   const result = useSingleDayTripMetrics({
@@ -49,7 +51,7 @@ export const SingleTripEmbedChart = ({
     case 'traveltimes':
       return <TravelTimesSingleChart traveltimes={result.data} {...props} />;
     case 'headways':
-      return <HeadwaysSingleChart headways={result.data} {...props} />;
+      return <HeadwaysSingleChart headways={result.data} alerts={linePage} {...props} />;
     case 'dwells':
       return <DwellsSingleChart dwells={result.data} {...props} />;
     case 'headway-distribution':

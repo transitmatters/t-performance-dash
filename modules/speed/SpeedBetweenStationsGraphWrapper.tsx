@@ -6,6 +6,7 @@ import type { SingleDayDataPoint } from '../../common/types/charts';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { StatStrip } from '../../common/components/widgets/StatStrip';
 import { getSingleDayWidgets } from '../../common/utils/widgets';
+import { useSingleDate } from '../../common/hooks/usePageParams';
 import { convertToStationSpeedDataset } from './utils/stationSpeed';
 import { SpeedBetweenStationsSingleChart } from './charts/SpeedBetweenStationsSingleChart';
 
@@ -20,6 +21,7 @@ export const SpeedBetweenStationsSingleWrapper = ({
   toStation,
   fromStation,
 }: SpeedBetweenStationsSingleWrapperProps) => {
+  const { date } = useSingleDate();
   const dataReady = !query.isError && query.data && toStation && fromStation;
   if (!dataReady) return <ChartPlaceHolder query={query} />;
   if (query.data.length < 1) return <NoDataNotice shutdownScope="trip" />;
@@ -34,6 +36,7 @@ export const SpeedBetweenStationsSingleWrapper = ({
   return (
     <ChartStack>
       <SpeedBetweenStationsSingleChart
+        date={date}
         traveltimes={convertedData}
         toStation={toStation}
         fromStation={fromStation}

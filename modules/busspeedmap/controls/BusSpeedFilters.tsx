@@ -1,7 +1,7 @@
 import { LabeledControl } from '../../../common/components/controls/LabeledControl';
 import { getBusRouteDataIds } from '../../../common/constants/lines';
 import { ToggleControl } from '../../../common/hooks/useChartToggle';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { usePageRoute } from '../../../common/utils/router';
 import {
   useDayType,
   useDirection,
@@ -43,7 +43,7 @@ const RouteFilter = ({ routeIds }: { routeIds: string[] }) => {
 export const SpeedMapFilters = () => {
   const {
     query: { busRoute },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const { shown } = useShownPeriod();
   const direction = useDirection();
   const routeIds = busRoute ? getBusRouteDataIds(busRoute) : [];

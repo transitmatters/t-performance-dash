@@ -7,7 +7,7 @@ import {
   useServiceDay,
 } from '../../hooks/usePageFilters';
 import { SUBWAY_LINES } from '../../types/lines';
-import { useDelimitatedRoute } from '../../utils/router';
+import { usePageRoute } from '../../utils/router';
 import {
   RankingsFilters,
   SpeedMapFilters,
@@ -72,7 +72,7 @@ export const PageFilters = () => {
     page,
     line,
     query: { busRoute, crRoute },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
 
   switch (page) {
     case 'reliability':

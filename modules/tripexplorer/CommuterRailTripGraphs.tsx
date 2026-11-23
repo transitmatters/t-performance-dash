@@ -20,7 +20,7 @@ import { RegionalRailPreview } from './regionalRail/RegionalRailPreview';
 import { useTripMetrics } from './useTripMetrics';
 
 export const CommuterRailTripGraphs = () => {
-  const { line, fromStation, toStation } = useTripPage();
+  const { line, fromStation, toStation, dates } = useTripPage();
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -42,7 +42,7 @@ export const CommuterRailTripGraphs = () => {
     { paramKey: 'dwDays' }
   );
 
-  const { aggregate, single, multi } = useTripMetrics(
+  const { single, multi } = useTripMetrics(
     'cr',
     fromStation.terminus ? [QueryNameKeys.dwells] : []
   );
@@ -51,7 +51,7 @@ export const CommuterRailTripGraphs = () => {
 
   return (
     <>
-      {aggregate ? (
+      {dates.kind === 'range' ? (
         <>
           <WidgetDiv>
             <WidgetTitle
@@ -110,6 +110,8 @@ export const CommuterRailTripGraphs = () => {
               action={peakTimeControl}
             />
             <AggregateChartWrapper
+              startDate={dates.startDate}
+              endDate={dates.endDate}
               query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
@@ -163,7 +165,7 @@ export const CommuterRailTripGraphs = () => {
               fromStation={fromStation}
             />
           </WidgetDiv>
-          <RegionalRailPreview fromStation={fromStation} toStation={toStation} />
+          <RegionalRailPreview fromStation={fromStation} toStation={toStation} date={dates.date} />
         </>
       )}
     </>

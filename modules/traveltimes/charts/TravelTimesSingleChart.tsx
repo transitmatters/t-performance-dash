@@ -3,7 +3,7 @@ import { SingleDayLineChart } from '../../../common/components/charts/SingleDayL
 import type { SingleDayDataPoint } from '../../../common/types/charts';
 import { BenchmarkFieldKeys, PointFieldKeys, MetricFieldKeys } from '../../../common/types/charts';
 import type { Station } from '../../../common/types/stations';
-import { useDelimitatedRoute } from '../../../common/utils/router';
+import { useLinePage } from '../../../common/hooks/usePageParams';
 import { getLocationDetails } from '../../../common/utils/stations';
 
 interface TravelTimesSingleChartProps {
@@ -11,8 +11,7 @@ interface TravelTimesSingleChartProps {
   toStation: Station;
   fromStation: Station;
   showLegend?: boolean;
-  /** The day shown; defaults to the URL's `date`. */
-  date?: string;
+  date: string;
   fill?: boolean;
 }
 
@@ -21,11 +20,11 @@ export const TravelTimesSingleChart = ({
   toStation,
   fromStation,
   showLegend = true,
-  date: dateProp,
+  date,
   fill = false,
 }: TravelTimesSingleChartProps) => {
-  const { linePath, query } = useDelimitatedRoute();
-  const date = dateProp ?? query.date;
+  const linePage = useLinePage();
+  const { linePath } = linePage;
 
   const anyTravelBenchmarks =
     Array.isArray(traveltimes) &&
@@ -48,9 +47,20 @@ export const TravelTimesSingleChart = ({
         showLegend={showLegend && anyTravelBenchmarks}
         fill={fill}
         embedChart="traveltimes"
+        alerts={linePage}
       />
     );
-  }, [linePath, traveltimes, date, fromStation, toStation, showLegend, anyTravelBenchmarks, fill]);
+  }, [
+    linePath,
+    linePage,
+    traveltimes,
+    date,
+    fromStation,
+    toStation,
+    showLegend,
+    anyTravelBenchmarks,
+    fill,
+  ]);
 
   return chart;
 };

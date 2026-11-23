@@ -1,7 +1,7 @@
 import type { DateStoreSection } from '../constants/pages';
 import { ALL_PAGES } from '../constants/pages';
 import type { Line } from '../types/lines';
-import { useDelimitatedRoute } from '../utils/router';
+import { usePageRoute } from '../utils/router';
 import { otherShutdownLines } from '../../modules/shutdowns';
 import { isSlowZonesLine } from '../../modules/slowzones/types';
 
@@ -25,7 +25,7 @@ export const usePageControls = () => {
     page,
     tab,
     query: { busRoute, crRoute, ferryRoute },
-  } = useDelimitatedRoute();
+  } = usePageRoute();
   const config = page ? ALL_PAGES[page] : undefined;
   const section = config?.dateStoreSection;
   const isTrips = section === 'singleTrips' || section === 'multiTrips';

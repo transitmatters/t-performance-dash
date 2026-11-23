@@ -2,7 +2,7 @@ import { CSVLink } from 'react-csv';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileArrowDown } from '@fortawesome/free-solid-svg-icons';
 import type { Location } from '../../types/charts';
-import { useDelimitatedRoute } from '../../utils/router';
+import { usePageRoute } from '../../utils/router';
 import { getCsvFilename } from '../../utils/csv';
 import { buttonVariants } from '../ui/button';
 
@@ -23,7 +23,7 @@ export const DownloadButton = ({
   location,
   endDate,
 }: DownloadButtonProps) => {
-  const { line } = useDelimitatedRoute();
+  const { line } = usePageRoute();
   return (
     <CSVLink
       className={buttonVariants({ variant: 'ghost', size: 'sm', className: 'csv-link' })}

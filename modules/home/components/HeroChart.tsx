@@ -20,7 +20,7 @@ const useDayLayers = (pick: HeroPick | undefined, date: string) => {
   // The same request the chart's context track makes, so it finds the answer already in the cache.
   const { isLoading } = useMatchingAlerts(
     pick ? date : undefined,
-    pick?.station.lineShort ?? 'Red'
+    pick && { lineShort: pick.station.lineShort }
   );
   // The same request the chart makes, so it finds the answer already in the cache.
   const weather = useWeatherData(
@@ -108,7 +108,7 @@ export const HeroChart = () => {
         callout={callout}
         actions={false}
         intro
-        alertsLine={station.lineShort}
+        alerts={{ lineShort: station.lineShort }}
       />
     </Card>
   );

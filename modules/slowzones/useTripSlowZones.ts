@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
 import { useSlowzoneAllData } from '../../common/api/hooks/slowzones';
 import { useDisplayStore } from '../../common/state/displayStore';
-import type { Station } from '../../common/types/stations';
-import { useDelimitatedRoute } from '../../common/utils/router';
+import type { SlowZonesTrip } from '../../common/types/charts';
 import { getTripSlowZoneRuns } from '../../common/utils/slowZoneUtils';
 import type { TripSlowZoneRun } from '../../common/utils/slowZoneUtils';
 import { isSlowZonesLine } from './types';
@@ -18,28 +17,27 @@ export interface TripSlowZones {
  * when the reader has turned them off, or the trip isn't on a line with slow zones.
  */
 export const useTripSlowZones = (
-  trip: { fromStation: Station; toStation: Station } | undefined,
-  startDate: string | undefined,
-  endDate: string | undefined
+  trip: SlowZonesTrip | undefined,
+  startDate: string,
+  endDate: string
 ): TripSlowZones | undefined => {
   const show = useDisplayStore((state) => state.showSlowZones);
-  const { lineShort, color } = useDelimitatedRoute();
-  const enabled = Boolean(show && trip && startDate && endDate && isSlowZonesLine(lineShort));
+  const enabled = Boolean(show && trip && isSlowZonesLine(trip.lineShort));
   const { data, isLoading } = useSlowzoneAllData(enabled);
   const runs = useMemo(
     () =>
-      enabled && data && trip && startDate && endDate
+      enabled && data && trip
         ? getTripSlowZoneRuns(
             data.data,
             trip.fromStation,
             trip.toStation,
-            lineShort,
+            trip.lineShort,
             startDate,
             endDate
           )
         : [],
-    [enabled, data, trip, lineShort, startDate, endDate]
+    [enabled, data, trip, startDate, endDate]
   );
-  if (!enabled) return undefined;
-  return { runs, isLoading, color };
+  if (!enabled || !trip) return undefined;
+  return { runs, isLoading, color: trip.color };
 };

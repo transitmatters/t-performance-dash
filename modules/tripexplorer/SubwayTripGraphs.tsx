@@ -26,7 +26,7 @@ import {
 import { useTripMetrics } from './useTripMetrics';
 
 export const SubwayTripGraphs = () => {
-  const { line, fromStation, toStation } = useTripPage();
+  const { line, fromStation, toStation, dates } = useTripPage();
   const { value: peakTime, control: peakTimeControl } = useChartToggle(
     'weekday' as const,
     PEAK_TIME_OPTIONS,
@@ -57,7 +57,7 @@ export const SubwayTripGraphs = () => {
     { paramKey: 'dwDays' }
   );
 
-  const { aggregate, single, multi } = useTripMetrics(
+  const { single, multi } = useTripMetrics(
     'subway',
     fromStation.terminus ? [QueryNameKeys.dwells] : []
   );
@@ -65,7 +65,7 @@ export const SubwayTripGraphs = () => {
 
   return (
     <>
-      {aggregate ? (
+      {dates.kind === 'range' ? (
         <>
           <WidgetDiv>
             {travelTimeDisplay === 'speeds' ? (
@@ -149,6 +149,8 @@ export const SubwayTripGraphs = () => {
               action={peakTimeControl}
             />
             <AggregateChartWrapper
+              startDate={dates.startDate}
+              endDate={dates.endDate}
               query={multi.traveltimes}
               toStation={toStation}
               fromStation={fromStation}
