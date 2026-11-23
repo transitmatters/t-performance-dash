@@ -80,12 +80,14 @@ export default defineConfig({
       'error',
       { prefer: 'type-imports', disallowTypeAnnotations: false },
     ],
+    'typescript/consistent-type-assertions': ['error', { assertionStyle: 'never' }],
 
     // Type-aware
     'typescript/await-thenable': 'error',
     'typescript/no-floating-promises': 'error',
     'typescript/no-misused-promises': 'error',
     'typescript/no-unnecessary-type-assertion': 'error',
+    'typescript/no-unsafe-type-assertion': 'error',
     'typescript/no-unsafe-argument': 'error',
     'typescript/no-unsafe-assignment': 'error',
     'typescript/no-unsafe-call': 'error',
@@ -120,8 +122,6 @@ export default defineConfig({
 
     // Worth turning on, but each has too many existing violations for this change.
     // Counts are as of the switch to oxlint.
-    'typescript/consistent-type-assertions': 'off', // 266; target { assertionStyle: 'never' }
-    'typescript/no-unsafe-type-assertion': 'off', // 204
     // These three trust indexed access to always return a value, so they need
     // noUncheckedIndexedAccess on first or their fixes drop real undefined guards.
     'typescript/no-unnecessary-condition': 'off', // 217
@@ -154,6 +154,17 @@ export default defineConfig({
       rules: {
         'typescript/no-unsafe-assignment': 'off',
         'typescript/no-unsafe-class-instance-assignment': 'off',
+      },
+    },
+    {
+      // A real Chart needs a canvas; these doubles stand in for the few fields the plugins read.
+      files: [
+        'common/components/charts/contextTrack/chartGeometryPlugin.test.ts',
+        'common/components/charts/watermarkPlugin.test.ts',
+      ],
+      rules: {
+        'typescript/consistent-type-assertions': 'off',
+        'typescript/no-unsafe-type-assertion': 'off',
       },
     },
     {
