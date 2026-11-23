@@ -8,6 +8,7 @@ interface ApiFetchArgs<P extends ApiPath> {
   pathParams?: Record<string, string>;
   options: Record<string, unknown>;
   errorMessage: string;
+  signal?: AbortSignal;
 }
 
 const buildUrl = (path: string, options: Record<string, unknown>) => {
@@ -31,11 +32,12 @@ export const apiFetch = async <P extends ApiPath>({
   pathParams,
   options,
   errorMessage,
+  signal,
 }: ApiFetchArgs<P>): Promise<ApiResponse<P>> => {
   const resolvedPath = path.replace(/\{(\w+)\}/g, (_, name: string) => pathParams?.[name] ?? '');
   const response = await fetchOrThrow(
     buildUrl(resolvedPath, options).toString(),
-    undefined,
+    { signal },
     errorMessage
   );
   return await response.json();

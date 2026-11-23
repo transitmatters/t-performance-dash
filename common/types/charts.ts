@@ -6,22 +6,24 @@ import type { AlertsScope } from './alerts';
 import type { LineShort } from './lines';
 import type { Station } from './stations';
 
+/** A headway, dwell or travel time event, with the fields any of those charts reads. */
 export interface SingleDayDataPoint {
   route_id: string;
-  direction: number;
+  /** Headway events send it as a string ('0', '1'), dwells and travel times as a number. */
+  direction: number | string;
   dep_dt?: string;
   arr_dt?: string;
   current_dep_dt?: string;
   travel_time_sec?: number;
   headway_time_sec?: number;
   dwell_time_sec?: number;
-  benchmark_travel_time_sec?: number;
+  benchmark_travel_time_sec?: number | null;
   benchmark_headway_time_sec?: number | null;
   tm_benchmark_travel_time_sec?: number | null;
   threshold_flag_1?: string;
   speed_mph?: number;
   benchmark_speed_mph?: number;
-  vehicle_consist?: string;
+  vehicle_consist?: string | null;
   occupancy_status?: string | null;
   occupancy_percentage?: string | null;
   vehicle_label?: string;
@@ -35,7 +37,7 @@ export interface AggregateDataPoint {
   bunched?: number;
   on_time?: number;
   /** Headways with a scheduled headway, which `bunched` and `on_time` are shares of. Older responses lack it. */
-  scheduled?: number;
+  scheduled?: number | null;
   max: number;
   mean: number;
   min: number;

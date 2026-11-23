@@ -19,26 +19,6 @@ export const QUERIES: { [key in RouteType]: QueryNameOptions[] } = {
   ferry: [QueryNameKeys.traveltimes, QueryNameKeys.headways],
 };
 
-export enum SingleDayAPIParams {
-  stop = 'stop',
-  fromStop = 'from_stop',
-  toStop = 'to_stop',
-  date = 'date',
-}
-export type SingleDayAPIOptions = { [key in SingleDayAPIParams]?: string[] | string };
-export type PartialSingleDayAPIOptions = Partial<SingleDayAPIOptions>;
-
-export enum AggregateAPIParams {
-  stop = 'stop',
-  fromStop = 'from_stop',
-  toStop = 'to_stop',
-  startDate = 'start_date',
-  endDate = 'end_date',
-}
-
-export type AggregateAPIOptions = { [key in AggregateAPIParams]?: string[] | string };
-export type PartialAggregateAPIOptions = Partial<AggregateAPIOptions>;
-
 export type FetchDeliveredTripMetricsOptions = {
   agg: AggType;
   start_date?: string;
