@@ -245,7 +245,7 @@ export const ChartHoverCard = () => {
 
   // The card is placed in viewport coordinates, so any scroll would leave it behind.
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
     const hide = () => {
       hideHoverCard('point');
       hideHoverCard('annotation');

@@ -86,6 +86,7 @@ export const ServiceChartEmbed = ({ line, chart }: ServiceChartEmbedProps) => {
       case 'by-hour':
         return <DailyServiceHistogram scheduledService={scheduledData.data!} dayKind={day} fill />;
     }
+    return undefined;
   };
 
   const when = `${dayjs(startDate).format(PRETTY_DATE_FORMAT)} – ${dayjs(endDate).format(PRETTY_DATE_FORMAT)}`;

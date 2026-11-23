@@ -103,6 +103,7 @@ export const useResolveCommand = () => {
         case 'action':
           return undefined;
       }
+      return undefined;
     },
     [route, generateHref, handlePageConfig]
   );

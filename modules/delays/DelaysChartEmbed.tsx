@@ -53,6 +53,7 @@ export const DelaysChartEmbed = ({ chart }: { chart: DelaysEmbedChart }) => {
           />
         );
     }
+    return undefined;
   };
 
   const detail = {

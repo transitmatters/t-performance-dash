@@ -28,18 +28,19 @@ const getLineOrRoute = (
     return { type: 'cr', value: lineString as CommuterRailRoute };
   if (FERRY_ROUTES.includes(lineString.toString() as FerryRoute))
     return { type: 'ferry', value: lineString as FerryRoute };
+  return undefined;
 };
 
 export const configToQueryParams = (search: URLSearchParams) => {
-  if (!search.has('config')) return;
+  if (!search.has('config')) return undefined;
 
   const configArr = Array.isArray(search.get('config'))
     ? search.get('config')
     : search.get('config')?.split(',');
-  if (!configArr || configArr.length !== 5) return;
+  if (!configArr || configArr.length !== 5) return undefined;
 
   const lineOrRoute = getLineOrRoute(configArr[0]);
-  if (!lineOrRoute) return;
+  if (!lineOrRoute) return undefined;
 
   const startDate = configArr[3] || undefined;
   const endDate = configArr[4] || undefined;
@@ -121,6 +122,7 @@ export const getV3RedirectHref = (pathname: string, search: URLSearchParams) => 
       return '/bus/trips/single/?busRoute=1';
     }
   }
+  return undefined;
 };
 
 /** Route `beforeLoad` hook: forwards v3 URLs before the page renders. */

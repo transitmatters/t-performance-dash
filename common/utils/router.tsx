@@ -453,12 +453,10 @@ const getDateQueryParams = (
   if (currentPage.dateStoreSection === newPage.dateStoreSection) {
     return Object.fromEntries(Object.entries(query).filter(([key]) => DATE_PARAMS.includes(key)));
   }
-  if (currentPage.dateStoreSection !== newPage.dateStoreSection) {
-    // Between the two trip views, what is on screen beats what is in the store.
-    const hopDates = getTripHopDates(currentPage.dateStoreSection, newPage.dateStoreSection, query);
-    if (hopDates) return hopDates;
-    return getDateStoreSection(newPage.dateStoreSection, dateStore);
-  }
+  // Between the two trip views, what is on screen beats what is in the store.
+  const hopDates = getTripHopDates(currentPage.dateStoreSection, newPage.dateStoreSection, query);
+  if (hopDates) return hopDates;
+  return getDateStoreSection(newPage.dateStoreSection, dateStore);
 };
 
 /**
@@ -484,19 +482,22 @@ const getChartQueryParams = (
 };
 
 const getBusRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
-  if (newPage.hasRouteSelector === false) return;
+  if (newPage.hasRouteSelector === false) return undefined;
   if (query.busRoute) return { busRoute: query.busRoute };
   if (newPage.defaultBusRoute) return { busRoute: newPage.defaultBusRoute };
+  return undefined;
 };
 
 const getCRRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
-  if (newPage.hasRouteSelector === false) return;
+  if (newPage.hasRouteSelector === false) return undefined;
   if (query.crRoute) return { crRoute: query.crRoute };
+  return undefined;
 };
 
 const getFerryRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
-  if (newPage.hasRouteSelector === false) return;
+  if (newPage.hasRouteSelector === false) return undefined;
   if (query.ferryRoute) return { ferryRoute: query.ferryRoute };
+  return undefined;
 };
 
 /** Remembered stations are only reused on the line and route they were picked on. */
@@ -512,6 +513,7 @@ const getStationQueryParams = (
     return { from: query.from, to: query.to };
   if (stationStore.from && stationStore.to && stationStore.scope === newScope)
     return { from: stationStore.from, to: stationStore.to };
+  return undefined;
 };
 
 export const getQueryParams = (

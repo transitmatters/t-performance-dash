@@ -71,6 +71,7 @@ export const optionsForField = (
       return true;
     });
   }
+  return undefined;
 };
 
 export const optionsStation = (

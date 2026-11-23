@@ -953,7 +953,7 @@ export const BusSpeedMapView = ({
   useEffect(() => {
     const skippingInitialRender = isFirstRender.current && !segmentStops;
     isFirstRender.current = false;
-    if (skippingInitialRender) return;
+    if (skippingInitialRender) return undefined;
 
     runFocusFlight();
     return () => cancelPendingFlightRef.current();

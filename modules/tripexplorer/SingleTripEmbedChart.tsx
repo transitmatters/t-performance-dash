@@ -57,4 +57,5 @@ export const SingleTripEmbedChart = ({
     case 'headway-distribution':
       return <HeadwaysHistogram headways={result.data} {...props} />;
   }
+  return undefined;
 };

@@ -127,7 +127,6 @@ export default defineConfig({
     'typescript/no-unnecessary-condition': 'off', // 217
     'typescript/no-unnecessary-type-conversion': 'off', // 10
     'typescript/no-unnecessary-boolean-literal-compare': 'off', // 2
-    'typescript/consistent-return': 'off', // 30
   },
   overrides: [
     {

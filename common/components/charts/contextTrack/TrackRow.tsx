@@ -84,7 +84,7 @@ export const TrackRow = ({
     : undefined;
   const fits = widths ? fitting !== undefined : null;
   useLayoutEffect(() => {
-    if (fits === null) return;
+    if (fits === null) return undefined;
     onLabelFit?.(label, fits);
     return () => onLabelFit?.(label, null);
   }, [fits, label, onLabelFit]);

@@ -84,4 +84,5 @@ export const getDefaultDates = (dateStoreSection: DateStoreSection, tab: Tab) =>
   if (dateStoreSection === 'singleTrips') return tabDefaults.singleTripConfig;
   if (dateStoreSection === 'multiTrips') return tabDefaults.multiTripConfig;
   if (dateStoreSection === 'system') return tabDefaults.systemConfig;
+  return undefined;
 };
