@@ -1,4 +1,6 @@
 import type { AlertsResponse, HistoricalAlert } from '../types/alerts';
+import { AlertEffect } from '../types/alerts';
+import type { Schemas } from '../types/apiSchemas';
 import type { BusRoute, CommuterRailRoute, FerryRoute, LineShort } from '../types/lines';
 import { getStationKeysFromStations } from '../utils/stations';
 import { getBusRouteDataIds } from '../constants/lines';
@@ -11,6 +13,22 @@ const alertsAPIConfig = {
 const accessibilityAlertsAPIConfig = {
   activity: 'USING_ESCALATOR,USING_WHEELCHAIR',
 };
+
+const isAlertEffect = (value: string): value is AlertEffect =>
+  Object.values(AlertEffect).some((effect) => effect === value);
+
+// The spec leaves alert types open, so an effect the MBTA adds later reads as UNKNOWN_EFFECT.
+const toAlertsResponse = (alert: Schemas['LiveAlert']): AlertsResponse => ({
+  ...alert,
+  type: isAlertEffect(alert.type) ? alert.type : AlertEffect.UNKNOWN_EFFECT,
+  stops: alert.stops.map(String),
+  routes: alert.routes ?? undefined,
+});
+
+const fetchLiveAlerts = async (options: object, errorMessage: string) =>
+  (await apiFetch({ path: '/api/alerts', options: { ...options }, errorMessage })).map(
+    toAlertsResponse
+  );
 
 type RouteOptions = {
   route?: string;
@@ -45,11 +63,7 @@ const fetchAlertsForLine = async (line: LineShort): Promise<AlertsResponse[]> =>
     options['route'] = line;
   }
 
-  return await apiFetch({
-    path: '/api/alerts',
-    options,
-    errorMessage: `Failed to fetch alerts for line ${line}`,
-  });
+  return fetchLiveAlerts(options, `Failed to fetch alerts for line ${line}`);
 };
 
 const fetchAlertsForBus = async (busRoute: string): Promise<AlertsResponse[]> => {
@@ -59,11 +73,7 @@ const fetchAlertsForBus = async (busRoute: string): Promise<AlertsResponse[]> =>
   };
   options['route_type'] = '3';
 
-  return await apiFetch({
-    path: '/api/alerts',
-    options,
-    errorMessage: `Failed to fetch alerts for bus route ${busRoute}`,
-  });
+  return fetchLiveAlerts(options, `Failed to fetch alerts for bus route ${busRoute}`);
 };
 
 const fetchAlertsForCommuterRail = async (
@@ -72,11 +82,7 @@ const fetchAlertsForCommuterRail = async (
   // route_type 2 is commuter rail
   const options: RouteOptions = { ...alertsAPIConfig, route: crRoute, route_type: '2' };
 
-  return await apiFetch({
-    path: '/api/alerts',
-    options,
-    errorMessage: `Failed to fetch alerts for commuter rail route ${crRoute}`,
-  });
+  return fetchLiveAlerts(options, `Failed to fetch alerts for commuter rail route ${crRoute}`);
 };
 
 export const fetchAccessibilityAlertsForLine = async (
@@ -85,11 +91,7 @@ export const fetchAccessibilityAlertsForLine = async (
   const stationKeys = getStationKeysFromStations(line);
   const options = { ...accessibilityAlertsAPIConfig, stop: stationKeys.join(',') };
 
-  return await apiFetch({
-    path: '/api/alerts',
-    options,
-    errorMessage: 'Failed to fetch accessibility alerts',
-  });
+  return fetchLiveAlerts(options, 'Failed to fetch accessibility alerts');
 };
 
 const GREEN_LINE_ROUTE_IDS = ['Green-B', 'Green-C', 'Green-D', 'Green-E'];
@@ -115,9 +117,16 @@ export const fetchHistoricalAlerts = async (
   crRoute?: CommuterRailRoute,
   ferryRoute?: FerryRoute
 ): Promise<HistoricalAlert[]> => {
-  return await apiFetch({
-    path: `/api/alerts/${date}`,
+  // Null for dates before the archive starts, or when the day's archive can't be read.
+  const alerts = await apiFetch({
+    path: '/api/alerts/{user_date}',
+    pathParams: { user_date: `${date}` },
     options: { route: getHistoricalAlertRoutes(line, busRoute, crRoute, ferryRoute) },
     errorMessage: 'Failed to fetch historical alerts',
   });
+  return (alerts ?? []).map(({ valid_from, valid_to, text }) => ({
+    valid_from,
+    valid_to: valid_to ?? null,
+    text: text ?? null,
+  }));
 };

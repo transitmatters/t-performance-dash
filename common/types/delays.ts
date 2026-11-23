@@ -1,4 +1,4 @@
-import type { Line } from './lines';
+import type { Schemas } from './apiSchemas';
 
 export const DELAY_CAUSES = [
   'disabled_vehicle',
@@ -20,15 +20,15 @@ export const DELAY_CAUSES = [
 
 export type DelayCause = (typeof DELAY_CAUSES)[number];
 
-/** A day or week of /api/linedelays. The per-cause fields add up the delay alerts stated. */
-export type LineDelays = {
-  date: string;
-  line: Line;
-  /** Delay the alerts stated ("delays of about 15 minutes"), summed. */
-  total_delay_time: number;
-  /** Subway only: minutes at least one of those alerts was up. Absent without alert history. */
+/**
+ * A day or week of /api/linedelays. The per-cause fields add up the delay alerts stated.
+ * `delay_alert_minutes` (subway only) is absent without alert history.
+ * `line` is the route the delays are for, as requested: `Red`, `Green-B`, `CR-Fairmount`.
+ */
+export type LineDelays = Schemas['LineDelayEntry'] & {
   delay_alert_minutes?: number;
 } & Record<DelayCause, number> &
+  // The per-cause minutes are extra keys the spec doesn't list.
   Partial<Record<`delay_alert_minutes_${DelayCause}`, number>>;
 
 /**

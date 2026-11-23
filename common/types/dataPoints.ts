@@ -1,3 +1,4 @@
+import type { Schemas } from './apiSchemas';
 import type { Line, LineShort } from './lines';
 import type { Station } from './stations';
 
@@ -263,38 +264,18 @@ export type ServiceHours = {
   delivered: number;
 };
 
-export type RidershipCount = {
-  date: string;
-  count: number;
-};
+export type RidershipCount = Schemas['RidershipEntry'];
 
 /** One week of average weekday fare validations at each gated station on a line, by parent stop ID */
-export type StationRidershipWeek = {
-  date: string;
-  stations: Record<string, number>;
-};
+export type StationRidershipWeek = Schemas['StationRidershipEntry'];
 
 /** Average weekday riders at one bus stop, in one direction and season */
-export type BusStopRidershipStop = {
-  stop_id: string;
-  boardings: number;
-  alightings: number;
-};
+export type BusStopRidershipStop = Schemas['BusStopRidershipStop'];
 
-export type BusStopRidershipDirection = {
-  /** 0 is outbound, 1 is inbound */
-  direction_id: number;
-  /** In order along the route */
-  stops: BusStopRidershipStop[];
-};
+export type BusStopRidershipDirection = Schemas['BusStopRidershipDirection'];
 
 /** A bus route's ridership by stop, from the MBTA's seasonal counts of every trip */
-export type BusStopRidership = {
-  route_id: string;
-  /** Each fall season the MBTA counted the route in, oldest first */
-  seasons: { season: string; directions: BusStopRidershipDirection[] }[];
-  stop_names: Record<string, string>;
-};
+export type BusStopRidership = Schemas['BusStopRidershipResponse'];
 
 export type ReliabilityCounts = {
   otpNumerator: number;
@@ -336,34 +317,15 @@ export type ReliabilityEntry = Partial<HeadwayCounts> & {
  * Riders and their passenger-weighted minutes, summed over a period; see
  * server/chalicelib/reliability.py. Divide minutes by riders for per-rider averages.
  */
-export type ExcessTripTimeSums = {
-  riders: number;
-  waitTime: number;
-  travelTime: number;
-  baselineTripTime: number;
-  baselineWaitTime: number;
-  baselineTravelTime: number;
-  withinFiveMin: number;
-  withinTwentyMin: number;
-  withinTwentyPct: number;
-  withinThirtyPct: number;
-};
-
-export type ExcessTripTimePeriod = 'amPeak' | 'pmPeak' | 'offPeak';
+export type ExcessTripTimeSums = Schemas['ExcessTripTimeSums'];
 
 /** Sums for both directions or one, with the same sums per service period. */
-export type ExcessTripTimeScope = ExcessTripTimeSums & {
-  byPeriod: Record<ExcessTripTimePeriod, ExcessTripTimeSums>;
-};
+export type ExcessTripTimeScope = Schemas['ExcessTripTimeScope'];
+
+export type ExcessTripTimePeriod = keyof ExcessTripTimeScope['byPeriod'];
 
 /** One day, week, or month of the MBTA's excess trip time for a subway line. */
-export type ExcessTripTimeEntry = ExcessTripTimeScope & {
-  date: string;
-  // Service days with data in the period
-  days: number;
-  // Per GTFS direction_id ("0", "1")
-  byDirection: Record<string, ExcessTripTimeScope>;
-};
+export type ExcessTripTimeEntry = Schemas['ExcessTripTimeEntry'];
 
 /** One direction's schedule, measured at its Boston terminal; see server/chalicelib/regional_rail.py. */
 export type ScorecardDirection = {

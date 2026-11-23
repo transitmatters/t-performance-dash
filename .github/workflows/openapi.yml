@@ -20,11 +20,13 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Install dependencies
         run: cd server && uv sync --group dev
-      - name: Regenerate OpenAPI spec
-        run: cd server && uv run python -m scripts.generate_openapi
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Regenerate OpenAPI spec and frontend API types
+        run: npm run generate-openapi
       - name: Check for uncommitted spec changes
         run: |
-          if ! git diff --exit-code server/openapi.json; then
-            echo "::error::server/openapi.json is out of date. Run 'npm run generate-openapi' and commit the result."
+          if ! git diff --exit-code server/openapi.json common/types/generated/api.ts; then
+            echo "::error::server/openapi.json or common/types/generated/api.ts is out of date. Run 'npm run generate-openapi' and commit the result."
             exit 1
           fi

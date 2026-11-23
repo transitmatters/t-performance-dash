@@ -1,3 +1,5 @@
+import type { Filled, Schemas } from './apiSchemas';
+
 export const WEATHER_CONDITIONS = [
   'clear',
   'cloudy',
@@ -10,12 +12,6 @@ export const WEATHER_CONDITIONS = [
 
 export type WeatherCondition = (typeof WEATHER_CONDITIONS)[number];
 
-export type WeatherHourly = {
-  timestamp: string;
-  temperature_f: number | null;
-  weather_code: number | null;
+export type WeatherHourly = Filled<Schemas['WeatherHourlyEntry']> & {
   condition: WeatherCondition | null;
-  precipitation_in: number | null;
-  humidity_pct: number | null;
-  wind_mph: number | null;
 };

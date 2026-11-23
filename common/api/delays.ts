@@ -8,9 +8,13 @@ export const fetchLineDelaysByLine = async (
 ): Promise<LineDelays[]> => {
   if (!options[FetchAlertDelaysByLineParams.line]) return [];
 
-  return await apiFetch({
+  const rows = await apiFetch({
     path: '/api/linedelays',
     options: withWeekStart(options),
     errorMessage: 'Failed to fetch delay metrics',
   });
+  return rows.map(({ delay_alert_minutes, ...row }) => ({
+    ...row,
+    delay_alert_minutes: delay_alert_minutes ?? undefined,
+  }));
 };

@@ -8,7 +8,7 @@ import type { FetchSpeedRestrictionsOptions, FetchSpeedRestrictionsResponse } fr
 import type { SlowZonesLineName } from '../../modules/slowzones/types';
 import { getGtfsRailLineId } from '../utils/lines';
 import { fetchOrThrow } from './utils/ApiError';
-import { apiFetch } from './utils/fetch';
+import { apiFetchUnchecked } from './utils/fetch';
 
 export const fetchDelayTotals = async (): Promise<SlowZoneDayTotalsResponse> => {
   const url = new URL(`/static/slowzones/delay_totals.json`, window.location.origin);
@@ -40,7 +40,7 @@ export const fetchSpeedRestrictions = async (
     available,
     date: resolvedDate,
     zones,
-  }: FetchSpeedRestrictionsResponse = await apiFetch({
+  }: FetchSpeedRestrictionsResponse = await apiFetchUnchecked({
     path: `/api/speed_restrictions`,
     options: { line_id: getGtfsRailLineId(lineId), date: requestedDate },
     errorMessage: 'Failed to fetch speed restrictions',

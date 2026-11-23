@@ -6,7 +6,8 @@
   "scripts": {
     "build": "vite build",
     "build-storybook": "storybook build",
-    "generate-openapi": "cd server && uv run python -m scripts.generate_openapi && cd ..",
+    "generate-openapi": "cd server && uv run python -m scripts.generate_openapi && cd .. && npm run generate-api-types",
+    "generate-api-types": "openapi-typescript server/openapi.json --default-non-nullable false -o common/types/generated/api.ts && oxfmt common/types/generated/api.ts",
     "generate-oss-list": "generate-attribution --outputDir common/constants/licenses && cd server && uv run python -m scripts.generate_python_licenses && cd ..",
     "get-api-cache": "cd server && uv run python -m scripts.fetch_static_data && cd ..",
     "get-data": "npm run get-sz-totals && npm run get-szs && npm run get-speed-restrictions && npm run get-landing-trip-metrics && npm run get-landing-ridership && npm run get-landing-baselines && npm run get-landing-overview && npm run get-api-cache",
@@ -118,6 +119,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.13.0",
     "npm-attribution-generator": "^2.0.0",
+    "openapi-typescript": "^7.13.0",
     "oxfmt": "^0.73.0",
     "serve": "^14.2.6",
     "storybook": "^10.6.2",
