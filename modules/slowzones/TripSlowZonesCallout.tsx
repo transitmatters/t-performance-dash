@@ -52,8 +52,7 @@ export const TripSlowZonesCallout = ({
   const { data } = useSlowzoneAllData();
   const summary = useMemo(
     () =>
-      data &&
-      getTripSlowZoneSummary(data.data, fromStation, toStation, lineShort, startDate, endDate),
+      data && getTripSlowZoneSummary(data, fromStation, toStation, lineShort, startDate, endDate),
     [data, fromStation, toStation, lineShort, startDate, endDate]
   );
   if (!summary) return null;
