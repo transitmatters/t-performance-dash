@@ -1,7 +1,9 @@
 const CIP_EXPIRY = new Date('2026-05-02T00:00:00');
 
+const EXPIRED = new Date() >= CIP_EXPIRY;
+
 export const CIPBanner = () => {
-  if (new Date() >= CIP_EXPIRY) return null;
+  if (EXPIRED) return null;
 
   return (
     <a

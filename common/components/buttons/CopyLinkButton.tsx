@@ -52,7 +52,7 @@ export const CopyButton = ({ getText, label, icon, ariaLabel, failedMessage }: C
   }, [getText]);
 
   return (
-    <Button variant="ghost" size="sm" onClick={handleClick} aria-label={ariaLabel}>
+    <Button variant="ghost" size="sm" onClick={() => void handleClick()} aria-label={ariaLabel}>
       <FontAwesomeIcon icon={state === 'copied' ? faCheck : icon} aria-hidden />
       {state === 'copied' ? 'Copied' : state === 'failed' ? "Couldn't copy" : label}
       {/* Announced without stealing focus, so keyboard and screen-reader users get the same

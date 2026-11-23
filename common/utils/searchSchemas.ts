@@ -11,7 +11,7 @@ type RawSearch = Record<string, unknown>;
 
 /** A non-empty string, or the first one of a repeated key. Never coerced, so `busRoute=1` stays `'1'`. */
 const str = (value: unknown): string | undefined => {
-  const first = Array.isArray(value) ? value[0] : value;
+  const first: unknown = Array.isArray(value) ? value[0] : value;
   return typeof first === 'string' && first !== '' ? first : undefined;
 };
 

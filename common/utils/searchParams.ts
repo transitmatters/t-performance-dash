@@ -15,12 +15,20 @@ export const parseSearch = (searchStr: string): SearchObject => {
   return search;
 };
 
+/** A URL parameter's text; parameters are strings, numbers or booleans, and anything else is dropped. */
+export const paramText = (value: unknown): string | undefined =>
+  typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+    ? String(value)
+    : undefined;
+
 export const stringifySearch = (search: Record<string, unknown>): string => {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(search)) {
-    if (value === undefined || value === null) continue;
-    if (Array.isArray(value)) value.forEach((item) => params.append(key, String(item)));
-    else params.append(key, String(value));
+    const values: unknown[] = Array.isArray(value) ? value : [value];
+    values.forEach((item) => {
+      const text = paramText(item);
+      if (text !== undefined) params.append(key, text);
+    });
   }
   const searchStr = params.toString();
   return searchStr ? `?${searchStr}` : '';

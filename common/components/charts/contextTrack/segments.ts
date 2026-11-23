@@ -1,4 +1,4 @@
-import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import dayjs from 'dayjs';
 import type { HistoricalAlert } from '../../../types/alerts';
 import { FIVE_MINUTES } from '../../../constants/time';
@@ -117,10 +117,7 @@ export const alertSegments = (alerts: HistoricalAlert[], date: string) =>
     })
   );
 
-export const getAlertAnnotations = (
-  alerts: HistoricalAlert[],
-  date: string
-): AnnotationOptions<keyof AnnotationTypeRegistry>[] =>
+export const getAlertAnnotations = (alerts: HistoricalAlert[], date: string): AnnotationOptions[] =>
   alerts.flatMap((alert) => {
     const clipped = clipAlert(alert, date);
     if (!clipped) return [];

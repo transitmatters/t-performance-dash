@@ -114,7 +114,7 @@ export const TotalDelayGraph = ({
                 filter: hideZeroUnlessAllZero,
                 callbacks: {
                   title: (context) => {
-                    return agg === 'weekly' ? `Week of ${context[0].label}` : `${context[0].label}`;
+                    return agg === 'weekly' ? `Week of ${context[0].label}` : context[0].label;
                   },
                   label: (tooltipItem) => {
                     return `${tooltipItem.dataset.label}: ${getFormattedTimeString(

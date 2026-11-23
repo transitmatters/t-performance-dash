@@ -14,15 +14,21 @@ const accessibilityAlertsAPIConfig = {
   activity: 'USING_ESCALATOR,USING_WHEELCHAIR',
 };
 
-const isAlertEffect = (value: string): value is AlertEffect =>
-  Object.values(AlertEffect).some((effect) => effect === value);
+const ALERT_EFFECTS = new Map<string, AlertEffect>(
+  Object.values(AlertEffect).map((effect) => [effect, effect])
+);
 
 // The spec leaves alert types open, so an effect the MBTA adds later reads as UNKNOWN_EFFECT.
-const toAlertsResponse = (alert: Schemas['LiveAlert']): AlertsResponse => ({
+const toAlertsResponse = ({
+  type,
+  stops,
+  routes,
+  ...alert
+}: Schemas['LiveAlert']): AlertsResponse => ({
   ...alert,
-  type: isAlertEffect(alert.type) ? alert.type : AlertEffect.UNKNOWN_EFFECT,
-  stops: alert.stops.map(String),
-  routes: alert.routes ?? undefined,
+  type: ALERT_EFFECTS.get(type) ?? AlertEffect.UNKNOWN_EFFECT,
+  stops: stops.map(String),
+  routes: routes ?? undefined,
 });
 
 type LiveAlertsQuery = ApiQuery<'/api/alerts'>;

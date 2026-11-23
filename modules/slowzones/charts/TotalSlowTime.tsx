@@ -191,7 +191,7 @@ export const TotalSlowTime = ({
                 position: 'nearest',
                 callbacks: {
                   title: (tooltipItems) => {
-                    return `${tooltipItems[0].label.split(',').slice(0, 2).join(',')}`;
+                    return tooltipItems[0].label.split(',').slice(0, 2).join(',');
                   },
                   label: (tooltipItem) => {
                     return `${

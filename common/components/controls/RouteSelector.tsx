@@ -108,7 +108,7 @@ export const RouteSelector = ({ className }: { className?: string }) => {
                 value={option.label}
                 onSelect={() => {
                   setOpen(false);
-                  if (option.key !== selectedKey) navigate({ href: hrefFor(option.key) });
+                  if (option.key !== selectedKey) void navigate({ href: hrefFor(option.key) });
                 }}
               >
                 <FontAwesomeIcon

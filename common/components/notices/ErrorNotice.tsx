@@ -7,7 +7,7 @@ import { getErrorCopy } from '../../api/utils/ApiError';
 import { Button } from '../ui/button';
 
 interface ErrorNoticeProps {
-  query?: UseQueryResult<unknown>;
+  query?: UseQueryResult;
 }
 
 /**
@@ -42,7 +42,7 @@ export const ErrorNotice = ({ query }: ErrorNoticeProps) => {
           variant="outline"
           size="sm"
           className="mt-2"
-          onClick={() => query?.refetch()}
+          onClick={() => void query?.refetch()}
           disabled={query?.isFetching}
         >
           <FontAwesomeIcon

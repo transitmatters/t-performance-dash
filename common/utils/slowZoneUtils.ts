@@ -100,10 +100,9 @@ export const useFormatSegments = (
 export const getRoutes = (direction: Direction, data: SlowZone[], isMobile: boolean) => {
   // group by line, sort by order , flatten, get ids, filter out duplicates
   const routes = Object.values(groupByLine(data))
-    .map((sz: SlowZone[]) =>
+    .flatMap((sz: SlowZone[]) =>
       sz.sort((a, b) => (direction === 'southbound' ? a.order - b.order : b.order - a.order))
     )
-    .flat()
     .map((sz: SlowZone) => getStationPairName(sz.from, sz.to, isMobile));
   return [...new Set(routes)];
 };

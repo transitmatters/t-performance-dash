@@ -48,7 +48,7 @@ export const splitDateRange = (
     });
     chunkStart = nextStart;
   }
-  return chunks.reverse();
+  return chunks.toReversed();
 };
 
 /** Joins chunks that run day-to-day into single spans, oldest first. */

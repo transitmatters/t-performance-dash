@@ -28,7 +28,7 @@ const RootComponent = () => {
   const colorVisionKey = useColorVisionKey();
   useGoatCounter();
   useEffect(() => {
-    initBetaRum();
+    void initBetaRum();
   }, []);
 
   if (embed && !notFound) {

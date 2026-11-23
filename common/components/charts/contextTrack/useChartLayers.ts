@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import type { Plugin } from 'chart.js';
-import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import { useWeatherData } from '../../../api/hooks/weather';
 import { useMatchingAlerts } from '../../../api/hooks/alerts';
 import type {
@@ -142,7 +142,7 @@ export const useChartLayers = ({
     () => weatherRuns.filter(({ key }) => pinned[key]),
     [weatherRuns, pinned]
   );
-  const annotations: AnnotationOptions<keyof AnnotationTypeRegistry>[] = useMemo(() => {
+  const annotations: AnnotationOptions[] = useMemo(() => {
     if (!enabled) return otherShutdowns.annotations;
     const pinnedAlerts =
       withAlerts && alerts

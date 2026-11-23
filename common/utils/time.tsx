@@ -96,7 +96,6 @@ export const getClockFormattedTimeString = (
   }
   const isPM = hours >= 12 && hours < 24;
   hours = use12Hour ? hours % 12 || 12 : hours % 24;
-  // eslint-disable-next-line prefer-const
   let [hoursString, minutesString, secondsString] = [hours, minutes, seconds].map((num) =>
     num.toString().padStart(2, '0')
   );

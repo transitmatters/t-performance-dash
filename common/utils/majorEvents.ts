@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Chart } from '@chartjs-utils';
-import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import type { MajorEvent } from '../constants/majorEvents';
 import { MAJOR_EVENTS } from '../constants/majorEvents';
 import { CHART_COLORS } from '../constants/colors';
@@ -65,7 +65,7 @@ export const useMajorEvents = (
 export const explainsGap = (events: MajorEvent[], from?: string, to?: string) =>
   events.some((event) => event.end && overlaps(event, from, to));
 
-type Annotation = AnnotationOptions<keyof AnnotationTypeRegistry>;
+type Annotation = AnnotationOptions;
 
 const isNoDataGap = (annotation: Annotation) =>
   annotation.type === 'box' && annotation.label?.content === 'No data';
@@ -130,9 +130,7 @@ const fitToChartHeight = (chart: Chart, text: string): string | string[] => {
  * instead of on top of each other. It's drawn over the data, so filled charts and "No data"
  * blocks can't hide it, with a white halo instead of a box, so data lines show between letters.
  */
-export const getMajorEventAnnotations = (
-  events: MajorEvent[]
-): AnnotationOptions<keyof AnnotationTypeRegistry>[] =>
+export const getMajorEventAnnotations = (events: MajorEvent[]): AnnotationOptions[] =>
   events.flatMap((event) => {
     const marker: AnnotationOptions<'line'> = {
       type: 'line',

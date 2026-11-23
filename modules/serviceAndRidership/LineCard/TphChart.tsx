@@ -20,6 +20,8 @@ type Props = {
 
 export const TphChart = (props: Props) => {
   const { color, baselineTph, currentTph, highestTph } = props;
+  // Color is the color library, not a component.
+  // oxlint-disable-next-line react/capitalized-calls
   const currentColor = Color(color).alpha(0.4).rgb().string();
 
   const data = useMemo(

@@ -1,4 +1,4 @@
-import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import dayjs from 'dayjs';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faCloudBolt, faCloudRain, faSmog, faSnowflake } from '@fortawesome/free-solid-svg-icons';
@@ -219,9 +219,7 @@ export const weatherRowAt = (
 
 // No hover card on the shading: it would stack on the chart's own popover, and the track already
 // shows the same card
-export const getWeatherAnnotations = (
-  runs: PlacedWeatherRun[]
-): AnnotationOptions<keyof AnnotationTypeRegistry>[] =>
+export const getWeatherAnnotations = (runs: PlacedWeatherRun[]): AnnotationOptions[] =>
   runs.map(({ run, start, end }) => ({
     type: 'box',
     xMin: start,

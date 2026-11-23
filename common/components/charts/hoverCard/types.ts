@@ -57,7 +57,6 @@ declare module 'chart.js' {
     hoverCard?: (this: Model, items: Item[]) => HoverCardContent | null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- must match Chart.js's declaration to merge
   interface PluginOptionsByType<TType extends ChartType> {
     hoverHighlight?: { enabled?: boolean };
   }

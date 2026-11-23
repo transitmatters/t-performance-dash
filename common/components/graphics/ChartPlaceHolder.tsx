@@ -3,7 +3,7 @@ import { ErrorNotice } from '../notices/ErrorNotice';
 import { ChartSkeleton } from './ChartSkeleton';
 
 interface ChartPlaceHolder {
-  query?: UseQueryResult<unknown>;
+  query?: UseQueryResult;
   readyState?: 'waiting' | 'error';
 }
 

@@ -1,4 +1,4 @@
-import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import dayjs from 'dayjs';
 import type { Block } from '../../../common/components/charts/TimeSeriesChart';
 import { CHART_COLORS } from '../../../common/constants/colors';
@@ -33,11 +33,11 @@ const shuttlingAnnotationBlockStyle = {
 export const getShuttlingBlockAnnotations = <T extends { date: string; miles_covered?: number }>(
   data: T[],
   hasData: (datapoint: T) => boolean = (datapoint) => Boolean(datapoint.miles_covered)
-): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
+): AnnotationOptions[] => {
   let xMin: string | undefined;
   let xMax: string | undefined;
   let insideShuttlingBlock = false;
-  const dateBlocks: AnnotationOptions<keyof AnnotationTypeRegistry>[] = [];
+  const dateBlocks: AnnotationOptions[] = [];
   data.forEach((datapoint, index) => {
     if (!hasData(datapoint)) {
       if (!insideShuttlingBlock) xMin = index > 0 ? data[index - 1].date : undefined;
@@ -64,7 +64,7 @@ export const getShuttlingBlockAnnotations = <T extends { date: string; miles_cov
 export const getRemainingBlockAnnotation = (
   xMin: string | undefined = OVERVIEW_TRAIN_MIN_DATE,
   xMax: string | undefined = TODAY.toString()
-): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
+): AnnotationOptions[] => {
   return [
     {
       type: 'box',
@@ -125,8 +125,8 @@ export const getServiceDatesBlockAnnotations = (
   endDate: string,
   serviceStart: string | undefined,
   serviceEnd: string | undefined
-): AnnotationOptions<keyof AnnotationTypeRegistry>[] => {
-  const dateBlocks: AnnotationOptions<keyof AnnotationTypeRegistry>[] = [];
+): AnnotationOptions[] => {
+  const dateBlocks: AnnotationOptions[] = [];
   if (serviceStart && dayjs(serviceStart).isAfter(startDate)) {
     dateBlocks.push({
       type: 'box',

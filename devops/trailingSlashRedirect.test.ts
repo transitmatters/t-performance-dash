@@ -1,3 +1,5 @@
+/* oxlint-disable typescript/no-implied-eval, typescript/no-unsafe-call, typescript/no-unsafe-member-access -- runs
+   the CloudFront function's source, which is untyped JS */
 import { describe, expect, it } from 'vitest';
 import template from '../server/cloudformation.json';
 

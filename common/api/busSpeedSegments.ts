@@ -13,6 +13,7 @@ import type {
   Period,
   TimeBand,
 } from '../../modules/busspeedmap/types';
+import { readJson } from './utils/fetch';
 
 dayjs.extend(isoWeek);
 
@@ -163,7 +164,7 @@ export const fetchBusSpeedSegmentLeaderboard = async ({
     throw new Error(`Failed to load the bus speed segment leaderboard for ${date}.`);
   }
 
-  return response.json();
+  return readJson(response);
 };
 
 /**
@@ -184,7 +185,7 @@ export const fetchBusRouteDelays = async ({
   if (response.status === 403 || response.status === 404) return null;
   if (!response.ok) throw new Error(`Failed to load bus route delays for ${date}.`);
 
-  return response.json();
+  return readJson(response);
 };
 
 /** Every PMTiles v3 archive opens with these seven ASCII bytes. */

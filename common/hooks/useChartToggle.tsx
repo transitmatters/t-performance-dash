@@ -116,9 +116,9 @@ export const useOption = <K extends string, T extends string = string>(
  * Pairs a chart's view/filter state with the control that changes it, so a parent can render the
  * control in its card header while the chart itself stays a child.
  */
-export const useChartToggle = <K extends string, T extends string>(
+export const useChartToggle = <K extends string>(
   initial: K,
-  options: [K, T][],
+  options: [K, string][],
   { variant, paramKey }: UseChartToggleOptions = {}
 ): { value: K; control: ReactNode } => {
   const { value, setValue } = useOption(initial, options, paramKey);

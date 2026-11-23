@@ -28,7 +28,7 @@ export const useWeatherData = (options: FetchWeatherOptions, enabled?: boolean) 
     const loaded = results.filter((result) => result.data);
     // Chunks come newest first
     const data = loaded.length
-      ? [...loaded].reverse().flatMap((result) => result.data ?? [])
+      ? [...loaded].toReversed().flatMap((result) => result.data ?? [])
       : undefined;
     const pending = !data && results.some((result) => result.isPending);
     return {

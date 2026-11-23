@@ -1,4 +1,4 @@
-import type { AnnotationOptions, AnnotationTypeRegistry } from 'chartjs-plugin-annotation';
+import type { AnnotationOptions } from 'chartjs-plugin-annotation';
 import dayjs from 'dayjs';
 import type { Block } from '../../../common/components/charts/TimeSeriesChart';
 import { annotationTooltip } from '../../../common/components/charts/annotationTooltip';
@@ -13,7 +13,7 @@ import type { Shutdown, ShutdownEffect } from '../../../common/types/shutdowns';
 import type { Station } from '../../../common/types/stations';
 import type { AggType } from '../../speed/constants/speeds';
 
-type Annotation = AnnotationOptions<keyof AnnotationTypeRegistry>;
+type Annotation = AnnotationOptions;
 type RapidTransitLine = keyof typeof rtStations;
 
 export type ShutdownView = {
@@ -222,7 +222,8 @@ const noonAfter = (day: string) => dayjs(day).hour(12).format(DATETIME_FORMAT);
 const gapEdges = (gap: Gap): [Edge, Edge] | undefined => {
   if ('from' in gap) return [gap.from, gap.to];
   if (gap.type !== 'box') return undefined;
-  const edge = (x: unknown) => (x === undefined ? undefined : String(x));
+  const edge = (x: unknown) =>
+    typeof x === 'string' || typeof x === 'number' ? String(x) : undefined;
   return [edge(gap.xMin), edge(gap.xMax)];
 };
 

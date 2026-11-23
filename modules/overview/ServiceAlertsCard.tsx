@@ -100,7 +100,7 @@ export const ServiceAlertsCard = ({
         ) : isError ? (
           // The card description already states the error; here we just offer the way out.
           <div className="py-2">
-            <Button variant="outline" size="sm" onClick={() => alerts.refetch()}>
+            <Button variant="outline" size="sm" onClick={() => void alerts.refetch()}>
               Try again
             </Button>
           </div>

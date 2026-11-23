@@ -77,7 +77,7 @@ export function RidershipDetails() {
           <StatCardGrid>
             <StatCard
               label="Average weekday riders"
-              value={`${Math.round(stats.average).toLocaleString('en-us')}`}
+              value={Math.round(stats.average).toLocaleString('en-us')}
               delta={ridershipDelta(stats.averageBefore, stats.averageAfter)}
             />
             {/* Wait for the seasonal maximum rather than flash the all-time one. A line with no
@@ -104,9 +104,7 @@ export function RidershipDetails() {
                   : 'Peak week'
               }
               value={
-                stats.peakCount != null
-                  ? `${Math.round(stats.peakCount).toLocaleString('en-us')}`
-                  : '—'
+                stats.peakCount != null ? Math.round(stats.peakCount).toLocaleString('en-us') : '—'
               }
               unit="riders"
             />

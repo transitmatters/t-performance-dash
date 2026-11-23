@@ -81,11 +81,12 @@ describe('getStationForInvalidFromSelection', () => {
       const ends = starts.map((from) =>
         getStationForInvalidFromSelection('line-bus', from, stations)
       );
-      expect(ends.filter(Boolean).length).toBeGreaterThan(0);
-      starts.forEach((from, index) => {
+      const pairs = starts.flatMap((from, index) => {
         const to = ends[index];
-        if (to) expect(hasTrip(from, to)).toBe(true);
+        return to ? [{ from, to }] : [];
       });
+      expect(pairs.length).toBeGreaterThan(0);
+      pairs.forEach(({ from, to }) => expect(hasTrip(from, to)).toBe(true));
     }
   );
 

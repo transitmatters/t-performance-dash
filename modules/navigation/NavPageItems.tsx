@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { Link } from '../../common/components/general/Link';
 import type { PageMetadata } from '../../common/constants/pages';
-import { PAGES } from '../../common/constants/pages';
 import { SidebarMenuSubButton, SidebarMenuSubItem } from '../../common/components/ui/sidebar';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { lineColorVar } from '../../common/styles/general';
@@ -35,8 +34,7 @@ export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
       {pages.map((tab) => {
         const enabled = line ? tab.lines.includes(line) : true;
         // Multi-day trips has no sidebar item of its own, so it lights up Trips.
-        const selected =
-          page === tab.key || (tab.key === PAGES.singleTrips && page === PAGES.multiTrips);
+        const selected = page === tab.key || (tab.key === 'singleTrips' && page === 'multiTrips');
 
         if (!enabled) {
           return (
@@ -51,7 +49,7 @@ export const NavPageItems = ({ pages, close }: NavPageItemsProps) => {
           );
         }
 
-        const target = tab.key === PAGES.singleTrips ? getNavTripPage(page, tripPage) : tab;
+        const target = tab.key === 'singleTrips' ? getNavTripPage(page, tripPage) : tab;
 
         return (
           <SidebarMenuSubItem key={tab.key}>

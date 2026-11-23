@@ -68,7 +68,7 @@ describe('buildRidershipRow for a retired route', () => {
     const data = Array.from({ length: 70 }, (_, i) => ({
       date: dayjs('2024-12-09').subtract(i, 'week').format('YYYY-MM-DD'),
       count: 3000,
-    })).reverse();
+    })).toReversed();
     expect(buildRidershipRow(data, '#000')).toBeNull();
     const row = buildRidershipRow(data, '#000', { yearOverYear: true, windowStart });
     expect(row?.formattedCurrent).toBe('3.0k');

@@ -17,9 +17,7 @@ import {
   defaultWeekAxis,
 } from './defaults';
 
-export const getDefaultTimeAxis = <Unit extends Granularity>(
-  unit: null | Unit
-): ResolvedTimeAxis => {
+export const getDefaultTimeAxis = (unit: null | Granularity): ResolvedTimeAxis => {
   if (unit === 'time') {
     return defaultTimeAxis;
   }
@@ -45,40 +43,33 @@ export const getGranularityForAgg = (agg: AggType): Granularity => {
   return 'month';
 };
 
-export const getLabelsForData = <Data extends Dataset[]>(data: Data) => {
+export const getLabelsForData = (data: Dataset[]) => {
   const allPoints = data
     // Gaps (null values) aren't data, so they don't move the "no data since" mark.
-    .map((dataset) =>
+    .flatMap((dataset) =>
       dataset.data
         .filter((point) => point.value != null)
         .map((point) => ('date' in point ? point.date : point.time))
-    )
-    .flat();
+    );
   const uniqueAndSortedPoints = [...new Set(allPoints)].sort();
   return uniqueAndSortedPoints;
 };
 
-export const mergeAndApplyStyles = <
-  Point extends DataPoint,
-  Styles extends Partial<DisplayStyle<Point>>,
->(
-  styles: (undefined | Styles)[],
+export const mergeAndApplyStyles = <Point extends DataPoint>(
+  styles: (undefined | Partial<DisplayStyle<Point>>)[],
   data: Point[]
 ): AppliedDisplayStyle<Point> => {
-  return styles.reduce((merged, style) => {
-    const entries = Object.entries(style ?? {}).map(([key, value]) => {
-      if (typeof value === 'object' && value && 'byPoint' in value) {
-        const dataByPoint = data.map((point) => value.byPoint(point));
-        return [key, dataByPoint];
-      }
-      return [key, value];
+  const merged: Record<string, unknown> = { ...defaultStyle };
+  styles.forEach((style) => {
+    if (!style) return;
+    Object.entries(style).forEach(([key, value]) => {
+      merged[key] =
+        typeof value === 'object' && value && 'byPoint' in value
+          ? data.map((point) => value.byPoint(point))
+          : value;
     });
-    const appliedStyle: Partial<AppliedDisplayStyle<Point>> = Object.fromEntries(entries);
-    return {
-      ...merged,
-      ...appliedStyle,
-    };
-  }, defaultStyle as AppliedDisplayStyle<Point>);
+  });
+  return merged as AppliedDisplayStyle<Point>;
 };
 
 export const getFillProps = (style: AppliedDisplayStyle<DataPoint>) => {

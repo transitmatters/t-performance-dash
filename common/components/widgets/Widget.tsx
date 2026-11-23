@@ -32,7 +32,7 @@ const isUseQueryResult = (obj: unknown): obj is UseQueryResult => {
   return !!obj && typeof obj === 'object' && 'isLoading' in obj && 'isError' in obj;
 };
 
-const toArray = (ready: ReadyDependency | ReadyDependency[]) =>
+const toArray = (ready: ReadyDependency | ReadyDependency[]): unknown[] =>
   Array.isArray(ready) ? ready : [ready];
 
 const getReadyState = (ready: ReadyDependency | ReadyDependency[]) => {

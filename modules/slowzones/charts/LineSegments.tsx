@@ -41,6 +41,17 @@ interface LineSegmentsProps {
   direction: Direction;
 }
 
+const groupDataByColor = (data: LineSegmentData[]) => {
+  return data.reduce((groups: Record<string, LineSegmentData[]>, item) => {
+    const group = item.color;
+    if (!groups[group]) {
+      groups[group] = [];
+    }
+    groups[group].push(item);
+    return groups;
+  }, {});
+};
+
 export const LineSegments = ({
   data,
   linePath,
@@ -79,17 +90,6 @@ export const LineSegments = ({
       color: sz.color,
     };
   });
-
-  const groupDataByColor = (data: LineSegmentData[]) => {
-    return data.reduce((groups: Record<string, LineSegmentData[]>, item) => {
-      const group = item.color;
-      if (!groups[group]) {
-        groups[group] = [];
-      }
-      groups[group].push(item);
-      return groups;
-    }, {});
-  };
 
   const lineSegmentDataByColor = useMemo(
     () => groupDataByColor(lineSegmentData),
@@ -152,8 +152,10 @@ export const LineSegments = ({
           }
         },
         onHover: (event, elements) => {
-          // @ts-expect-error TS doesn't think target has `style` (rude), but it does
-          event.native.target.style.cursor = elements?.[0] ? 'pointer' : 'default';
+          const target = event.native?.target;
+          if (target instanceof HTMLElement) {
+            target.style.cursor = elements[0] ? 'pointer' : 'default';
+          }
         },
         parsing: isMobile ? { xAxisKey: 'id' } : { yAxisKey: 'id' },
         indexAxis: isMobile ? 'x' : 'y',

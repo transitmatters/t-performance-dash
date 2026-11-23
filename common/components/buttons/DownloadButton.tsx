@@ -8,7 +8,7 @@ import { buttonVariants } from '../ui/button';
 
 interface DownloadButtonProps {
   datasetName: string;
-  data: Record<string, any>[];
+  data: object[];
   startDate: string;
   includeBothStopsForLocation?: boolean;
   location?: Location;

@@ -17,7 +17,7 @@ import { getFormattedTimeString } from '../../../utils/time';
 import { SERVICE_DAY_START_HOUR } from '../../../constants/time';
 import type { HoverCardContent } from '../hoverCard/types';
 import { ChartDiv } from '../ChartDiv';
-import type { ByHourDataset, DisplayStyle, ValueAxis as ValueAxis } from './types';
+import type { ByHourDataset, DisplayStyle, ValueAxis } from './types';
 import { resolveStyle } from './styles';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
@@ -36,9 +36,12 @@ interface Props {
   chartRef?: RefObject<Chart<'bar'> | null>;
 }
 
-const allTimeLabels = ['AM', 'PM']
-  .map((label) => Array.from({ length: 12 }, (_, i) => `${i === 0 ? 12 : i} ${label}`))
-  .flat();
+// Gradients and patterns have no CSS color string for the hover card to show.
+const asColorString = (color: unknown) => (typeof color === 'string' ? color : undefined);
+
+const allTimeLabels = ['AM', 'PM'].flatMap((label) =>
+  Array.from({ length: 12 }, (_, i) => `${i === 0 ? 12 : i} ${label}`)
+);
 
 // Order hours by service day, so the trips after midnight come last
 const toServiceDay = <T,>(hours: T[]): T[] => [
@@ -96,8 +99,8 @@ export const ByHourHistogram = (props: Props) => {
             datasetRoundTrips && value > 0
               ? `every ${getFormattedTimeString(3600 / value)}`
               : undefined,
-          color: String(item.dataset.backgroundColor),
-          borderColor: String(item.dataset.borderColor),
+          color: asColorString(item.dataset.backgroundColor),
+          borderColor: asColorString(item.dataset.borderColor),
         };
       });
       const [before, after] = items.map((item) => item.parsed.y ?? 0);
