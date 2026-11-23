@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import type { TimePredictionWeek } from '../../../common/types/dataPoints';
 import red from '../../../server/tests/fixtures/api_samples/time_predictions/red.json';
 import { getPredictionStats } from './utils';
 
 describe('getPredictionStats', () => {
-  const stats = getPredictionStats(red as TimePredictionWeek[]);
+  const stats = getPredictionStats(red);
 
   it('picks the best and worst whole weeks, not single bins', () => {
     expect(stats.peakAccuracy).toBeCloseTo(0.938, 3);

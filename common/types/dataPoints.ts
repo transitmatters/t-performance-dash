@@ -172,24 +172,10 @@ export type SpeedRestriction = Schemas['SpeedRestrictionZone'] & {
   validAsOf: Date;
 };
 
-export interface TimePrediction {
-  mode: 'subway' | 'bus';
-  arrival_departure: string;
-  route_id: string;
-  bin: PredictionBin;
-  weekly: string;
-  num_accurate_predictions: number;
-  num_predictions: number;
-  accuracy_percentage?: string;
-}
+/** One week's predictions in one bin (`0-3 min`, `3-6 min`, `6-12 min` or `12-30 min`). */
+export type TimePrediction = Schemas['TimePredictionBucket'];
 
-export type PredictionBin = '0-3 min' | '3-6 min' | '6-12 min' | '12-30 min';
-
-export interface TimePredictionWeek {
-  week: string;
-  prediction: TimePrediction[];
-  routeId: string;
-}
+export type TimePredictionWeek = Schemas['TimePredictionWeek'];
 
 export type DayKind = 'weekday' | 'saturday' | 'sunday';
 
@@ -198,11 +184,7 @@ export type ServiceLevels = Schemas['ServiceLevelsByDayKind'];
 
 export type ScheduledService = Schemas['GetScheduledServiceResponse'];
 
-export type ServiceHours = {
-  date: string;
-  scheduled: number;
-  delivered: number;
-};
+export type ServiceHours = Schemas['ServiceHoursEntry'];
 
 export type RidershipCount = Schemas['RidershipEntry'];
 
