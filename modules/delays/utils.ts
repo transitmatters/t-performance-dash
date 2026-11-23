@@ -9,13 +9,13 @@ const PERIOD_DAYS: Record<DelayAgg, number> = { daily: 1, weekly: 7, monthly: 36
 
 const sum = (values: number[]) => values.reduce((total, v) => total + v, 0);
 
+/** What the stats read from each row. */
+export type StatsRow = Pick<RangeRow, 'total_delay_time' | 'days' | DelayReasonKey>;
+
 /**
  * Minutes delayed per period, from the days the rows cover. A week with only two days of data so
  * far counts as two days, not a quiet week.
  */
-/** What the stats read from each row. */
-export type StatsRow = Pick<RangeRow, 'total_delay_time' | 'days' | DelayReasonKey>;
-
 const perPeriod = (rows: StatsRow[], periodDays: number) =>
   (sum(rows.map((row) => row.total_delay_time)) / sum(rows.map((row) => row.days))) * periodDays;
 

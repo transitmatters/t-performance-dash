@@ -9,10 +9,10 @@ import type {
 import type { Line } from '../../common/types/lines';
 import { percent } from './utils';
 
-/** The lines the MBTA publishes excess trip time for. It plans to add the Green Line. */
 /** The lines the MBTA publishes excess trip time for, as the API accepts them. */
 export type ExcessTripTimeLine = NonNullable<FetchExcessTripTimeOptions['line']>;
 
+/** The lines the MBTA publishes excess trip time for. It plans to add the Green Line. */
 export const EXCESS_TRIP_TIME_LINES: ExcessTripTimeLine[] = [
   'line-red',
   'line-orange',
