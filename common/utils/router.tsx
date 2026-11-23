@@ -1,4 +1,10 @@
-import { useMatches, useNavigate, useRouter } from '@tanstack/react-router';
+import {
+  rootRouteId,
+  useLocation,
+  useMatches,
+  useNavigate,
+  useRouter,
+} from '@tanstack/react-router';
 import { useCallback } from 'react';
 import { isEqual, pickBy, startCase, toLower } from '@lodash-utils';
 import type { Line, LineColorKey, LinePath, LineShort } from '../types/lines';
@@ -176,13 +182,22 @@ const NO_SEARCH: SearchObject = {};
  * so chrome outside the page's Outlet reads the page too.
  */
 export const useRenderedLocation = () => {
+  const location = useLocation();
+  // When no route matched the path, only the root's `/` is left, which reads as the landing page.
+  const unmatched = useMatches({
+    select: (matches) =>
+      matches[matches.length - 1]?.routeId === rootRouteId &&
+      matches.some((match) => match.status === 'notFound' || match._notFound === true),
+  });
   const pathname = useMatches({
     select: (matches) => matches[matches.length - 1]?.pathname ?? '/',
   });
   const search = useMatches({
     select: (matches) => matches[matches.length - 1]?.search ?? NO_SEARCH,
   });
-  return { pathname, search };
+  return unmatched
+    ? { pathname: location.pathname, search: location.search }
+    : { pathname, search };
 };
 
 /** The page on screen, for chrome that renders on every kind of page. Pages use usePageParams. */
