@@ -54,9 +54,8 @@ export function SlowZonesDetails() {
     lineShort === 'Mattapan';
   const isDesktop = useBreakpoint('lg');
 
-  const isRapidTransit = canShowSlowZonesMap;
   const stats =
-    delayTotals.data && allSlow.data && isRapidTransit
+    delayTotals.data && allSlow.data && canShowSlowZonesMap
       ? getSlowZoneStats(delayTotals.data.data, allSlow.data, startDateUTC, endDateUTC, lineShort)
       : null;
 
@@ -97,7 +96,7 @@ export function SlowZonesDetails() {
         >
           {/* Children are built before Widget checks `ready`, so guard the data here too —
               `delayTotals.data!` alone throws on the first client render. */}
-          {isRapidTransit && delayTotals.data ? (
+          {canShowSlowZonesMap && delayTotals.data ? (
             <TotalSlowTimeWrapper
               data={delayTotals.data.data}
               startDateUTC={startDateUTC}
