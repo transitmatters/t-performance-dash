@@ -7,9 +7,11 @@ const isWeatherCondition = (value: string): value is WeatherCondition =>
   WEATHER_CONDITIONS.some((condition) => condition === value);
 
 export const fetchWeather = async (options: FetchWeatherOptions): Promise<WeatherHourly[]> => {
+  const { start_date, end_date } = options;
+  if (!start_date || !end_date) return [];
   const hours = await apiFetch({
     path: '/api/weather',
-    options,
+    options: { start_date, end_date },
     errorMessage: 'Failed to fetch weather data',
   });
   return hours.map((hour) => ({

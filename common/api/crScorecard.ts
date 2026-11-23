@@ -6,9 +6,11 @@ import { apiFetch } from './utils/fetch';
 export const fetchCrScorecard = async (
   options: FetchCrScorecardOptions
 ): Promise<CrScorecardEntry[]> => {
+  const { route_id, start_date, end_date, agg, day_kind } = withWeekStart(options);
+  if (!route_id || !start_date || !end_date || !agg || !day_kind) return [];
   return await apiFetch({
     path: '/api/crscorecard',
-    options: withWeekStart(options),
+    options: { route_id, start_date, end_date, agg, day_kind },
     errorMessage: 'Failed to fetch Regional Rail scorecard data',
   });
 };

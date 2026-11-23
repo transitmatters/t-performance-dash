@@ -6,7 +6,6 @@ import { TitleWithInfo } from '../../common/components/general/InfoTooltip';
 import { useReliabilityDirection } from '../../common/hooks/usePageFilters';
 import { LINE_COLORS } from '../../common/constants/colors';
 import { TODAY_STRING } from '../../common/constants/dates';
-import type { Line } from '../../common/types/lines';
 import type { AggType } from '../speed/constants/speeds';
 import { ExcessTimeBars } from './charts/ExcessTimeBars';
 import { ReliabilityGraph } from './charts/ReliabilityGraph';
@@ -22,10 +21,11 @@ import {
   withinFiveShare,
   withinTwentyShare,
 } from './excessTripTimeUtils';
+import type { ExcessTripTimeLine } from './excessTripTimeUtils';
 import { formatCount, formatPercent, toPoints } from './utils';
 
 interface ExcessTripTimeProps {
-  line: Line;
+  line: ExcessTripTimeLine;
   agg: AggType;
   startDate?: string;
   endDate?: string;

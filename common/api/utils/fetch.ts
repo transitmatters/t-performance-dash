@@ -1,12 +1,13 @@
 import { APP_DATA_BASE_PATH } from '../../utils/constants';
-import type { ApiPath, ApiResponse } from '../../types/apiSchemas';
+import type { ApiPath, ApiQuery, ApiResponse } from '../../types/apiSchemas';
 import { fetchOrThrow } from './ApiError';
 
 interface ApiFetchArgs<P extends ApiPath> {
   path: P;
   /** Values for the path's `{name}` segments. */
   pathParams?: Record<string, string>;
-  options: Record<string, unknown>;
+  // The intersection lets the body read a route's parameters generically.
+  options: ApiQuery<P> & Record<string, unknown>;
   errorMessage: string;
   signal?: AbortSignal;
 }
