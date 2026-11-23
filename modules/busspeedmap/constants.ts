@@ -55,6 +55,9 @@ export const DIRECTIONS: { key: DirectionFilter; label: string }[] = [
 
 export const DEFAULT_DIRECTION: DirectionFilter = 'inbound';
 
+/** The GTFS direction_id each direction filter stands for (see DIRECTIONS). */
+export const DIRECTION_IDS: Record<DirectionFilter, number> = { inbound: 1, outbound: 0 };
+
 export const PERIODS: { key: Period; label: string }[] = [
   { key: 'daily', label: 'Day' },
   { key: 'weekly', label: 'Week' },
@@ -121,6 +124,12 @@ export const DWELL_RADIUS_STOPS: [number, number][] = [
 
 /** Dwell dots are dark with a white edge, so they sit apart from the speed ramp under them. */
 export const DWELL_COLOR = '#292524';
+
+/**
+ * The time a trip loses to delay, in the route delay bars: the speed ramp's slow end, so it reads
+ * as slow the way the map does.
+ */
+export const DELAY_LOST_COLOR = SPEED_COLOR_STOPS[1][1];
 
 /**
  * Served same-origin: CloudFront maps this prefix onto the private performance bucket.

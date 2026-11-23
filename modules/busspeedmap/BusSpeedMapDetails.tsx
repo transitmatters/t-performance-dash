@@ -1,6 +1,5 @@
 'use client';
 
-import dayjs from 'dayjs';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useBusDwellsUrl, useBusSpeedSegmentsUrl } from '../../common/api/hooks/busSpeedSegments';
 import { BusSpeedDataUnavailableError } from '../../common/api/busSpeedSegments';
@@ -14,8 +13,9 @@ import { getBusRouteDataIds } from '../../common/constants/lines';
 import { WidgetTitle } from '../../common/components/widgets/WidgetTitle';
 import { Skeleton } from '../../common/components/ui/skeleton';
 import { useDelimitatedRoute } from '../../common/utils/router';
+import { BusRouteDelayCard } from './BusRouteDelayCard';
 import { BusSpeedDataNotes } from './BusSpeedDataNotes';
-import { ALL_ROUTES, DAY_TYPES, DIRECTIONS, TIME_BANDS } from './constants';
+import { ALL_ROUTES, TIME_BANDS } from './constants';
 import { InProgressBadge } from './InProgressBadge';
 import { BusSpeedLegend } from './map/BusSpeedLegend';
 import { BusSpeedMapViewLazy as BusSpeedMapView } from './map/BusSpeedMapViewLazy';
@@ -23,6 +23,7 @@ import { RetiredRouteNotice, serviceEndBefore } from './RetiredRouteNotice';
 import {
   useDayType,
   useDirection,
+  useDirectionAndDays,
   useRouteId,
   useShownPeriod,
   useTimeBand,
@@ -45,18 +46,17 @@ export function BusSpeedMapDetails() {
   const { data: dwellsUrl } = useBusDwellsUrl({ date, period, timeBand }, Boolean(date));
 
   const band = TIME_BANDS.find(({ key }) => key === timeBand);
-  // A single day is wholly one day type, so it's named instead.
-  const days =
-    period === 'daily'
-      ? date && dayjs(date).format('dddd')
-      : DAY_TYPES.find(({ key }) => key === dayType)?.label;
+  const directionAndDays = useDirectionAndDays();
   const summary = [
-    DIRECTIONS.find(({ key }) => key === direction)?.label,
-    days,
+    directionAndDays,
     band && (band.key === 'all_day' ? band.label : `${band.label}, ${band.hours}`),
   ]
     .filter(Boolean)
     .join(' · ');
+  // Each route of a combined route like SL4/SL5, unless the header narrows it to one. The ids the
+  // data is filed under, so a retired route like 60/65-legacy finds its trips.
+  const routeIds =
+    routeId === ALL_ROUTES ? (busRoute ? getBusRouteDataIds(busRoute) : []) : [routeId];
 
   const mapBox = 'h-[28rem] w-full overflow-hidden rounded-lg md:h-[36rem]';
 
@@ -109,6 +109,15 @@ export function BusSpeedMapDetails() {
           />
           <div className="flex flex-col gap-3">{renderBody()}</div>
         </WidgetDiv>
+        {date && !serviceEndBefore(busRoute, date, period) && (
+          <BusRouteDelayCard
+            date={date}
+            period={period}
+            dayType={dayType}
+            direction={direction}
+            routeIds={routeIds}
+          />
+        )}
         <BusSpeedDataNotes />
       </ChartPageDiv>
     </>

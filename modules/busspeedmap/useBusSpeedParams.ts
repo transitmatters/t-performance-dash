@@ -24,7 +24,7 @@ import type {
   Period,
   TimeBand,
 } from './types';
-import { periodLabel } from './utils';
+import { directionAndDaysLabel, periodLabel } from './utils';
 
 // The speed map's and Rankings' filters. The header renders their controls and the pages read
 // them, so each is a hook over its URL param, like common/hooks/usePageFilters.ts.
@@ -50,6 +50,17 @@ export const useTimeBand = () => useOption<TimeBand>(DEFAULT_TIME_BAND, TIME_BAN
 
 export const useDirection = () =>
   useOption<DirectionFilter>(DEFAULT_DIRECTION, DIRECTION_OPTIONS, 'direction');
+
+/** The speed map's direction and days in words, as "Outbound · Weekdays" (see directionAndDaysLabel). */
+export const useDirectionAndDays = () => {
+  const {
+    query: { date },
+  } = useDelimitatedRoute();
+  const { shown: period } = useShownPeriod();
+  const { value: dayType } = useDayType();
+  const { value: direction } = useDirection();
+  return directionAndDaysLabel(date, period, dayType, direction);
+};
 
 /** One route of a combined route like SL4/SL5, or all of them. */
 export const useRouteId = (routeIds: string[]) =>

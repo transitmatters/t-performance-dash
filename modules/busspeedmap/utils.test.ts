@@ -12,6 +12,7 @@ import {
   averageDwell,
   canStepPeriod,
   clampDate,
+  directionAndDaysLabel,
   dwellFromPoint,
   dwellFromSegment,
   dwellShare,
@@ -736,5 +737,26 @@ describe('period dates', () => {
       expect(inProgressThrough('2026-12-01', 'monthly', '2026-11-29')).toBeUndefined();
       expect(inProgressThrough('2026-11-30', 'weekly', '2026-11-29')).toBeUndefined();
     });
+  });
+});
+
+describe('directionAndDaysLabel', () => {
+  it('names the day type for a week or month', () => {
+    expect(directionAndDaysLabel('2026-11-04', 'weekly', 'business_day', 'outbound')).toBe(
+      'Outbound · Weekdays'
+    );
+    expect(directionAndDaysLabel('2026-11-04', 'monthly', 'weekend_or_holiday', 'inbound')).toBe(
+      'Inbound · Weekends & holidays'
+    );
+  });
+
+  it('names the day itself for a single day, whatever the day type', () => {
+    expect(directionAndDaysLabel('2026-11-04', 'daily', 'weekend_or_holiday', 'inbound')).toBe(
+      'Inbound · Wednesday'
+    );
+  });
+
+  it('leaves out the day with no date picked', () => {
+    expect(directionAndDaysLabel(undefined, 'daily', 'business_day', 'inbound')).toBe('Inbound');
   });
 });
