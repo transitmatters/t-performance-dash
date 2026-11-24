@@ -108,6 +108,8 @@ export function SlowZonesDetails() {
         </Widget>
         <Widget
           title="Line map"
+          // The segment tooltip opens above the map and would be cut off by the card
+          className="overflow-visible"
           subtitle={`As of ${formatDateTodayCheck(endDate).replace('Today', 'today')}`}
           ready={[allSlow, speedRestrictions]}
         >
