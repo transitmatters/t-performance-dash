@@ -3,15 +3,18 @@ import { getRangePresets, SINGLE_PRESETS } from '../../../constants/dates';
 import { checkForPreset } from '../../../utils/datePresets';
 import type { QueryTypeOptions } from '../../../types/router';
 import { usePageRoute } from '../../../utils/router';
+import { useNotableDates } from './useNotableDates';
 
 const format = (date: string | undefined) => (date ? dayjs(date).format('MMM D, YYYY') : '');
 
 /** The selected dates in words, for places that show them without the date control. */
 export const useDateSummary = (type: QueryTypeOptions) => {
   const { tab, page, query } = usePageRoute();
+  const notable = useNotableDates(type);
   const presets = type === 'range' ? getRangePresets(tab, page) : SINGLE_PRESETS[tab];
   const presetKey = checkForPreset(query);
-  const presetName = presetKey !== 'custom' ? presets[presetKey]?.name : undefined;
+  const presetName =
+    (presetKey !== 'custom' ? presets[presetKey]?.name : undefined) ?? notable.selected?.label;
   const dates =
     type === 'range' ? `${format(query.startDate)} – ${format(query.endDate)}` : format(query.date);
   return { presetName, dates };
