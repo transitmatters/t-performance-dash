@@ -56,7 +56,7 @@ const getNormalizedData = (
       }
       return date >= startDate && date <= endDate;
     })
-    .sort();
+    .toSorted();
   const filteredData = Object.fromEntries(dateStringsWithinRange.map((date) => [date, data[date]]));
   const baselineKey = getBaselineKey(filteredData, baselineMode);
   const baseline = filteredData[baselineKey];
@@ -79,26 +79,27 @@ export const ServiceRidershipChart = (props: Props) => {
   } = props;
 
   const data = useMemo((): Dataset[] => {
+    const serviceData = getNormalizedData(serviceHistory ?? {}, startDate, endDate, baselineMode);
     const service: Dataset = {
       label: 'Service levels',
-      data: getNormalizedData(serviceHistory ?? {}, startDate, endDate, baselineMode),
+      data: serviceData,
       style: {
         fillPattern: 'striped' as const,
-        tooltipLabel(point) {
-          const { actualValue } = point as unknown as { actualValue: number };
-          return `Service levels: ${actualValue} trips/day`;
+        tooltipLabel(_point, { dataIndex }) {
+          return `Service levels: ${serviceData[dataIndex].actualValue} trips/day`;
         },
       },
     };
     if (ridershipHistory) {
+      const ridershipData = getNormalizedData(ridershipHistory, startDate, endDate, baselineMode);
       return [
         service,
         {
           label: 'Ridership',
-          data: getNormalizedData(ridershipHistory, startDate, endDate, baselineMode),
+          data: ridershipData,
           style: {
-            tooltipLabel(point) {
-              const { actualValue } = point as unknown as { actualValue: number };
+            tooltipLabel(_point, { dataIndex }) {
+              const { actualValue } = ridershipData[dataIndex];
               return `Ridership: ${actualValue} ${getRidershipNoun(lineId)}/day`;
             },
           },

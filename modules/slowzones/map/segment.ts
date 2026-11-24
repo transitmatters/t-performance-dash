@@ -91,7 +91,7 @@ const filterActiveElements = <T extends Record<string, unknown>>(
   targetLine: LineShort,
   targetDate: Date,
   getRecordDateRange: (t: T) => [Date, Date],
-  getRecordLine: (t: T) => LineShort
+  getRecordLine: (t: T) => string
 ) => {
   return records.filter((record) => {
     const [startDate, endDate] = getRecordDateRange(record);
@@ -196,7 +196,7 @@ export const segmentSlowZones = (options: SegmentSlowZonesOptions): Segmentation
       lineName,
       effectiveDate,
       (rs) => [new Date(rs.reported), rs.validAsOf],
-      (rs) => rs.lineId.replace('line-', '') as LineShort
+      (rs) => rs.lineId.replace('line-', '')
     ),
     (rs) => getStationById(rs.fromStopId!),
     (rs) => getStationById(rs.toStopId!)

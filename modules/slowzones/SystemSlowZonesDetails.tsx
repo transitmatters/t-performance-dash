@@ -16,11 +16,10 @@ import { ButtonGroup } from '../../common/components/general/ButtonGroup';
 import { useChartToggle, useOption } from '../../common/hooks/useChartToggle';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { formatDateTodayCheck } from '../../common/state/utils/dateStoreUtils';
-import type { Direction } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
 import { TotalSlowTime } from './charts/TotalSlowTime';
 import { LineSegments } from './charts/LineSegments';
-import { DirectionObject } from './constants/constants';
+import { DIRECTION_OPTIONS, DirectionObject } from './constants/constants';
 import { SlowZonesMap } from './map';
 import type { SlowZonesLineName } from './types';
 
@@ -28,7 +27,6 @@ interface SystemSlowZonesDetailsProps {
   showTitle?: boolean;
 }
 
-const DIRECTION_OPTIONS = Object.entries(DirectionObject) as [Direction, string][];
 const LINE_KEYS: Record<SlowZonesLineName, Line> = {
   Red: 'line-red',
   Orange: 'line-orange',

@@ -16,6 +16,7 @@ export const formatNumber = (value: number) =>
       ? `${round(value / 1000, 1)}k`
       : `${round(value, value >= 100 ? 0 : 1)}`;
 
+// oxlint-disable-next-line typescript/consistent-return -- exhaustive switch; tsc rejects a missed case
 export const formatValue = (value: number | null, unit: Unit | 'minutes'): string => {
   if (value === null || !Number.isFinite(value)) return '—';
   switch (unit) {

@@ -60,7 +60,7 @@ export const useIntroAnimation = (enabled: boolean, count: number) => {
   // Timed rather than Chart.js's onComplete, which also fires when a rebuild stops the first
   // chart's animation partway through.
   useEffect(() => {
-    if (!pending) return;
+    if (!pending) return undefined;
     const timer = window.setTimeout(() => setPending(false), DURATION_MS + 200);
     return () => window.clearTimeout(timer);
   }, [pending]);

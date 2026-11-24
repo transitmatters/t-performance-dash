@@ -48,7 +48,8 @@ describe('topCauseLabel', () => {
 
   it('is empty without a cause, or with one it does not know', () => {
     expect(topCauseLabel({}, 'line-red')).toBeUndefined();
-    const unknown = { cause: 'gremlins', share: 0.5 } as unknown as Cell['topCause'];
+    // As the API could send it; the type only lists the causes we know.
+    const unknown: Cell['topCause'] = JSON.parse('{ "cause": "gremlins", "share": 0.5 }');
     expect(topCauseLabel({ topCause: unknown }, 'line-red')).toBeUndefined();
   });
 });

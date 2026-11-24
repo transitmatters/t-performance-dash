@@ -57,7 +57,7 @@ const getPage = (pathItems: string[], tab: Tab): string => {
   return pageArray[0];
 };
 
-const getTab = (path: LinePath): Tab => {
+const getTab = (path: string): Tab => {
   if (RAIL_LINES.includes(path)) {
     return 'Subway';
   } else if (path === 'bus') {
@@ -89,10 +89,14 @@ export const parseRoutePath = (pathname: string) => {
   // Page detection expects trailing-slash paths; a hand-typed `/red/speed` still has to work.
   const pathItems = (pathname.endsWith('/') ? pathname : `${pathname}/`).split('/');
   const linePath = pathItems[1];
-  const tab = getTab((linePath as LinePath) ?? 'System');
+  const tab = getTab(linePath ?? 'System');
   return {
     pathItems,
     tab,
+    // TODO: Page doesn't cover every page name a URL can hold ('v3Redirect', or anything on a 404),
+    // and neither do Route's linePath and lineShort (see routeWithQuery). Typing them as possibly
+    // unknown means handling that wherever a route is read.
+    // oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- see above
     page: getPage(pathItems, tab) as Page,
     line:
       linePath !== undefined && hasKey(linePathToKeyMap, linePath)
@@ -217,8 +221,11 @@ const routeWithQuery = (pathname: string, query: QueryParams): Route => {
 
   return {
     line,
-    linePath: pathItems[1] as LinePath, //TODO: Remove as
-    lineShort: startCase(toLower(pathItems[1]).replace('-', ' ')) as LineShort, //TODO: Remove as
+    // Unchecked URL segments; see parseRoutePath.
+    // oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- see above
+    linePath: pathItems[1] as LinePath,
+    // oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- see above
+    lineShort: startCase(toLower(pathItems[1]).replace('-', ' ')) as LineShort,
     page: page,
     tab,
     query,
@@ -401,12 +408,7 @@ export const useGenerateHref = () => {
   const stationStore = useStationStore();
 
   const generateHref = useCallback(
-    (
-      newPage: PageMetadata,
-      currentPageName: Page | string,
-      query: QueryParams,
-      linePath: LinePath
-    ) => {
+    (newPage: PageMetadata, currentPageName: string, query: QueryParams, linePath: LinePath) => {
       const currentPage = hasKey(ALL_PAGES, currentPageName)
         ? ALL_PAGES[currentPageName]
         : undefined;
@@ -458,12 +460,10 @@ const getDateQueryParams = (
   if (currentPage.dateStoreSection === newPage.dateStoreSection) {
     return Object.fromEntries(Object.entries(query).filter(([key]) => DATE_PARAMS.includes(key)));
   }
-  if (currentPage.dateStoreSection !== newPage.dateStoreSection) {
-    // Between the two trip views, what is on screen beats what is in the store.
-    const hopDates = getTripHopDates(currentPage.dateStoreSection, newPage.dateStoreSection, query);
-    if (hopDates) return hopDates;
-    return getDateStoreSection(newPage.dateStoreSection, dateStore);
-  }
+  // Between the two trip views, what is on screen beats what is in the store.
+  const hopDates = getTripHopDates(currentPage.dateStoreSection, newPage.dateStoreSection, query);
+  if (hopDates) return hopDates;
+  return getDateStoreSection(newPage.dateStoreSection, dateStore);
 };
 
 /**
@@ -489,19 +489,22 @@ const getChartQueryParams = (
 };
 
 const getBusRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
-  if (newPage.hasRouteSelector === false) return;
+  if (newPage.hasRouteSelector === false) return undefined;
   if (query.busRoute) return { busRoute: query.busRoute };
   if (newPage.defaultBusRoute) return { busRoute: newPage.defaultBusRoute };
+  return undefined;
 };
 
 const getCRRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
-  if (newPage.hasRouteSelector === false) return;
+  if (newPage.hasRouteSelector === false) return undefined;
   if (query.crRoute) return { crRoute: query.crRoute };
+  return undefined;
 };
 
 const getFerryRouteQueryParam = (newPage: PageMetadata, query: QueryParams) => {
-  if (newPage.hasRouteSelector === false) return;
+  if (newPage.hasRouteSelector === false) return undefined;
   if (query.ferryRoute) return { ferryRoute: query.ferryRoute };
+  return undefined;
 };
 
 /** Remembered stations are only reused on the line and route they were picked on. */
@@ -517,6 +520,7 @@ const getStationQueryParams = (
     return { from: query.from, to: query.to };
   if (stationStore.from && stationStore.to && stationStore.scope === newScope)
     return { from: stationStore.from, to: stationStore.to };
+  return undefined;
 };
 
 export const getQueryParams = (
@@ -545,14 +549,14 @@ export const getQueryParams = (
  * The speed map and Rankings share the single-day trips date section without being trip views, so
  * the section alone can't say whether a page is one.
  */
-const isTripPage = (page: Page | string): page is TripPage =>
+const isTripPage = (page: string): page is TripPage =>
   page === 'singleTrips' || page === 'multiTrips';
 
 /**
  * Where the sidebar's Trips item goes: the trip view already open, or else the one last used, so a
  * picked date range is still there on the way back.
  */
-export const getNavTripPage = (currentPage: Page | string, tripPage: TripPage): PageMetadata =>
+export const getNavTripPage = (currentPage: string, tripPage: TripPage): PageMetadata =>
   isTripPage(currentPage) ? ALL_PAGES[currentPage] : ALL_PAGES[tripPage];
 
 const getPathName = (newPage: PageMetadata, linePath: LinePath) => {

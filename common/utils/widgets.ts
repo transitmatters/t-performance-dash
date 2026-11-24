@@ -17,8 +17,8 @@ const ON_TIME_HEADWAYS =
 const getAverage = (data: (number | undefined)[]) => {
   // Filter out undefined, null, NaN, and non-finite values
   const validData = data.filter(
-    (val) => val !== undefined && val !== null && typeof val === 'number' && Number.isFinite(val)
-  ) as number[];
+    (val): val is number => typeof val === 'number' && Number.isFinite(val)
+  );
 
   if (validData.length >= 1) {
     const totalSum = validData.reduce((a, b) => a + b, 0);
@@ -68,8 +68,8 @@ const getOnTimeTravelPercentage = (data: SingleDayDataPoint[]) => {
 const getPeaks = (data: (number | undefined)[]) => {
   // Filter out undefined, null, NaN, and non-finite values
   const validData = data.filter(
-    (val) => val !== undefined && val !== null && typeof val === 'number' && Number.isFinite(val)
-  ) as number[];
+    (val): val is number => typeof val === 'number' && Number.isFinite(val)
+  );
 
   validData.sort((a, b) => a - b);
 
@@ -272,10 +272,10 @@ const getSingleDayNumberArray = (
   data: SingleDayDataPoint[],
   type: 'traveltimes' | 'dwells' | 'headways' | 'speeds'
 ) => {
-  if (type === 'traveltimes') return data.map((data) => data.travel_time_sec);
-  if (type === 'speeds') return data.map((data) => data.speed_mph);
-  if (type === 'dwells') return data.map((data) => data.dwell_time_sec);
-  if (type === 'headways') return data.map((data) => data.headway_time_sec);
+  if (type === 'traveltimes') return data.map((point) => point.travel_time_sec);
+  if (type === 'speeds') return data.map((point) => point.speed_mph);
+  if (type === 'dwells') return data.map((point) => point.dwell_time_sec);
+  if (type === 'headways') return data.map((point) => point.headway_time_sec);
   return [];
 };
 

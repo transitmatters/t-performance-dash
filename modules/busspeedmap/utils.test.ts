@@ -145,7 +145,7 @@ describe('sharedRouteKeys', () => {
   });
 
   it('lists every combination of two or more', () => {
-    expect(sharedRouteKeys(['741', '742', '743', '746']).sort()).toEqual(
+    expect(sharedRouteKeys(['741', '742', '743', '746']).toSorted()).toEqual(
       [
         '741,742',
         '741,743',
@@ -158,7 +158,7 @@ describe('sharedRouteKeys', () => {
         '741,743,746',
         '742,743,746',
         '741,742,743,746',
-      ].sort()
+      ].toSorted()
     );
   });
 
@@ -356,8 +356,8 @@ describe('summarizeDwell', () => {
       ])
     );
 
-    expect(summary.byAverageDwell.map((entry) => entry.route)).toEqual(['2', '1', '3']);
-    expect(summary.byDwellShare.map((entry) => entry.route)).toEqual(['3', '1', '2']);
+    expect(summary.byAverageDwell.map((ranked) => ranked.route)).toEqual(['2', '1', '3']);
+    expect(summary.byDwellShare.map((ranked) => ranked.route)).toEqual(['3', '1', '2']);
     expect(dwellShare(summary.byDwellShare[0])).toBe(0.5);
   });
 
@@ -372,7 +372,7 @@ describe('summarizeDwell', () => {
       ])
     );
 
-    expect(summary.byAverageDwell.map((entry) => entry.route)).toEqual(['66', '1']);
+    expect(summary.byAverageDwell.map((ranked) => ranked.route)).toEqual(['66', '1']);
     expect(summary.overall).toEqual({ averageDwell: 108000 / 2750, dwellShare: 108000 / 166000 });
   });
 
@@ -473,7 +473,7 @@ describe('rankLeaderboard', () => {
 });
 
 describe('headway rankings', () => {
-  const route = (
+  const headwayRoute = (
     id: string,
     mph: number,
     headways?: [number, number, number, number, number]
@@ -492,12 +492,16 @@ describe('headway rankings', () => {
     }),
   });
 
-  const DATE = '2026-11-02';
+  const HEADWAY_DATE = '2026-11-02';
 
   it('pools headway counts from only the frequent routes in a group', () => {
     // 116 is a Frequent Bus Route; 114 and 117 aren't. They shared a label until 2024-12-15.
     const [group] = groupLeaderboardByBusRoute(
-      [route('114', 8, [50, 0, 0, 0, 50]), route('116', 9, [1, 1, 6, 1, 1]), route('117', 10)],
+      [
+        headwayRoute('114', 8, [50, 0, 0, 0, 50]),
+        headwayRoute('116', 9, [1, 1, 6, 1, 1]),
+        headwayRoute('117', 10),
+      ],
       '2024-12-01'
     );
 
@@ -510,8 +514,8 @@ describe('headway rankings', () => {
 
   it('adds up every frequent route in a group', () => {
     const [group] = groupLeaderboardByBusRoute(
-      [route('749', 8, [2, 0, 4, 0, 4]), route('751', 9, [3, 0, 1, 0, 1])],
-      DATE
+      [headwayRoute('749', 8, [2, 0, 4, 0, 4]), headwayRoute('751', 9, [3, 0, 1, 0, 1])],
+      HEADWAY_DATE
     );
 
     expect(group.route).toBe('SL4/SL5');
@@ -522,13 +526,13 @@ describe('headway rankings', () => {
   const grouped = () =>
     groupLeaderboardByBusRoute(
       [
-        route('1', 6, [1, 0, 8, 0, 1]), // 10% bunched, 80% within
-        route('28', 7, [3, 0, 5, 0, 2]), // 30% bunched, 50% within
-        route('39', 9, [2, 0, 2, 0, 6]), // 20% bunched, 20% within
-        route('7', 5, [9, 0, 0, 0, 1]), // not frequent
-        route('57', 8), // frequent, but no headways counted
+        headwayRoute('1', 6, [1, 0, 8, 0, 1]), // 10% bunched, 80% within
+        headwayRoute('28', 7, [3, 0, 5, 0, 2]), // 30% bunched, 50% within
+        headwayRoute('39', 9, [2, 0, 2, 0, 6]), // 20% bunched, 20% within
+        headwayRoute('7', 5, [9, 0, 0, 0, 1]), // not frequent
+        headwayRoute('57', 8), // frequent, but no headways counted
       ],
-      DATE
+      HEADWAY_DATE
     );
 
   it('ranks frequent routes with headways, most bunched first', () => {
@@ -557,7 +561,7 @@ describe('headway rankings', () => {
 });
 
 describe('dropped-trip rankings', () => {
-  const route = (
+  const droppedRoute = (
     id: string,
     trips?: [scheduled: number, dropped: number, waived: number]
   ): BusSpeedLeaderboardEntry => ({
@@ -573,12 +577,12 @@ describe('dropped-trip rankings', () => {
     }),
   });
 
-  const DATE = '2026-10-31';
+  const DROPPED_DATE = '2026-10-31';
 
   it('pools trip counts across the routes behind a label', () => {
     const [group] = groupLeaderboardByBusRoute(
-      [route('749', [3000, 30, 20]), route('751', [5000, 10, 10])],
-      DATE
+      [droppedRoute('749', [3000, 30, 20]), droppedRoute('751', [5000, 10, 10])],
+      DROPPED_DATE
     );
 
     expect(group.route).toBe('SL4/SL5');
@@ -590,7 +594,7 @@ describe('dropped-trip rankings', () => {
   });
 
   it('has no trip counts when no route in a label has them', () => {
-    const [group] = groupLeaderboardByBusRoute([route('1')], DATE);
+    const [group] = groupLeaderboardByBusRoute([droppedRoute('1')], DROPPED_DATE);
     expect(group).not.toHaveProperty('scheduled_trips');
     expect(DROPPED.value(group)).toBeUndefined();
   });
@@ -598,14 +602,14 @@ describe('dropped-trip rankings', () => {
   const grouped = () =>
     groupLeaderboardByBusRoute(
       [
-        route('1', [6000, 60, 50]), // 1.0%
-        route('28', [6000, 120, 100]), // 2.0%
-        route('39', [6000, 0, 0]), // none dropped
-        route('217', [MIN_SCHEDULED_TRIPS - 1, 4, 2]), // 0.8%, on too few trips
-        route('713', [1900, 300, 0]), // 15.8%, none waived; shown as 712/713
-        route('57'), // no trip counts
+        droppedRoute('1', [6000, 60, 50]), // 1.0%
+        droppedRoute('28', [6000, 120, 100]), // 2.0%
+        droppedRoute('39', [6000, 0, 0]), // none dropped
+        droppedRoute('217', [MIN_SCHEDULED_TRIPS - 1, 4, 2]), // 0.8%, on too few trips
+        droppedRoute('713', [1900, 300, 0]), // 15.8%, none waived; shown as 712/713
+        droppedRoute('57'), // no trip counts
       ],
-      DATE
+      DROPPED_DATE
     );
 
   it('ranks the most dropped first, leaving out routes with too few trips or none counted', () => {

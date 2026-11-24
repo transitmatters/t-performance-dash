@@ -3,12 +3,10 @@ import { DELAY_CAUSES } from '../../common/types/delays';
 import type { DelayRow } from './reasonSeries';
 import { coverRange, splitByWeek } from './range';
 import { getDelayStats } from './utils';
+import { recordFromKeys } from '../../common/utils/objects';
 
 const row = (date: string, minutes: number, overrides: Partial<DelayRow> = {}): DelayRow => {
-  const causes = Object.fromEntries(DELAY_CAUSES.map((cause) => [cause, 0])) as Record<
-    (typeof DELAY_CAUSES)[number],
-    number
-  >;
+  const causes = recordFromKeys(DELAY_CAUSES, () => 0);
   return {
     date,
     line: 'line-red',
@@ -84,7 +82,7 @@ describe('coverRange', () => {
     // June 3 to September 8: 98 days
     expect(covered).toBe(98);
     expect(total).toBe(980);
-    expect(rows.map((r) => r.date)).toEqual(rows.map((r) => r.date).sort());
+    expect(rows.map((r) => r.date)).toEqual(rows.map((r) => r.date).toSorted());
   });
 });
 

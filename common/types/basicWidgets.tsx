@@ -133,7 +133,7 @@ export interface WidgetComparison {
 }
 
 export interface MiniWidgetObject {
-  type: 'delta' | 'data' | string;
+  type: 'delta' | 'data';
   widgetValue: WidgetValueInterface;
   text: string;
   /** How the figure is calculated, shown in a tooltip next to its label. */

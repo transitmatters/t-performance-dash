@@ -1,9 +1,5 @@
-import {
-  DELAY_CAUSES,
-  type DelayCause,
-  type DisplayedDelays,
-  type LineDelays,
-} from '../../../common/types/delays';
+import { DELAY_CAUSES, type DisplayedDelays, type LineDelays } from '../../../common/types/delays';
+import { recordFromKeys } from '../../../common/utils/objects';
 
 /**
  * Use the actual delay (how long delay alerts were active) everywhere it exists: subway
@@ -15,12 +11,9 @@ export const toDisplayedDelays = (
 ): { delays: DisplayedDelays[]; isActual: boolean } => {
   const isActual = data.some((row) => row.delay_alert_minutes != null);
   const delays = data.map((row) => {
-    const causes = Object.fromEntries(
-      DELAY_CAUSES.map((cause) => [
-        cause,
-        isActual ? (row[`delay_alert_minutes_${cause}`] ?? 0) : row[cause],
-      ])
-    ) as Record<DelayCause, number>;
+    const causes = recordFromKeys(DELAY_CAUSES, (cause) =>
+      isActual ? (row[`delay_alert_minutes_${cause}`] ?? 0) : row[cause]
+    );
     return {
       date: row.date,
       total_delay_time: isActual ? (row.delay_alert_minutes ?? null) : row.total_delay_time,

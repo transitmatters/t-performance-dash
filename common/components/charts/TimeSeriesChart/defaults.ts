@@ -1,6 +1,6 @@
-import type { DataPoint, DisplayStyle, ResolvedTimeAxis } from './types';
+import type { AppliedDisplayStyle, DataPoint, ResolvedTimeAxis } from './types';
 
-export const defaultStyle: DisplayStyle<DataPoint> = {
+export const defaultStyle: AppliedDisplayStyle<DataPoint> = {
   color: '#ddd',
   width: 2,
   fillColor: null,

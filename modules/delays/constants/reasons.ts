@@ -1,9 +1,11 @@
 import type { DelayCause } from '../../../common/types/delays';
+import { DELAY_CAUSES } from '../../../common/types/delays';
 import type { Line } from '../../../common/types/lines';
 import { patternFill } from '../../../common/utils/chartPatterns';
 import type { PatternShape } from '../../../common/utils/chartPatterns';
 import { isColorblindMode } from '../../../common/utils/colorVision';
 import { hexWithAlpha } from '../../../common/utils/general';
+import { recordFromKeys } from '../../../common/utils/objects';
 
 export type DelayReasonKey = DelayCause;
 export type DelayFamilyId =
@@ -141,10 +143,13 @@ export const DELAY_REASONS: DelayReason[] = REASON_COLORS.map(({ color, cvdColor
   },
 }));
 
-export const REASON_BY_KEY = Object.fromEntries(DELAY_REASONS.map((r) => [r.key, r])) as Record<
-  DelayReasonKey,
-  DelayReason
->;
+const reasonFor = (key: DelayReasonKey) => {
+  const reason = DELAY_REASONS.find((r) => r.key === key);
+  if (!reason) throw new Error(`No delay reason for ${key}`);
+  return reason;
+};
+
+export const REASON_BY_KEY = recordFromKeys(DELAY_CAUSES, reasonFor);
 
 /**
  * Colorblind mode textures each family, so a family reads by pattern even where its hue doesn't;

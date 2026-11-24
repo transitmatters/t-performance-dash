@@ -5,19 +5,21 @@ import { getRidershipStats } from './utils';
 
 describe('getRidershipStats', () => {
   it('reads the share of the historical maximum from the newest week with a count', () => {
-    const ridership = [
+    // A week without a count, as the API sends it; the type says a count is always there.
+    const uncounted: RidershipCount = JSON.parse('{ "date": "2026-11-02", "count": null }');
+    const ridership: RidershipCount[] = [
       { date: '2026-10-19', count: 400 },
       { date: '2026-10-26', count: 500 },
-      { date: '2026-11-02', count: null },
-    ] as unknown as RidershipCount[];
+      uncounted,
+    ];
     expect(getRidershipStats(ridership, 1000).percentage).toBe(0.5);
   });
 
   it('compares the newest week with the same week of past years when it can', () => {
-    const ridership = [
+    const ridership: RidershipCount[] = [
       { date: '2025-12-15', count: 106_107 },
       { date: '2025-12-22', count: 64_879 },
-    ] as unknown as RidershipCount[];
+    ];
     const christmas = { value: 105_674, season: 'Christmas week' };
     const stats = getRidershipStats(ridership, 211_886, (date) =>
       date === '2025-12-22' ? christmas : undefined
@@ -27,14 +29,14 @@ describe('getRidershipStats', () => {
   });
 
   it('falls back to the all-time maximum for a week without seasonal history', () => {
-    const ridership = [{ date: '2026-07-06', count: 105_943 }] as unknown as RidershipCount[];
+    const ridership: RidershipCount[] = [{ date: '2026-07-06', count: 105_943 }];
     const stats = getRidershipStats(ridership, 211_886, () => undefined);
     expect(stats.percentage).toBe(0.5);
     expect(stats.seasonalPeak).toBeUndefined();
   });
 
   it('has no share without a maximum, as for a held-back baseline', () => {
-    const ridership = [{ date: '2026-05-25', count: 4_000 }] as unknown as RidershipCount[];
+    const ridership: RidershipCount[] = [{ date: '2026-05-25', count: 4_000 }];
     expect(getRidershipStats(ridership, undefined).percentage).toBeNaN();
   });
 });

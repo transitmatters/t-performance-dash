@@ -1,4 +1,5 @@
 import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
+import { isOneOf } from './objects';
 
 /**
  * Per-route `validateSearch` functions. TanStack merges a route's output over the raw search, so
@@ -19,7 +20,7 @@ const oneOf =
   <T extends string>(values: readonly T[]) =>
   (value: unknown): T | undefined => {
     const s = str(value);
-    return values.includes(s as T) ? (s as T) : undefined;
+    return isOneOf(values, s) ? s : undefined;
   };
 
 const dateSearch = (search: RawSearch) => ({
@@ -33,12 +34,22 @@ const stationSearch = (search: RawSearch) => ({
   to: str(search.to),
 });
 
-// Not checked against the route lists, so a newly added route works before its type does.
-const routeSearch = (search: RawSearch) => ({
-  busRoute: str(search.busRoute) as BusRoute | undefined,
-  crRoute: str(search.crRoute) as CommuterRailRoute | undefined,
-  ferryRoute: str(search.ferryRoute) as FerryRoute | undefined,
-});
+type RouteSearch = {
+  busRoute: BusRoute | undefined;
+  crRoute: CommuterRailRoute | undefined;
+  ferryRoute: FerryRoute | undefined;
+};
+
+const routeSearch = (search: RawSearch): RouteSearch => {
+  const routes = {
+    busRoute: str(search.busRoute),
+    crRoute: str(search.crRoute),
+    ferryRoute: str(search.ferryRoute),
+  };
+  // Not checked against the route lists, so a newly added route works before its type does.
+  // oxlint-disable-next-line typescript/consistent-type-assertions, typescript/no-unsafe-type-assertion -- see above
+  return routes as RouteSearch;
+};
 
 /**
  * Per-chart view and filter state. These ride in the URL so a copied link reproduces what the

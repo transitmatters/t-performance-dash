@@ -47,7 +47,7 @@ const sortOnKey = (data: LineData[], sortFn: SortFn) => {
   data.forEach((line) => {
     keys[line.id] = sortFn(line);
   });
-  return data.sort((a, b) => {
+  return data.toSorted((a, b) => {
     const ka = keys[a.id];
     const kb = keys[b.id];
     if (ka === kb) {
@@ -148,7 +148,10 @@ export const LineGrid = (props: Props) => {
           size="sm"
           value={kindOption}
           // Radix clears the value when the active chip is pressed again; treat that as "All".
-          onValueChange={(value) => updateKind((value || 'all') as LineKindOption)}
+          onValueChange={(value) => {
+            const option = LINE_KIND_OPTIONS.find(([key]) => key === (value || 'all'));
+            if (option) updateKind(option[0]);
+          }}
           aria-label="Filter by mode"
           // The shadcn gap utility doesn't resolve in this Tailwind build (see ButtonGroup).
           className="flex-wrap justify-start gap-1.5"

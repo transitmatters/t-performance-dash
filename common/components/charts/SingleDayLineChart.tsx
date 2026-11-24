@@ -134,7 +134,7 @@ export const SingleDayLineChart = ({
   );
 
   const convertedData = data.map((datapoint) =>
-    ((datapoint[metricField] as number) * multiplier).toFixed(2)
+    ((datapoint[metricField] ?? NaN) * multiplier).toFixed(2)
   );
 
   const tones = pointTones(data, metricField, effectiveBenchmarkData, showUnderRatio);

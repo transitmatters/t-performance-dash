@@ -1,12 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { getHistoricalAlertRoutes } from '../api/alerts';
-import type { BusRoute } from '../types/lines';
-import { getBusRoutes } from './stations';
+import { objectKeys } from '../utils/objects';
+import { busStations } from './stations';
 import { getBusRouteDataIds } from './lines';
 
-const LEGACY_ROUTES = getBusRoutes().filter((busRoute) =>
-  busRoute.endsWith('-legacy')
-) as BusRoute[];
+const LEGACY_ROUTES = objectKeys(busStations).filter((busRoute) => busRoute.endsWith('-legacy'));
 
 // getBusRouteIds keeps a retired route's "-legacy" label, which the API reads as a route_id of its
 // own. These files use the label on purpose; anything that fetches a route's data must not.
@@ -34,6 +32,6 @@ describe('retired "-legacy" bus routes', () => {
     const labelUsers = Object.entries(sources)
       .filter(([, source]) => source.includes('getBusRouteIds('))
       .map(([path]) => path.slice(1));
-    expect(labelUsers.sort()).toEqual([...LABEL_USERS].sort());
+    expect(labelUsers.toSorted()).toEqual([...LABEL_USERS].toSorted());
   });
 });

@@ -88,7 +88,7 @@ export const ButtonGroup: <T extends string, K extends string>(
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container) return undefined;
     const resizeObserver = new ResizeObserver(() => movePill(false));
     resizeObserver.observe(container);
     return () => resizeObserver.disconnect();

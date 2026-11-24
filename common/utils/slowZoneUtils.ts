@@ -101,7 +101,7 @@ export const getRoutes = (direction: Direction, data: SlowZone[], isMobile: bool
   // group by line, sort by order , flatten, get ids, filter out duplicates
   const routes = Object.values(groupByLine(data))
     .flatMap((sz: SlowZone[]) =>
-      sz.sort((a, b) => (direction === 'southbound' ? a.order - b.order : b.order - a.order))
+      sz.toSorted((a, b) => (direction === 'southbound' ? a.order - b.order : b.order - a.order))
     )
     .map((sz: SlowZone) => getStationPairName(sz.from, sz.to, isMobile));
   return [...new Set(routes)];
@@ -370,12 +370,12 @@ export const getTripSlowZoneRuns = (
     ...new Set([startDate, ...zones.flatMap((zone) => [zone.start, dayAfter(zone.end)])]),
   ]
     .filter((date) => date >= startDate && date < afterEnd)
-    .sort();
+    .toSorted();
 
   return changes.flatMap((start, i) => {
     const active = zones
       .filter((zone) => zone.start <= start && zone.end >= start)
-      .sort((a, b) => b.delay - a.delay);
+      .toSorted((a, b) => b.delay - a.delay);
     const total = active.reduce((sum, zone) => sum + zone.delay, 0);
     if (total <= 0) return [];
     const next = changes[i + 1] ?? afterEnd;

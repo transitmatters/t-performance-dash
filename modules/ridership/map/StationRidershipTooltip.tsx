@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import classNames from 'classnames';
 import type { TooltipSide } from '@transitmatters/stripmap';
 
@@ -19,7 +19,7 @@ export const RidershipMapTooltip = ({
   children,
 }: RidershipMapTooltipProps) => (
   <div
-    style={{ '--tooltip-accent-color': color } as CSSProperties}
+    style={{ '--tooltip-accent-color': color }}
     className={classNames(
       styles.tooltip,
       '[--tooltip-background:white] dark:[--tooltip-background:var(--color-stone-800)]',

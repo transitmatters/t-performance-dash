@@ -67,7 +67,7 @@ export const DelayInsight = ({
       const label = windowFor(dayjs(point[PointFieldKeys.depDt]).hour());
       if (label) counts.set(label, (counts.get(label) ?? 0) + 1);
     });
-    const [dominant] = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+    const [dominant] = [...counts.entries()].toSorted((a, b) => b[1] - a[1]);
     // Only name a window when it holds a real share of the delays.
     const concentrated = dominant && dominant[1] / behind.length >= 0.4 ? dominant[0] : undefined;
     return { count: behind.length, concentrated };

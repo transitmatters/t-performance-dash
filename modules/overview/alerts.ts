@@ -12,6 +12,7 @@ export const getRelevantAlerts = <Alert extends Pick<AlertsResponse, 'active_per
         if (relevantTimes.length > 0) {
           return { ...alert, relevantTimes: relevantTimes };
         }
+        return undefined;
       })
       // Remove alerts with no relevant times.
       .filter((relevantAlert) => relevantAlert != null)

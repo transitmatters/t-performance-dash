@@ -73,9 +73,9 @@ function TabsList({
   }, []);
 
   useLayoutEffect(() => {
-    if (variant !== 'default') return;
+    if (variant !== 'default') return undefined;
     const list = listRef.current;
-    if (!list) return;
+    if (!list) return undefined;
     movePill(!isFirstMove.current);
     isFirstMove.current = false;
     const mutationObserver = new MutationObserver(() => movePill(true));

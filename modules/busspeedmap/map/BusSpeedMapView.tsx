@@ -8,6 +8,7 @@ import Map, { Layer, NavigationControl, Popup, Source } from 'react-map-gl/mapli
 import type { MapLayerMouseEvent, MapRef } from 'react-map-gl/maplibre';
 import type {
   DataDrivenPropertyValueSpecification,
+  ExpressionSpecification,
   FilterSpecification,
   MapGeoJSONFeature,
   Map as MaplibreMap,
@@ -58,6 +59,12 @@ import { SegmentPopupContent } from './BusSpeedSegmentPopupContent';
 import { BusStopPopupContent, StationPopupContent } from './BusSpeedStopPopupContent';
 import { ResetViewControl } from './ResetViewControl';
 import { EMPTY_ROUTE, useRouteSegments } from './routeSegments';
+import {
+  isBusStopProperties,
+  isDwellProperties,
+  isSegmentProperties,
+  isStationProperties,
+} from './featureProperties';
 import { findStopBounds } from './stopBounds';
 
 // Registered once at module scope, onto the shared maplibre-gl module. This file is only
@@ -161,7 +168,7 @@ const speedColor: DataDrivenPropertyValueSpecification<string> = [
   ['has', 'p50_speed_mph'],
   ['interpolate', ['linear'], ['get', 'p50_speed_mph'], ...SPEED_COLOR_STOPS.flat()],
   NO_SPEED_COLOR,
-] as unknown as DataDrivenPropertyValueSpecification<string>;
+];
 
 /** The camera that fits the whole network in view, which depends on the map's current size. */
 const networkView = (map: MaplibreMap) => map.cameraForBounds(NETWORK_BOUNDS, { padding: 24 });
@@ -177,36 +184,35 @@ const zoomWidth = (
   atLowZoom: number,
   atMidZoom: number,
   atHighZoom: number
-): DataDrivenPropertyValueSpecification<number> =>
-  [
-    'interpolate',
-    ['linear'],
-    ['zoom'],
-    9,
-    atLowZoom,
-    13,
-    atMidZoom,
-    16,
-    atHighZoom,
-  ] as unknown as DataDrivenPropertyValueSpecification<number>;
+): DataDrivenPropertyValueSpecification<number> => [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  9,
+  atLowZoom,
+  13,
+  atMidZoom,
+  16,
+  atHighZoom,
+];
 
 const lineWidth = zoomWidth(1.5, 3.5, 6);
 /** Below this a dash is too small to read as one, against lines this thin. */
 const TERMINAL_DASHES_MIN_ZOOM = 13;
-const SOLID_LINE = ['literal', [1, 0]];
-const lineDashes = [
+const SOLID_LINE: ExpressionSpecification = ['literal', [1, 0]];
+const lineDashes: DataDrivenPropertyValueSpecification<number[]> = [
   'step',
   ['zoom'],
   SOLID_LINE,
   TERMINAL_DASHES_MIN_ZOOM,
   ['case', ['has', 'terminal_section'], ['literal', [1, 2.5]], SOLID_LINE],
-] as unknown as DataDrivenPropertyValueSpecification<number[]>;
+];
 const casingWidth = zoomWidth(3.5, 5.5, 8);
 const hoverHaloWidth = zoomWidth(7, 11, 16);
 
 /** Below this the segments are too short and dense for arrows to read as anything but noise. */
 const ARROWS_MIN_ZOOM = 13;
-const arrowSize = [
+const arrowSize: DataDrivenPropertyValueSpecification<number> = [
   'interpolate',
   ['linear'],
   ['zoom'],
@@ -217,7 +223,7 @@ const arrowSize = [
   // The leaderboard dialog zooms to 18 on a single segment, where the arrow is the point.
   18,
   1.3,
-] as unknown as DataDrivenPropertyValueSpecification<number>;
+];
 
 /**
  * A right-pointing chevron, drawn here rather than shipped as a file. A line-placed symbol's
@@ -256,41 +262,45 @@ const addArrowImage = (map: MaplibreMap) => {
  * comma-joined, e.g. "Red,Green") are drawn white with a dark ring, the usual map convention
  * for a transfer.
  */
-const stationColor = (): DataDrivenPropertyValueSpecification<string> =>
-  [
+const stationColor = (): DataDrivenPropertyValueSpecification<string> => {
+  // Split off so the type sees the one label `match` requires.
+  const [[firstLine, { color: firstColor }], ...otherLines] = Object.entries(STATION_LINES);
+  return [
     'case',
     ['in', ',', ['get', 'lines']],
     '#ffffff',
     [
       'match',
       ['get', 'lines'],
-      ...Object.entries(STATION_LINES).flatMap(([line, { color }]) => [line, color]),
+      firstLine,
+      firstColor,
+      ...otherLines.flatMap(([line, { color }]) => [line, color]),
       '#6b7280',
     ],
-  ] as unknown as DataDrivenPropertyValueSpecification<string>;
+  ];
+};
 
 const stationStrokeColor: DataDrivenPropertyValueSpecification<string> = [
   'case',
   ['in', ',', ['get', 'lines']],
   '#1c1c1c',
   '#ffffff',
-] as unknown as DataDrivenPropertyValueSpecification<string>;
+];
 
 const zoomRadius = (
   atZoom: number,
   radius: number,
   atHighZoom: number,
   highRadius: number
-): DataDrivenPropertyValueSpecification<number> =>
-  [
-    'interpolate',
-    ['linear'],
-    ['zoom'],
-    atZoom,
-    radius,
-    atHighZoom,
-    highRadius,
-  ] as unknown as DataDrivenPropertyValueSpecification<number>;
+): DataDrivenPropertyValueSpecification<number> => [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  atZoom,
+  radius,
+  atHighZoom,
+  highRadius,
+];
 
 const stationRadius = zoomRadius(8, 2, 16, 7);
 const busStopRadius = zoomRadius(11, 1.5, 16, 4);
@@ -309,25 +319,24 @@ const HOVER_HALO_COLOR = '#FFC72C';
  * Dwell dots are sized by median dwell (DWELL_RADIUS_STOPS, at zoom 16) and shrink as the map
  * zooms out.
  */
-const dwellRadiusAt = (scale: number, extra: number) => [
+const dwellRadiusAt = (scale: number, extra: number): ExpressionSpecification => [
   'interpolate',
   ['linear'],
   ['get', 'median_dwell_seconds'],
   ...DWELL_RADIUS_STOPS.flatMap(([seconds, radius]) => [seconds, radius * scale + extra]),
 ];
 /** The dot's radius, or with `extra`, a few pixels past it to hover by. */
-const dwellRadiusWith = (extra: number) =>
-  [
-    'interpolate',
-    ['linear'],
-    ['zoom'],
-    DWELL_DOTS_MINIMUM_ZOOM,
-    dwellRadiusAt(0.4, extra),
-    14,
-    dwellRadiusAt(0.7, extra),
-    16,
-    dwellRadiusAt(1, extra),
-  ] as unknown as DataDrivenPropertyValueSpecification<number>;
+const dwellRadiusWith = (extra: number): DataDrivenPropertyValueSpecification<number> => [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  DWELL_DOTS_MINIMUM_ZOOM,
+  dwellRadiusAt(0.4, extra),
+  14,
+  dwellRadiusAt(0.7, extra),
+  16,
+  dwellRadiusAt(1, extra),
+];
 const dwellRadius = dwellRadiusWith(0);
 const dwellHitRadius = dwellRadiusWith(3);
 
@@ -443,13 +452,14 @@ const INTERACTIVE_LAYER_IDS = Object.keys(HOVER_LAYERS);
 const topHovered = (event: MapLayerMouseEvent): MapGeoJSONFeature | undefined => {
   const distance = (feature: MapGeoJSONFeature) => {
     if (feature.geometry.type !== 'Point') return 0;
-    const point = event.target.project(feature.geometry.coordinates as [number, number]);
+    const [longitude, latitude] = feature.geometry.coordinates;
+    const point = event.target.project([longitude, latitude]);
     return Math.hypot(point.x - event.point.x, point.y - event.point.y);
   };
   return (event.features ?? [])
     .filter((feature) => feature.layer.id in HOVER_LAYERS)
     .map((feature) => ({ feature, rank: HOVER_LAYERS[feature.layer.id].rank }))
-    .sort((a, b) => a.rank - b.rank || distance(a.feature) - distance(b.feature))[0]?.feature;
+    .toSorted((a, b) => a.rank - b.rank || distance(a.feature) - distance(b.feature))[0]?.feature;
 };
 
 /**
@@ -466,7 +476,8 @@ const segmentsSharingStops = (
 ): BusSpeedSegmentProperties[] => {
   const matches = features
     .filter((feature) => HOVER_LAYERS[feature.layer.id]?.kind === 'segment')
-    .map((feature) => feature.properties as BusSpeedSegmentProperties)
+    .map((feature) => feature.properties)
+    .filter(isSegmentProperties)
     .filter(
       (segment) =>
         segment.direction_id === hovered.direction_id &&
@@ -478,7 +489,7 @@ const segmentsSharingStops = (
       (segment, index) =>
         matches.findIndex((other) => other.route_id === segment.route_id) === index
     )
-    .sort(
+    .toSorted(
       (a, b) =>
         Number(isPooledSegment(b)) - Number(isPooledSegment(a)) ||
         compareRouteNames(getBusRouteDisplayName(a.route_id), getBusRouteDisplayName(b.route_id))
@@ -542,14 +553,10 @@ export const BusSpeedMapView = ({
   // Every feature of the selected routes, including the pooled ones standing in for several of
   // them on a shared stop pair (see routeClauses below). The fly-to needs those: at the lowest
   // zooms, which it fits a route from, tippecanoe keeps them over the lines they stand in for.
-  const routeFilterClause = useMemo<FilterSpecification | undefined>(
+  const routeFilterClause = useMemo<ExpressionSpecification | undefined>(
     () =>
       routeIds
-        ? ([
-            'in',
-            ['get', 'route_id'],
-            ['literal', [...routeIds, ...sharedRouteKeys(routeIds)]],
-          ] as unknown as FilterSpecification)
+        ? ['in', ['get', 'route_id'], ['literal', [...routeIds, ...sharedRouteKeys(routeIds)]]]
         : undefined,
     [routeIds]
   );
@@ -557,17 +564,17 @@ export const BusSpeedMapView = ({
   // Bus stops follow the route filter, so a selected route's stops aren't lost among every
   // other route's. `routes` is a comma-joined string, and a bare `in` would let "1" match
   // inside "111" -- comma-wrapping both sides makes it an exact match.
-  const busStopsFilter = useMemo<FilterSpecification | undefined>(
+  const busStopsFilter = useMemo<ExpressionSpecification | undefined>(
     () =>
       routeIds
-        ? ([
+        ? [
             'any',
-            ...routeIds.map((routeId) => [
+            ...routeIds.map((routeId): ExpressionSpecification => [
               'in',
               `,${routeId},`,
               ['concat', ',', ['get', 'routes'], ','],
             ]),
-          ] as unknown as FilterSpecification)
+          ]
         : undefined,
     [routeIds]
   );
@@ -603,30 +610,34 @@ export const BusSpeedMapView = ({
   // it, so the popup can list them. Tiles from before the pipeline pooled anything have no
   // shared_routes, so they draw every route as they always did.
   const routeClauses = useMemo<{
-    drawn: FilterSpecification;
-    hoverable?: FilterSpecification;
+    drawn: ExpressionSpecification;
+    hoverable?: ExpressionSpecification;
   }>(() => {
-    const isPooled = ['==', ['get', 'route_id'], ['get', 'shared_routes']];
+    const isPooled: ExpressionSpecification = ['==', ['get', 'route_id'], ['get', 'shared_routes']];
     if (!routeIds) {
       return {
-        drawn: ['any', ['!', ['has', 'shared_routes']], isPooled] as unknown as FilterSpecification,
+        drawn: ['any', ['!', ['has', 'shared_routes']], isPooled],
       };
     }
     const pooledIds = sharedRouteKeys(routeIds);
-    const isStoodInFor = ['in', ['coalesce', ['get', 'shared_routes'], ''], ['literal', pooledIds]];
+    const isStoodInFor: ExpressionSpecification = [
+      'in',
+      ['coalesce', ['get', 'shared_routes'], ''],
+      ['literal', pooledIds],
+    ];
     return {
       drawn: [
         'any',
         ['all', ['in', ['get', 'route_id'], ['literal', routeIds]], ['!', isStoodInFor]],
         ['in', ['get', 'route_id'], ['literal', pooledIds]],
-      ] as unknown as FilterSpecification,
+      ],
       hoverable: routeFilterClause,
     };
   }, [routeIds, routeFilterClause]);
 
   // The time band and day type on show, for segments and dwell points alike.
-  const bandClauses = useMemo<FilterSpecification[]>(() => {
-    const clauses: FilterSpecification[] = [['==', ['get', 'time_band'], timeBand]];
+  const bandClauses = useMemo<ExpressionSpecification[]>(() => {
+    const clauses: ExpressionSpecification[] = [['==', ['get', 'time_band'], timeBand]];
     // Daily features carry no `day_type` at all (a single day is already wholly one type),
     // so this clause only applies to weekly/monthly tiles.
     if (period !== 'daily') clauses.push(['==', ['get', 'day_type'], dayType]);
@@ -634,18 +645,18 @@ export const BusSpeedMapView = ({
   }, [timeBand, period, dayType]);
 
   // The slice of the data on show, whichever segments of it are drawn.
-  const sliceClauses = useMemo<FilterSpecification[]>(
+  const sliceClauses = useMemo<ExpressionSpecification[]>(
     () => [['>=', ['get', 'n_traversals'], MIN_TRAVERSALS], ...bandClauses],
     [bandClauses]
   );
 
   // Dwell points have no pooled rows, so a route filter is just their own route_ids.
-  const dwellSliceClauses = useMemo<FilterSpecification[]>(
+  const dwellSliceClauses = useMemo<ExpressionSpecification[]>(
     () => [
       ['>=', ['get', 'n_dwells'], MIN_TRAVERSALS],
       ...bandClauses,
       ...(routeIds
-        ? [['in', ['get', 'route_id'], ['literal', routeIds]] as unknown as FilterSpecification]
+        ? [['in', ['get', 'route_id'], ['literal', routeIds]] satisfies ExpressionSpecification]
         : []),
     ],
     [bandClauses, routeIds]
@@ -653,36 +664,44 @@ export const BusSpeedMapView = ({
 
   // The dots drawn: the direction on show, like the segments, and in segment-focus mode just the
   // segment's two stops.
-  const dwellFilter = useMemo<FilterSpecification>(
-    () =>
-      [
-        'all',
-        ...dwellSliceClauses,
-        ['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0],
-        ...(segmentStops
-          ? [['in', ['get', 'stop_name'], ['literal', [segmentStops.from, segmentStops.to]]]]
-          : []),
-      ] as unknown as FilterSpecification,
+  const dwellFilter = useMemo<ExpressionSpecification>(
+    () => [
+      'all',
+      ...dwellSliceClauses,
+      ['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0],
+      ...(segmentStops
+        ? [
+            [
+              'in',
+              ['get', 'stop_name'],
+              ['literal', [segmentStops.from, segmentStops.to]],
+            ] satisfies ExpressionSpecification,
+          ]
+        : []),
+    ],
     [dwellSliceClauses, direction, segmentStops]
   );
 
-  const [filter, hitboxFilter] = useMemo<[FilterSpecification, FilterSpecification]>(() => {
-    const clauses = [...sliceClauses];
+  const [filter, hitboxFilter] = useMemo<[ExpressionSpecification, ExpressionSpecification]>(() => {
+    const clauses: ExpressionSpecification[] = [...sliceClauses];
     if (segmentStops) {
       clauses.push(['==', ['get', 'from_stop_name'], segmentStops.from]);
       clauses.push(['==', ['get', 'to_stop_name'], segmentStops.to]);
     }
     // GTFS direction_id: 0 is outbound, 1 is inbound -- matches the hover popup below.
     clauses.push(['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]);
-    const withRoutes = (routeClause?: FilterSpecification) =>
-      ['all', ...clauses, ...(routeClause ? [routeClause] : [])] as unknown as FilterSpecification;
+    const withRoutes = (routeClause?: ExpressionSpecification): ExpressionSpecification => [
+      'all',
+      ...clauses,
+      ...(routeClause ? [routeClause] : []),
+    ];
     return [withRoutes(routeClauses.drawn), withRoutes(routeClauses.hoverable)];
   }, [sliceClauses, routeClauses, segmentStops, direction]);
 
   // Identifies the exact hovered features (one per route on the segment) so the halo layer
   // below can single them out -- the same route_id/direction_id/from/to tuple used as a
   // segment's natural key elsewhere (e.g. BusSpeedSegmentLeaderboard's list key).
-  const hoveredFilter = useMemo<FilterSpecification | undefined>(() => {
+  const hoveredFilter = useMemo<ExpressionSpecification | undefined>(() => {
     if (hovered?.kind !== 'segment') return undefined;
     const [{ direction_id, from_stop_name, to_stop_name }] = hovered.segments;
     return [
@@ -691,7 +710,7 @@ export const BusSpeedMapView = ({
       ['==', ['get', 'direction_id'], direction_id],
       ['==', ['get', 'from_stop_name'], from_stop_name],
       ['==', ['get', 'to_stop_name'], to_stop_name],
-    ] as unknown as FilterSpecification;
+    ];
   }, [hovered]);
 
   // A stop's dwell, whichever way the direction toggle points: stops are drawn for both
@@ -704,14 +723,13 @@ export const BusSpeedMapView = ({
     if (dwellsUrl) {
       const points = map.querySourceFeatures(DWELLS_SOURCE_ID, {
         sourceLayer: DWELLS_SOURCE_LAYER,
-        filter: [
-          'all',
-          ...dwellSliceClauses,
-          ['==', ['get', 'stop_id'], stopId],
-        ] as unknown as FilterSpecification,
+        filter: ['all', ...dwellSliceClauses, ['==', ['get', 'stop_id'], stopId]],
       });
       return stopDwellsByRoute(
-        points.map((f) => dwellFromPoint(f.properties as BusDwellProperties))
+        points
+          .map((f) => f.properties)
+          .filter(isDwellProperties)
+          .map(dwellFromPoint)
       );
     }
     const segments = map.querySourceFeatures(SOURCE_ID, {
@@ -721,10 +739,13 @@ export const BusSpeedMapView = ({
         ...sliceClauses,
         ['==', ['get', 'from_stop_id'], stopId],
         ...(routeFilterClause ? [routeFilterClause] : []),
-      ] as unknown as FilterSpecification,
+      ],
     });
     return stopDwellsByRoute(
-      segments.map((f) => dwellFromSegment(f.properties as BusSpeedSegmentProperties))
+      segments
+        .map((f) => f.properties)
+        .filter(isSegmentProperties)
+        .map(dwellFromSegment)
     );
   };
 
@@ -737,13 +758,10 @@ export const BusSpeedMapView = ({
           filter: ['==', ['get', 'stop_id'], dwell.stop_id],
         })
       : [];
-    return (
-      (pole?.properties as BusStopProperties | undefined) ?? {
-        stop_id: dwell.stop_id,
-        stop_name: dwell.stop_name,
-        routes: dwell.route_id,
-      }
-    );
+    const poleProperties: unknown = pole?.properties;
+    return isBusStopProperties(poleProperties)
+      ? poleProperties
+      : { stop_id: dwell.stop_id, stop_name: dwell.stop_name, routes: dwell.route_id };
   };
 
   const onMouseMove = (event: MapLayerMouseEvent) => {
@@ -753,6 +771,7 @@ export const BusSpeedMapView = ({
       return;
     }
     const { kind } = HOVER_LAYERS[feature.layer.id];
+    const featureProperties: unknown = feature.properties;
     const position = {
       longitude: event.lngLat.lng,
       latitude: event.lngLat.lat,
@@ -764,26 +783,34 @@ export const BusSpeedMapView = ({
           : ('bottom-left' as const),
     };
     if (kind === 'segment') {
-      const segments = segmentsSharingStops(
-        event.features ?? [],
-        feature.properties as BusSpeedSegmentProperties
-      );
+      if (!isSegmentProperties(featureProperties)) {
+        setHovered(undefined);
+        return;
+      }
+      const segments = segmentsSharingStops(event.features ?? [], featureProperties);
       setHovered({ kind, ...position, segments });
     } else if (kind === 'busStop' || kind === 'dwell') {
-      const stopId = (feature.properties as BusStopProperties | BusDwellProperties).stop_id;
+      const isStop = kind === 'dwell' ? isDwellProperties : isBusStopProperties;
+      if (!isStop(featureProperties)) {
+        setHovered(undefined);
+        return;
+      }
+      const stopId = featureProperties.stop_id;
       // Kept while the mouse stays on the stop, which it moves on far more often than it leaves:
       // the lookup takes about 40ms at zoom 12 downtown.
       const sameStop =
         hovered?.kind === kind && hovered.properties.stop_id === stopId ? hovered : undefined;
       const properties =
         sameStop?.properties ??
-        (kind === 'dwell'
-          ? busStopFor(event.target, feature.properties as BusDwellProperties)
-          : (feature.properties as BusStopProperties));
+        (isDwellProperties(featureProperties)
+          ? busStopFor(event.target, featureProperties)
+          : featureProperties);
       const dwells = sameStop?.dwells ?? stopDwells(event.target, stopId);
       setHovered({ kind, ...position, properties, dwells });
+    } else if (isStationProperties(featureProperties)) {
+      setHovered({ kind, ...position, properties: featureProperties });
     } else {
-      setHovered({ kind, ...position, properties: feature.properties as StationProperties });
+      setHovered(undefined);
     }
   };
 
@@ -819,7 +846,7 @@ export const BusSpeedMapView = ({
       return;
     }
 
-    const focusFilterClauses: FilterSpecification[] = [routeFilterClause];
+    const focusFilterClauses: ExpressionSpecification[] = [routeFilterClause];
     if (segmentStops) {
       focusFilterClauses.push(
         ['==', ['get', 'from_stop_name'], segmentStops.from],
@@ -827,20 +854,21 @@ export const BusSpeedMapView = ({
         ['==', ['get', 'direction_id'], direction === 'inbound' ? 1 : 0]
       );
     }
-    const focusFilterExpression = ['all', ...focusFilterClauses] as unknown as FilterSpecification;
+    const focusFilterExpression: ExpressionSpecification = ['all', ...focusFilterClauses];
 
     const boundsOfLoadedFocus = (): LngLatBounds | undefined => {
       const features = map.querySourceFeatures(SOURCE_ID, {
         sourceLayer: PMTILES_SOURCE_LAYER,
         filter: focusFilterExpression,
-      }) as MapGeoJSONFeature[];
+      });
       if (!features.length) return undefined;
 
       const bounds = new LngLatBounds();
       for (const feature of features) {
         if (feature.geometry.type !== 'LineString') continue;
         for (const position of feature.geometry.coordinates) {
-          bounds.extend(position as [number, number]);
+          const [longitude, latitude] = position;
+          bounds.extend([longitude, latitude]);
         }
       }
       return bounds.isEmpty() ? undefined : bounds;
@@ -896,12 +924,12 @@ export const BusSpeedMapView = ({
     };
     // A whole route fits its stops: the loaded tiles hold only what's near the current view, and
     // below zoom 12 only some of each route's segments.
-    const stopsArchive = stopsKey ? protocol.get(stopsKey) : undefined;
-    if (segmentStops || !stopsArchive || !routeIds) {
+    const registeredArchive = stopsKey ? protocol.get(stopsKey) : undefined;
+    if (segmentStops || !registeredArchive || !routeIds) {
       attempt(false);
       return;
     }
-    void findStopBounds(stopsArchive, routeIds, { fallbackStopIds: routeStopIds })
+    void findStopBounds(registeredArchive, routeIds, { fallbackStopIds: routeStopIds })
       .catch(() => undefined)
       .then((bounds) => {
         if (cancelled) return;
@@ -953,7 +981,7 @@ export const BusSpeedMapView = ({
   useEffect(() => {
     const skippingInitialRender = isFirstRender.current && !segmentStops;
     isFirstRender.current = false;
-    if (skippingInitialRender) return;
+    if (skippingInitialRender) return undefined;
 
     runFocusFlight();
     return () => cancelPendingFlightRef.current();
@@ -1084,13 +1112,7 @@ export const BusSpeedMapView = ({
               type="circle"
               source-layer={DWELLS_SOURCE_LAYER}
               minzoom={DWELL_DOTS_MINIMUM_ZOOM}
-              filter={
-                [
-                  'all',
-                  dwellFilter,
-                  ['==', ['get', 'stop_id'], hovered.properties.stop_id],
-                ] as unknown as FilterSpecification
-              }
+              filter={['all', dwellFilter, ['==', ['get', 'stop_id'], hovered.properties.stop_id]]}
               paint={{
                 'circle-color': DWELL_COLOR,
                 'circle-radius': dwellRadius,

@@ -3,8 +3,8 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { RidershipCount } from '../types/dataPoints';
 import { getSeason, getSeasonalMaximum, getSeasonalMaximums } from './seasonalRidership';
 
-const counts = (points: [string, number | null][]) =>
-  points.map(([date, count]) => ({ date, count })) as RidershipCount[];
+const counts = (points: [string, number][]): RidershipCount[] =>
+  points.map(([date, count]) => ({ date, count }));
 
 describe('getSeason', () => {
   // West of UTC, where `new Date('2019-12-23')` is still the 22nd, a Sunday.
@@ -118,13 +118,9 @@ describe('getSeasonalMaximums', () => {
   });
 
   it('skips missing and zero weeks', () => {
-    const maximums = getSeasonalMaximums(
-      counts([
-        ['2019-03-04', null],
-        ['2018-03-05', 0],
-      ]),
-      '2023-11-09'
-    );
+    // As the API sends it; the type says a count is always there.
+    const missing: RidershipCount = JSON.parse('{ "date": "2019-03-04", "count": null }');
+    const maximums = getSeasonalMaximums([missing, ...counts([['2018-03-05', 0]])], '2023-11-09');
     expect(maximums.size).toBe(0);
   });
 });

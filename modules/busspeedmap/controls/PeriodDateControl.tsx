@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { CSSProperties } from 'react';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -151,15 +150,11 @@ export const PeriodDateControl = () => {
             align="start"
             className="w-auto gap-0 overflow-hidden p-0"
             aria-label={`Choose a ${unit}`}
-            style={
-              {
-                ...lineColorVar(colorKey),
-                '--primary': 'var(--line-color)',
-                '--primary-foreground': needsDarkTextOn(colorKey)
-                  ? 'var(--color-stone-900)'
-                  : '#fff',
-              } as CSSProperties
-            }
+            style={{
+              ...lineColorVar(colorKey),
+              '--primary': 'var(--line-color)',
+              '--primary-foreground': needsDarkTextOn(colorKey) ? 'var(--color-stone-900)' : '#fff',
+            }}
           >
             <div className="flex flex-col sm:flex-row">
               <div className="flex flex-row flex-wrap gap-1 border-b border-stone-200 bg-stone-50 p-2 sm:w-44 sm:flex-col sm:border-r sm:border-b-0 dark:border-stone-700 dark:bg-stone-900">

@@ -7,6 +7,7 @@ import type {
   ExcessTripTimeSums,
 } from '../../common/types/dataPoints';
 import type { Line } from '../../common/types/lines';
+import { recordFromKeys } from '../../common/utils/objects';
 import { percent } from './utils';
 
 /** The lines the MBTA publishes excess trip time for, as the API accepts them. */
@@ -83,9 +84,9 @@ const FIELDS: (keyof ExcessTripTimeSums)[] = [
 
 /** Every row's sums added up, for the stat cards. Averages come from the totals, not from averaging each period. */
 export const sumEttRows = (rows: EttRow[]) => {
-  const totals = Object.fromEntries(
-    FIELDS.map((field) => [field, rows.reduce((t, row) => t + (row.sums?.[field] ?? 0), 0)])
-  ) as ExcessTripTimeSums;
+  const totals: ExcessTripTimeSums = recordFromKeys(FIELDS, (field) =>
+    rows.reduce((t, row) => t + (row.sums?.[field] ?? 0), 0)
+  );
   const days = rows.reduce((t, row) => t + (row.sums ? row.days : 0), 0);
   return { ...totals, days };
 };

@@ -45,19 +45,19 @@ export const RollingNumber = ({
 
   useEffect(() => {
     const node = spanRef.current;
-    if (!node) return;
+    if (!node) return undefined;
 
     // Nothing sensible to roll toward — show it as-is (buildRow already drops non-finite rows).
     if (!Number.isFinite(value) || prefersReducedMotion()) {
       currentRef.current = value;
       node.textContent = format(value);
-      return;
+      return undefined;
     }
 
     const from = currentRef.current;
     if (from === value) {
       node.textContent = format(value);
-      return;
+      return undefined;
     }
 
     const start = performance.now();

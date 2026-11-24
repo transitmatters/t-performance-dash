@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import { useMemo } from 'react';
 import { useThemeStore } from '../../../common/state/themeStore';
 import { hexWithAlpha } from '../../../common/utils/general';
+import { recordFromKeys } from '../../../common/utils/objects';
 import { useLinePage } from '../../../common/hooks/usePageParams';
 import { TIME_BANDS } from '../../busspeedmap/constants';
 import type { TimeBand } from '../../busspeedmap/types';
@@ -23,12 +24,10 @@ export const useBandColors = (): Record<TimeBand, string> => {
   const allDay = useLinePage().color;
   return useMemo(
     () =>
-      Object.fromEntries(
-        TIME_BANDS.map(({ key }) => [
-          key,
-          key === 'all_day' ? allDay : BAND_COLORS[key][isDark ? 'dark' : 'light'],
-        ])
-      ) as Record<TimeBand, string>,
+      recordFromKeys(
+        TIME_BANDS.map(({ key }) => key),
+        (key) => (key === 'all_day' ? allDay : BAND_COLORS[key][isDark ? 'dark' : 'light'])
+      ),
     [isDark, allDay]
   );
 };

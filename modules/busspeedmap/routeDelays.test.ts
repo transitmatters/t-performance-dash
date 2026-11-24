@@ -45,7 +45,7 @@ describe('routeDelayRows', () => {
     expect(rows.map(({ band }) => band)).toEqual(ROUTE_DELAY_BANDS);
     expect(rows.map(({ band }) => band)).not.toContain('all_day');
     expect(rows.find(({ band }) => band === 'pm_peak')?.entry).toBe(pm);
-    expect(rows.filter(({ entry }) => entry)).toHaveLength(1);
+    expect(rows.filter(({ entry: bandEntry }) => bandEntry)).toHaveLength(1);
   });
 });
 

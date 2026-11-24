@@ -84,7 +84,7 @@ export const SlowZonesMap = ({
     [slowZones, zoneDelays, speedRestrictions, line, diagram, endDate]
   );
 
-  const getSegmentsForSlowZones = ({ isHorizontal }: { isHorizontal: boolean }) => {
+  const getSegmentsForSlowZones = ({ isHorizontal: horizontal }: { isHorizontal: boolean }) => {
     return segments
       .filter((segment) => {
         // Include segments that have slow zones OR speed restrictions in any direction
@@ -98,12 +98,12 @@ export const SlowZonesMap = ({
         const strokes: { offset: number; stroke: string; strokeWidth: number; opacity: number }[] =
           [];
 
-        for (const direction of ['0', '1'] as const) {
-          const zones = segment.slowZones[direction];
-          const restrictions = segment.speedRestrictions[direction];
+        for (const dir of ['0', '1'] as const) {
+          const zones = segment.slowZones[dir];
+          const restrictions = segment.speedRestrictions[dir];
 
           if (zones.length > 0 || restrictions.length > 0) {
-            const offset = direction === '0' ? 1 : -1;
+            const offset = dir === '0' ? 1 : -1;
 
             if (zones.length > 0) {
               // We have a detected slow zone - use delay-based opacity
@@ -131,11 +131,11 @@ export const SlowZonesMap = ({
           labels: [
             {
               mapSide: '0' as const,
-              boundingSize: isHorizontal ? 15 : 20,
-              ...getSegmentLabelOverrides(segment.segmentLocation, isHorizontal),
+              boundingSize: horizontal ? 15 : 20,
+              ...getSegmentLabelOverrides(segment.segmentLocation, horizontal),
               content: (size: { width: number; height: number }) => (
                 <SlowSegmentLabel
-                  isHorizontal={isHorizontal}
+                  isHorizontal={horizontal}
                   segment={segment}
                   line={line}
                   {...size}

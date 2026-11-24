@@ -58,6 +58,7 @@ export const barAxisBounds = (
 };
 
 /** Time-axis ticks one unit coarser than the bars. Weekly bars label each January with its year. */
+// oxlint-disable-next-line typescript/consistent-return -- exhaustive switch; tsc rejects a missed case
 export const delayTimeAxis = (agg: DelayAgg) => {
   switch (agg) {
     case 'daily':

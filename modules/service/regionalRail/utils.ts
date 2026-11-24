@@ -73,7 +73,7 @@ export const weakerByHour = (entry: CrScorecardEntry): (number | null)[] =>
 /** Shade for an hour's average trains: 0 (none) to 3 (three or more). */
 export const hourLevel = (trains: number | null | undefined): 0 | 1 | 2 | 3 => {
   const rounded = Math.round(trains ?? 0);
-  return rounded >= 3 ? 3 : rounded <= 0 ? 0 : (rounded as 1 | 2);
+  return rounded >= 3 ? 3 : rounded === 2 ? 2 : rounded === 1 ? 1 : 0;
 };
 
 /** "5 AM" for the hour starting at that byHour index. */

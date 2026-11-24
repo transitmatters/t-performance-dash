@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import type { PMTiles } from 'pmtiles';
 import { completeZoom } from './routeSegments';
 
-const archiveWith = (metadata: object) => ({ getMetadata: async () => metadata }) as PMTiles;
+const archiveWith = (metadata: object) => ({ getMetadata: async () => metadata });
 
 describe('completeZoom', () => {
   it('is the zoom after the last one tippecanoe dropped features from', async () => {

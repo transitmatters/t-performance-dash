@@ -5,6 +5,7 @@ import { ALL_PAGES } from '../../common/constants/pages';
 import type { Line } from '../../common/types/lines';
 import type { QueryParams } from '../../common/types/router';
 import type { Station } from '../../common/types/stations';
+import { hasKey } from '../../common/utils/hasKey';
 import {
   getBusRouteSelectionItemHref,
   getCommuterRailRouteSelectionItemHref,
@@ -71,7 +72,8 @@ export const useResolveCommand = () => {
             return getFerryRouteSelectionItemHref(target.route, route);
           return getBusRouteSelectionItemHref(target.route, route);
         case 'page': {
-          const routeParam = target.route ? ROUTE_PARAM[target.line as RouteLine] : undefined;
+          const routeParam =
+            target.route && hasKey(ROUTE_PARAM, target.line) ? ROUTE_PARAM[target.line] : undefined;
           const sameScope =
             target.line === route.line && (!routeParam || route.query[routeParam] === target.route);
           const query = sameScope ? route.query : withoutScopedParams(route.query);
@@ -103,6 +105,7 @@ export const useResolveCommand = () => {
         case 'action':
           return undefined;
       }
+      return undefined;
     },
     [route, generateHref, handlePageConfig]
   );

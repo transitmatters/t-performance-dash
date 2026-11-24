@@ -14,7 +14,6 @@ import { Widget } from '../../common/components/widgets';
 import { StatCard, StatCardGrid } from '../../common/components/widgets/StatCard';
 import { NoDataNotice } from '../../common/components/notices/NoDataNotice';
 import { getFormattedTimeString } from '../../common/utils/time';
-import type { Direction } from '../../common/types/dataPoints';
 import { useChartToggle } from '../../common/hooks/useChartToggle';
 import { ChartPageDiv } from '../../common/components/charts/ChartPageDiv';
 import { useBreakpoint } from '../../common/hooks/useBreakpoint';
@@ -23,12 +22,10 @@ import { GreenLineSlowZoneNotice } from '../../common/components/notices/GreenLi
 import { SlowZonesSegmentsWrapper } from './SlowZonesSegmentsWrapper';
 import { TotalSlowTimeWrapper } from './TotalSlowTimeWrapper';
 import { SlowZonesMap } from './map';
-import { DirectionObject } from './constants/constants';
+import { DIRECTION_OPTIONS, DirectionObject } from './constants/constants';
 import { getSlowZoneStats, slowTimeBadge, zonesBadge } from './utils';
 
 dayjs.extend(utc);
-
-const DIRECTION_OPTIONS = Object.entries(DirectionObject) as [Direction, string][];
 
 export function SlowZonesDetails() {
   const { value: direction, control: directionControl } = useChartToggle(

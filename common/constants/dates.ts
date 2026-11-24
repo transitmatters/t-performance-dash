@@ -8,8 +8,9 @@ import type {
   SingleDateParams,
 } from '../components/inputs/DateSelection/types/DateSelectionTypes';
 
-import type { BusRoute, CommuterRailRoute, FerryRoute } from '../types/lines';
+import type { BusRoute, FerryRoute } from '../types/lines';
 import type { Tab } from '../types/router';
+import { hasKey } from '../utils/hasKey';
 import { getMinMaxDatesForRoute } from '../utils/stations';
 import type { Page } from './pages';
 
@@ -92,13 +93,16 @@ export const getBusRouteService = (busRoute: BusRoute) => {
 export const getDatePickerBounds = (
   tab: Tab,
   page?: Page,
-  route?: CommuterRailRoute | BusRoute | FerryRoute
+  route?: string
 ): { minDate: string; maxDate: string } => {
-  const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route as CommuterRailRoute | BusRoute);
+  const { minDate, maxDate } = getMinMaxDatesForRoute(tab, route);
 
   if (tab === 'Ferry' && (page === 'singleTrips' || page === 'multiTrips')) {
     return {
-      minDate: FERRY_ROUTE_TRIPS_MIN_DATES[route as FerryRoute] ?? FERRY_MIN_DATE,
+      minDate:
+        (route && hasKey(FERRY_ROUTE_TRIPS_MIN_DATES, route)
+          ? FERRY_ROUTE_TRIPS_MIN_DATES[route]
+          : undefined) ?? FERRY_MIN_DATE,
       maxDate: TODAY_STRING,
     };
   }
@@ -181,7 +185,7 @@ const SINGLE_RAPID_PRESETS: {
 };
 
 export const SINGLE_PRESETS: {
-  [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
+  [key in Tab]: { [preset in DatePresetKey]?: DateSelectionDefaultOptions<SingleDateParams> };
 } = {
   Subway: SINGLE_RAPID_PRESETS,
   Bus: SINGLE_RAPID_PRESETS,
@@ -274,7 +278,7 @@ const RANGE_RIDE_RELIABILITY_PRESETS = {
 };
 
 export const RANGE_PRESETS: {
-  [key in Tab]: { [key in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> };
+  [key in Tab]: { [preset in DatePresetKey]?: DateSelectionDefaultOptions<DateParams> };
 } = {
   Subway: RANGE_RAPID_PRESETS,
   Bus: RANGE_RAPID_PRESETS,

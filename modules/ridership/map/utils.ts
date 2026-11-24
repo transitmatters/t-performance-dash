@@ -1,5 +1,6 @@
 import { rtStations } from '../../../common/constants/stations';
 import type { RidershipCount, StationRidershipWeek } from '../../../common/types/dataPoints';
+import { isOneOf } from '../../../common/utils/objects';
 
 export const STATION_RIDERSHIP_LINES = ['Red', 'Orange', 'Blue', 'Green'] as const;
 
@@ -7,8 +8,7 @@ export type StationRidershipLineName = (typeof STATION_RIDERSHIP_LINES)[number];
 
 export const isStationRidershipLine = (
   lineShort: string | undefined
-): lineShort is StationRidershipLineName =>
-  (STATION_RIDERSHIP_LINES as readonly (string | undefined)[]).includes(lineShort);
+): lineShort is StationRidershipLineName => isOneOf(STATION_RIDERSHIP_LINES, lineShort);
 
 const linesByStationId = STATION_RIDERSHIP_LINES.reduce<Record<string, StationRidershipLineName[]>>(
   (index, lineName) => {
@@ -35,7 +35,10 @@ export const getStationAverages = (weeks: StationRidershipWeek[]) => {
     });
   });
   return Object.fromEntries(
-    Object.entries(totals).map(([stationId, { sum, weeks }]) => [stationId, sum / weeks])
+    Object.entries(totals).map(([stationId, { sum, weeks: weekCount }]) => [
+      stationId,
+      sum / weekCount,
+    ])
   );
 };
 

@@ -1,8 +1,8 @@
 import { TIME_BANDS } from './constants';
+import { isKeyedByBand, isKeyedByDayType } from './utils';
 import type {
   BusRouteDelayEntry,
   BusRouteDelaysByBand,
-  BusRouteDelaysByDayType,
   BusRouteDelaysResponse,
   DayType,
   Period,
@@ -21,8 +21,12 @@ export const selectRouteDelayBands = (
   dayType: DayType
 ): BusRouteDelaysByBand =>
   period === 'daily'
-    ? (data as BusRouteDelaysByBand)
-    : ((data as BusRouteDelaysByDayType)[dayType] ?? {});
+    ? isKeyedByBand(data)
+      ? data
+      : {}
+    : isKeyedByDayType(data)
+      ? (data[dayType] ?? {})
+      : {};
 
 export interface RouteDelayRow {
   band: TimeBand;
@@ -77,7 +81,7 @@ export const routeDelayCardContent = (
   routeIds: string[],
   directionId: number
 ): RouteDelayCardContent => {
-  if (period !== 'daily' && !(data as BusRouteDelaysByDayType)[dayType]) return { kind: 'noDays' };
+  if (period !== 'daily' && !(isKeyedByDayType(data) && data[dayType])) return { kind: 'noDays' };
 
   const bands = selectRouteDelayBands(data, period, dayType);
   const routes = routeIds

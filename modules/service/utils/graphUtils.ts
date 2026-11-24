@@ -84,7 +84,7 @@ const EXPECTED_LAG_DAYS = 2;
  * The bucket is the spacing of the last two dates, which covers daily, weekly and monthly data.
  */
 const getStaleLatestDate = (dates: string[], end: string) => {
-  const sorted = [...new Set(dates)].sort();
+  const sorted = [...new Set(dates)].toSorted();
   const latest = sorted.at(-1);
   if (!latest) return undefined;
   const previous = sorted.at(-2);

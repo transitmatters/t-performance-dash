@@ -18,11 +18,10 @@ export const textOnLineColor = (line?: LineColorKey | null) =>
  * for it at any alpha: `bg-(--line-color)/75`, `hover:border-(--line-color)/50`, and so on.
  * The variable inherits, so setting it on a container covers its children.
  */
-export const lineColorVar = (line?: LineColorKey | null): CSSProperties =>
-  ({
-    '--line-color': LINE_COLORS[line ?? 'default'],
-    '--line-color-dark': LINE_COLORS_DARK[line ?? 'default'],
-  }) as CSSProperties;
+export const lineColorVar = (line?: LineColorKey | null): CSSProperties => ({
+  '--line-color': LINE_COLORS[line ?? 'default'],
+  '--line-color-dark': LINE_COLORS_DARK[line ?? 'default'],
+});
 
 export const lineColorBackground: LineColorStyleMap = {
   'line-red': `bg-mbta-red`,

@@ -150,11 +150,11 @@ describe('buildStatements', () => {
   });
 
   it('says how much ridership changed and where it grew most', () => {
-    const { ridership } = byId(DATA);
-    expect(ridership.head).toBe(
+    const { ridership: statement } = byId(DATA);
+    expect(statement.head).toBe(
       'Every line carries more riders than a year ago, up to +16% on Commuter Rail.'
     );
-    expect(ridership.viz.kind === 'changes' && ridership.viz.marks).toHaveLength(6);
+    expect(statement.viz.kind === 'changes' && statement.viz.marks).toHaveLength(6);
   });
 
   it('says how evenly trains are spaced and links to the line furthest off', () => {
@@ -206,20 +206,20 @@ describe('buildStatements', () => {
   });
 
   it('gives the range of subway speeds and compares slow zones now with their peak', () => {
-    const { speed } = byId(DATA);
-    expect(speed.head).toBe(
+    const { speed: statement } = byId(DATA);
+    expect(statement.head).toBe(
       'Subway trains run at 83% to 109% of their best speeds. Slow zones add 1.3 minutes a day across the subway, down from 2 hours a day in April 2023.'
     );
-    expect(speed.link.label).toBe('Green Line speed');
+    expect(statement.link.label).toBe('Green Line speed');
   });
 
   it('falls back to slow zones alone without speed baselines', () => {
     const rows = DATA.rows.map((r) => ({ ...r, cells: { ...r.cells, speed: undefined } }));
-    const { speed } = byId({ ...DATA, rows });
-    expect(speed.head).toBe(
+    const { speed: statement } = byId({ ...DATA, rows });
+    expect(statement.head).toBe(
       'Slow zones add 1.3 minutes a day across the subway, down from 2 hours a day in April 2023.'
     );
-    expect(speed.viz.kind).toBe('area');
+    expect(statement.viz.kind).toBe('area');
   });
 
   it('leaves out what a file from before dropped trips and ridership lacks', () => {

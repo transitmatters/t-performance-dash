@@ -59,7 +59,7 @@ export const searchCommands = (
     const score = scoreCommand(command, tokens, line);
     if (score !== undefined) scored.push({ command, score });
   }
-  return scored.sort(compare).map(({ command }) => command);
+  return scored.toSorted(compare).map(({ command }) => command);
 };
 
 export interface CommandSection {

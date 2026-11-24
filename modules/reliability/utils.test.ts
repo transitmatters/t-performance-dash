@@ -59,12 +59,12 @@ describe('toCsvRows', () => {
 
 describe('toPoints', () => {
   it('keeps a null point for a period with nothing measured, so series stay aligned', () => {
-    const data = [
-      { date: '2026-03-01', onTime: 80 },
-      { date: '2026-03-08' },
-      { date: '2026-03-15', onTime: 90 },
-    ] as unknown as ReliabilityEntry[];
-    expect(toPoints(data, (e) => e.onTime)).toEqual([
+    const entries: ReliabilityEntry[] = [
+      { date: '2026-03-01', days: 7, onTime: 80 },
+      { date: '2026-03-08', days: 7 },
+      { date: '2026-03-15', days: 7, onTime: 90 },
+    ];
+    expect(toPoints(entries, (e) => e.onTime)).toEqual([
       { date: '2026-03-01', value: 80 },
       { date: '2026-03-08', value: null },
       { date: '2026-03-15', value: 90 },

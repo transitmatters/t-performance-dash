@@ -39,6 +39,7 @@ export class BusSpeedDataUnavailableError extends Error {
  * files (a pmtiles feature property, or a leaderboard.json top-level key), selected
  * client-side rather than fetched separately.
  */
+// oxlint-disable-next-line typescript/consistent-return -- exhaustive switch; tsc rejects a missed case
 const periodDirectory = (date: string, period: Period): string => {
   const day = dayjs(date);
   switch (period) {

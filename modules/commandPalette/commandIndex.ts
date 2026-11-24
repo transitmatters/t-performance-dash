@@ -18,6 +18,8 @@ import {
   FERRY_ROUTES,
 } from '../../common/types/lines';
 import type { Station } from '../../common/types/stations';
+import { isLine } from '../../common/utils/isLine';
+import { objectKeys } from '../../common/utils/objects';
 import { LINE_ENTRY_PATHS, NAV_LINES, lineIcon, pagesForLine } from '../navigation/lineNav';
 
 export type RouteLine = 'line-bus' | 'line-commuter-rail' | 'line-ferry';
@@ -231,8 +233,9 @@ const stationCommand = (
   });
 
 const stationCommands = (): Command[] => [
-  ...(Object.keys(rtStations) as (keyof typeof rtStations)[]).flatMap((lineShort) => {
-    const line = `line-${lineShort.toLowerCase()}` as Line;
+  ...objectKeys(rtStations).flatMap((lineShort) => {
+    const line = `line-${lineShort.toLowerCase()}`;
+    if (!isLine(line)) return [];
     return rtStations[lineShort].stations
       .filter((station) => !station.disabled)
       .map((station) =>

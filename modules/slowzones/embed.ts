@@ -1,11 +1,15 @@
 import { LINE_OBJECTS } from '../../common/constants/lines';
 import type { LinePath } from '../../common/types/lines';
 import { getEmbedSnippet } from '../../common/utils/embed';
+import { hasKey } from '../../common/utils/hasKey';
 import { linePathToKeyMap } from '../../common/utils/router';
 import { stringifySearch } from '../../common/utils/searchParams';
 
 /** A rail line's path, or `system` for every line on one chart. */
 export type SlowZonesEmbedLine = LinePath | 'system';
+
+export const isSlowZonesEmbedLine = (line: string): line is SlowZonesEmbedLine =>
+  line === 'system' || hasKey(linePathToKeyMap, line);
 
 interface DateRange {
   startDate?: string;

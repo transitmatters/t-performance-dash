@@ -35,15 +35,8 @@ export const mergeChunks = (
   const isError = !data && !pending.length;
   const isFetching = results.some((result) => result.isFetching);
 
-  return {
+  const shared = {
     ...newest,
-    data,
-    error: isError ? failed[0].error : null,
-    isError,
-    isPending: !data && !isError,
-    isLoading: !data && !isError && isFetching,
-    isSuccess: Boolean(data),
-    status: data ? 'success' : isError ? 'error' : 'pending',
     isFetching,
     refetch: () =>
       Promise.all((failed.length ? failed : results).map((result) => result.refetch())).then(
@@ -58,5 +51,45 @@ export const mergeChunks = (
       byTimeRange: chunks[0],
       byTimeStatus: statusOf(newest),
     },
-  } as ChunkedAggregateQueryResult;
+    // Each branch below is one of UseQueryResult's status variants, so these match it rather than
+    // the newest chunk.
+    isLoadingError: false,
+    isRefetchError: false,
+    isPlaceholderData: false,
+  } as const;
+  if (data) {
+    return {
+      ...shared,
+      data,
+      error: null,
+      isError: false,
+      isPending: false,
+      isLoading: false,
+      isSuccess: true,
+      status: 'success',
+    };
+  }
+  if (isError) {
+    return {
+      ...shared,
+      data: undefined,
+      error: failed[0].error,
+      isError: true,
+      isPending: false,
+      isLoading: false,
+      isLoadingError: true,
+      isSuccess: false,
+      status: 'error',
+    };
+  }
+  return {
+    ...shared,
+    data: undefined,
+    error: null,
+    isError: false,
+    isPending: true,
+    isLoading: isFetching,
+    isSuccess: false,
+    status: 'pending',
+  };
 };

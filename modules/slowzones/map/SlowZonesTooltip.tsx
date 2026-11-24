@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import type { CSSProperties } from 'react';
 import classNames from 'classnames';
 import type { TooltipSide } from '@transitmatters/stripmap';
 
@@ -94,17 +93,14 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
     return null;
   }
 
-  const renderSpeedRestrictions = (speedRestrictions: SpeedRestriction[]) => {
-    if (speedRestrictions.length) {
-      const minimumSpeed = speedRestrictions.reduce(
-        (min, sr) => Math.min(min, sr.speedMph),
-        Infinity
-      );
-      const totalFeet = speedRestrictions.reduce((sum, sr) => sum + sr.trackFeet, 0);
-      const [oldest] = speedRestrictions
+  const renderSpeedRestrictions = (restrictions: SpeedRestriction[]) => {
+    if (restrictions.length) {
+      const minimumSpeed = restrictions.reduce((min, sr) => Math.min(min, sr.speedMph), Infinity);
+      const totalFeet = restrictions.reduce((sum, sr) => sum + sr.trackFeet, 0);
+      const [oldest] = restrictions
         .filter((sr) => sr.reported)
         .map((sr) => sr.reported)
-        .sort();
+        .toSorted();
       const oldestString = prettyDate(oldest, false);
       return (
         <div className={classNames(styles.speedRestriction, 'stone bg-slate-200 text-xs')}>
@@ -188,7 +184,7 @@ export const SlowZonesTooltip = (props: SlowZonesTooltipProps) => {
 
   return (
     <div
-      style={{ '--tooltip-accent-color': color } as CSSProperties}
+      style={{ '--tooltip-accent-color': color }}
       className={classNames(
         styles.slowZonesTooltip,
         isHorizontal && styles.horizontal,

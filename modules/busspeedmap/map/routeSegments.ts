@@ -16,9 +16,21 @@ export const EMPTY_ROUTE: FeatureCollection = { type: 'FeatureCollection', featu
  * zoom; an empty entry means nothing was. A month's band archive is thinned below 12, a day's
  * below 9, and an all_day archive not at all.
  */
-export const completeZoom = async (archive: PMTiles): Promise<number | undefined> => {
-  const { strategies } = (await archive.getMetadata()) as { strategies?: object[] };
-  const lastThinned = strategies?.findLastIndex((strategy) => Object.keys(strategy).length > 0);
+export const completeZoom = async (
+  archive: Pick<PMTiles, 'getMetadata'>
+): Promise<number | undefined> => {
+  const metadata = await archive.getMetadata();
+  const strategies: unknown[] | undefined =
+    typeof metadata === 'object' &&
+    metadata !== null &&
+    'strategies' in metadata &&
+    Array.isArray(metadata.strategies)
+      ? metadata.strategies
+      : undefined;
+  const lastThinned = strategies?.findLastIndex(
+    (strategy) =>
+      typeof strategy === 'object' && strategy !== null && Object.keys(strategy).length > 0
+  );
   return lastThinned === undefined || lastThinned === -1 ? undefined : lastThinned + 1;
 };
 
@@ -34,10 +46,13 @@ export const readRouteSegments = async (
   bounds: LngLatBounds,
   routeKeys: string[]
 ): Promise<FeatureCollection> => {
+  const [southWest, northEast] = bounds.toArray();
   const tiles = await Promise.all(
-    tilesCovering(bounds.toArray().flat() as [number, number, number, number], zoom).map(
-      async ([x, y]) => ({ x, y, tile: await archive.getZxy(zoom, x, y) })
-    )
+    tilesCovering([...southWest, ...northEast], zoom).map(async ([x, y]) => ({
+      x,
+      y,
+      tile: await archive.getZxy(zoom, x, y),
+    }))
   );
   const features: Feature[] = [];
   for (const { x, y, tile } of tiles) {

@@ -55,16 +55,17 @@ const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1
  */
 export const describeWeather = (hours: WeatherReading[], condition: WeatherCondition): string => {
   const codes = hours
-    .filter((hour) => hour.condition === condition && hour.weather_code !== null)
-    .map((hour) => WMO_CODES[hour.weather_code as number])
+    .flatMap(({ condition: hourCondition, weather_code }) =>
+      hourCondition === condition && weather_code !== null ? [WMO_CODES[weather_code]] : []
+    )
     .filter(Boolean);
   const kinds = new Set(codes.map(({ kind }) => kind));
   const noun =
     kinds.size === 1 ? [...kinds][0] : (CONDITION_NOUNS[condition] ?? condition.toString());
   const intensities = codes.flatMap(({ intensity }) => (intensity ? [intensity] : []));
   if (!intensities.length) return capitalize(noun);
-  const low = Math.min(...intensities) as Intensity;
-  const high = Math.max(...intensities) as Intensity;
+  const low = intensities.reduce((a, b) => (b < a ? b : a));
+  const high = intensities.reduce((a, b) => (b > a ? b : a));
   const range =
     low === high ? INTENSITY_WORDS[low] : `${INTENSITY_WORDS[low]} to ${INTENSITY_WORDS[high]}`;
   return capitalize(`${range} ${noun}`);

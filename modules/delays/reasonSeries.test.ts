@@ -22,15 +22,13 @@ import {
   toMonthly,
   withinRange,
 } from './reasonSeries';
+import { recordFromKeys } from '../../common/utils/objects';
 
 const row = (overrides: Partial<LineDelays> = {}): LineDelays => ({
   date: '2026-10-14',
   line: 'line-red',
   total_delay_time: 0,
-  ...(Object.fromEntries(DELAY_CAUSES.map((cause) => [cause, 0])) as Record<
-    (typeof DELAY_CAUSES)[number],
-    number
-  >),
+  ...recordFromKeys(DELAY_CAUSES, () => 0),
   ...overrides,
 });
 

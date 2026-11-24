@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { CSSProperties } from 'react';
 import dayjs from 'dayjs';
 import classNames from 'classnames';
 import { Calendar } from '../../ui/calendar';
@@ -49,15 +48,13 @@ export const DateField = ({
       <PopoverContent
         align="center"
         className="w-auto p-0"
-        style={
-          {
-            ...lineColorVar(colorKey),
-            // The calendar's selected-day styling is themed via --primary; point it at the line
-            // color rather than adding a separate override for every possible line.
-            '--primary': 'var(--line-color)',
-            '--primary-foreground': needsDarkText ? 'var(--color-stone-900)' : '#fff',
-          } as CSSProperties
-        }
+        style={{
+          ...lineColorVar(colorKey),
+          // The calendar's selected-day styling is themed via --primary; point it at the line
+          // color rather than adding a separate override for every possible line.
+          '--primary': 'var(--line-color)',
+          '--primary-foreground': needsDarkText ? 'var(--color-stone-900)' : '#fff',
+        }}
       >
         <Calendar
           mode="single"

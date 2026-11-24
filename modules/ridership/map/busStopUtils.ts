@@ -75,7 +75,7 @@ export const resolveBusStopRidershipSelection = (
     route.seasons[route.seasons.length - 1];
   const directionIds = season.directions
     .map((direction) => direction.direction_id)
-    .sort((a, b) => b - a);
+    .toSorted((a, b) => b - a);
   const directionId =
     directionIds.find((id) => id === selection.directionId) ??
     directionIds.find((id) => id === 1) ??

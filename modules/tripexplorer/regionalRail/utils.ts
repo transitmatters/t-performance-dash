@@ -34,10 +34,10 @@ export const DEFAULT_TIME = 12 * HOUR;
  * Regional Rail takes Commuter Rail's purple, raised in dark mode to stay readable on a dark card.
  * Set on the preview, as `--rr` and `--rr-dark`.
  */
-export const RR_COLORS = {
+export const RR_COLORS: CSSProperties = {
   '--rr': LINE_TEXT_COLORS['line-commuter-rail'].light,
   '--rr-dark': LINE_TEXT_COLORS['line-commuter-rail'].dark,
-} as CSSProperties;
+};
 
 /** Dot colors for each schedule, shared by the table's key and the strip of trains. */
 export const DOT_CLASS = {

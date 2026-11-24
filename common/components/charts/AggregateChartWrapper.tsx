@@ -103,4 +103,5 @@ export const AggregateChartWrapper = ({
         />
       );
   }
+  return undefined;
 };

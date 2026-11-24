@@ -54,7 +54,7 @@ export const BusStopRidershipMap = ({
   const pxPerStation = Math.max(7, Math.min(15, 300 / stops.length));
 
   const getStations = useCallback(
-    ({ isHorizontal }: { isHorizontal: boolean }): StationRenderOptions[] =>
+    ({ isHorizontal: horizontal }: { isHorizontal: boolean }): StationRenderOptions[] =>
       stops.map(({ stop_id, boardings }) => ({
         stationId: stop_id,
         dot: {
@@ -67,14 +67,14 @@ export const BusStopRidershipMap = ({
           {
             mapSide: '0',
             length: pxPerStation,
-            boundingSize: isHorizontal ? 8 : 14,
+            boundingSize: horizontal ? 8 : 14,
             // Keep clear of the dot, which sits on the edge of the label nearest the line
             content: ({ width, height }) => (
               <text
-                x={isHorizontal ? width / 2 : 4.5}
-                y={isHorizontal ? 4.5 : height / 2 + 1.25}
+                x={horizontal ? width / 2 : 4.5}
+                y={horizontal ? 4.5 : height / 2 + 1.25}
                 fontSize={3}
-                textAnchor={isHorizontal ? 'middle' : 'start'}
+                textAnchor={horizontal ? 'middle' : 'start'}
                 className="fill-stone-700 dark:fill-stone-300"
               >
                 {formatStationRidership(boardings)}

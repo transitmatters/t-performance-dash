@@ -15,7 +15,7 @@ export const colorVisionPalette = <T extends object>(standard: T, colorblind: Pa
   new Proxy(standard, {
     get: (target, key, receiver) =>
       isColorblindMode() && Object.hasOwn(colorblind, key)
-        ? colorblind[key as keyof T]
+        ? Reflect.get(colorblind, key)
         : Reflect.get(target, key, receiver),
   });
 

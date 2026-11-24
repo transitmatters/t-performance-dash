@@ -2,9 +2,14 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { Route } from '../../common/types/router';
 import { getTripEmbedSnippet, getTripPageUrl } from './embed';
 
-const route = {
+const route: Route = {
   line: 'line-red',
   linePath: 'red',
+  lineShort: 'Red',
+  page: 'multiTrips',
+  tab: 'Subway',
+  colorKey: 'line-red',
+  color: '',
   query: {
     from: 'place-pktrm',
     to: 'place-harsq',
@@ -15,7 +20,7 @@ const route = {
     ttDays: 'weekday',
     hwDays: 'weekend',
   },
-} as unknown as Route;
+};
 
 const srcOf = (snippet: string) => snippet.match(/src="([^"]+)"/)?.[1];
 
@@ -51,7 +56,15 @@ describe('trip embed snippets', () => {
   });
 
   it('titles the embed after the route and chart', () => {
-    const bus = { ...route, line: 'line-bus', linePath: 'bus', query: { busRoute: '1' } } as Route;
+    const bus: Route = {
+      ...route,
+      line: 'line-bus',
+      linePath: 'bus',
+      lineShort: 'Bus',
+      tab: 'Bus',
+      colorKey: 'line-bus',
+      query: { busRoute: '1' },
+    };
     expect(getTripEmbedSnippet({ page: 'multi', chart: 'traveltimes-by-hour' }, bus)).toContain(
       'title="Route 1 travel times by hour — TransitMatters"'
     );

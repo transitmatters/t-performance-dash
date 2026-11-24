@@ -1,4 +1,4 @@
-import type { AnchorHTMLAttributes, ComponentProps, Ref } from 'react';
+import type { AnchorHTMLAttributes, Ref } from 'react';
 import { Link as RouterLink } from '@tanstack/react-router';
 import type { SearchObject } from '../../utils/searchParams';
 import { parseSearch, stringifySearch } from '../../utils/searchParams';
@@ -24,10 +24,12 @@ export const Link = ({ href, ...props }: LinkProps) => {
   // Split into to/search/hash rather than passing `href`: Link memoizes its destination on those,
   // not on `href`, so an `href` that changes between renders would keep pointing at the old URL.
   const { pathname, search, hash } = new URL(url, 'http://placeholder');
-  const routerProps = {
-    to: pathname,
-    search: parseSearch(search),
-    hash: hash ? hash.slice(1) : undefined,
-  } as unknown as ComponentProps<typeof RouterLink>;
-  return <RouterLink {...routerProps} {...props} />;
+  return (
+    <RouterLink
+      to={pathname}
+      search={parseSearch(search)}
+      hash={hash ? hash.slice(1) : undefined}
+      {...props}
+    />
+  );
 };

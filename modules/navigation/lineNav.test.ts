@@ -1,13 +1,19 @@
 import { describe, expect, it } from 'vitest';
 import { FERRY_DEFAULTS } from '../../common/state/defaults/dateDefaults';
+import type { Page } from '../../common/constants/pages';
+import { LINE_OBJECTS } from '../../common/constants/lines';
 import type { Line } from '../../common/types/lines';
 import type { QueryParams, Route } from '../../common/types/router';
 import { getCanonicalSearchHref } from '../../common/utils/dateParams';
+import { routeFromLocation } from '../../common/utils/router';
 import { parseSearch } from '../../common/utils/searchParams';
 import { hrefForLine } from './lineNav';
 
-const at = (line: Line | undefined, page: string, query: QueryParams = {}) =>
-  ({ line, page, query }) as Route;
+const at = (line: Line | undefined, page: Page, query: QueryParams = {}): Route => ({
+  ...routeFromLocation(line ? `/${LINE_OBJECTS[line].path}/` : '/', {}),
+  page,
+  query,
+});
 
 const RANGE = { startDate: '2026-01-01', endDate: '2026-02-01' };
 const DATES = 'startDate=2026-01-01&endDate=2026-02-01';

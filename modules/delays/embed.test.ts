@@ -2,9 +2,14 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import type { Route } from '../../common/types/router';
 import { getDelaysEmbedSnippet, getDelaysPageUrl } from './embed';
 
-const green = {
+const green: Route = {
   line: 'line-green',
   linePath: 'green',
+  lineShort: 'Green',
+  page: 'delays',
+  tab: 'Subway',
+  colorKey: 'line-green',
+  color: '',
   query: {
     startDate: '2024-01-01',
     endDate: '2024-12-31',
@@ -13,7 +18,7 @@ const green = {
     focus: 'signal',
     ttDays: 'weekday',
   },
-} as unknown as Route;
+};
 
 const srcOf = (snippet: string) => snippet.match(/src="([^"]+)"/)?.[1];
 
@@ -38,7 +43,16 @@ describe('delays embed snippets', () => {
     expect(getDelaysEmbedSnippet('breakdown', green)).toContain(
       'title="Green Line C Branch delay time by cause — TransitMatters"'
     );
-    const bus = { line: 'line-bus', linePath: 'bus', query: { busRoute: '1' } } as Route;
+    const bus: Route = {
+      line: 'line-bus',
+      linePath: 'bus',
+      lineShort: 'Bus',
+      page: 'delays',
+      tab: 'Bus',
+      colorKey: 'line-bus',
+      color: '',
+      query: { busRoute: '1' },
+    };
     expect(getDelaysEmbedSnippet('causes', bus)).toContain('title="Route 1 delay causes');
   });
 

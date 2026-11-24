@@ -152,13 +152,14 @@ export const TimeSeriesChart = <Data extends Dataset[]>(props: Props<Data>) => {
         ...getFillProps(style),
       };
     });
+    const noPoints: { x: string; y: number | null }[] = [];
     const benchmarkDummyDatasets = benchmarks.map((benchmark) => {
       const color = benchmark.color || CHART_COLORS.ANNOTATIONS;
       return {
         label: benchmark.label,
         backgroundColor: 'transparent',
         borderColor: color,
-        data: null as unknown as { x: string; y: number | null }[],
+        data: noPoints,
       };
     });
     return { datasets: [...datasets, ...benchmarkDummyDatasets] };

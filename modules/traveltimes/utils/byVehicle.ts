@@ -20,7 +20,7 @@ export interface VehicleTravelTime {
 }
 
 const median = (values: number[]) => {
-  const sorted = [...values].sort((a, b) => a - b);
+  const sorted = [...values].toSorted((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 };
@@ -70,5 +70,5 @@ export const getTravelTimesByVehicle = (
         cars: cars.join(', '),
       };
     })
-    .sort((a, b) => a.median_travel_time_sec - b.median_travel_time_sec);
+    .toSorted((a, b) => a.median_travel_time_sec - b.median_travel_time_sec);
 };

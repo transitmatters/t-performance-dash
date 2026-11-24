@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import type { Location } from '../../common/types/charts';
 import type { LineColorKey } from '../../common/types/lines';
 import { LINE_TEXT_COLORS } from '../../common/constants/colors';
@@ -16,7 +15,7 @@ interface LocationTitleProps {
 export const LocationTitle = ({ location, both, line }: LocationTitleProps) => {
   const textColor = line ? LINE_TEXT_COLORS[line] : undefined;
   const style = textColor
-    ? ({ '--station-light': textColor.light, '--station-dark': textColor.dark } as CSSProperties)
+    ? { '--station-light': textColor.light, '--station-dark': textColor.dark }
     : undefined;
   const stationClass = textColor
     ? 'truncate text-(--station-light) dark:text-(--station-dark)'

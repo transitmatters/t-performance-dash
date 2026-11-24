@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import type { Shutdown } from '../../../common/types/shutdowns';
-import type { Station } from '../../../common/types/stations';
 import {
   affectsTrip,
   describeShutdowns,
@@ -27,7 +26,7 @@ const shutdown = (overrides: Partial<Shutdown> = {}): Shutdown => ({
   ...overrides,
 });
 
-const station = (line: string, stopId: string) => stationForStop(line, stopId) as Station;
+const station = (line: string, stopId: string) => stationForStop(line, stopId)!;
 
 describe('shutdownLineId', () => {
   it('covers rapid transit and commuter rail only', () => {

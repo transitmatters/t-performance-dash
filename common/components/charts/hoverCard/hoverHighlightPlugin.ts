@@ -1,6 +1,8 @@
-import type { Plugin } from 'chart.js';
+import type { Chart, Plugin } from 'chart.js';
 
 import { getChartTheme } from '../../../utils/chartTheme';
+
+const isLineChart = (chart: Chart) => 'type' in chart.config && chart.config.type === 'line';
 
 /**
  * Marks what the hover card is reading on line charts: a faint vertical rule through the hovered
@@ -12,7 +14,7 @@ export const hoverHighlightPlugin: Plugin<'line', { enabled?: boolean }> = {
   id: 'hoverHighlight',
   defaults: { enabled: true },
   beforeDatasetsDraw: (chart, _args, options) => {
-    if (!options.enabled || (chart.config as { type?: string }).type !== 'line') return;
+    if (!options.enabled || !isLineChart(chart)) return;
     const [active] = chart.tooltip?.getActiveElements() ?? [];
     if (!active) return;
     const { top, bottom } = chart.chartArea;
@@ -28,15 +30,13 @@ export const hoverHighlightPlugin: Plugin<'line', { enabled?: boolean }> = {
     ctx.restore();
   },
   afterDatasetsDraw: (chart, _args, options) => {
-    if (!options.enabled || (chart.config as { type?: string }).type !== 'line') return;
+    if (!options.enabled || !isLineChart(chart)) return;
     const { ctx } = chart;
     chart.tooltip?.getActiveElements().forEach(({ element }) => {
-      const { radius, backgroundColor } = element.options as {
-        radius?: number;
-        backgroundColor?: unknown;
-      };
+      const radius: unknown = element.options.radius;
+      const backgroundColor: unknown = element.options.backgroundColor;
       // Bars, and points too faint to have a color worth echoing
-      if (!radius || typeof backgroundColor !== 'string') return;
+      if (typeof radius !== 'number' || !radius || typeof backgroundColor !== 'string') return;
       ctx.save();
       ctx.beginPath();
       ctx.arc(element.x, element.y, radius + 3, 0, Math.PI * 2);

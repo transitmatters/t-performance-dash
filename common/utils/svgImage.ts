@@ -60,7 +60,8 @@ export async function svgToCanvas(container: HTMLElement): Promise<HTMLCanvasEle
   const box = svg.getBoundingClientRect();
   if (!box.width || !box.height) return null;
 
-  const copy = svg.cloneNode(true) as SVGSVGElement;
+  const copy = svg.cloneNode(true);
+  if (!(copy instanceof SVGSVGElement)) return null;
   inlineStyles(svg, copy);
   copy.setAttribute('width', String(box.width));
   copy.setAttribute('height', String(box.height));
