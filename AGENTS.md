@@ -14,7 +14,7 @@ Guidance for AI coding agents working on the TransitMatters Data Dashboard, whic
 ## Commands
 
 ```bash
-npm run lint                     # tsc + ESLint + oxfmt check, then Ruff check + format check
+npm run lint                     # tsc + oxlint + oxfmt check, then Ruff check + format check
 npm run lint-frontend-fix        # Auto-fix frontend
 npm run lint-backend-fix         # Auto-fix backend
 npm test                         # Frontend tests (Vitest)

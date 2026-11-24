@@ -28,8 +28,13 @@ const progressive = (count: number): ChartOptions<'line'>['animations'] => {
   const previousY = (ctx: ScriptableContext<'line'>) => {
     const meta = ctx.chart.getDatasetMeta(ctx.datasetIndex);
     const previous = ctx.dataIndex > 0 ? meta.data[ctx.dataIndex - 1] : undefined;
-    return previous
-      ? previous.getProps(['y'], true).y
+    // getProps(…, true) is where the point is headed, not where its own animation has it now.
+    const target: unknown = previous?.getProps(['y'], true);
+    return typeof target === 'object' &&
+      target !== null &&
+      'y' in target &&
+      typeof target.y === 'number'
+      ? target.y
       : ctx.chart.scales.y.getPixelForValue(ctx.chart.scales.y.min);
   };
   const spec = (prop: string, from: number | ((ctx: ScriptableContext<'line'>) => number)) => ({

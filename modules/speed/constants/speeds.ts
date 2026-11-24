@@ -42,7 +42,7 @@ const getWeeklyTitle = (date: string) => {
 
 const getMonthlyTitle = (date: string) => {
   const dateObject = dayjs(date);
-  return `${dateObject.format('MMMM YYYY')}`;
+  return dateObject.format('MMMM YYYY');
 };
 
 export const SPEED_RANGE_PARAM_MAP: { [s: string]: ParamsType } = {

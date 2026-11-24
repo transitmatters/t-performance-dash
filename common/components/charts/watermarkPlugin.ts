@@ -12,7 +12,6 @@ export interface WatermarkOptions {
 }
 
 declare module 'chart.js' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- merging needs Chart.js's own type parameter
   interface PluginOptionsByType<TType extends ChartType> {
     /** `false` leaves the wordmark off this chart. */
     watermark?: WatermarkOptions | false;

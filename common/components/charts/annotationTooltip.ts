@@ -22,6 +22,12 @@ export const annotationTooltip = (content: AnnotationTooltipContent) => {
   return { enter };
 };
 
+type AnnotationElement = ReturnType<typeof Annotation.getAnnotations>[number];
+
+// Cards are keyed by their annotation's enter hook, which is compared by identity, never called.
+// oxlint-disable-next-line typescript/unbound-method
+const hookOf = (element: AnnotationElement) => element.options.enter as Hook;
+
 /** Shows the card for whichever annotation box is under the pointer. */
 export const annotationHoverCardPlugin: Plugin = {
   id: 'annotationHoverCard',
@@ -31,11 +37,11 @@ export const annotationHoverCardPlugin: Plugin = {
       event.type === 'mousemove' && x !== null && y !== null
         ? Annotation.getAnnotations(chart).find(
             (element) =>
-              cards.has(element.options.enter as Hook) &&
+              cards.has(hookOf(element)) &&
               (element as unknown as { inRange: (x: number, y: number) => boolean }).inRange(x, y)
           )
         : undefined;
-    const content = hit && cards.get(hit.options.enter as Hook);
+    const content = hit && cards.get(hookOf(hit));
     if (!hit || !content) {
       hideHoverCard('annotation', chart);
       return;

@@ -4,11 +4,7 @@ import { Line } from '@chartjs-components';
 import 'chartjs-adapter-date-fns';
 import { enUS } from 'date-fns/locale';
 import Annotation from 'chartjs-plugin-annotation';
-import type {
-  AnnotationOptions,
-  AnnotationTypeRegistry,
-  PartialEventContext,
-} from 'chartjs-plugin-annotation';
+import type { AnnotationOptions, PartialEventContext } from 'chartjs-plugin-annotation';
 
 import { useLinePage } from '../../common/hooks/usePageParams';
 import { CHART_COLORS, COLORS } from '../../common/constants/colors';
@@ -37,7 +33,7 @@ interface RidershipGraphProps {
   endDate: string;
   showTitle?: boolean;
   serviceEnd?: string;
-  serviceDateBlocks?: AnnotationOptions<keyof AnnotationTypeRegistry>[];
+  serviceDateBlocks?: AnnotationOptions[];
   /** Charts one station's ridership, which has no historical maximum to compare against */
   stationName?: string;
 }

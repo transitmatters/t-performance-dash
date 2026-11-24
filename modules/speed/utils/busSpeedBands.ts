@@ -65,7 +65,7 @@ export const bandMph = (
 /** CSV rows: one mph column per line, in place of the nested band map a spreadsheet can't show. */
 export const flattenBandsForCsv = (data: DeliveredTripMetricsBus[]) =>
   data.map((row) => {
-    const mphColumns = TIME_BANDS.map(({ key }) => [
+    const mphColumns = TIME_BANDS.map(({ key }): [string, number | string] => [
       key === 'all_day' ? 'miles_per_hour' : `${key}_mph`,
       bandMph(row, key) ?? '',
     ]);

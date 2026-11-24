@@ -73,7 +73,7 @@ export const TrackRow = ({
     };
     measure();
     // Web fonts can load after the first measurement and change the widths
-    document.fonts?.ready.then(measure);
+    void document.fonts?.ready.then(measure);
     return () => {
       cancelled = true;
     };

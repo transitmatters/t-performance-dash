@@ -11,11 +11,11 @@ export const RegionalRailNotes = () => (
       Built from the MBTA&apos;s published schedules, not trains actually run. TransitMatters&apos;
       Regional Rail vision calls for a train at least every 30 minutes in both directions, from 5am
       to 1am, on a repeating hourly pattern riders can memorize.{' '}
-      <a href={REGIONAL_RAIL_REPORTS_URL} rel="noopener" target="_blank">
+      <a href={REGIONAL_RAIL_REPORTS_URL} rel="noopener noreferrer" target="_blank">
         Read our Regional Rail reports
       </a>
       , or{' '}
-      <a href={REGIONAL_RAIL_EXPLORER_URL} rel="noopener" target="_blank">
+      <a href={REGIONAL_RAIL_EXPLORER_URL} rel="noopener noreferrer" target="_blank">
         plan a trip on the Regional Rail Explorer
       </a>
       .

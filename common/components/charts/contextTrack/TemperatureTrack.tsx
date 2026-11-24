@@ -91,7 +91,9 @@ export const TemperatureTrack = ({
   const band = daily
     ? [
         ...points.map((point) => `${x(point.time)},${y(point.high ?? point.mean)}`),
-        ...[...points].reverse().map((point) => `${x(point.time)},${y(point.low ?? point.mean)}`),
+        ...[...points]
+          .toReversed()
+          .map((point) => `${x(point.time)},${y(point.low ?? point.mean)}`),
       ].join(' ')
     : undefined;
 

@@ -30,8 +30,11 @@ export const fetchOrThrow = async (url: string, init?: RequestInit, message?: st
     throw error;
   });
   if (!response.ok) {
-    const body = await response.json().catch(() => undefined);
-    const code = typeof body?.Code === 'string' ? body.Code : undefined;
+    const body: unknown = await response.json().catch(() => undefined);
+    const code =
+      typeof body === 'object' && body !== null && 'Code' in body && typeof body.Code === 'string'
+        ? body.Code
+        : undefined;
     throw new ApiError('http', { status: response.status, code, message });
   }
   return response;

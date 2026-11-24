@@ -12,7 +12,7 @@ describe('completeZoom', () => {
       {},
       {},
       {},
-      ...Array(8).fill({ dropped_as_needed: 1 }),
+      ...Array.from({ length: 8 }, () => ({ dropped_as_needed: 1 })),
       {},
       {},
       {},

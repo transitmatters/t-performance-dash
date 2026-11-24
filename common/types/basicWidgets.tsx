@@ -23,7 +23,7 @@ class BaseWidgetValue {
   delta?: number | undefined;
   percentChange?: number | undefined;
 
-  constructor(value: number | undefined, delta?: number | undefined) {
+  constructor(value: number | undefined, delta?: number) {
     this.value = value;
     this.delta = delta;
     this.percentChange =
@@ -49,7 +49,6 @@ export class DeltaTimeWidgetValue extends BaseWidgetValue implements WidgetValue
     return getFormattedTimeValue(this.delta, isLarge);
   }
   getFormattedDelta() {
-    new Error('DeltaWidgets should use `getFormattedValue`');
     return 'invalid';
   }
 }
@@ -91,7 +90,7 @@ export class PercentageWidgetValue extends BaseWidgetValue implements WidgetValu
     if (this.value === undefined) return '...';
     return (
       <p className="text-sm">
-        <WidgetText isLarge={isLarge} text={`${Math.round(100 * this.value).toString()}`} />
+        <WidgetText isLarge={isLarge} text={Math.round(100 * this.value).toString()} />
         <UnitText isLarge={isLarge} text={this.getUnits()} />
       </p>
     );

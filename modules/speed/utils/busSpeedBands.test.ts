@@ -52,7 +52,7 @@ describe('parseVisibleBands', () => {
 
 describe('serializeVisibleBands', () => {
   it('writes nothing for the default selection, in any order', () => {
-    expect(serializeVisibleBands([...DEFAULT_VISIBLE_BANDS].reverse())).toBeUndefined();
+    expect(serializeVisibleBands([...DEFAULT_VISIBLE_BANDS].toReversed())).toBeUndefined();
   });
 
   it('round-trips a narrowed selection', () => {

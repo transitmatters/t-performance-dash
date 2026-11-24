@@ -1,4 +1,5 @@
 import { APP_DATA_BASE_PATH } from '../../utils/constants';
+import { paramText } from '../../utils/searchParams';
 import type { ApiPath, ApiPathParams, ApiQuery, ApiResponse } from '../../types/apiSchemas';
 import { fetchOrThrow } from './ApiError';
 
@@ -12,6 +13,14 @@ type ApiFetchArgs<P extends ApiPath> = {
   ? { pathParams?: undefined }
   : { /** Values for the path's `{name}` segments. */ pathParams: ApiPathParams<P> });
 
+/**
+ * A response's JSON body as `T`. Bodies aren't validated at runtime, so this is where an untyped
+ * body becomes a typed one.
+ */
+export const readJson = async <T>(response: Response): Promise<T> =>
+  // oxlint-disable-next-line typescript/no-unsafe-return -- the one unchecked step, described above
+  response.json();
+
 const buildUrl = (path: string, options: object) => {
   const url = new URL(`${APP_DATA_BASE_PATH}${path}`, window.location.origin);
   const entries: [string, unknown][] = Object.entries(options);
@@ -19,7 +28,8 @@ const buildUrl = (path: string, options: object) => {
     // An array is sent as a repeated parameter (`route=a&route=b`).
     const values: unknown[] = Array.isArray(value) ? value : [value];
     values.forEach((item) => {
-      if (item !== undefined) url.searchParams.append(key, String(item));
+      const text = paramText(item);
+      if (text !== undefined) url.searchParams.append(key, text);
     });
   });
   return url;
@@ -37,13 +47,14 @@ export const apiFetch = async <P extends ApiPath>({
   signal,
 }: ApiFetchArgs<P>): Promise<ApiResponse<P>> => {
   const segments = new Map<string, unknown>(Object.entries(pathParams ?? {}));
-  const resolvedPath = path.replace(/\{(\w+)\}/g, (_, name: string) =>
-    String(segments.get(name) ?? '')
+  const resolvedPath = path.replace(
+    /\{(\w+)\}/g,
+    (_, name: string) => paramText(segments.get(name)) ?? ''
   );
   const response = await fetchOrThrow(
     buildUrl(resolvedPath, options).toString(),
     { signal },
     errorMessage
   );
-  return await response.json();
+  return readJson(response);
 };

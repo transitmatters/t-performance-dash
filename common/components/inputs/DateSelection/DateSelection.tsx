@@ -11,6 +11,11 @@ import type { QueryTypeOptions } from '../../../types/router';
 import { Popover, PopoverContent, PopoverTrigger } from '../../ui/popover';
 import { DatePickers } from './DatePickers';
 import { DatePickerPresets } from './DatePickerPresets';
+import type {
+  DateParams,
+  DateSelectionDefaultOptions,
+  SingleDateParams,
+} from './types/DateSelectionTypes';
 
 interface DateSelectionProps {
   type: QueryTypeOptions;
@@ -22,7 +27,9 @@ export const DateSelection = ({ type }: DateSelectionProps) => {
   const [open, setOpen] = useState<boolean>(false);
   const datePreset = checkForPreset(query);
   const updateQueryParams = useUpdateQuery();
-  const presets = range ? getRangePresets(tab, page) : SINGLE_PRESETS[tab];
+  const presets: Partial<
+    Record<DatePresetKey, DateSelectionDefaultOptions<DateParams | SingleDateParams>>
+  > = range ? getRangePresets(tab, page) : SINGLE_PRESETS[tab];
   const presetDateArray = Object.values(presets);
 
   const handleSelection = (datePresetKey: DatePresetKey) => {

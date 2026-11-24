@@ -89,7 +89,7 @@ export const AccessibilityCard = ({ lineShort }: AccessibilityCardProps) => {
         )}
         {isError && (
           <div className="py-2">
-            <Button variant="outline" size="sm" onClick={() => accessibilityAlerts.refetch()}>
+            <Button variant="outline" size="sm" onClick={() => void accessibilityAlerts.refetch()}>
               Try again
             </Button>
           </div>
@@ -100,6 +100,7 @@ export const AccessibilityCard = ({ lineShort }: AccessibilityCardProps) => {
           <div
             role="region"
             aria-label="Out-of-service elevators and escalators"
+            // oxlint-disable-next-line jsx-a11y/no-noninteractive-tabindex
             tabIndex={0}
             className="-mx-1 flex max-h-80 flex-col divide-y overflow-y-auto overscroll-contain rounded-md px-1 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-hidden"
           >

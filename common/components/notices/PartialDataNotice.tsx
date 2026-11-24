@@ -24,7 +24,7 @@ export const PartialDataNotice = ({ query }: PartialDataNoticeProps) => {
         variant="outline"
         size="sm"
         className="self-start"
-        onClick={() => query.refetch()}
+        onClick={() => void query.refetch()}
         disabled={query.isFetching}
       >
         <FontAwesomeIcon

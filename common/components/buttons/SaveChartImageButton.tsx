@@ -112,7 +112,12 @@ export const SaveChartImageButton = ({
   );
 
   return (
-    <Button variant="ghost" size="sm" onClick={handleClick} aria-label="Save chart as an image">
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={(event) => void handleClick(event)}
+      aria-label="Save chart as an image"
+    >
       <FontAwesomeIcon icon={faFileImage} aria-hidden />
       PNG
     </Button>

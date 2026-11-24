@@ -138,21 +138,21 @@ export const BusStopRidership = ({ busRoute }: { busRoute: BusRoute }) => {
                 additionalButtonClass="flex-none px-3"
               />
             )}
-            <label className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 text-sm">
               <span className="text-stone-600 dark:text-stone-300">Season</span>
               <Select value={view.season} onValueChange={setSeason}>
-                <SelectTrigger size="sm">
+                <SelectTrigger size="sm" aria-label="Season">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {[...view.seasons].reverse().map((option) => (
+                  {[...view.seasons].toReversed().map((option) => (
                     <SelectItem key={option} value={option}>
                       {option}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-            </label>
+            </div>
           </div>
           <BusStopRidershipMap
             // Remount when the stops change, so the diagram doesn't animate between routes

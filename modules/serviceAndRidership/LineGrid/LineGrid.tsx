@@ -17,7 +17,6 @@ import { sortFunctions } from './sorting';
 
 type Props = {
   lineData: Record<string, LineData>;
-  // eslint-disable-next-line react-x/no-unused-props -- we'll use this eventually
   summaryData: SummaryData;
   filter?: (r: LineData) => boolean;
 };
@@ -86,7 +85,7 @@ const getTailwindClassForDisplayOption = (display: DisplayOption) => {
 };
 
 export const LineGrid = (props: Props) => {
-  const { lineData: lineData, filter = defaultFilter } = props;
+  const { lineData, filter = defaultFilter } = props;
   const [limit, setLimit] = useState(pagination);
   const [query, setQuery] = useState('');
   const [kindOption, setKindOption] = useState<LineKindOption>('all');

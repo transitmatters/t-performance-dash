@@ -960,7 +960,7 @@ export const BusSpeedMapView = ({
     // runFocusFlight is recreated only when focusKey's own inputs (routeFilter, direction,
     // segmentStops, the stops archive) change, so it's redundant here -- focusKey is the one
     // true dependency.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // oxlint-disable-next-line react/exhaustive-deps
   }, [focusKey]);
 
   return (

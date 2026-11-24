@@ -133,10 +133,10 @@ export const BusSpeedSegmentLeaderboardSection = ({
   return (
     <>
       {availableRoutes.length > 0 && (
-        <label className="flex items-center gap-2 self-start text-sm">
+        <div className="flex items-center gap-2 self-start text-sm">
           <span className="text-stone-600">Route</span>
           <Select value={routeFilter} onValueChange={setRouteFilter}>
-            <SelectTrigger size="sm">
+            <SelectTrigger size="sm" aria-label="Route">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -148,7 +148,7 @@ export const BusSpeedSegmentLeaderboardSection = ({
               ))}
             </SelectContent>
           </Select>
-        </label>
+        </div>
       )}
       {renderList()}
       <BusSpeedSegmentMapDialog

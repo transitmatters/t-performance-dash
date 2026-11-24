@@ -314,16 +314,15 @@ export const RANGE_DATE_KEYS: Record<string, DatePresetKey> = Object.fromEntries
     ...Object.values(RANGE_RAPID_PRESETS),
     ...Object.values(RANGE_RIDE_PRESETS),
     ...Object.values(RANGE_RIDE_RELIABILITY_PRESETS),
-  ].map((rangePreset) => [
+  ].map((rangePreset): [string, DatePresetKey] => [
     `${rangePreset.input.startDate}${rangePreset.input.endDate}`,
     rangePreset.key,
   ])
 );
 export const SINGLE_DATE_KEYS: Record<string, DatePresetKey> = Object.fromEntries(
-  Object.values(SINGLE_RAPID_PRESETS).map((singlePreset) => [
-    singlePreset.input.date,
-    singlePreset.key,
-  ])
+  Object.values(SINGLE_RAPID_PRESETS).flatMap(({ input, key }): [string, DatePresetKey][] =>
+    input.date ? [[input.date, key]] : []
+  )
 );
 
 export const todayOrDate = (date: dayjs.Dayjs) => {

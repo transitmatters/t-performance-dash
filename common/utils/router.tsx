@@ -252,7 +252,7 @@ export const useNavigateToQuery = () => {
       const { search } = router.latestLocation;
       const next = pickBy(update(search), (value) => value !== undefined);
       if (isEqual(next, search)) return;
-      navigate({ to: './', search: next, replace, resetScroll: false });
+      void navigate({ to: './', search: next, replace, resetScroll: false });
     },
     [router, navigate]
   );
@@ -323,7 +323,7 @@ export const getLineSelectionItemHref = (newLine: Line, route: Route): string =>
   }
   // Drop stations and route params, which belong to the old line.
   const queryParams = queryWithout(query, ['from', 'to', ...ROUTE_PARAMS]);
-  href += currentPath ? `${currentPath}` : '';
+  href += currentPath ? currentPath : '';
   const queryString = queryParams.toString();
   href += queryString ? `?${queryString}` : '';
   return href;

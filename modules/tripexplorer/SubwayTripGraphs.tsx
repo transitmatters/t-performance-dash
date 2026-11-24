@@ -156,7 +156,7 @@ export const SubwayTripGraphs = () => {
               fromStation={fromStation}
               type={'traveltimes'}
               timeUnit={'by_time'}
-              peakTime={peakTime === 'weekday' ? true : false}
+              peakTime={peakTime === 'weekday'}
             />
           </WidgetDiv>
         </>

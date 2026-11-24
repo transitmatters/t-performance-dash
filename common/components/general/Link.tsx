@@ -18,6 +18,8 @@ type LinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href'> & {
 
 export const Link = ({ href, ...props }: LinkProps) => {
   const url = hrefToString(href);
+  // Children arrive in props.
+  // oxlint-disable-next-line jsx-a11y/anchor-has-content
   if (isExternal(url)) return <a href={url} {...props} />;
   // Split into to/search/hash rather than passing `href`: Link memoizes its destination on those,
   // not on `href`, so an `href` that changes between renders would keep pointing at the old URL.

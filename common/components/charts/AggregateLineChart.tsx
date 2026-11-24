@@ -93,7 +93,7 @@ export const AggregateLineChart = ({
   suggestedYMax,
   showLegend = true,
   byTime = false,
-  yUnit = 'Minutes',
+  yUnit,
   chartTitle,
   hoverRows,
   fill = false,

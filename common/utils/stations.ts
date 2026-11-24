@@ -303,7 +303,7 @@ export const findValidDefaultStations = (stations: Station[] | undefined) => {
   // stop in order can be on another branch, so it has to share one.
   for (const dir of ['1', '0'] as const) {
     const validStations = stations.filter((s) => s.stops[dir]?.length > 0);
-    const ordered = dir === '1' ? validStations : [...validStations].reverse();
+    const ordered = dir === '1' ? validStations : [...validStations].toReversed();
     for (const defaultFrom of [ordered[1], ordered[0]]) {
       if (!defaultFrom) continue;
       const defaultTo = ordered.find(

@@ -8,18 +8,18 @@ import type { FetchSpeedRestrictionsOptions } from '../types/api';
 import type { SlowZonesLineName } from '../../modules/slowzones/types';
 import { getGtfsRailLineId } from '../utils/lines';
 import { fetchOrThrow } from './utils/ApiError';
-import { apiFetch } from './utils/fetch';
+import { apiFetch, readJson } from './utils/fetch';
 
 export const fetchDelayTotals = async (): Promise<SlowZoneDayTotalsResponse> => {
   const url = new URL(`/static/slowzones/delay_totals.json`, window.location.origin);
   const resp = await fetchOrThrow(url.toString(), undefined, 'Failed to fetch slow zone totals');
-  return resp.json();
+  return readJson(resp);
 };
 
 export const fetchAllSlow = async (): Promise<SlowZoneAllSlowResponse> => {
   const url = new URL(`/static/slowzones/all_slow.json`, window.location.origin);
   const resp = await fetchOrThrow(url.toString(), undefined, 'Failed to fetch slow zones');
-  return resp.json();
+  return readJson(resp);
 };
 
 export const fetchZoneDelays = async (
@@ -28,7 +28,7 @@ export const fetchZoneDelays = async (
   const url = new URL(`/static/slowzones/zone_delays/${lineShort}.json`, window.location.origin);
   const resp = await fetch(url.toString());
   if (!resp.ok) throw new Error(`Failed to fetch daily slow zone delays for ${lineShort}`);
-  return resp.json();
+  return readJson(resp);
 };
 
 export const fetchSpeedRestrictions = async (

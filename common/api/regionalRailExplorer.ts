@@ -1,6 +1,7 @@
 import { REGIONAL_RAIL_EXPLORER_URL } from '../constants/regionalRail';
 import type { RreJourneyParams, RreJourneysResponse } from '../types/regionalRailExplorer';
 import { fetchOrThrow } from './utils/ApiError';
+import { readJson } from './utils/fetch';
 
 // The API and the Explorer page take the same query, so a preview and its link always agree
 const journeyQuery = ({ from, to, day, time }: RreJourneyParams) =>
@@ -20,5 +21,5 @@ export const fetchRreJourneys = async (params: RreJourneyParams): Promise<RreJou
     undefined,
     'Failed to fetch Regional Rail Explorer journeys'
   );
-  return await response.json();
+  return readJson(response);
 };
