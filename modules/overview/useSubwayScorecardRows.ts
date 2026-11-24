@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { useMemo } from 'react';
 
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
+import { useReliabilityData } from '../../common/api/hooks/reliability';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { getRidershipLineId } from '../../common/utils/ridership';
 import { useSlowzoneAllData } from '../../common/api/hooks/slowzones';
@@ -12,6 +13,7 @@ import type { DatedValue } from '../../common/utils/dateAggregation';
 import type { Line, LineShort } from '../../common/types/lines';
 import type { SlowZoneAllSlowResponse } from '../../common/types/dataPoints';
 import type { ScorecardRow, ScorecardSlot } from './types';
+import { buildReliabilityRow, reliabilityMeta } from './ReliabilityChart';
 import {
   WINDOW_START,
   buildRidershipRow,
@@ -22,6 +24,7 @@ import {
 } from './scorecardUtils';
 
 const SPEED = { key: 'speed', label: 'Speed', subtitle: 'Average, both directions' } as const;
+const RELIABILITY = reliabilityMeta();
 const SERVICE = {
   key: 'service',
   label: 'Service delivered',
@@ -121,6 +124,10 @@ export const useSubwayScorecardRows = (
     enabled
   );
   const allSlow = useSlowzoneAllData();
+  const reliability = useReliabilityData(
+    { route_id: line, start_date: WINDOW_START, end_date: TODAY_STRING, agg: 'weekly' },
+    enabled
+  );
 
   const speedRow = useMemo(
     () =>
@@ -137,6 +144,11 @@ export const useSubwayScorecardRows = (
           })
         : null,
     [tripMetrics.data, color]
+  );
+
+  const reliabilityRow = useMemo(
+    () => (reliability.data && color ? buildReliabilityRow(reliability.data, color) : null),
+    [reliability.data, color]
   );
 
   const serviceRow = useMemo(() => {
@@ -172,6 +184,7 @@ export const useSubwayScorecardRows = (
   const slots: ScorecardSlot[] = line
     ? [
         toSlot(SPEED, [tripMetrics], () => speedRow),
+        toSlot(RELIABILITY, [reliability], () => reliabilityRow),
         toSlot(SERVICE, [tripMetrics], () => serviceRow),
         toSlot(RIDERSHIP, [ridership], () => ridershipRow),
         ...(hasSlowZones ? [toSlot(SLOW_ZONES, [allSlow], () => slowZoneRow)] : []),
