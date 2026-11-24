@@ -149,6 +149,40 @@ describe('buildStatements', () => {
     );
   });
 
+  it('adds the subway once every line has a dropped figure', () => {
+    const shares: Record<string, number> = { red: 0.068, orange: 0.025, blue: 0.057, green: 0.093 };
+    const withSubway = (ids: string[]) => ({
+      ...DATA,
+      rows: DATA.rows.map((r) =>
+        ids.includes(r.id)
+          ? { ...r, cells: { ...r.cells, dropped: cell('dropped', 'problem', shares[r.id]) } }
+          : r
+      ),
+    });
+
+    const { dropped } = byId(withSubway(Object.keys(shares)));
+    expect(dropped.head).toBe(
+      'Buses drop 0.5% of scheduled trips, down from 4.0% a year ago. Commuter Rail cancels 0.1%. Subway lines drop 2.5% to 9.3%.'
+    );
+    expect(dropped.viz.kind === 'shares' && dropped.viz.marks.map((m) => m.row)).toEqual([
+      'red',
+      'orange',
+      'blue',
+      'green',
+      'commuter-rail',
+      'frequent-bus',
+      'all-bus',
+    ]);
+    expect(dropped.note).toContain('a subway trip when no train stopped for it');
+
+    // One line without a figure leaves the subway out of the sentence, but its bars still show.
+    const partial = byId(withSubway(['red', 'orange', 'blue'])).dropped;
+    expect(partial.head).toBe(
+      'Buses drop 0.5% of scheduled trips, down from 4.0% a year ago. Commuter Rail cancels 0.1%.'
+    );
+    expect(partial.viz.kind === 'shares' && partial.viz.marks).toHaveLength(6);
+  });
+
   it('says how much ridership changed and where it grew most', () => {
     const { ridership } = byId(DATA);
     expect(ridership.head).toBe(
