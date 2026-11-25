@@ -7,6 +7,7 @@ import pandas as pd
 from botocore.exceptions import ClientError
 import csv
 import itertools
+import sys
 import zlib
 
 from chalicelib import parallel
@@ -116,7 +117,9 @@ def is_rapid_transit(stop_id: str):
     return not (is_bus(stop_id) or is_cr(stop_id) or is_ferry(stop_id))
 
 
-def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, route_context=None, prefer_lamp=False):
+def download_one_event_file(
+    date: pd.Timestamp, stop_id: str, use_gobble=False, route_context=None, prefer_lamp=False, event_types=None
+):
     """Download and parse a single day's event CSV for a stop from S3.
 
     Selects the appropriate S3 path based on the stop's mode (bus, CR, ferry, rapid
@@ -130,6 +133,7 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
       route_context: Unused, reserved for future use. (Default value = None)
       prefer_lamp: For rapid transit, try LAMP before the monthly archive, which is less
         detailed. Used for single-day requests. (Default value = False)
+      event_types: Event types to keep, or None for all. (Default value = None)
 
     Returns:
       list[dict]: Rows of event data sorted by event_time, or empty list if unavailable.
@@ -139,11 +143,11 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
     if prefer_lamp and is_rapid_transit(stop_id) and date.date() <= date_utils.get_max_monthly_data_date():
         lamp_key = f"Events-lamp/{get_lamp_folder()}/{stop_id}/Year={year}/Month={month}/Day={day}/events.csv"
         try:
-            return _parse_events(download(lamp_key, "ascii", False))
+            return _parse_events(download(lamp_key, "ascii", False), event_types=event_types)
         except ClientError as ex:
             if ex.response["Error"]["Code"] != "NoSuchKey":
                 raise
-        return download_one_event_file(date, stop_id, use_gobble, route_context)
+        return download_one_event_file(date, stop_id, use_gobble, route_context, event_types=event_types)
 
     if is_cr(stop_id):
         folder = get_gobble_folder(stop_id)
@@ -178,12 +182,12 @@ def download_one_event_file(date: pd.Timestamp, stop_id: str, use_gobble=False, 
             print(f"WARNING: No data available on S3 for key: {key}")
             # Only rapid transit has a second source to try; CR and ferry would request the same key again
             if not use_gobble and is_rapid_transit(stop_id):
-                return download_one_event_file(date, stop_id, use_gobble=True)
+                return download_one_event_file(date, stop_id, use_gobble=True, event_types=event_types)
             return []
         else:
             raise
 
-    return _parse_events(decompressed, fix_dst_eve=key.startswith("Events/monthly-data/"))
+    return _parse_events(decompressed, fix_dst_eve=key.startswith("Events/monthly-data/"), event_types=event_types)
 
 
 def _fix_dst_eve_prediction(row: dict):
@@ -195,36 +199,69 @@ def _fix_dst_eve_prediction(row: dict):
     return row
 
 
-def _parse_events(csv_text: str, fix_dst_eve=False):
+# The event columns the metric calculations read. A year of a busy stop is hundreds of thousands
+# of rows, so dropping the rest (stop_sequence, vehicle_id, scheduled_trip_id, ...) keeps
+# aggregate requests well inside the Lambda's memory.
+EVENT_FIELDS = (
+    "service_date",
+    "route_id",
+    "trip_id",
+    "direction_id",
+    "event_type",
+    "event_time",
+    "vehicle_label",
+    "vehicle_consist",
+    "scheduled_headway",
+    "scheduled_tt",
+    "scheduled_travel_time",
+)
+# Columns with few distinct values, which share one string object per value.
+INTERNED_FIELDS = ("service_date", "route_id", "direction_id", "event_type")
+
+
+def _slim_event(row: dict):
+    """Keep only EVENT_FIELDS, interning the low-cardinality ones."""
+    slim = {field: row[field] for field in EVENT_FIELDS if field in row}
+    for field in INTERNED_FIELDS:
+        if field in slim:
+            slim[field] = sys.intern(slim[field])
+    return slim
+
+
+def _parse_events(csv_text: str, fix_dst_eve=False, event_types=None):
     """Parse an events CSV into rows sorted by event_time.
 
     Args:
       csv_text: str: The CSV file contents.
       fix_dst_eve: Correct predicted events on days before a DST change. Only the
         monthly rapid transit archive needs this. (Default value = False)
+      event_types: Event types to keep, or None for all. (Default value = None)
     """
     rows = csv.DictReader(csv_text.splitlines())
     if fix_dst_eve:
         rows = map(_fix_dst_eve_prediction, rows)
-    return sorted(rows, key=lambda row: row["event_time"])
+    if event_types is not None:
+        rows = (row for row in rows if row["event_type"] in event_types)
+    return sorted(map(_slim_event, rows), key=lambda row: row["event_time"])
 
 
 @parallel.make_parallel
-def parallel_download_events(datestop: itertools.product, prefer_lamp=False):
+def parallel_download_events(datestop: itertools.product, prefer_lamp=False, event_types=None):
     """Download event data for a single (date, stop) pair. Parallelized via @make_parallel.
 
     Args:
       datestop: A (date, stop_id) tuple from an itertools.product iterator.
       prefer_lamp: Passed through to ``download_one_event_file``. (Default value = False)
+      event_types: Event types to keep, or None for all. (Default value = None)
 
     Returns:
       list[dict]: Event rows for the given date and stop.
     """
     (date, stop) = datestop
-    return download_one_event_file(date, stop, prefer_lamp=prefer_lamp)
+    return download_one_event_file(date, stop, prefer_lamp=prefer_lamp, event_types=event_types)
 
 
-def download_events(start_date: date, end_date: date, stops: list):
+def download_events(start_date: date, end_date: date, stops: list, event_types=None):
     """Download event data for multiple stops over a date range, in parallel.
 
     Fetches all combinations of dates and stops, then filters to the exact date range
@@ -234,6 +271,7 @@ def download_events(start_date: date, end_date: date, stops: list):
       start_date: date: Start of the date range (inclusive).
       end_date: date: End of the date range (inclusive).
       stops: list: List of stop IDs to fetch data for.
+      event_types: Event types to keep, or None for all. (Default value = None)
 
     Returns:
       list[dict]: All event rows sorted by event_time.
@@ -241,10 +279,10 @@ def download_events(start_date: date, end_date: date, stops: list):
     if start_date == end_date:
         # Single day: fetch that exact date (not its month file) so rapid transit can read LAMP first
         datestops = [(pd.Timestamp(start_date), stop) for stop in stops]
-        result = parallel_download_events(datestops, prefer_lamp=True)
+        result = parallel_download_events(datestops, prefer_lamp=True, event_types=event_types)
     else:
         datestops = itertools.product(parallel.s3_date_range(start_date, end_date, stops), stops)
-        result = parallel_download_events(datestops)
+        result = parallel_download_events(datestops, event_types=event_types)
     result = filter(
         lambda row: start_date.strftime("%Y-%m-%d") <= row["service_date"] <= end_date.strftime("%Y-%m-%d"), result
     )

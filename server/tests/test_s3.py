@@ -205,3 +205,33 @@ def test_missing_ferry_day_is_requested_once(fake_s3):
 
     assert s3.download_events(day, day, [FERRY_STOP]) == []
     assert requested == [_ferry_daily_key(day)]
+
+
+def test_range_keeps_only_requested_event_types(fake_s3):
+    files, _ = fake_s3
+    files[MONTHLY_KEY] = _csv(
+        "2025-03-12,Red,t1,0,70061,ARR,2025-03-12 05:01:00,1854",
+        "2025-03-12,Red,t1,0,70061,DEP,2025-03-12 05:01:50,1854",
+    )
+
+    rows = s3.download_events(date(2025, 3, 10), date(2025, 3, 14), ["70061"], event_types=["DEP", "PRD"])
+
+    assert [r["event_type"] for r in rows] == ["DEP"]
+
+
+def test_rows_keep_only_the_fields_metrics_read(fake_s3):
+    files, _ = fake_s3
+    files[MONTHLY_KEY] = _csv("2025-03-12,Red,t1,0,70061,DEP,2025-03-12 05:01:50,1854")
+
+    [row] = s3.download_events(date(2025, 3, 10), date(2025, 3, 14), ["70061"])
+
+    assert "stop_id" not in row
+    assert row == {
+        "service_date": "2025-03-12",
+        "route_id": "Red",
+        "trip_id": "t1",
+        "direction_id": "0",
+        "event_type": "DEP",
+        "event_time": "2025-03-12 05:01:50",
+        "vehicle_label": "1854",
+    }
