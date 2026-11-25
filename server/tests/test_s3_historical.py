@@ -32,7 +32,7 @@ def events(monkeypatch):
     monkeypatch.setattr(
         s3_historical.s3,
         "download_events",
-        lambda start, end, stops: sorted(served, key=lambda row: row["event_time"]),
+        lambda start, end, stops, event_types=None: sorted(served, key=lambda row: row["event_time"]),
     )
     return served
 
