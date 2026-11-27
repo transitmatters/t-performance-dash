@@ -17,7 +17,11 @@ import { getSlowZoneOpacity } from '../../../common/utils/slowZoneUtils';
 import { useDateRange } from '../../../common/hooks/usePageParams';
 import { SvgChart } from '../../../common/components/charts/SvgChart';
 import { useThemeStore } from '../../../common/state/themeStore';
-import { abbreviateStationName, getStripMapWatermark } from '../../../common/utils/stripmap';
+import {
+  abbreviateStationName,
+  getMinHorizontalScale,
+  getStripMapWatermark,
+} from '../../../common/utils/stripmap';
 import { segmentSlowZones } from './segment';
 import { SlowSegmentLabel } from './SlowSegmentLabel';
 import { SlowZonesTooltip } from './SlowZonesTooltip';
@@ -178,6 +182,7 @@ export const SlowZonesMap = ({
         direction={direction}
         getSegments={getSegmentsForSlowZones}
         getStationLabel={abbreviateStationName}
+        minHorizontalScale={getMinHorizontalScale(lineName)}
         tooltip={{ snapToSegment: true, maxDistance: 20, render: renderSlowZonesTooltip }}
         watermark={getStripMapWatermark(isHorizontal, isDark)}
       />
