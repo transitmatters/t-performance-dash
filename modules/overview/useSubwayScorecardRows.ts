@@ -40,6 +40,9 @@ const SLOW_ZONES = {
 
 const SLOW_ZONE_LINES: LineShort[] = ['Red', 'Orange', 'Blue', 'Green', 'Mattapan'];
 
+/** The MBTA doesn't count Mattapan ridership. */
+export const hasRidershipData = (lineShort: LineShort | undefined) => lineShort !== 'Mattapan';
+
 const buildSlowZoneRow = (
   zones: SlowZoneAllSlowResponse['data'],
   lineShort: LineShort,
@@ -107,6 +110,7 @@ export const useSubwayScorecardRows = (
   const enabled = Boolean(line);
   const color = line ? LINE_COLORS[line] : undefined;
   const hasSlowZones = Boolean(lineShort && SLOW_ZONE_LINES.includes(lineShort));
+  const hasRidership = hasRidershipData(lineShort);
 
   const tripMetrics = useDeliveredTripMetrics(
     { start_date: WINDOW_START, end_date: TODAY_STRING, agg: 'weekly', line },
@@ -118,7 +122,7 @@ export const useSubwayScorecardRows = (
       start_date: WINDOW_START,
       end_date: TODAY_STRING,
     },
-    enabled
+    enabled && hasRidership
   );
   const allSlow = useSlowzoneAllData();
 
@@ -173,7 +177,7 @@ export const useSubwayScorecardRows = (
     ? [
         toSlot(SPEED, [tripMetrics], () => speedRow),
         toSlot(SERVICE, [tripMetrics], () => serviceRow),
-        toSlot(RIDERSHIP, [ridership], () => ridershipRow),
+        ...(hasRidership ? [toSlot(RIDERSHIP, [ridership], () => ridershipRow)] : []),
         ...(hasSlowZones ? [toSlot(SLOW_ZONES, [allSlow], () => slowZoneRow)] : []),
       ]
     : [];

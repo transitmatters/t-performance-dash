@@ -22,6 +22,7 @@ import {
   trimTrailingEmpty,
 } from './scorecardUtils';
 import type { MetricKey } from './types';
+import { hasRidershipData } from './useSubwayScorecardRows';
 
 export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
   const { line, lineShort } = useLinePage();
@@ -41,11 +42,14 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
     agg: CHART_CONFIG.agg,
   });
   // The scorecard's request for the same line, so the page asks for ridership once
-  const ridership = useRidershipData({
-    line_id: getRidershipLineId(line, undefined, undefined, undefined),
-    start_date: WINDOW_START,
-    end_date: endDate,
-  });
+  const ridership = useRidershipData(
+    {
+      line_id: getRidershipLineId(line, undefined, undefined, undefined),
+      start_date: WINDOW_START,
+      end_date: endDate,
+    },
+    hasRidershipData(lineShort)
+  );
   const delayTotals = useSlowzoneDelayTotalData();
 
   if (metric === 'speed') {
