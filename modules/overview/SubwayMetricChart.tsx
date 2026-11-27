@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 import { useLinePage } from '../../common/hooks/usePageParams';
 import { useDeliveredTripMetrics } from '../../common/api/hooks/tripmetrics';
+import { useReliabilityData } from '../../common/api/hooks/reliability';
 import { useScheduledService } from '../../common/api/hooks/service';
 import { useRidershipData } from '../../common/api/hooks/ridership';
 import { getRidershipLineId } from '../../common/utils/ridership';
@@ -22,6 +23,17 @@ import {
   trimTrailingEmpty,
 } from './scorecardUtils';
 import type { MetricKey } from './types';
+import { ReliabilityChart } from './ReliabilityChart';
+
+const ReliabilityNote = ({ isGreen }: { isGreen: boolean }) => (
+  <>
+    A headway is the time between one train leaving a station and the next, at every station but the
+    terminals. It&apos;s within 75–125% when it&apos;s close to the scheduled headway, and bunched
+    when it&apos;s half the scheduled headway or less. Each share is of all the line&apos;s
+    headways, in both directions.
+    {isGreen && ' Where branches share track, trains from every branch count together.'}
+  </>
+);
 
 export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
   const { line, lineShort } = useLinePage();
@@ -47,6 +59,10 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
     end_date: endDate,
   });
   const delayTotals = useSlowzoneDelayTotalData();
+  const reliability = useReliabilityData(
+    { route_id: line, start_date: startDate, end_date: endDate, agg: CHART_CONFIG.agg },
+    metric === 'reliability'
+  );
 
   if (metric === 'speed') {
     if (!tripMetrics.data) return <ChartPlaceHolder query={tripMetrics} />;
@@ -78,6 +94,17 @@ export const SubwayMetricChart = ({ metric }: { metric: MetricKey }) => {
         config={CHART_CONFIG}
         startDate={chartWindowStart(chartEnd)}
         endDate={chartEnd}
+      />
+    );
+  }
+  if (metric === 'reliability') {
+    if (!reliability.data) return <ChartPlaceHolder query={reliability} />;
+    return (
+      <ReliabilityChart
+        data={reliability.data}
+        line={line}
+        end={endDate}
+        note={<ReliabilityNote isGreen={line === 'line-green'} />}
       />
     );
   }
